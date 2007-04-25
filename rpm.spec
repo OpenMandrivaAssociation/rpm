@@ -52,7 +52,7 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 21
+%define release			    %mkrel 22
 %define perlmodulerelease	%{release}
 %define poptrelease		%{release}
 
