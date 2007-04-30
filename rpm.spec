@@ -277,6 +277,9 @@ Patch108: rpm-4.4.6-use-dgettext-instead-of-gettext-to-allow-use-of-multilibs.pa
 # > Looks like no one uses complex logic in their if statements...
 Patch109: rpm-4.4.6-spec--fix-parens-in-exprs.patch
 
+# [PIXEL] allow urpmi to display "remove package foo" when removing an empty package
+Patch110: rpm-4.4.6-ensure-uninst-callback-is-called-for-empty-packages.patch
+
 License:	GPL
 BuildRequires:	autoconf2.5 >= 2.57
 BuildRequires:	doxygen
@@ -560,6 +563,7 @@ the installed RPM database as well as files on the filesystem.
 %patch107 -p1
 %patch108 -p1
 %patch109 -p1
+%patch110 -p1
 
 # The sqlite from rpm tarball is the same than the system one
 # rpm author just add LINT comment for his checking purpose
@@ -959,6 +963,4 @@ fi
 %{perl_vendorarch}/%{perlmodule}.pm
 %{perl_vendorarch}/auto/%{perlmodule}
 %doc perl/Changes
-
-
 
