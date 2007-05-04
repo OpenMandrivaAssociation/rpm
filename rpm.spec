@@ -377,6 +377,9 @@ Requires:	patch
 Requires:	make
 Requires:	unzip
 Requires:	elfutils
+# pkgconfig is needed for performing automatic computation of pkgconfig files
+# dependencies (see /usr/lib/rpm/mandriva/pkgconfigdeps.sh) (#30632)
+Requires:	pkgconfig
 Requires:	rpm = %{version}-%{release}
 Requires:	rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 
