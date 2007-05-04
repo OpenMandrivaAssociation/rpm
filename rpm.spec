@@ -791,7 +791,7 @@ fi
 %ifarch alpha
 %attr(   -, rpm, rpm) %{rpmdir}/alpha*
 %endif
-%ifarch sparc sparc64
+%ifarch %{sunsparc}
 %attr(   -, rpm, rpm) %{rpmdir}/sparc*
 %endif
 %ifarch ppc powerpc
