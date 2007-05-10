@@ -280,6 +280,10 @@ Patch109: rpm-4.4.6-spec--fix-parens-in-exprs.patch
 # [PIXEL] allow urpmi to display "remove package foo" when removing an empty package
 Patch110: rpm-4.4.6-ensure-uninst-callback-is-called-for-empty-packages.patch
 
+# [from upstream] fixes a segfault using a maliciously crafted  header without RPMTAG_NAME.
+# Details at https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=239557
+Patch111: rpm-4.4.6-fix-segfault-on-header-without-RPMTAG_NAME.patch
+
 License:	GPL
 BuildRequires:	autoconf2.5 >= 2.57
 BuildRequires:	doxygen
@@ -567,6 +571,7 @@ the installed RPM database as well as files on the filesystem.
 %patch108 -p1
 %patch109 -p1
 %patch110 -p1
+%patch111 -p1
 
 # The sqlite from rpm tarball is the same than the system one
 # rpm author just add LINT comment for his checking purpose
