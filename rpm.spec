@@ -284,6 +284,24 @@ Patch110: rpm-4.4.6-ensure-uninst-callback-is-called-for-empty-packages.patch
 # Details at https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=239557
 Patch111: rpm-4.4.6-fix-segfault-on-header-without-RPMTAG_NAME.patch
 
+# [from rpm 4.4.9]
+# [see also http://hg.rpm.org/rpm?cs=c74b54a0a618]
+Patch112: rpm-4.4.6-call-fflush-at-the-end-of-writeing-a-signed-package-to-catch-out-disk-space-errors.patch
+
+# [from rpm 4.4.9]
+# [see also http://hg.rpm.org/rpm?cs=72e4635d0775]
+# fixes http://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=235353
+Patch113: rpm-4.4.6-fix-default-verify-flags-for-doc--useful-for-deltarpm.patch
+
+# [from rpm 4.4.9]
+# [see also http://hg.rpm.org/rpm?cs=68f3eb1cad71]
+# fixes http://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=232222
+Patch114: rpm-4.4.6-fix-debugedit-for-relative-paths.patch
+
+# [from rpm 4.4.9]
+# [see also http://hg.rpm.org/rpm?cs=ccb43549c3b4]
+Patch115: rpm-4.4.6-rebuilddb-with-root.patch
+
 License:	GPL
 BuildRequires:	autoconf2.5 >= 2.57
 BuildRequires:	doxygen
@@ -572,6 +590,10 @@ the installed RPM database as well as files on the filesystem.
 %patch109 -p1
 %patch110 -p1
 %patch111 -p1
+%patch112 -p1
+%patch113 -p1
+%patch114 -p1
+%patch115 -p1
 
 # The sqlite from rpm tarball is the same than the system one
 # rpm author just add LINT comment for his checking purpose
