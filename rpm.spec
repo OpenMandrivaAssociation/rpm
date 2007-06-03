@@ -212,6 +212,10 @@ Patch111: rpm-check-file-trim-double-slash-in-buildroot.patch
 
 Patch112: rpm-dont-use-rpmio-to-read-file-for-script.patch
 
+# Patch from cvs
+# using _docdir_fmt for doc directory
+Patch113: rpm-4.4.8-macro_doc_fmt.patch
+
 License:	GPL
 BuildRequires:	autoconf2.5 >= 2.57
 BuildRequires:	doxygen
@@ -482,6 +486,8 @@ the installed RPM database as well as files on the filesystem.
 
 # Fix strange issue making %pre/post/... -f not working
 %patch112 -p0 -b .build-no-rpmio
+
+%patch113 -p0 -b .docdir-macros
 
 %build
 
