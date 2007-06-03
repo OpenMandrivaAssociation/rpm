@@ -1,5 +1,5 @@
 # Do not change this spec directly but in the svn
-# $Id: rpm.spec 149139 2007-03-27 11:50:28Z pixel $
+# $Id: rpm.spec 134789 2007-03-27 15:13:43Z nanardon $
 
 %define lib64arches	x86_64 ppc64 sparc64
 
@@ -46,14 +46,14 @@
 %define __find_requires %{rpmdir}/mandriva/find-requires %{?buildroot:%{buildroot}} %{?_target_cpu:%{_target_cpu}}
 %define __find_provides %{rpmdir}/mandriva/find-provides
 
-%define rpmversion	4.4.6
-%define poptver		1.10.6
+%define rpmversion	4.4.8
+%define poptver		1.10.8
 %define perlmoduleversion	0.66
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 22
-%define perlmodulerelease	%{release}
+%define release			    %mkrel 1
+%define perlmodulerelease   %mkrel 21
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -98,7 +98,6 @@ Patch2:		rpm-4.4.6-no-static.patch
 # (gb) force generation of PIC code for static libs that can be built into a DSO (zlib, file)
 Patch3:		rpm-4.4.6-pic.patch
 
-
 # if %post of foo-2 fails,
 # or if %preun of foo-1 fails,
 # or if %postun of foo-1 fails,
@@ -122,8 +121,6 @@ Patch49:	rpm-4.4.3-provides-obsoleted.patch
 # Introduce new ppc32 arch. Fix ppc64 bi-arch builds. Fix ppc builds on newer CPUs.
 Patch56:	rpm-4.4.6-ppc32.patch
 
-Patch57:	rpm-4.4.6-sparc.patch
-
 # Colorize static archives and .so symlinks
 Patch62:	rpm-4.4.3-coloring.patch
 
@@ -136,9 +133,6 @@ Patch64:    rpm-4.4.1-morepopt.patch
 # Being able to read old rpm (build with rpm v3)
 # See https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=127113#c12
 Patch68:    rpm-4.4.1-region_trailer.patch
-
-# Fix some French translations
-Patch69:	rpm-4.4.6-fr.patch
 
 # In original rpm, -bb --short-circuit does not work and run all stage
 # From popular request, we allow to do this
@@ -158,10 +152,6 @@ Patch77:    rpm-source-defattr.patch
 
 # Do not use futex, but fcntl
 Patch78:    rpm-4.4.6-fcntl.patch
-
-# Fix: http://qa.mandriva.com/show_bug.cgi?id=17774
-# Patch from cvs HEAD (4.4.3)
-Patch80:    rpm-4.4.2-buildsubdir-for-scriptlet.patch
 
 Patch82:    rpm-4.4.3-ordering.patch
 
@@ -191,10 +181,6 @@ Patch88: rpm-4.4.6-SOURCEPACKAGE.patch
 # reported upstream, I hope to see this include
 Patch89: rpm-4.4.6-rpmdb.h-cpp-fix.patch
 
-# Unchecked eol with rpm --eval %, or %!
-# reported upstream
-Patch90: rpm-4.4.6-macro-unchecked-eol.patch
-
 # avoids taking into account duplicates in file list when checking
 # for unpackaged files
 Patch91: rpm-4.4.6-check-dupl-files.patch
@@ -203,104 +189,28 @@ Patch91: rpm-4.4.6-check-dupl-files.patch
 # files (for rpm -ta)
 Patch92: rpm-4.4.6-newtar.patch
 
-# Berkeley DB stores path into __db.00? files.
-# this is an issue when using --root because
-# "chroot rpm" will not work when trying to find files
-# into the chroot path again. To avoid this issue,
-# this patch uses the same hack than sqlite:
-#   getcwd; cd /; chroot root; => enterChroot()
-#   play with db
-#   chroot . ; cd oldpath => leaveChroot()
-
-Patch93: rpm-4.4.6-db3-chroot-with-root.patch
-
-Patch193: rpm-4.4.6-chroot-failing-is-an-error.patch
-
 # This patch adds again a workaround to allow rpm to read/install
 # rpm v3 - Internal format is likely the same into rpm v4, data is
 # just organised in another way
 
 Patch94: rpm-4.4.6-rpmv3-support.patch
 
-# http://qa.mandriva.com/show_bug.cgi?id=23075 said everything:
-# use tee -a to avoid overwrite in the loop
-Patch95: rpm-4.4.6-gendiff-tee-no-overwrite.patch
-
-# Patch fixing http://qa.mandriva.com/show_bug.cgi?id=23774
-Patch96: rpm-4.4.6-configfile-not-removed.patch
-
-# upstream patch
-# https://lists.dulug.duke.edu/pipermail/rpm-devel/2006-July/001266.html
-Patch97: rpm-dbenv.patch
-
 # fix free on invalid pointer after displaying "Unable to open temp file"
 Patch98: rpm-4.4.6-fix-free-on-bad-pointer.patch
-Patch99: rpm-4.4.6-makeTempFile-init-null.patch
 
 # without this patch, when pkg rpm-build is not installed,
 # using rpm -bs t.spec returns: "t.spec: No such file or directory"
 Patch100: rpm-4.4.6-fix-error-message-rpmb-not-installed.patch
 
-# ignore getcwd failing. db_abshome will not be set,
-# it may affect db/log/log_archive.c, but that should be ok
-Patch101: rpm-4.4.6-work-even-with-invalid-cwd.patch
-
-# when calling ->trans twice in a row, the time of the transaction may be the same
-# so /usr/X11R6/lib/X11/app-defaults;456ac510 may be left from the first transaction
-# and the second will cause segfault
-Patch102: rpm-4.4.6-fix-segfault-if-time-based-file-already-exists.patch
-
-# remove symlink /usr/X11R6/lib/X11/app-defaults;456ac510 when app-defaults is a directory,
-# and so rename fails. With this patch, the segfault patch above is not really needed
-Patch103: rpm-4.4.6-remove-temporary-file-on-error.patch
-
-Patch104: rpm-4.4.6-fix-segfault-on-weird-buggy-rpm-header.patch
-
-# fix query format on rpm header with tag 265 which has no name (#27108)
-Patch105: rpm-4.4.6-fix-query-format-xml-and-yaml-on-weird-header.patch
-
-Patch106: rpm4-CVE-2006-5466.patch
-
-# librpm uses bavail ie "free blocks avail to non-superuser"
-# that's ok, it will help keeping some free space, even for root
-# but when bavail == 0, librpm thinks statfs failed, and do not check
-# so setting bavail to 1 when bavail it is 0
-# (no package should fit in one block!)
-Patch107: rpm-4.4.6-do-check-free-size-when-bavail-is-0.patch
-
 Patch108: rpm-4.4.6-use-dgettext-instead-of-gettext-to-allow-use-of-multilibs.patch
 
-# upstream patch (from mls@suse.de)
-# > seems like parenthesis never worked in the expression parses as
-# > the parser doesn't read over the trailing ')'. Very strange, it
-# > seems like this was broken since the very beginning of rpm.
-# > Looks like no one uses complex logic in their if statements...
-Patch109: rpm-4.4.6-spec--fix-parens-in-exprs.patch
+Patch109: rpm-build-expand-field-for-single-token.patch
 
-# [PIXEL] allow urpmi to display "remove package foo" when removing an empty package
-Patch110: rpm-4.4.6-ensure-uninst-callback-is-called-for-empty-packages.patch
+Patch110: rpm-read-default-rpmrc.patch
 
-# [from upstream] fixes a segfault using a maliciously crafted  header without RPMTAG_NAME.
-# Details at https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=239557
-Patch111: rpm-4.4.6-fix-segfault-on-header-without-RPMTAG_NAME.patch
+Patch111: rpm-check-file-trim-double-slash-in-buildroot.patch
 
-# [from rpm 4.4.9]
-# [see also http://hg.rpm.org/rpm?cs=c74b54a0a618]
-Patch112: rpm-4.4.6-call-fflush-at-the-end-of-writeing-a-signed-package-to-catch-out-disk-space-errors.patch
-
-# [from rpm 4.4.9]
-# [see also http://hg.rpm.org/rpm?cs=72e4635d0775]
-# fixes http://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=235353
-Patch113: rpm-4.4.6-fix-default-verify-flags-for-doc--useful-for-deltarpm.patch
-
-# [from rpm 4.4.9]
-# [see also http://hg.rpm.org/rpm?cs=68f3eb1cad71]
-# fixes http://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=232222
-Patch114: rpm-4.4.6-fix-debugedit-for-relative-paths.patch
-
-# [from rpm 4.4.9]
-# [see also http://hg.rpm.org/rpm?cs=ccb43549c3b4]
-Patch115: rpm-4.4.6-rebuilddb-with-root.patch
+Patch112: rpm-dont-use-rpmio-to-read-file-for-script.patch
 
 License:	GPL
 BuildRequires:	autoconf2.5 >= 2.57
@@ -399,9 +309,6 @@ Requires:	patch
 Requires:	make
 Requires:	unzip
 Requires:	elfutils
-# pkgconfig is needed for performing automatic computation of pkgconfig files
-# dependencies (see /usr/lib/rpm/mandriva/pkgconfigdeps.sh) (#30632)
-Requires:	pkgconfig
 Requires:	rpm = %{version}-%{release}
 Requires:	rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 
@@ -415,7 +322,7 @@ Summary:	Python bindings for apps which will manipulate RPM packages
 Group:		Development/Python
 Requires:	python >= %{pyver}
 Requires:	rpm = %{version}-%{release}
-Obsoletes:  rpm-python
+Obsoletes:  rpm-python < %version-%release
 Provides:   rpm-python = %version-%release
 
 %description -n python-rpm
@@ -499,7 +406,7 @@ the installed RPM database as well as files on the filesystem.
 
 %patch3 -p1 -b .pic
 
-%patch17 -p1 -b .improved
+%patch17 -p0 -b .improved
 
 %patch22 -p1 -b .fail
 
@@ -509,9 +416,7 @@ the installed RPM database as well as files on the filesystem.
 
 %patch49 -p0 -b .provides
 
-%patch56 -p1 -b .ppc32
-
-%patch57 -p1 -b .sparc
+%patch56 -p0 -b .ppc32
 
 %patch62 -p0 -b .coloring
 
@@ -521,13 +426,13 @@ the installed RPM database as well as files on the filesystem.
 
 %patch68 -p0 -b .region_trailer
 
-%patch69 -p0 -b .trans
+#%patch69 -p0 -b .trans
 
 %patch70 -p0 -b .shortcircuit
 
 %patch71 -p0  -b .ordererase
 
-%patch72 -p1  -b .fileconflicts
+%patch72 -p0  -b .fileconflicts
 
 %patch77 -p0  -b .srcdefattr
 
@@ -535,8 +440,6 @@ the installed RPM database as well as files on the filesystem.
 %else
 %patch78 -p0  -b .fcntl
 %endif
-
-%patch80 -p0 -b .subdir-scriplet
 
 %patch82 -p0 -b .ordering
 
@@ -554,50 +457,31 @@ the installed RPM database as well as files on the filesystem.
 
 %patch89 -p0 -b .cpp-compliant
 
-%patch90 -p0 -b .unchecked-eol
-
 %patch91 -p0 -b .check-dupl-files
 
 %patch92 -p0 -b .newtar
 
-%patch93 -p1 -b .db3chroot
-%patch193 -p1 -b .catch-chroot-fail
-
 %patch94 -p1 -b .rpmv3-support
 
-%patch95 -p0 -b .gendiff-tee-overwrite
-
-%patch96 -p0 -b .configfile-not-removed
-
-%patch97 -p0 -b .dbenv
-
 %patch98 -p1 -b .free
-%patch99 -p1 -b .makeTemp-init-null
 
 %patch100 -p1 -b .rpmb-missing
 
-%patch101 -p1 -b .getcwd-failing
-
-%patch102 -p1 -b .segfault
-%patch103 -p1 -b .rm-on-error
-%patch104 -p1 -b .segfault2
-%patch105 -p1 -b .qf-xml
-
-%patch106 -p0 -b .cve-2006-5466
-
-%patch107 -p1
 %patch108 -p1
-%patch109 -p1
-%patch110 -p1
-%patch111 -p1
-%patch112 -p1
-%patch113 -p1
-%patch114 -p1
-%patch115 -p1
 
-# The sqlite from rpm tarball is the same than the system one
-# rpm author just add LINT comment for his checking purpose
-mv sqlite sqlite.orig
+# rpm now check there is only one token per field
+# too bad, the check is performed before macro expansion...
+%patch109 -p0 -b .singletoken
+
+# This rpm do not use rpmrc anymore, this patch
+# get back until I have a better solution (read the doc ? :)
+%patch110 -p0 -b .use-default-rpmrc
+
+# Fix diff issue when buildroot contains some "//"
+%patch111 -p0 -b .trim-slash
+
+# Fix strange issue making %pre/post/... -f not working
+%patch112 -p0 -b .build-no-rpmio
 
 %build
 
@@ -615,7 +499,7 @@ done
 # configure breaks make install, but this does not matter.
 # --build, we explictly set 'mandriva' as our config subdir and 
 # _host_vendor are 'mandriva'
-CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" \
+CFLAGS="$RPM_OPT_FLAGS -fPIC" CXXFLAGS="$RPM_OPT_FLAGS -fPIC" \
     ./configure \
         --build=%{_target_cpu}-%{_host_vendor}-%{_target_os}%{?_gnu} \
         --prefix=%{_prefix} \
@@ -644,7 +528,7 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" \
 # 21:38 < jbj> Nanar: zlib modified to make *.rpm packages rsync friendly.
 #              See https://svn.uhulinux.hu/packages/dev/zlib/patches/02-rsync.patch
 # 21:38 < jbj> rip if you don't want to be rsync friendly. <shrug>
-%make -C zlib AM_CFLAGS="$RPM_OPT_FLAGS"
+%make -C zlib AM_CFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-fPIC"
 
 %make
 
@@ -668,7 +552,7 @@ ln -s rpm/rpmpopt-%{rpmversion} $RPM_BUILD_ROOT%{_prefix}/lib/rpmpopt
 ln -sf ppc-mandriva-linux $RPM_BUILD_ROOT%{rpmdir}/powerpc-mandriva-linux
 %endif
 
-mv -f $RPM_BUILD_ROOT/%{rpmdir}/rpmdiff $RPM_BUILD_ROOT/%{_bindir}
+#mv -f $RPM_BUILD_ROOT/%{rpmdir}/rpmdiff $RPM_BUILD_ROOT/%{_bindir}
 
 # Save list of packages through cron
 mkdir -p ${RPM_BUILD_ROOT}/etc/cron.daily
@@ -681,7 +565,7 @@ mkdir -p $RPM_BUILD_ROOT/etc/rpm/
 cat << E_O_F > $RPM_BUILD_ROOT/etc/rpm/macros.cdb
 %%__dbi_cdb      %%{nil}
 %%__dbi_other    %%{?_tmppath:tmpdir=%%{_tmppath}} usedbenv create \
-                 joinenv mpool mp_mmapsize=8Mb mp_size=512kb verify
+                 mpool mp_mmapsize=8Mb mp_size=512kb verify
 E_O_F
 
 mkdir -p $RPM_BUILD_ROOT/var/lib/rpm
@@ -777,8 +661,8 @@ fi
 
 %files -f %{name}.lang
 %defattr(-,root,root)
-%doc RPM-PGP-KEY RPM-GPG-KEY GROUPS CHANGES doc/manual/[a-z]*
-%attr(0755, rpm, rpm) /bin/rpm
+%doc GROUPS CHANGES doc/manual/[a-z]*
+%attr(0755,rpm,rpm) /bin/rpm
 %attr(0755, rpm, rpm) %{_bindir}/rpm2cpio
 %attr(0755, rpm, rpm) %{_bindir}/gendiff
 %attr(0755, rpm, rpm) %{_bindir}/rpmdb
@@ -795,7 +679,7 @@ fi
 %dir /etc/rpm/macros.d
 %attr(0755, rpm, rpm) %{rpmdir}/config.guess
 %attr(0755, rpm, rpm) %{rpmdir}/config.sub
-%attr(0755, rpm, rpm) %{rpmdir}/convertrpmrc.sh
+#%attr(0755, rpm, rpm) %{rpmdir}/convertrpmrc.sh
 %attr(0755, rpm, rpm) %{rpmdir}/rpmdb_*
 %attr(0644, rpm, rpm) %{rpmdir}/macros
 %attr(0755, rpm, rpm) %{rpmdir}/mkinstalldirs
@@ -805,7 +689,6 @@ fi
 %attr(0644, rpm, rpm) %{rpmdir}/rpmrc
 
 %{_prefix}/lib/rpmpopt
-%{_prefix}/lib/rpm/rpmrc
 %rpmattr	%{rpmdir}/rpm2cpio.sh
 %rpmattr	%{rpmdir}/tgpg
 
@@ -818,7 +701,7 @@ fi
 %ifarch alpha
 %attr(   -, rpm, rpm) %{rpmdir}/alpha*
 %endif
-%ifarch %{sunsparc}
+%ifarch sparc sparc64
 %attr(   -, rpm, rpm) %{rpmdir}/sparc*
 %endif
 %ifarch ppc powerpc
@@ -839,8 +722,9 @@ fi
 %attr(   -, rpm, rpm) %{rpmdir}/ia64-*
 %endif
 %ifarch x86_64
-#%attr(   -, rpm, rpm) %{rpmdir}/amd64-*
-%attr(   -, rpm, rpm) %{rpmdir}/x86_64-*
+%attr(   -, rpm, rpm) %{rpmdir}/amd64-*
+#%attr(   -, rpm, rpm) %{rpmdir}/x86_64-*
+%attr(   -, rpm, rpm) %{rpmdir}/ia32e-*
 %endif
 %attr(   -, rpm, rpm) %{rpmdir}/noarch*
 
@@ -888,11 +772,6 @@ fi
 %rpmattr	%{_bindir}/rpmbuild
 %rpmattr	%{_prefix}/lib/rpm/brp-*
 %rpmattr	%{_prefix}/lib/rpm/check-files
-%rpmattr	%{_prefix}/lib/rpm/check-prereqs
-#%rpmattr	%{_prefix}/lib/rpm/config.site
-#%rpmattr	%{_prefix}/lib/rpm/cross-build
-#%rpmattr	%{_prefix}/lib/rpm/filter.sh
-%rpmattr	%{_prefix}/lib/rpm/freshen.sh
 %rpmattr	%{_prefix}/lib/rpm/debugedit
 %rpmattr	%{_prefix}/lib/rpm/executabledeps.sh
 %rpmattr	%{_prefix}/lib/rpm/find-debuginfo.sh
@@ -903,22 +782,22 @@ fi
 %rpmattr	%{_prefix}/lib/rpm/find-req.pl
 %rpmattr	%{_prefix}/lib/rpm/find-requires
 %rpmattr	%{_prefix}/lib/rpm/find-requires.perl
-%rpmattr	%{_prefix}/lib/rpm/get_magic.pl
 %rpmattr	%{_prefix}/lib/rpm/getpo.sh
 %rpmattr	%{_prefix}/lib/rpm/http.req
-%rpmattr	%{_prefix}/lib/rpm/javadeps
 %rpmattr	%{_prefix}/lib/rpm/javadeps.sh
 %rpmattr	%{_prefix}/lib/rpm/libtooldeps.sh
 %rpmattr	%{_prefix}/lib/rpm/magic
 %rpmattr	%{_prefix}/lib/rpm/magic.mgc
 %rpmattr	%{_prefix}/lib/rpm/magic.mime
 %rpmattr	%{_prefix}/lib/rpm/magic.mime.mgc
-%rpmattr	%{_prefix}/lib/rpm/magic.prov
-%rpmattr	%{_prefix}/lib/rpm/magic.req
 %rpmattr	%{_prefix}/lib/rpm/perldeps.pl
 %rpmattr	%{_prefix}/lib/rpm/perl.prov
 %rpmattr	%{_prefix}/lib/rpm/perl.req
 %rpmattr	%{_prefix}/lib/rpm/pkgconfigdeps.sh
+%rpmattr    %{_prefix}//lib/rpm/php.prov
+%rpmattr    %{_prefix}//lib/rpm/php.req
+%rpmattr    %{_prefix}//lib/rpm/symclash.py
+%rpmattr    %{_prefix}//lib/rpm/symclash.sh
 
 %rpmattr	%{_prefix}/lib/rpm/rpm[bt]
 %rpmattr	%{_prefix}/lib/rpm/rpmdeps
@@ -961,7 +840,6 @@ fi
 %{_libdir}/librpmbuild.la
 %{_libdir}/librpmbuild.so
 %{_datadir}/man/man3/RPM*
-%rpmattr	%{rpmdir}/rpmcache
 %rpmattr	%{rpmdir}/rpmdb_deadlock
 %rpmattr	%{rpmdir}/rpmdb_dump
 %rpmattr	%{rpmdir}/rpmdb_load
@@ -969,8 +847,6 @@ fi
 %rpmattr	%{rpmdir}/rpmdb_svc
 %rpmattr	%{rpmdir}/rpmdb_stat
 %rpmattr	%{rpmdir}/rpmdb_verify
-%rpmattr	%{rpmdir}/rpmfile
-%rpmattr	%{_bindir}/rpmgraph
 
 %files -n popt-data -f popt.lang
 %defattr(-,root,root)
