@@ -53,7 +53,7 @@
 %define libpoptver	0
 %define libver		4.4
 %define release			    %mkrel 1
-%define perlmodulerelease   %mkrel 21
+%define perlmodulerelease   %mkrel 23
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
