@@ -259,6 +259,7 @@ Conflicts:	menu < 2.1.5-29mdk
 Conflicts:	locales < 2.3.1.1
 Conflicts:	man-pages-fr < 0.9.7-16mdk
 Conflicts:	man-pages-pl < 0.4-9mdk
+Conflicts:	perl-URPM < 1.63-3mdv2008.0
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 URL:            http://www.rpm.org/
 Requires(pre):		rpm-helper >= 0.8
