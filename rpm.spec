@@ -697,7 +697,7 @@ fi
 %rpmattr	%{rpmdir}/rpm2cpio.sh
 %rpmattr	%{rpmdir}/tgpg
 
-%ifarch i386 i486 i586 i686 k6 athlon
+%ifarch %{ix86}
 %attr(   -, rpm, rpm) %{rpmdir}/i*86-*
 #%attr(   -, rpm, rpm) %{rpmdir}/k6*
 %attr(   -, rpm, rpm) %{rpmdir}/athlon*
@@ -706,7 +706,7 @@ fi
 %ifarch alpha
 %attr(   -, rpm, rpm) %{rpmdir}/alpha*
 %endif
-%ifarch sparc sparc64
+%ifarch %{sunsparc}
 %attr(   -, rpm, rpm) %{rpmdir}/sparc*
 %endif
 %ifarch ppc powerpc
