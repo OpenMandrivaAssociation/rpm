@@ -206,8 +206,6 @@ Patch108: rpm-4.4.6-use-dgettext-instead-of-gettext-to-allow-use-of-multilibs.pa
 
 Patch109: rpm-build-expand-field-for-single-token.patch
 
-Patch110: rpm-read-default-rpmrc.patch
-
 Patch111: rpm-check-file-trim-double-slash-in-buildroot.patch
 
 Patch112: rpm-dont-use-rpmio-to-read-file-for-script.patch
@@ -215,6 +213,8 @@ Patch112: rpm-dont-use-rpmio-to-read-file-for-script.patch
 # Patch from cvs
 # using _docdir_fmt for doc directory
 Patch113: rpm-4.4.8-macro_doc_fmt.patch
+
+Patch114: rpm-read-vendor-macros.patch
 
 License:	GPL
 BuildRequires:	autoconf2.5 >= 2.57
@@ -251,7 +251,7 @@ Requires:	glibc >= 2.1.92
 Requires:	mktemp
 Requires:	popt = %{poptver}-%{poptrelease}
 Requires:	setup >= 2.2.0-8mdk
-Requires:	rpm-mandriva-setup >= 1.16
+Requires:	rpm-mandriva-setup >= 1.42
 Requires:	update-alternatives
 Requires:	%librpmname = %version-%release
 Conflicts:	patch < 2.5
@@ -478,10 +478,6 @@ the installed RPM database as well as files on the filesystem.
 # too bad, the check is performed before macro expansion...
 %patch109 -p0 -b .singletoken
 
-# This rpm do not use rpmrc anymore, this patch
-# get back until I have a better solution (read the doc ? :)
-%patch110 -p0 -b .use-default-rpmrc
-
 # Fix diff issue when buildroot contains some "//"
 %patch111 -p0 -b .trim-slash
 
@@ -489,6 +485,8 @@ the installed RPM database as well as files on the filesystem.
 %patch112 -p0 -b .build-no-rpmio
 
 %patch113 -p0 -b .docdir-macros
+
+%patch114 -p0 -b .read-our-macros
 
 %build
 
