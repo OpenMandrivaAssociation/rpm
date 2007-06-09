@@ -216,6 +216,8 @@ Patch113: rpm-4.4.8-macro_doc_fmt.patch
 
 Patch114: rpm-read-vendor-macros.patch
 
+Patch115: rpm-4.4.8-dont-clean-buildroot-in-install.patch
+
 License:	GPL
 BuildRequires:	autoconf2.5 >= 2.57
 BuildRequires:	doxygen
@@ -487,6 +489,8 @@ the installed RPM database as well as files on the filesystem.
 %patch113 -p0 -b .docdir-macros
 
 %patch114 -p0 -b .read-our-macros
+
+%patch115 -p0 -b .noclean
 
 %build
 
