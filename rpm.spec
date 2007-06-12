@@ -218,6 +218,9 @@ Patch114: rpm-read-vendor-macros.patch
 
 Patch115: rpm-4.4.8-dont-clean-buildroot-in-install.patch
 
+# Fix #31287, rpm -V do not use same space count
+Patch116: rpm-qv-use-same-indentation.patch
+
 License:	GPL
 BuildRequires:	autoconf2.5 >= 2.57
 BuildRequires:	doxygen
@@ -491,6 +494,8 @@ the installed RPM database as well as files on the filesystem.
 %patch114 -p0 -b .read-our-macros
 
 %patch115 -p0 -b .noclean
+
+%patch116 -p0 -b .rpmVspace
 
 %build
 
