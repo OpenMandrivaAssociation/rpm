@@ -52,8 +52,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 2
-%define perlmodulerelease   %mkrel 24
+%define release			    %mkrel 2.1
+%define perlmodulerelease   %mkrel 24.1
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -120,9 +120,6 @@ Patch49:	rpm-4.4.3-provides-obsoleted.patch
 
 # Introduce new ppc32 arch. Fix ppc64 bi-arch builds. Fix ppc builds on newer CPUs.
 Patch56:	rpm-4.4.6-ppc32.patch
-
-# Colorize static archives and .so symlinks
-Patch62:	rpm-4.4.3-coloring.patch
 
 # ok for this
 Patch63:	rpm-4.4.6-dont-install-delta-rpms.patch
@@ -427,8 +424,6 @@ the installed RPM database as well as files on the filesystem.
 %patch49 -p0 -b .provides
 
 %patch56 -p0 -b .ppc32
-
-%patch62 -p0 -b .coloring
 
 %patch63 -p0 -b .dont-install-delta-rpms
 
