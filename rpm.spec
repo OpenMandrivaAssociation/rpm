@@ -52,12 +52,14 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 3
-%define perlmodulerelease   %mkrel 25
+%define release			    %mkrel 3.1
+%define perlmodulerelease   %mkrel 25.1
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
+%define libpoptnamedevel  %mklibname -d popt
+%define librpmnamedevel   %mklibname -d rpm
 
 %define buildpython 1
 
@@ -284,16 +286,17 @@ RPM is a powerful command line driven package management system capable of
 installing, uninstalling, verifying, querying, and updating software packages.
 This package contains common files to all applications based on rpm.
 
-%package -n %librpmname-devel
+%package -n %librpmnamedevel
 Summary:	Development files for applications which will manipulate RPM packages
 Group:		Development/C
 Requires:	rpm = %{version}-%{release}
 Requires:	popt-devel = %{poptver}-%{poptrelease}
-Provides:   	librpm-devel = %version-%release
 Provides:   	rpm-devel = %version-%release
 Obsoletes:  	rpm-devel < 4.4.1
+Obsoletes:      %{_lib}rpm4.4-devel
+Obsoletes:      %{_lib}rpm4.2-devel
 
-%description -n %librpmname-devel
+%description -n %librpmnamedevel
 This package contains the RPM C library and header files.  These
 development files will simplify the process of writing programs
 which manipulate RPM packages and databases and are intended to make
@@ -370,17 +373,17 @@ arguments to be aliased via configuration files and includes utility
 functions for parsing arbitrary strings into argv[] arrays using
 shell-like rules.
 
-%package -n %libpoptname-devel
+%package -n %libpoptnamedevel
 Summary:	A C library for parsing command line parameters
 Group:		Development/C
 Version:	%{poptver}
 Release:	%{poptrelease}
 Requires:	popt = %{poptver}-%{poptrelease}
 Provides:   popt-devel = %{poptver}-%{poptrelease}
-Provides:   libpopt-devel = %{poptver}-%{poptrelease}
 Obsoletes:  popt-devel <= 1.8.3
+Obsoletes:  %{_lib}popt0-devel
 
-%description -n %libpoptname-devel
+%description -n %libpoptnamedevel
 Popt is a C library for parsing command line parameters.  Popt was
 heavily influenced by the getopt() and getopt_long() functions, but it
 improves on them by allowing more powerful argument expansion.  Popt
@@ -832,7 +835,7 @@ fi
 %{_libdir}/librpmio-%{libver}.so
 %{_libdir}/librpmbuild-%{libver}.so
 
-%files -n %librpmname-devel
+%files -n %librpmnamedevel
 %defattr(-,root,root)
 #%doc apidocs/html
 %{_includedir}/rpm
@@ -865,7 +868,7 @@ fi
 /%{_lib}/libpopt.so.*
 %{_libdir}/libpopt.so.*
 
-%files -n %libpoptname-devel
+%files -n %libpoptnamedevel
 %defattr(-,root,root)
 %{_libdir}/libpopt.a
 %{_libdir}/libpopt.la
