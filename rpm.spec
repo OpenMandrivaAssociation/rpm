@@ -52,8 +52,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 3.1
-%define perlmodulerelease   %mkrel 25.1
+%define release			    %mkrel 4
+%define perlmodulerelease   %mkrel 26
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -221,11 +221,11 @@ Patch115: rpm-4.4.8-dont-clean-buildroot-in-install.patch
 Patch116: rpm-qv-use-same-indentation.patch
 
 License:	GPL
-BuildRequires:	autoconf2.5 >= 2.57
+BuildRequires:	autoconf >= 2.57
 BuildRequires:	doxygen
 BuildRequires:	zlib-devel
 BuildRequires:  bzip2-devel
-BuildRequires:	automake1.8
+BuildRequires:	automake >= 1.8
 BuildRequires:	elfutils-devel
 BuildRequires:	sed >= 4.0.3
 BuildRequires:	libbeecrypt-devel
