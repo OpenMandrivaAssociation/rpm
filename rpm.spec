@@ -52,8 +52,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 4
-%define perlmodulerelease   %mkrel 26
+%define release			    %mkrel 5
+%define perlmodulerelease   %mkrel 27
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -290,7 +290,8 @@ This package contains common files to all applications based on rpm.
 Summary:	Development files for applications which will manipulate RPM packages
 Group:		Development/C
 Requires:	rpm = %{version}-%{release}
-Requires:	popt-devel = %{poptver}-%{poptrelease}
+Requires:	%libpoptnamedevel = %{poptver}-%{poptrelease}
+Provides:	librpm-devel = %version-%release
 Provides:   	rpm-devel = %version-%release
 Obsoletes:  	rpm-devel < 4.4.1
 Obsoletes:      %{_lib}rpm4.4-devel
@@ -378,8 +379,9 @@ Summary:	A C library for parsing command line parameters
 Group:		Development/C
 Version:	%{poptver}
 Release:	%{poptrelease}
-Requires:	popt = %{poptver}-%{poptrelease}
+Requires:	%libpoptname = %{poptver}-%{poptrelease}
 Provides:   popt-devel = %{poptver}-%{poptrelease}
+Provides:   libpopt-devel = %{poptver}-%{poptrelease}
 Obsoletes:  popt-devel <= 1.8.3
 Obsoletes:  %{_lib}popt0-devel
 
