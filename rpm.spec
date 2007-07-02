@@ -622,8 +622,8 @@ EOF
   rm -f  .%{_bindir}/rpmdiff
 )
 
-%{rpmdir}/%{_host_vendor}/find-lang.sh $RPM_BUILD_ROOT %{name}
-%{rpmdir}/%{_host_vendor}/find-lang.sh $RPM_BUILD_ROOT popt
+%{rpmdir}/%{_host_vendor}/find-lang.pl $RPM_BUILD_ROOT %{name}
+%{rpmdir}/%{_host_vendor}/find-lang.pl $RPM_BUILD_ROOT popt
 
 %check
 
