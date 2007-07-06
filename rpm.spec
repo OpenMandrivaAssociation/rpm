@@ -219,6 +219,9 @@ Patch115: rpm-4.4.8-dont-clean-buildroot-in-install.patch
 # Fix #31287, rpm -V do not use same space count
 Patch116: rpm-qv-use-same-indentation.patch
 
+# if file exists and is not yet in db, rpm don't check and replace it
+Patch117: rpm-dont-replace-config-not-in-db.patch
+
 License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	doxygen
@@ -495,6 +498,8 @@ the installed RPM database as well as files on the filesystem.
 %patch115 -p0 -b .noclean
 
 %patch116 -p0 -b .rpmVspace
+
+%patch117 -p0 -b .rpmnew
 
 %build
 
