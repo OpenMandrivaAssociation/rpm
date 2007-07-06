@@ -51,8 +51,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 5
-%define perlmodulerelease   %mkrel 27
+%define release			    %mkrel 6
+%define perlmodulerelease   %mkrel 28
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -540,6 +540,8 @@ CFLAGS="$RPM_OPT_FLAGS -fPIC" CXXFLAGS="$RPM_OPT_FLAGS -fPIC" \
         --with-glob \
         --without-selinux \
         --with-apidocs 
+
+RPM_OPT_FLAGS=-g
 
 # We should use the zlib provided with rpm:
 # 21:17 < Nanar> why using ../../zlib in file/ instead system library ?
