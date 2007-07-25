@@ -222,6 +222,8 @@ Patch116: rpm-qv-use-same-indentation.patch
 # if file exists and is not yet in db, rpm don't check and replace it
 Patch117: rpm-dont-replace-config-not-in-db.patch
 
+Patch118: rpm-4.4.8-lowercase-os-for-platform.patch
+
 License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	doxygen
@@ -501,6 +503,8 @@ the installed RPM database as well as files on the filesystem.
 %patch116 -p0 -b .rpmVspace
 
 %patch117 -p0 -b .rpmnew
+
+%patch118 -p0 -b .lowercaseos
 
 %build
 
