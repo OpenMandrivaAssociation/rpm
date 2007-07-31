@@ -546,8 +546,6 @@ CFLAGS="$RPM_OPT_FLAGS -fPIC" CXXFLAGS="$RPM_OPT_FLAGS -fPIC" \
         --without-selinux \
         --with-apidocs 
 
-RPM_OPT_FLAGS=-g
-
 # We should use the zlib provided with rpm:
 # 21:17 < Nanar> why using ../../zlib in file/ instead system library ?
 # 21:38 < jbj> Nanar: zlib modified to make *.rpm packages rsync friendly.
