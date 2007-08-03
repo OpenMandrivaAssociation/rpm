@@ -200,6 +200,13 @@ Patch98: rpm-4.4.6-fix-free-on-bad-pointer.patch
 # using rpm -bs t.spec returns: "t.spec: No such file or directory"
 Patch100: rpm-4.4.6-fix-error-message-rpmb-not-installed.patch
 
+# librpm uses bavail ie "free blocks avail to non-superuser"
+# that's ok, it will help keeping some free space, even for root
+# but when bavail == 0, librpm thinks statfs failed, and do not check
+# so setting bavail to 1 when bavail it is 0
+# (no package should fit in one block!)
+Patch107: rpm-4.4.8-do-check-free-size-when-bavail-is-0.patch
+
 Patch108: rpm-4.4.6-use-dgettext-instead-of-gettext-to-allow-use-of-multilibs.patch
 
 Patch109: rpm-build-expand-field-for-single-token.patch
@@ -481,6 +488,8 @@ the installed RPM database as well as files on the filesystem.
 %patch98 -p1 -b .free
 
 %patch100 -p1 -b .rpmb-missing
+
+%patch107 -p1
 
 %patch108 -p1
 
