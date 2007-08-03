@@ -240,6 +240,8 @@ Patch118: rpm-4.4.8-lowercase-os-for-platform.patch
 # nb: this issue is fixed in cvs HEAD
 Patch119: rpm-4.4.8-fix-build-without-O2.patch
 
+Patch120: rpm-4.4.8-fix-segfault-for-old-pkg-with-Postin-but-no-Postinprog.patch
+
 License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	doxygen
@@ -525,6 +527,7 @@ the installed RPM database as well as files on the filesystem.
 %patch118 -p0 -b .lowercaseos
 
 %patch119 -p1
+%patch120 -p1
 
 %build
 
