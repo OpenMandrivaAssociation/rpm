@@ -73,6 +73,9 @@
 %define rpmsetup_version 1.34
 %endif
 
+%define builddebug 0
+%{?_with_debug:%define builddebug 1}
+
 %{?_with_python:%define buildpython 1}
 %{?_without_python:%define buildpython 0}
 
@@ -230,6 +233,12 @@ Patch116: rpm-qv-use-same-indentation.patch
 Patch117: rpm-dont-replace-config-not-in-db.patch
 
 Patch118: rpm-4.4.8-lowercase-os-for-platform.patch
+
+# HAVE_LOCALE_H is used by system.h, ensure it is defined properly
+# (the issue only occurs when compiling without __OPTIMIZE__ (ie -O2)
+#  otherwise libintl.h do include locale.h)
+# nb: this issue is fixed in cvs HEAD
+Patch119: rpm-4.4.8-fix-build-without-O2.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -515,6 +524,8 @@ the installed RPM database as well as files on the filesystem.
 
 %patch118 -p0 -b .lowercaseos
 
+%patch119 -p1
+
 %build
 
 for dir in . popt file zlib db/dist; do
@@ -531,6 +542,9 @@ done
 # configure breaks make install, but this does not matter.
 # --build, we explictly set 'mandriva' as our config subdir and 
 # _host_vendor are 'mandriva'
+%if %builddebug
+RPM_OPT_FLAGS=-g
+%endif
 CFLAGS="$RPM_OPT_FLAGS -fPIC" CXXFLAGS="$RPM_OPT_FLAGS -fPIC" \
     ./configure \
         --build=%{_target_cpu}-%{_host_vendor}-%{_target_os}%{?_gnu} \
@@ -541,6 +555,9 @@ CFLAGS="$RPM_OPT_FLAGS -fPIC" CXXFLAGS="$RPM_OPT_FLAGS -fPIC" \
         --infodir=%{_infodir} \
         --enable-nls \
         --without-javaglue \
+%if %builddebug
+        --enable-debug \
+%endif
 %if %buildnptl
         --enable-posixmutexes \
 %else
