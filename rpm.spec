@@ -51,8 +51,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 7
-%define perlmodulerelease   %mkrel 29
+%define release			    %mkrel 8
+%define perlmodulerelease   %mkrel 30
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -62,11 +62,7 @@
 
 %define buildpython 1
 
-%ifarch ppc x86_64 amd64 ppc64 athlon pentium3 pentium4
-%define buildnptl 1
-%else
 %define buildnptl 0
-%endif
 
 %if %{mdkversion} >= 200710
 # MDV 2007.1 builds with --hash-style=gnu by default
