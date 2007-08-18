@@ -51,8 +51,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 8
-%define perlmodulerelease   %mkrel 30
+%define release			    %mkrel 9
+%define perlmodulerelease   %mkrel 31
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -888,13 +888,6 @@ fi
 %{_libdir}/librpmbuild.la
 %{_libdir}/librpmbuild.so
 %{_datadir}/man/man3/RPM*
-%rpmattr	%{rpmdir}/rpmdb_deadlock
-%rpmattr	%{rpmdir}/rpmdb_dump
-%rpmattr	%{rpmdir}/rpmdb_load
-%rpmattr	%{rpmdir}/rpmdb_loadcvt
-%rpmattr	%{rpmdir}/rpmdb_svc
-%rpmattr	%{rpmdir}/rpmdb_stat
-%rpmattr	%{rpmdir}/rpmdb_verify
 
 %files -n popt-data -f popt.lang
 %defattr(-,root,root)
