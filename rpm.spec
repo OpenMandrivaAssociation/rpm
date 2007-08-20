@@ -777,13 +777,13 @@ fi
 %attr(   -, rpm, rpm) %{rpmdir}/noarch*
 
 %{_prefix}/src/rpm/RPMS/*
-%{_datadir}/man/man[18]/*.[18]*
-%lang(pl) %{_datadir}/man/pl/man[18]/*.[18]*
-%lang(ru) %{_datadir}/man/ru/man[18]/*.[18]*
-%lang(ja) %{_datadir}/man/ja/man[18]/*.[18]*
-%lang(sk) %{_datadir}/man/sk/man[18]/*.[18]*
-%lang(fr) %{_datadir}/man/fr/man[18]/*.[18]*
-%lang(ko) %{_datadir}/man/ko/man[18]/*.[18]*
+%{_mandir}/man[18]/*.[18]*
+%lang(pl) %{_mandir}/pl/man[18]/*.[18]*
+%lang(ru) %{_mandir}/ru/man[18]/*.[18]*
+%lang(ja) %{_mandir}/ja/man[18]/*.[18]*
+%lang(sk) %{_mandir}/sk/man[18]/*.[18]*
+%lang(fr) %{_mandir}/fr/man[18]/*.[18]*
+%lang(ko) %{_mandir}/ko/man[18]/*.[18]*
 
 %config(noreplace,missingok)	/etc/cron.daily/rpm
 %config(noreplace,missingok)	/etc/logrotate.d/rpm
@@ -887,7 +887,7 @@ fi
 %{_libdir}/librpmbuild.a
 %{_libdir}/librpmbuild.la
 %{_libdir}/librpmbuild.so
-%{_datadir}/man/man3/RPM*
+%{_mandir}/man3/RPM*
 
 %files -n popt-data -f popt.lang
 %defattr(-,root,root)
@@ -903,7 +903,7 @@ fi
 %{_libdir}/libpopt.la
 %{_libdir}/libpopt.so
 %{_includedir}/popt.h
-%{_datadir}/man/man3/popt.3*
+%{_mandir}/man3/popt.3*
 
 %files -n perl-%perlmodule
 %defattr(-,root,root)
