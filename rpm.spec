@@ -16,7 +16,7 @@
 %define _datadir /usr/share
 %define _defaultdocdir %_datadir/doc
 %define _localstatedir /var
-%define _mandir %_datadir/man
+%define _mandir %_mandir
 %define _infodir %_datadir/info
 
 %define _host_vendor mandriva
