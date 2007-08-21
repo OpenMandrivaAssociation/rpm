@@ -16,7 +16,6 @@
 %define _datadir /usr/share
 %define _defaultdocdir %_datadir/doc
 %define _localstatedir /var
-%define _mandir %_mandir
 %define _infodir %_datadir/info
 
 %define _host_vendor mandriva
@@ -51,8 +50,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 9
-%define perlmodulerelease   %mkrel 31
+%define release			    %mkrel 10
+%define perlmodulerelease   %mkrel 32
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -237,6 +236,16 @@ Patch118: rpm-4.4.8-lowercase-os-for-platform.patch
 Patch119: rpm-4.4.8-fix-build-without-O2.patch
 
 Patch120: rpm-4.4.8-fix-segfault-for-old-pkg-with-Postin-but-no-Postinprog.patch
+
+# important patch fixing parse_hdlist (and so genhdlist2) on heavy loaded boxes
+# (without this patch it timeouts after a read miss of 1 second (even a pipe),
+# and there is no way we can retry since we would need to backtrack the fd)
+Patch121: rpm-4.4.8-raise-read-timeout-to-60secs.patch
+
+# this handles buggy rpm ftp://ftp.free.fr/mirrors/plf.zarb.org/mandriva/2007.1/free/release/binary/x86_64/lib64spectrum2-0.2.2-4plf.x86_64.rpm
+# which has only 7 DIRNAMES/BASENAMES entries, but more FILELINKTOS entries
+# a better fix may be to cleanup the mess when reading the header?
+Patch122: rpm-4.4.8-do-not-crash-when-FILELINKTOS-has-more-entries-than-DIRNAMES.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -524,6 +533,8 @@ the installed RPM database as well as files on the filesystem.
 
 %patch119 -p1
 %patch120 -p1
+%patch121 -p1 -b .timeout
+%patch122 -p1
 
 %build
 
