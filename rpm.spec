@@ -243,7 +243,7 @@ Patch120: rpm-4.4.8-fix-segfault-for-old-pkg-with-Postin-but-no-Postinprog.patch
 Patch121: rpm-4.4.8-raise-read-timeout-to-60secs.patch
 
 # this handles buggy rpm ftp://ftp.free.fr/mirrors/plf.zarb.org/mandriva/2007.1/free/release/binary/x86_64/lib64spectrum2-0.2.2-4plf.x86_64.rpm
-# which has only 7 DIRNAMES/BASENAMES entries, but more FILELINKTOS entries
+# which has only 7 DIRNAMES/BASENAMES entries, but more FILELINKTOS entries (#32102)
 # a better fix may be to cleanup the mess when reading the header?
 Patch122: rpm-4.4.8-do-not-crash-when-FILELINKTOS-has-more-entries-than-DIRNAMES.patch
 
