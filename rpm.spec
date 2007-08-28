@@ -247,6 +247,9 @@ Patch121: rpm-4.4.8-raise-read-timeout-to-60secs.patch
 # a better fix may be to cleanup the mess when reading the header?
 Patch122: rpm-4.4.8-do-not-crash-when-FILELINKTOS-has-more-entries-than-DIRNAMES.patch
 
+# from rpm.org 4.4.2.2: make find-lang --with-gnome picks up omf files (rhbz#251400)
+Patch123: rpm-4.4.8-find-lang-omf-files.patch
+
 License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	doxygen
@@ -535,6 +538,8 @@ the installed RPM database as well as files on the filesystem.
 %patch120 -p1
 %patch121 -p1 -b .timeout
 %patch122 -p1
+
+%patch123 -p1
 
 %build
 
