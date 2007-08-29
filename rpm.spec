@@ -50,8 +50,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 10
-%define perlmodulerelease   %mkrel 32
+%define release			    %mkrel 11
+%define perlmodulerelease   %mkrel 33
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -249,6 +249,13 @@ Patch122: rpm-4.4.8-do-not-crash-when-FILELINKTOS-has-more-entries-than-DIRNAMES
 
 # from rpm.org 4.4.2.2: make find-lang --with-gnome picks up omf files (rhbz#251400)
 Patch123: rpm-4.4.8-find-lang-omf-files.patch
+
+# [pixel] without this patch, "rpm -e" or "rpm -U" will need to stat(2) every dirnames of
+# files from the package (eg COPYING) in the db. This is quite costly when not in cache 
+# (eg on a test here: >300 stats, and so 3 seconds after a "echo 3 > /proc/sys/vm/drop_caches")
+# this breaks urpmi test case test_rpm_i_fail('gd') in superuser--file-conflicts.t,
+# but this is bad design anyway
+Patch124: rpm-4.4.8-speedup-by-not-checking-same-files-with-different-paths-through-symlink.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -540,6 +547,7 @@ the installed RPM database as well as files on the filesystem.
 %patch122 -p1
 
 %patch123 -p1
+%patch124 -p1
 
 %build
 
