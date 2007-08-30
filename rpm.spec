@@ -50,8 +50,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 11
-%define perlmodulerelease   %mkrel 33
+%define release			    %mkrel 12
+%define perlmodulerelease   %mkrel 34
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -256,6 +256,9 @@ Patch123: rpm-4.4.8-find-lang-omf-files.patch
 # this breaks urpmi test case test_rpm_i_fail('gd') in superuser--file-conflicts.t,
 # but this is bad design anyway
 Patch124: rpm-4.4.8-speedup-by-not-checking-same-files-with-different-paths-through-symlink.patch
+
+# patch from popt cvs (removes N_ from popt.h) (fixes #31397)
+Patch125: popt-fix-N_.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -548,6 +551,10 @@ the installed RPM database as well as files on the filesystem.
 
 %patch123 -p1
 %patch124 -p1
+
+cd popt
+%patch125 -p0 -b .N_
+cd ..
 
 %build
 
