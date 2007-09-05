@@ -50,8 +50,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 12
-%define perlmodulerelease   %mkrel 34
+%define release			    %mkrel 13
+%define perlmodulerelease   %mkrel 35
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -259,6 +259,10 @@ Patch124: rpm-4.4.8-speedup-by-not-checking-same-files-with-different-paths-thro
 
 # patch from popt cvs (removes N_ from popt.h) (fixes #31397)
 Patch125: popt-fix-N_.patch
+
+# allow to use "linux32 rpm -bb" instead of "linux32 rpm -bb --target x86_64"
+# for this to work, %{_host_cpu32} must be set
+Patch126: rpm-4.4.8-use_host_cpu32-when-linux32.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -555,6 +559,8 @@ the installed RPM database as well as files on the filesystem.
 cd popt
 %patch125 -p0 -b .N_
 cd ..
+
+%patch126 -p1 -b .linux32
 
 %build
 
