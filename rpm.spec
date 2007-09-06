@@ -50,8 +50,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 13
-%define perlmodulerelease   %mkrel 35
+%define release			    %mkrel 15
+%define perlmodulerelease   %mkrel 37
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -261,8 +261,7 @@ Patch124: rpm-4.4.8-speedup-by-not-checking-same-files-with-different-paths-thro
 Patch125: popt-fix-N_.patch
 
 # allow to use "linux32 rpm -bb" instead of "linux32 rpm -bb --target x86_64"
-# for this to work, %{_host_cpu32} must be set
-Patch126: rpm-4.4.8-use_host_cpu32-when-linux32.patch
+Patch126: rpm-4.4.8-use-etc-platform32-when-linux32.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
