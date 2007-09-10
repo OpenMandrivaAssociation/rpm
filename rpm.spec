@@ -50,8 +50,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 16
-%define perlmodulerelease   %mkrel 38
+%define release			    %mkrel 17
+%define perlmodulerelease   %mkrel 39
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -262,6 +262,10 @@ Patch125: popt-fix-N_.patch
 
 # allow to use "linux32 rpm -bb" instead of "linux32 rpm -bb --target x86_64"
 Patch126: rpm-4.4.8-use-etc-platform32-when-linux32.patch
+
+# make "rpm -bb --quiet" quiet as should be 
+# (without this patch, the option is simply ignored in rpmcliAllPoptTable)
+Patch127: rpm-4.4.8-handle-rpmbuild--quiet.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -560,6 +564,8 @@ cd popt
 cd ..
 
 %patch126 -p1 -b .linux32
+
+%patch127 -p1 -b .quiet
 
 %build
 
