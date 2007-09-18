@@ -267,6 +267,9 @@ Patch126: rpm-4.4.8-use-etc-platform32-when-linux32.patch
 # (without this patch, the option is simply ignored in rpmcliAllPoptTable)
 Patch127: rpm-4.4.8-handle-rpmbuild--quiet.patch
 
+# fix rpm -K segfaulting on corrupted header (#33735)
+Patch128: rpm-4.4.8-fix-rpm-K-segfault-on-corrupted-header.patch
+
 License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	doxygen
@@ -566,6 +569,8 @@ cd ..
 %patch126 -p1 -b .linux32
 
 %patch127 -p1 -b .quiet
+
+%patch128 -p1
 
 %build
 
