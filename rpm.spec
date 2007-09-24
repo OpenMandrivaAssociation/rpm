@@ -50,8 +50,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 17
-%define perlmodulerelease   %mkrel 39
+%define release			    %mkrel 18
+%define perlmodulerelease   %mkrel 40
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -96,6 +96,9 @@ Patch2:		rpm-4.4.6-no-static.patch
 
 # (gb) force generation of PIC code for static libs that can be built into a DSO (zlib, file)
 Patch3:		rpm-4.4.6-pic.patch
+
+# (pixel) resurrected patch. useful when used together with "private" in macros.cdb
+Patch13:	rpm-4.4.8-global-RPMLOCK.patch
 
 # if %post of foo-2 fails,
 # or if %preun of foo-1 fails,
@@ -469,6 +472,8 @@ the installed RPM database as well as files on the filesystem.
 
 %patch3 -p1 -b .pic
 
+%patch13 -p1 -b .lock
+
 %patch17 -p0 -b .improved
 
 %patch22 -p1 -b .fail
@@ -659,7 +664,7 @@ install -m 644 scripts/rpm.log ${RPM_BUILD_ROOT}/etc/logrotate.d/rpm
 mkdir -p $RPM_BUILD_ROOT/etc/rpm/
 cat << E_O_F > $RPM_BUILD_ROOT/etc/rpm/macros.cdb
 %%__dbi_cdb      %%{nil}
-%%__dbi_other    %%{?_tmppath:tmpdir=%%{_tmppath}} usedbenv create \
+%%__dbi_other    %%{?_tmppath:tmpdir=%%{_tmppath}} private create \
                  mpool mp_mmapsize=8Mb mp_size=512kb verify
 E_O_F
 
