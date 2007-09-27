@@ -50,8 +50,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 19
-%define perlmodulerelease   %mkrel 41
+%define release			    %mkrel 20
+%define perlmodulerelease   %mkrel 42
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
