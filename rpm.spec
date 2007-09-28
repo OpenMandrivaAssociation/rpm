@@ -50,8 +50,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 20
-%define perlmodulerelease   %mkrel 42
+%define release			    %mkrel 21
+%define perlmodulerelease   %mkrel 43
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -472,7 +472,7 @@ the installed RPM database as well as files on the filesystem.
 
 %patch3 -p1 -b .pic
 
-%patch13 -p1 -b .lock
+#%patch13 -p1 -b .lock
 
 %patch17 -p0 -b .improved
 
@@ -664,7 +664,7 @@ install -m 644 scripts/rpm.log ${RPM_BUILD_ROOT}/etc/logrotate.d/rpm
 mkdir -p $RPM_BUILD_ROOT/etc/rpm/
 cat << E_O_F > $RPM_BUILD_ROOT/etc/rpm/macros.cdb
 %%__dbi_cdb      %%{nil}
-%%__dbi_other    %%{?_tmppath:tmpdir=%%{_tmppath}} private create \
+%%__dbi_other    %%{?_tmppath:tmpdir=%%{_tmppath}} usedbenv create \
                  mpool mp_mmapsize=8Mb mp_size=512kb verify
 E_O_F
 
