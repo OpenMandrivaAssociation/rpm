@@ -50,8 +50,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 21
-%define perlmodulerelease   %mkrel 43
+%define release			    %mkrel 22
+%define perlmodulerelease   %mkrel 44
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -272,6 +272,12 @@ Patch127: rpm-4.4.8-handle-rpmbuild--quiet.patch
 
 # fix rpm -K segfaulting on corrupted header (#33735)
 Patch128: rpm-4.4.8-fix-rpm-K-segfault-on-corrupted-header.patch
+
+# if "a" suggests "b", rpm rightfully allows to remove "b"
+# but rpm must not put in cache that "b" can be removed,
+# because if "c" requires "b", rpm must not allow to remove "b"
+# (#34342)
+Patch129: rpm-4.4.8-do-not-cache-unsatisfied-suggest.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -576,6 +582,7 @@ cd ..
 %patch127 -p1 -b .quiet
 
 %patch128 -p1
+%patch129 -p1
 
 %build
 
