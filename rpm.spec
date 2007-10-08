@@ -699,7 +699,7 @@ cat > %buildroot%_sysconfdir/rpm/macros <<EOF
 # usually contains 
 
 # Set this one according your locales
-# %_install_langs
+# %%_install_langs
 
 EOF
 
