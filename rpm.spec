@@ -696,7 +696,7 @@ mkdir -p $RPM_BUILD_ROOT/var/spool/repackage
 mkdir -p %buildroot%_sysconfdir/rpm/macros.d
 cat > %buildroot%_sysconfdir/rpm/macros <<EOF
 # Put your own system macros here
-# useally contains 
+# usually contains 
 
 # Set this one according your locales
 # %_install_langs
