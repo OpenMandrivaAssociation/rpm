@@ -290,7 +290,7 @@ BuildRequires:	sed >= 4.0.3
 BuildRequires:	libbeecrypt-devel
 BuildRequires:	ed, gettext-devel
 BuildRequires:  libsqlite3-devel
-BuildRequires:  neon-devel >= 0.26
+BuildRequires:  neon0.26-devel
 BuildRequires:  rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 BuildRequires:  readline-devel
 BuildRequires:	ncurses-devel
