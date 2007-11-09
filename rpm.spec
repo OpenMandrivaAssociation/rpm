@@ -967,7 +967,6 @@ fi
 %files -n perl-%perlmodule
 %defattr(-,root,root)
 %doc perl/Changes
-%{_mandir}/man3/popt.3*
 %{perl_vendorarch}/%{perlmodule}.pm
 %{perl_vendorarch}/auto/%{perlmodule}
 
