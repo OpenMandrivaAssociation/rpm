@@ -280,7 +280,7 @@ Patch128: rpm-4.4.8-fix-rpm-K-segfault-on-corrupted-header.patch
 Patch129: rpm-4.4.8-do-not-cache-unsatisfied-suggest.patch
 
 #(peroyvind): Fix usage of more recent lzma utils
-Patch130:	rpm-4.4.8-fix-obsolete-lzma-arguments.patch
+Patch130:	rpm-4.5-lzma-fixes.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -587,7 +587,7 @@ cd ..
 %patch128 -p1
 %patch129 -p1
 
-%patch130 -p1 -b .lzmafix
+%patch130 -p0 -b .lzmafix
 
 %build
 
