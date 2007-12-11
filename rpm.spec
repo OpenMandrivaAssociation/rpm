@@ -149,9 +149,6 @@ Patch72:    rpm-4.4.1-fileconflicts.patch
 # Allow to set %_srcdefattr for src.rpm
 Patch77:    rpm-source-defattr.patch
 
-# Do not use futex, but fcntl
-Patch78:    rpm-4.4.6-fcntl.patch
-
 Patch82:    rpm-4.4.3-ordering.patch
 
 # don't conflict for doc files from colored packages
@@ -510,11 +507,6 @@ the installed RPM database as well as files on the filesystem.
 %patch72 -p0  -b .fileconflicts
 
 %patch77 -p0  -b .srcdefattr
-
-%if %buildnptl
-%else
-%patch78 -p0  -b .fcntl
-%endif
 
 %patch82 -p0 -b .ordering
 
