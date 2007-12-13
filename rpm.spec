@@ -279,6 +279,9 @@ Patch129: rpm-4.4.8-do-not-cache-unsatisfied-suggest.patch
 #(peroyvind): Fix usage of more recent lzma utils
 Patch130:	rpm-4.5-lzma-fixes.patch
 
+#(peroyvind: Use LZMA_Alone file format, even with newer versions
+Patch131:	rpm-4.5-lzma_alone.patch
+
 License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	doxygen
@@ -580,6 +583,7 @@ cd ..
 %patch129 -p1
 
 %patch130 -p0 -b .lzmafix
+%patch131 -p0 -b .lzma_alone
 
 %build
 
