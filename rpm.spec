@@ -44,12 +44,12 @@
 %define __find_requires %{rpmdir}/mandriva/find-requires %{?buildroot:%{buildroot}} %{?_target_cpu:%{_target_cpu}}
 %define __find_provides %{rpmdir}/mandriva/find-provides
 
-%define rpmversion	4.4.8
+%define rpmversion	4.4.2.2
 %define poptver		1.10.8
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 22
+%define release			    %mkrel 1
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -77,23 +77,18 @@
 
 Summary:	The RPM package management system
 Name:		rpm
+Epoch:		1
 Version:	%{rpmversion}
 Release:	%{release}
 Group:		System/Configuration/Packaging
 
-Source:		ftp://ftp.jbj.org/pub/rpm-%{libver}.x/rpm-%{srcver}.tar.bz2
+Source:		http://www.rpm.org/releases/rpm-%{libver}.x/rpm-%{srcver}.tar.gz
 
 # Add some undocumented feature to gendiff
-Patch17:	rpm-4.2-gendiff-improved.patch
+Patch17:	rpm-4.4.2.2-gendiff-improved.patch
 
-# (gb) fix built-in zlib dependencies
-Patch1:		rpm-4.4.6-deps.patch
-
-# (gb) use shared libraries
-Patch2:		rpm-4.4.6-no-static.patch
-
-# (gb) force generation of PIC code for static libs that can be built into a DSO (zlib, file)
-Patch3:		rpm-4.4.6-pic.patch
+# (gb) force generation of PIC code for static libs that can be built into a DSO (file)
+Patch3:		rpm-4.4.2.2-pic.patch
 
 # (pixel) resurrected patch. useful when used together with "private" in macros.cdb
 Patch13:	rpm-4.4.8-global-RPMLOCK.patch
@@ -110,26 +105,20 @@ Patch13:	rpm-4.4.8-global-RPMLOCK.patch
 Patch22:        rpm-4.4.6-non-pre-scripts-dont-fail.patch
 
 # (fredl) add loging facilities through syslog
-Patch31:	rpm-4.4.3-syslog.patch
+Patch31:	rpm-4.4.2.2-syslog.patch
 
 # Check amd64 vs x86_64, these arch are the same
 Patch44:	rpm-4.4.1-amd64.patch
 
-# Backport from 4.2.1 provides becoming obsoletes bug (fpons)
-Patch49:	rpm-4.4.3-provides-obsoleted.patch
+# part of Backport from 4.2.1 provides becoming obsoletes bug (fpons)
+# (is it still needed?)
+Patch49:	rpm-4.4.2.2-provides-obsoleted.patch
 
 # Introduce new ppc32 arch. Fix ppc64 bi-arch builds. Fix ppc builds on newer CPUs.
-Patch56:	rpm-4.4.6-ppc32.patch
-
-# ok for this
-Patch63:	rpm-4.4.6-dont-install-delta-rpms.patch
+Patch56:	rpm-4.4.2.2-ppc32.patch
 
 # This patch ask to read /usr/lib/rpm/vendor/rpmpopt too
-Patch64:    rpm-4.4.1-morepopt.patch
-
-# Being able to read old rpm (build with rpm v3)
-# See https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=127113#c12
-Patch68:    rpm-4.4.1-region_trailer.patch
+Patch64:    rpm-4.4.2.2-vendor-rpmpopt.patch
 
 # In original rpm, -bb --short-circuit does not work and run all stage
 # From popular request, we allow to do this
@@ -140,27 +129,19 @@ Patch70:	rpm-4.4.1-bb-shortcircuit.patch
 # http://www.redhat.com/archives/rpm-list/2005-April/msg00132.html
 Patch71:    rpm-4.4.4-ordererase.patch
 
-# File conflicts when rpm -i
-# https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=151609
-Patch72:    rpm-4.4.1-fileconflicts.patch
-
-# Allow to set %_srcdefattr for src.rpm
-Patch77:    rpm-source-defattr.patch
-
-Patch82:    rpm-4.4.3-ordering.patch
+# [Aug 2005] should fix ordering issue:
+Patch82:    rpm-4.4.2.2-ordering.patch
 
 # don't conflict for doc files from colored packages
 # (to be able to install lib*-devel together with lib64*-devel even if they have conflicting manpages)
 Patch83: rpm-4.2.3-no-doc-conflicts.patch
 
 # Fix http://qa.mandriva.com/show_bug.cgi?id=19392
-Patch84: rpm-4.4.4-rpmqv-ghost.patch
+# (is this working??)
+Patch84: rpm-4.4.2.2-rpmqv-ghost.patch
 
-# Use temporary table for Depends DB (Olivier Thauvin upstream)
-Patch86: rpm-4.4.6-depsdb.patch
-
-# Currently we prefer to disable dependencies over parents directory
-Patch87: rpm-4.4.6-no-dirnames-dep.patch
+# (sqlite) Use temporary table for Depends DB (Olivier Thauvin upstream)
+Patch86: rpm-4.4.2.2-depsdb.patch
 
 # rpm 4.4.6 killed SOURCEPACKAGE, but this was announce lately, and will
 # break all older tools that was using it (mdv 2006, 2005) which need this
@@ -168,23 +149,9 @@ Patch87: rpm-4.4.6-no-dirnames-dep.patch
 # This patch readd the tag into src.rpm
 Patch88: rpm-4.4.6-SOURCEPACKAGE.patch
 
-# make rpmdb cpp compliant (sptutle)
-# reported upstream, I hope to see this include
-Patch89: rpm-4.4.6-rpmdb.h-cpp-fix.patch
-
 # avoids taking into account duplicates in file list when checking
 # for unpackaged files
 Patch91: rpm-4.4.6-check-dupl-files.patch
-
-# with tar >= 1.15.91, one needs the --wildcard option to list *.spec
-# files (for rpm -ta)
-Patch92: rpm-4.4.6-newtar.patch
-
-# This patch adds again a workaround to allow rpm to read/install
-# rpm v3 - Internal format is likely the same into rpm v4, data is
-# just organised in another way
-
-Patch94: rpm-4.4.6-rpmv3-support.patch
 
 # fix free on invalid pointer after displaying "Unable to open temp file"
 Patch98: rpm-4.4.6-fix-free-on-bad-pointer.patch
@@ -193,70 +160,42 @@ Patch98: rpm-4.4.6-fix-free-on-bad-pointer.patch
 # using rpm -bs t.spec returns: "t.spec: No such file or directory"
 Patch100: rpm-4.4.6-fix-error-message-rpmb-not-installed.patch
 
-# librpm uses bavail ie "free blocks avail to non-superuser"
-# that's ok, it will help keeping some free space, even for root
-# but when bavail == 0, librpm thinks statfs failed, and do not check
-# so setting bavail to 1 when bavail it is 0
-# (no package should fit in one block!)
-Patch107: rpm-4.4.8-do-check-free-size-when-bavail-is-0.patch
-
 Patch108: rpm-4.4.6-use-dgettext-instead-of-gettext-to-allow-use-of-multilibs.patch
 
 Patch109: rpm-build-expand-field-for-single-token.patch
 
+# Fix diff issue when buildroot contains some "//"
 Patch111: rpm-check-file-trim-double-slash-in-buildroot.patch
 
-Patch112: rpm-dont-use-rpmio-to-read-file-for-script.patch
+# Fix strange issue making %pre/post/... -f not working
+# (only needed on 4.4.8?)
+Patch112: rpm-4.4.2.2-dont-use-rpmio-to-read-file-for-script.patch
 
-# Patch from cvs
-# using _docdir_fmt for doc directory
-Patch113: rpm-4.4.8-macro_doc_fmt.patch
-
-Patch114: rpm-read-vendor-macros.patch
-
-Patch115: rpm-4.4.8-dont-clean-buildroot-in-install.patch
+Patch114: rpm-4.4.2.2-read-vendor-macros.patch
 
 # Fix #31287, rpm -V do not use same space count
-Patch116: rpm-qv-use-same-indentation.patch
-
-# if file exists and is not yet in db, rpm don't check and replace it
-Patch117: rpm-dont-replace-config-not-in-db.patch
-
-Patch118: rpm-4.4.8-lowercase-os-for-platform.patch
+Patch116: rpm-4.4.2.2-qv-use-same-indentation.patch
 
 # HAVE_LOCALE_H is used by system.h, ensure it is defined properly
 # (the issue only occurs when compiling without __OPTIMIZE__ (ie -O2)
 #  otherwise libintl.h do include locale.h)
 # nb: this issue is fixed in cvs HEAD
-Patch119: rpm-4.4.8-fix-build-without-O2.patch
-
-Patch120: rpm-4.4.8-fix-segfault-for-old-pkg-with-Postin-but-no-Postinprog.patch
+Patch119: rpm-4.4.2.2-fix-build-without-O2.patch
 
 # important patch fixing parse_hdlist (and so genhdlist2) on heavy loaded boxes
 # (without this patch it timeouts after a read miss of 1 second (even a pipe),
 # and there is no way we can retry since we would need to backtrack the fd)
 Patch121: rpm-4.4.8-raise-read-timeout-to-60secs.patch
 
-# this handles buggy rpm ftp://ftp.free.fr/mirrors/plf.zarb.org/mandriva/2007.1/free/release/binary/x86_64/lib64spectrum2-0.2.2-4plf.x86_64.rpm
-# which has only 7 DIRNAMES/BASENAMES entries, but more FILELINKTOS entries (#32102)
-# a better fix may be to cleanup the mess when reading the header?
-Patch122: rpm-4.4.8-do-not-crash-when-FILELINKTOS-has-more-entries-than-DIRNAMES.patch
-
-# from rpm.org 4.4.2.2: make find-lang --with-gnome picks up omf files (rhbz#251400)
-Patch123: rpm-4.4.8-find-lang-omf-files.patch
+# remove unused skipDir functionality that conflicts with patch124 below
+Patch1124: rpm-4.4.2.2-revert-unused-skipDir-functionality.patch
 
 # [pixel] without this patch, "rpm -e" or "rpm -U" will need to stat(2) every dirnames of
 # files from the package (eg COPYING) in the db. This is quite costly when not in cache 
 # (eg on a test here: >300 stats, and so 3 seconds after a "echo 3 > /proc/sys/vm/drop_caches")
 # this breaks urpmi test case test_rpm_i_fail('gd') in superuser--file-conflicts.t,
 # but this is bad design anyway
-Patch124: rpm-4.4.8-speedup-by-not-checking-same-files-with-different-paths-through-symlink.patch
-
-# patch from popt cvs (removes N_ from popt.h) (fixes #31397)
-Patch125: popt-fix-N_.patch
-
-# allow to use "linux32 rpm -bb" instead of "linux32 rpm -bb --target x86_64"
-Patch126: rpm-4.4.8-use-etc-platform32-when-linux32.patch
+Patch124: rpm-4.4.2.2-speedup-by-not-checking-same-files-with-different-paths-through-symlink.patch
 
 # make "rpm -bb --quiet" quiet as should be 
 # (without this patch, the option is simply ignored in rpmcliAllPoptTable)
@@ -265,17 +204,19 @@ Patch127: rpm-4.4.8-handle-rpmbuild--quiet.patch
 # fix rpm -K segfaulting on corrupted header (#33735)
 Patch128: rpm-4.4.8-fix-rpm-K-segfault-on-corrupted-header.patch
 
-# if "a" suggests "b", rpm rightfully allows to remove "b"
-# but rpm must not put in cache that "b" can be removed,
-# because if "c" requires "b", rpm must not allow to remove "b"
-# (#34342)
-Patch129: rpm-4.4.8-do-not-cache-unsatisfied-suggest.patch
+# [from SuSE] patch1004 needed by patch1005
+Patch132: rpm-4.4.2.2-extcond.patch
+# [from SuSE] handle "Suggests" via RPMTAG_SUGGESTSNAME
+Patch133: rpm-4.4.2.2-weakdeps.patch
 
-#(peroyvind): Fix usage of more recent lzma utils
-Patch130:	rpm-4.5-lzma-fixes.patch
+# be compatible with >= 4.4.8 :
+Patch1000: rpm-4.4.2.2-handle-buildroot-macro.patch
+Patch1001: rpm-4.4.2.2-lzma-support.patch
+Patch1002: rpm-4.4.2.2-default-topdir--usr-src-rpm.patch
 
-#(peroyvind: Use LZMA_Alone file format, even with newer versions
-Patch131:	rpm-4.5-lzma_alone.patch
+# keep compatibility with "suggests" the way rpm >= 4.4.7 do it
+# (backport from 4.4.7 + mandriva fix)
+Patch1003: rpm-4.4.2.2-handle-suggests--ignore-requires-hint.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -313,7 +254,7 @@ Requires:	popt = %{poptver}-%{poptrelease}
 Requires:	setup >= 2.2.0-8mdk
 Requires:	rpm-mandriva-setup >= 1.42
 Requires:	update-alternatives
-Requires:	%librpmname = %version-%release
+Requires:	%librpmname = %epoch:%version-%release
 Conflicts:	patch < 2.5
 Conflicts:	menu < 2.1.5-29mdk
 Conflicts:	locales < 2.3.1.1
@@ -345,8 +286,8 @@ This package contains common files to all applications based on rpm.
 %package -n %librpmnamedevel
 Summary:	Development files for applications which will manipulate RPM packages
 Group:		Development/C
-Requires:	rpm = %{version}-%{release}
-Requires:	%libpoptnamedevel = %{poptver}-%{poptrelease}
+Requires:	rpm = %epoch:%{version}-%{release}
+Requires:	%libpoptnamedevel = %epoch:%{poptver}-%{poptrelease}
 Provides:	librpm-devel = %version-%release
 Provides:   	rpm-devel = %version-%release
 Obsoletes:  	rpm-devel < 4.4.1
@@ -376,7 +317,7 @@ Requires:	patch
 Requires:	make
 Requires:	unzip
 Requires:	elfutils
-Requires:	rpm = %{version}-%{release}
+Requires:	rpm = %epoch:%{version}-%{release}
 Requires:	rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 
 %description build
@@ -388,8 +329,8 @@ build packages using RPM.
 Summary:	Python bindings for apps which will manipulate RPM packages
 Group:		Development/Python
 Requires:	python >= %{pyver}
-Requires:	rpm = %{version}-%{release}
-Obsoletes:  rpm-python < %version-%release
+Requires:	rpm = %epoch:%{version}-%{release}
+Obsoletes:  rpm-python < %epoch:%version-%release
 Provides:   rpm-python = %version-%release
 
 %description -n python-rpm
@@ -435,7 +376,7 @@ Summary:	A C library for parsing command line parameters
 Group:		Development/C
 Version:	%{poptver}
 Release:	%{poptrelease}
-Requires:	%libpoptname = %{poptver}-%{poptrelease}
+Requires:	%libpoptname = %epoch:%{poptver}-%{poptrelease}
 Provides:   popt-devel = %{poptver}-%{poptrelease}
 Provides:   libpopt-devel = %{poptver}-%{poptrelease}
 Obsoletes:  popt-devel <= 1.8.3
@@ -457,122 +398,82 @@ capabilities.
 %prep
 %setup -q -n %name-%srcver
 
-%patch1 -p1 -b .deps
-
-%patch2 -p1 -b .no-static
-
 %patch3 -p1 -b .pic
 
 #%patch13 -p1 -b .lock
 
-%patch17 -p0 -b .improved
+%patch17 -p1 -b .improved
 
 %patch22 -p1 -b .fail
 
-%patch31 -p0 -b .syslog
+%patch31 -p1 -b .syslog
 
 %patch44 -p1 -b .amd64
 
-%patch49 -p0 -b .provides
+%patch49 -p1 -b .provides
 
-%patch56 -p0 -b .ppc32
+%patch56 -p1 -b .ppc32
 
-%patch63 -p0 -b .dont-install-delta-rpms
-
-%patch64 -p0 -b .morepopt
-
-%patch68 -p0 -b .region_trailer
+%patch64 -p1 -b .morepopt
 
 %patch70 -p0 -b .shortcircuit
 
 %patch71 -p0  -b .ordererase
 
-%patch72 -p0  -b .fileconflicts
-
-%patch77 -p0  -b .srcdefattr
-
-%patch82 -p0 -b .ordering
+%patch82 -p1 -b .ordering
 
 %patch83 -p1 -b .no-doc-conflicts
 
-%patch84 -p0 -b .poptQVghost
+%patch84 -p1 -b .poptQVghost
 
-%patch86 -p0 -b .depsdb
-
-%patch87 -p0 -b .no-dirname-dep
+%patch86 -p1 -b .depsdb
 
 %patch88 -p0 -b .sourcepackage
 
-%patch89 -p0 -b .cpp-compliant
-
 %patch91 -p0 -b .check-dupl-files
-
-%patch92 -p0 -b .newtar
-
-%patch94 -p1 -b .rpmv3-support
 
 %patch98 -p1 -b .free
 
 %patch100 -p1 -b .rpmb-missing
 
-%patch107 -p1
-
 %patch108 -p1
-
-# rpm now check there is only one token per field
-# too bad, the check is performed before macro expansion...
-%patch109 -p0 -b .singletoken
 
 # Fix diff issue when buildroot contains some "//"
 %patch111 -p0 -b .trim-slash
 
 # Fix strange issue making %pre/post/... -f not working
-%patch112 -p0 -b .build-no-rpmio
+%patch112 -p1 -b .build-no-rpmio
 
-%patch113 -p0 -b .docdir-macros
+%patch114 -p1 -b .read-our-macros
 
-%patch114 -p0 -b .read-our-macros
-
-%patch115 -p0 -b .noclean
-
-%patch116 -p0 -b .rpmVspace
-
-%patch117 -p0 -b .rpmnew
-
-%patch118 -p0 -b .lowercaseos
+%patch116 -p1 -b .rpmVspace
 
 %patch119 -p1
-%patch120 -p1
+
 %patch121 -p1 -b .timeout
-%patch122 -p1
 
-%patch123 -p1
-%patch124 -p1
-
-cd popt
-%patch125 -p0 -b .N_
-cd ..
-
-%patch126 -p1 -b .linux32
+%patch1124 -p1 -b .skipDir
+%patch124 -p1 -b .speedup
 
 %patch127 -p1 -b .quiet
 
 %patch128 -p1
-%patch129 -p1
 
-%patch130 -p0 -b .lzmafix
-%patch131 -p0 -b .lzma_alone
+
+%patch1000 -p1
+%patch1001 -p1 -b .lzma
+%patch1002 -p1
+%patch1003 -p1
+
+%patch132 -p0
+%patch133 -p1
 
 %build
 
-for dir in . popt file zlib db/dist; do
-    (
-    cd $dir
-    libtoolize --force
-    aclocal
-    automake -a
-    autoconf
-    )
+for dir in . popt file; do
+    pushd $dir
+    autoreconf
+    popd
 done
 
 # rpm takes care of --libdir but explicitelly setting --libdir on
@@ -608,13 +509,6 @@ CFLAGS="$RPM_OPT_FLAGS -fPIC" CXXFLAGS="$RPM_OPT_FLAGS -fPIC" \
         --with-glob \
         --without-selinux \
         --without-apidocs 
-
-# We should use the zlib provided with rpm:
-# 21:17 < Nanar> why using ../../zlib in file/ instead system library ?
-# 21:38 < jbj> Nanar: zlib modified to make *.rpm packages rsync friendly.
-#              See https://svn.uhulinux.hu/packages/dev/zlib/patches/02-rsync.patch
-# 21:38 < jbj> rip if you don't want to be rsync friendly. <shrug>
-%make -C zlib AM_CFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-fPIC"
 
 %make
 
@@ -750,6 +644,7 @@ fi
 %attr(0755, rpm, rpm) %{_bindir}/rpm2cpio
 %attr(0755, rpm, rpm) %{_bindir}/gendiff
 %attr(0755, rpm, rpm) %{_bindir}/rpmdb
+%attr(0755, rpm, rpm) %{_bindir}/rpmgraph
 %attr(0755, rpm, rpm) %{_bindir}/rpm[eiukqv]
 %attr(0755, rpm, rpm) %{_bindir}/rpmsign
 %attr(0755, rpm, rpm) %{_bindir}/rpmquery
@@ -851,7 +746,6 @@ fi
 %rpmattr	%{_prefix}/lib/rpm/brp-*
 %rpmattr	%{_prefix}/lib/rpm/check-files
 %rpmattr	%{_prefix}/lib/rpm/debugedit
-%rpmattr	%{_prefix}/lib/rpm/executabledeps.sh
 %rpmattr	%{_prefix}/lib/rpm/find-debuginfo.sh
 %rpmattr	%{_prefix}/lib/rpm/find-lang.sh
 %rpmattr	%{_prefix}/lib/rpm/find-prov.pl
@@ -862,8 +756,6 @@ fi
 %rpmattr	%{_prefix}/lib/rpm/find-requires.perl
 %rpmattr	%{_prefix}/lib/rpm/getpo.sh
 %rpmattr	%{_prefix}/lib/rpm/http.req
-%rpmattr	%{_prefix}/lib/rpm/javadeps.sh
-%rpmattr	%{_prefix}/lib/rpm/libtooldeps.sh
 %rpmattr	%{_prefix}/lib/rpm/magic
 %rpmattr	%{_prefix}/lib/rpm/magic.mgc
 %rpmattr	%{_prefix}/lib/rpm/magic.mime
@@ -871,11 +763,22 @@ fi
 %rpmattr	%{_prefix}/lib/rpm/perldeps.pl
 %rpmattr	%{_prefix}/lib/rpm/perl.prov
 %rpmattr	%{_prefix}/lib/rpm/perl.req
-%rpmattr	%{_prefix}/lib/rpm/pkgconfigdeps.sh
-%rpmattr    %{_prefix}//lib/rpm/php.prov
-%rpmattr    %{_prefix}//lib/rpm/php.req
-%rpmattr    %{_prefix}//lib/rpm/symclash.py
-%rpmattr    %{_prefix}//lib/rpm/symclash.sh
+
+%rpmattr	%{_prefix}/lib/rpm/check-buildroot
+%rpmattr	%{_prefix}/lib/rpm/check-prereqs
+%rpmattr	%{_prefix}/lib/rpm/check-rpaths
+%rpmattr	%{_prefix}/lib/rpm/check-rpaths-worker
+%rpmattr	%{_prefix}/lib/rpm/convertrpmrc.sh
+%rpmattr	%{_prefix}/lib/rpm/freshen.sh
+%rpmattr	%{_prefix}/lib/rpm/get_magic.pl
+%rpmattr	%{_prefix}/lib/rpm/javadeps
+%rpmattr	%{_prefix}/lib/rpm/magic.prov
+%rpmattr	%{_prefix}/lib/rpm/magic.req
+%rpmattr	%{_prefix}/lib/rpm/mono-find-provides
+%rpmattr	%{_prefix}/lib/rpm/mono-find-requires
+%rpmattr	%{_prefix}/lib/rpm/rpmcache
+%rpmattr	%{_prefix}/lib/rpm/rpmdiff
+%rpmattr	%{_prefix}/lib/rpm/rpmfile
 
 %rpmattr	%{_prefix}/lib/rpm/rpm[bt]
 %rpmattr	%{_prefix}/lib/rpm/rpmdeps
