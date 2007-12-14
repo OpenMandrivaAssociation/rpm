@@ -483,8 +483,6 @@ capabilities.
 
 %patch68 -p0 -b .region_trailer
 
-#%patch69 -p0 -b .trans
-
 %patch70 -p0 -b .shortcircuit
 
 %patch71 -p0  -b .ordererase
