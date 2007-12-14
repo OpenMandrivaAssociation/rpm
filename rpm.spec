@@ -284,7 +284,6 @@ Patch131:	rpm-4.5-lzma_alone.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
-BuildRequires:	doxygen
 BuildRequires:	zlib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -629,7 +628,7 @@ CFLAGS="$RPM_OPT_FLAGS -fPIC" CXXFLAGS="$RPM_OPT_FLAGS -fPIC" \
 %endif
         --with-glob \
         --without-selinux \
-        --with-apidocs 
+        --without-apidocs 
 
 # We should use the zlib provided with rpm:
 # 21:17 < Nanar> why using ../../zlib in file/ instead system library ?
@@ -684,8 +683,6 @@ for dbi in \
 do
     touch $RPM_BUILD_ROOT/var/lib/rpm/$dbi
 done
-
-find apidocs -type f | xargs perl -p -i -e "s@$RPM_BUILD_DIR/%{name}-%{rpmversion}@@g"
 
 test -d doc-copy || mkdir doc-copy
 rm -rf doc-copy/*
@@ -933,7 +930,6 @@ fi
 
 %files -n %librpmnamedevel
 %defattr(-,root,root)
-#%doc apidocs/html
 %{_includedir}/rpm
 %{_libdir}/librpm.a
 %{_libdir}/librpm.la
