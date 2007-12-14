@@ -702,7 +702,7 @@ fi
 %endif
 %ifarch x86_64
 %attr(   -, rpm, rpm) %{rpmdir}/amd64-*
-#%attr(   -, rpm, rpm) %{rpmdir}/x86_64-*
+%attr(   -, rpm, rpm) %{rpmdir}/x86_64-*
 %attr(   -, rpm, rpm) %{rpmdir}/ia32e-*
 %endif
 %attr(   -, rpm, rpm) %{rpmdir}/noarch*
