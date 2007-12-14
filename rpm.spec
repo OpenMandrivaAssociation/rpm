@@ -833,7 +833,6 @@ fi
 %endif
 %attr(   -, rpm, rpm) %{rpmdir}/noarch*
 
-%{_prefix}/src/rpm/RPMS/*
 %{_mandir}/man[18]/*.[18]*
 %lang(pl) %{_mandir}/pl/man[18]/*.[18]*
 %lang(ru) %{_mandir}/ru/man[18]/*.[18]*
@@ -868,12 +867,7 @@ fi
 %defattr(-,root,root)
 %doc CHANGES
 %doc doc-copy/*
-%dir %{_prefix}/src/rpm
-%dir %{_prefix}/src/rpm/BUILD
-%dir %{_prefix}/src/rpm/SPECS
-%dir %{_prefix}/src/rpm/SOURCES
-%dir %{_prefix}/src/rpm/SRPMS
-%dir %{_prefix}/src/rpm/RPMS
+%{_prefix}/src/rpm
 %rpmattr	%{_bindir}/rpmbuild
 %rpmattr	%{_prefix}/lib/rpm/brp-*
 %rpmattr	%{_prefix}/lib/rpm/check-files
