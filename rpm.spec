@@ -46,12 +46,10 @@
 
 %define rpmversion	4.4.8
 %define poptver		1.10.8
-%define perlmoduleversion	0.66
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
 %define release			    %mkrel 22
-%define perlmodulerelease   %mkrel 44
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -157,9 +155,6 @@ Patch83: rpm-4.2.3-no-doc-conflicts.patch
 
 # Fix http://qa.mandriva.com/show_bug.cgi?id=19392
 Patch84: rpm-4.4.4-rpmqv-ghost.patch
-
-# Install perl module in vendor directory
-Patch85: rpm-4.4.4-perldirs.patch
 
 # Use temporary table for Depends DB (Olivier Thauvin upstream)
 Patch86: rpm-4.4.6-depsdb.patch
@@ -297,7 +292,6 @@ BuildRequires:  rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_versi
 BuildRequires:  readline-devel
 BuildRequires:	ncurses-devel
 BuildRequires:  openssl-devel >= 0.9.8
-BuildRequires:	perl-devel
 BuildRequires:  liblua-devel
 # Need for doc
 BuildRequires:	graphviz
@@ -460,17 +454,6 @@ shell-like rules.
 Install popt-devel if you're a C programmer and you'd like to use its
 capabilities.
 
-%define		perlmodule	RPM
-%package -n perl-%perlmodule
-Summary:	Perl bindings for RPM
-Group:		Development/Perl
-Version:	%perlmoduleversion
-Release:	%perlmodulerelease
-
-%description -n perl-%perlmodule
-The RPM Perl module provides an object-oriented interface to querying both
-the installed RPM database as well as files on the filesystem.
-
 %prep
 %setup -q -n %name-%srcver
 
@@ -515,8 +498,6 @@ the installed RPM database as well as files on the filesystem.
 %patch83 -p1 -b .no-doc-conflicts
 
 %patch84 -p0 -b .poptQVghost
-
-%patch85 -p0 -b .perldirs
 
 %patch86 -p0 -b .depsdb
 
@@ -937,7 +918,6 @@ fi
 %{_libdir}/librpmbuild.a
 %{_libdir}/librpmbuild.la
 %{_libdir}/librpmbuild.so
-%{_mandir}/man3/RPM*
 
 %files -n popt-data -f popt.lang
 %defattr(-,root,root)
@@ -954,10 +934,3 @@ fi
 %{_libdir}/libpopt.so
 %{_includedir}/popt.h
 %{_mandir}/man3/popt.3*
-
-%files -n perl-%perlmodule
-%defattr(-,root,root)
-%doc perl/Changes
-%{perl_vendorarch}/%{perlmodule}.pm
-%{perl_vendorarch}/auto/%{perlmodule}
-
