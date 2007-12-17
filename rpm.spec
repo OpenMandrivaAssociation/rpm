@@ -218,6 +218,10 @@ Patch1002: rpm-4.4.2.2-default-topdir--usr-src-rpm.patch
 # (backport from 4.4.7 + mandriva fix)
 Patch1003: rpm-4.4.2.2-handle-suggests--ignore-requires-hint.patch
 
+# keep libpopt.so versioning from 4.4.8 to avoid warning:
+# xxx: /lib/libpopt.so.0: no version information available (required by xxx)
+Patch1004: rpm-4.4.2.2-add-libpopt-vers.patch
+
 License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	zlib-devel
@@ -464,6 +468,7 @@ capabilities.
 %patch1001 -p1 -b .lzma
 %patch1002 -p1
 %patch1003 -p1
+%patch1004 -p1
 
 %patch132 -p0
 %patch133 -p1
