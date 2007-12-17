@@ -209,8 +209,13 @@ Patch132: rpm-4.4.2.2-extcond.patch
 # [from SuSE] handle "Suggests" via RPMTAG_SUGGESTSNAME
 Patch133: rpm-4.4.2.2-weakdeps.patch
 
+# MDV2008.0 sets %buildroot globally, but default rule is %buildroot overrides BuildRoot
+# this breaks (broken) .spec relying on a specified BuildRoot (#34705).
+# Introducing a global %defaultbuildroot which is used when neither %buildroot nor BuildRoot is used
+# So %buildroot/$RPM_BUILD_ROOT in .spec are set to %buildroot or BuildRoot or %defaultbuildroot (in that order)
+Patch134: rpm-4.4.2.2-defaultbuildroot.patch
+
 # be compatible with >= 4.4.8 :
-Patch1000: rpm-4.4.2.2-handle-buildroot-macro.patch
 Patch1001: rpm-4.4.2.2-lzma-support.patch
 Patch1002: rpm-4.4.2.2-default-topdir--usr-src-rpm.patch
 
@@ -464,7 +469,6 @@ capabilities.
 %patch128 -p1
 
 
-%patch1000 -p1
 %patch1001 -p1 -b .lzma
 %patch1002 -p1
 %patch1003 -p1
@@ -472,6 +476,8 @@ capabilities.
 
 %patch132 -p0
 %patch133 -p1
+
+%patch134 -p1
 
 %build
 
