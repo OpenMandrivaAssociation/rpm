@@ -132,7 +132,7 @@ Patch71:    rpm-4.4.4-ordererase.patch
 # [Aug 2005] should fix ordering issue:
 Patch82:    rpm-4.4.2.2-ordering.patch
 
-# don't conflict for doc files from colored packages
+# don't conflict for doc files
 # (to be able to install lib*-devel together with lib64*-devel even if they have conflicting manpages)
 Patch83: rpm-4.2.3-no-doc-conflicts.patch
 
@@ -226,14 +226,6 @@ Patch1003: rpm-4.4.2.2-handle-suggests--ignore-requires-hint.patch
 # keep libpopt.so versioning from 4.4.8 to avoid warning:
 # xxx: /lib/libpopt.so.0: no version information available (required by xxx)
 Patch1004: rpm-4.4.2.2-add-libpopt-vers.patch
-
-# - in rpm 4.4.8, %_transaction_color is always 3 on ix86/x86_64,
-# - in mdv2008.0 we don't have FILECOLORS anymore 
-#    (need fixing? happens cuz %_use_internal_dependency_generator 0 in mandriva/macros)
-# - rpm allows conflicting doc files even if the pkgs arch are the same
-# => simplify the test and always allow conflicting doc files in some dirs,
-#    idependently of transaction color or file colors
-Patch1005: rpm-4.4.2.2-allow-conflicting-doc-files--even-if-no-transaction-color.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -480,7 +472,6 @@ capabilities.
 %patch1002 -p1
 %patch1003 -p1
 %patch1004 -p1
-%patch1005 -p1
 
 %patch132 -p0
 %patch133 -p1
