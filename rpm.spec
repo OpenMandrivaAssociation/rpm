@@ -143,12 +143,6 @@ Patch84: rpm-4.4.2.2-rpmqv-ghost.patch
 # (sqlite) Use temporary table for Depends DB (Olivier Thauvin upstream)
 Patch86: rpm-4.4.2.2-depsdb.patch
 
-# rpm 4.4.6 killed SOURCEPACKAGE, but this was announce lately, and will
-# break all older tools that was using it (mdv 2006, 2005) which need this
-# tag to know it is possible to rebuild a src.rpm
-# This patch readd the tag into src.rpm
-Patch88: rpm-4.4.6-SOURCEPACKAGE.patch
-
 # avoids taking into account duplicates in file list when checking
 # for unpackaged files
 Patch91: rpm-4.4.6-check-dupl-files.patch
@@ -438,8 +432,6 @@ capabilities.
 %patch84 -p1 -b .poptQVghost
 
 %patch86 -p1 -b .depsdb
-
-%patch88 -p0 -b .sourcepackage
 
 %patch91 -p0 -b .check-dupl-files
 
