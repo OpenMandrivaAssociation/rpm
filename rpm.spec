@@ -277,6 +277,7 @@ URL:            http://rpm.org/
 Requires(pre):		rpm-helper >= 0.8
 Requires(pre):		coreutils
 Requires(postun):	rpm-helper >= 0.8
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 RPM is a powerful command line driven package management system capable of
