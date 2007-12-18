@@ -479,7 +479,7 @@ capabilities.
 %patch132 -p0
 %patch133 -p1
 
-%patch134 -p1
+%patch134 -p1 -b .defaultbuildroot
 
 %build
 
