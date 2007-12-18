@@ -148,12 +148,14 @@ Patch86: rpm-4.4.2.2-depsdb.patch
 Patch91: rpm-4.4.6-check-dupl-files.patch
 
 # fix free on invalid pointer after displaying "Unable to open temp file"
+# [already applied in rpm.org HEAD]
 Patch98: rpm-4.4.6-fix-free-on-bad-pointer.patch
 
 # without this patch, when pkg rpm-build is not installed,
 # using rpm -bs t.spec returns: "t.spec: No such file or directory"
 Patch100: rpm-4.4.6-fix-error-message-rpmb-not-installed.patch
 
+# [already applied in rpm.org HEAD]
 Patch108: rpm-4.4.6-use-dgettext-instead-of-gettext-to-allow-use-of-multilibs.patch
 
 Patch109: rpm-build-expand-field-for-single-token.patch
@@ -168,12 +170,14 @@ Patch112: rpm-4.4.2.2-dont-use-rpmio-to-read-file-for-script.patch
 Patch114: rpm-4.4.2.2-read-vendor-macros.patch
 
 # Fix #31287, rpm -V do not use same space count
+# [already applied in rpm.org HEAD]
 Patch116: rpm-4.4.2.2-qv-use-same-indentation.patch
 
 # HAVE_LOCALE_H is used by system.h, ensure it is defined properly
 # (the issue only occurs when compiling without __OPTIMIZE__ (ie -O2)
 #  otherwise libintl.h do include locale.h)
 # nb: this issue is fixed in cvs HEAD
+# [already applied in rpm.org HEAD]
 Patch119: rpm-4.4.2.2-fix-build-without-O2.patch
 
 # important patch fixing parse_hdlist (and so genhdlist2) on heavy loaded boxes
@@ -193,9 +197,11 @@ Patch124: rpm-4.4.2.2-speedup-by-not-checking-same-files-with-different-paths-th
 
 # make "rpm -bb --quiet" quiet as should be 
 # (without this patch, the option is simply ignored in rpmcliAllPoptTable)
+# [already applied in rpm.org HEAD]
 Patch127: rpm-4.4.8-handle-rpmbuild--quiet.patch
 
 # fix rpm -K segfaulting on corrupted header (#33735)
+# [already applied in rpm.org HEAD]
 Patch128: rpm-4.4.8-fix-rpm-K-segfault-on-corrupted-header.patch
 
 # [from SuSE] patch132 needed by patch133
