@@ -204,7 +204,7 @@ Patch127: rpm-4.4.8-handle-rpmbuild--quiet.patch
 # fix rpm -K segfaulting on corrupted header (#33735)
 Patch128: rpm-4.4.8-fix-rpm-K-segfault-on-corrupted-header.patch
 
-# [from SuSE] patch1004 needed by patch1005
+# [from SuSE] patch132 needed by patch133
 Patch132: rpm-4.4.2.2-extcond.patch
 # [from SuSE] handle "Suggests" via RPMTAG_SUGGESTSNAME
 Patch133: rpm-4.4.2.2-weakdeps.patch
