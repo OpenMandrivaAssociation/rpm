@@ -227,6 +227,9 @@ Patch1003: rpm-4.4.2.2-handle-suggests--ignore-requires-hint.patch
 # xxx: /lib/libpopt.so.0: no version information available (required by xxx)
 Patch1004: rpm-4.4.2.2-add-libpopt-vers.patch
 
+# default behaviour in rpm >= 4.4.6
+Patch1005: rpm-4.4.2.2-allow-conflicting-ghost-files.patch
+
 License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	zlib-devel
@@ -472,6 +475,7 @@ capabilities.
 %patch1002 -p1
 %patch1003 -p1
 %patch1004 -p1
+%patch1005 -p1
 
 %patch132 -p0
 %patch133 -p1
