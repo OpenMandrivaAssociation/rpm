@@ -215,6 +215,10 @@ Patch133: rpm-4.4.2.2-weakdeps.patch
 # So %buildroot/$RPM_BUILD_ROOT in .spec are set to %buildroot or BuildRoot or %defaultbuildroot (in that order)
 Patch134: rpm-4.4.2.2-defaultbuildroot.patch
 
+# fix truncated "file conflict" error message in russian (#31680)
+# (the utf8 russian string is 124 chars, whereas the i18n'ed should be <100bytes)
+Patch135: rpm-4.4.2.2-fix-truncated-rpmProblemString.patch
+
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.2-lzma-support.patch
 Patch1002: rpm-4.4.2.2-default-topdir--usr-src-rpm.patch
@@ -480,6 +484,7 @@ capabilities.
 %patch133 -p1
 
 %patch134 -p1 -b .defaultbuildroot
+%patch135 -p1
 
 %build
 
