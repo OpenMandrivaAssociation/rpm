@@ -219,6 +219,9 @@ Patch134: rpm-4.4.2.2-defaultbuildroot.patch
 # (the utf8 russian string is 124 chars, whereas the i18n'ed should be <100bytes)
 Patch135: rpm-4.4.2.2-fix-truncated-rpmProblemString.patch
 
+# (mdv bug #27417)
+Patch136: rpm-4.4.2.2-fix-multiline-macro-handling-on-last-line-of-spec.patch
+
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.2-lzma-support.patch
 Patch1002: rpm-4.4.2.2-default-topdir--usr-src-rpm.patch
@@ -485,6 +488,7 @@ capabilities.
 
 %patch134 -p1 -b .defaultbuildroot
 %patch135 -p1
+%patch136 -p1 -b .lastline
 
 %build
 
