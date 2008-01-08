@@ -49,7 +49,7 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 4
+%define release			    %mkrel 5
 %define poptrelease		%{release}
 
 %define libpoptname  %mklibname popt %{libpoptver}
@@ -236,6 +236,9 @@ Patch1004: rpm-4.4.2.2-add-libpopt-vers.patch
 
 # default behaviour in rpm >= 4.4.6
 Patch1005: rpm-4.4.2.2-allow-conflicting-ghost-files.patch
+
+# was already in rpm >= 4.4.6
+Patch1006: rpm-4.4.2.2-implement-triggerprein-scriptlets.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -482,6 +485,7 @@ capabilities.
 %patch1003 -p1
 %patch1004 -p1
 %patch1005 -p1
+%patch1006 -p1
 
 %patch132 -p0
 %patch133 -p1
