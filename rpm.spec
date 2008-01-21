@@ -240,6 +240,8 @@ Patch1005: rpm-4.4.2.2-allow-conflicting-ghost-files.patch
 # was already in rpm >= 4.4.6
 Patch1006: rpm-4.4.2.2-implement-triggerprein-scriptlets.patch
 
+Patch1007: rpm-4.4.2.2-fix-russian-translation.patch
+
 License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	zlib-devel
@@ -486,6 +488,7 @@ capabilities.
 %patch1004 -p1
 %patch1005 -p1
 %patch1006 -p1
+%patch1007 -p1
 
 %patch132 -p0
 %patch133 -p1
