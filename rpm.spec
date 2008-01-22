@@ -134,7 +134,7 @@ Patch82:    rpm-4.4.2.2-ordering.patch
 
 # don't conflict for doc files
 # (to be able to install lib*-devel together with lib64*-devel even if they have conflicting manpages)
-Patch83: rpm-4.2.3-no-doc-conflicts.patch
+Patch83: rpm-4.4.2.2-no-doc-conflicts.patch
 
 # Fix http://qa.mandriva.com/show_bug.cgi?id=19392
 # (is this working??)
