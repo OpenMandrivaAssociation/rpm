@@ -242,6 +242,9 @@ Patch1006: rpm-4.4.2.2-implement-triggerprein-scriptlets.patch
 
 Patch1007: rpm-4.4.2.2-fix-russian-translation.patch
 
+# backport from rpm 4.4.8, fixes #36672
+Patch1008: rpm-4.4.2.2-fix-displaying-requires-found.patch
+
 License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	zlib-devel
@@ -489,6 +492,7 @@ capabilities.
 %patch1005 -p1
 %patch1006 -p1
 %patch1007 -p1
+%patch1008 -p1
 
 %patch132 -p0
 %patch133 -p1
