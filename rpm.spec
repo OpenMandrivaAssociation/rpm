@@ -44,14 +44,13 @@
 %define __find_requires %{rpmdir}/mandriva/find-requires %{?buildroot:%{buildroot}} %{?_target_cpu:%{_target_cpu}}
 %define __find_provides %{rpmdir}/mandriva/find-provides
 
-%define rpmversion	4.4.2.2
+%define rpmversion	4.4.2.3
 %define poptver		1.10.8
-%define srcver		%rpmversion
+%define srcver		%rpmversion-rc1
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 7
-%define poptrelease		%{release}
-
+%define release			    %mkrel 0.rc1.1
+%define poptrelease	%mkrel 8
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
 %define libpoptnamedevel  %mklibname -d popt
@@ -129,9 +128,6 @@ Patch70:	rpm-4.4.1-bb-shortcircuit.patch
 # http://www.redhat.com/archives/rpm-list/2005-April/msg00132.html
 Patch71:    rpm-4.4.4-ordererase.patch
 
-# [Aug 2005] should fix ordering issue:
-Patch82:    rpm-4.4.2.2-ordering.patch
-
 # don't conflict for doc files
 # (to be able to install lib*-devel together with lib64*-devel even if they have conflicting manpages)
 Patch83: rpm-4.4.2.2-no-doc-conflicts.patch
@@ -147,16 +143,9 @@ Patch86: rpm-4.4.2.2-depsdb.patch
 # for unpackaged files
 Patch91: rpm-4.4.6-check-dupl-files.patch
 
-# fix free on invalid pointer after displaying "Unable to open temp file"
-# [already applied in rpm.org HEAD]
-Patch98: rpm-4.4.6-fix-free-on-bad-pointer.patch
-
 # without this patch, when pkg rpm-build is not installed,
 # using rpm -bs t.spec returns: "t.spec: No such file or directory"
 Patch100: rpm-4.4.6-fix-error-message-rpmb-not-installed.patch
-
-# [already applied in rpm.org HEAD]
-Patch108: rpm-4.4.6-use-dgettext-instead-of-gettext-to-allow-use-of-multilibs.patch
 
 Patch109: rpm-build-expand-field-for-single-token.patch
 
@@ -169,22 +158,6 @@ Patch112: rpm-4.4.2.2-dont-use-rpmio-to-read-file-for-script.patch
 
 Patch114: rpm-4.4.2.2-read-vendor-macros.patch
 
-# Fix #31287, rpm -V do not use same space count
-# [already applied in rpm.org HEAD]
-Patch116: rpm-4.4.2.2-qv-use-same-indentation.patch
-
-# HAVE_LOCALE_H is used by system.h, ensure it is defined properly
-# (the issue only occurs when compiling without __OPTIMIZE__ (ie -O2)
-#  otherwise libintl.h do include locale.h)
-# nb: this issue is fixed in cvs HEAD
-# [already applied in rpm.org HEAD]
-Patch119: rpm-4.4.2.2-fix-build-without-O2.patch
-
-# important patch fixing parse_hdlist (and so genhdlist2) on heavy loaded boxes
-# (without this patch it timeouts after a read miss of 1 second (even a pipe),
-# and there is no way we can retry since we would need to backtrack the fd)
-Patch121: rpm-4.4.8-raise-read-timeout-to-60secs.patch
-
 # remove unused skipDir functionality that conflicts with patch124 below
 Patch1124: rpm-4.4.2.2-revert-unused-skipDir-functionality.patch
 
@@ -194,15 +167,6 @@ Patch1124: rpm-4.4.2.2-revert-unused-skipDir-functionality.patch
 # this breaks urpmi test case test_rpm_i_fail('gd') in superuser--file-conflicts.t,
 # but this is bad design anyway
 Patch124: rpm-4.4.2.2-speedup-by-not-checking-same-files-with-different-paths-through-symlink.patch
-
-# make "rpm -bb --quiet" quiet as should be 
-# (without this patch, the option is simply ignored in rpmcliAllPoptTable)
-# [already applied in rpm.org HEAD]
-Patch127: rpm-4.4.8-handle-rpmbuild--quiet.patch
-
-# fix rpm -K segfaulting on corrupted header (#33735)
-# [already applied in rpm.org HEAD]
-Patch128: rpm-4.4.8-fix-rpm-K-segfault-on-corrupted-header.patch
 
 # [from SuSE] patch132 needed by patch133
 Patch132: rpm-4.4.2.2-extcond.patch
@@ -214,13 +178,6 @@ Patch133: rpm-4.4.2.2-weakdeps.patch
 # Introducing a global %defaultbuildroot which is used when neither %buildroot nor BuildRoot is used
 # So %buildroot/$RPM_BUILD_ROOT in .spec are set to %buildroot or BuildRoot or %defaultbuildroot (in that order)
 Patch134: rpm-4.4.2.2-defaultbuildroot.patch
-
-# fix truncated "file conflict" error message in russian (#31680)
-# (the utf8 russian string is 124 chars, whereas the i18n'ed should be <100bytes)
-Patch135: rpm-4.4.2.2-fix-truncated-rpmProblemString.patch
-
-# (mdv bug #27417)
-Patch136: rpm-4.4.2.2-fix-multiline-macro-handling-on-last-line-of-spec.patch
 
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.2-lzma-support.patch
@@ -236,14 +193,6 @@ Patch1004: rpm-4.4.2.2-add-libpopt-vers.patch
 
 # default behaviour in rpm >= 4.4.6
 Patch1005: rpm-4.4.2.2-allow-conflicting-ghost-files.patch
-
-# was already in rpm >= 4.4.6
-Patch1006: rpm-4.4.2.2-implement-triggerprein-scriptlets.patch
-
-Patch1007: rpm-4.4.2.2-fix-russian-translation.patch
-
-# backport from rpm 4.4.8, fixes #36672
-Patch1008: rpm-4.4.2.2-fix-displaying-requires-found.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -447,8 +396,6 @@ capabilities.
 
 %patch71 -p0  -b .ordererase
 
-%patch82 -p1 -b .ordering
-
 %patch83 -p1 -b .no-doc-conflicts
 
 %patch84 -p1 -b .poptQVghost
@@ -457,11 +404,7 @@ capabilities.
 
 %patch91 -p0 -b .check-dupl-files
 
-%patch98 -p1 -b .free
-
 %patch100 -p1 -b .rpmb-missing
-
-%patch108 -p1
 
 # Fix diff issue when buildroot contains some "//"
 %patch111 -p0 -b .trim-slash
@@ -471,18 +414,8 @@ capabilities.
 
 %patch114 -p1 -b .read-our-macros
 
-%patch116 -p1 -b .rpmVspace
-
-%patch119 -p1
-
-%patch121 -p1 -b .timeout
-
 %patch1124 -p1 -b .skipDir
 %patch124 -p1 -b .speedup
-
-%patch127 -p1 -b .quiet
-
-%patch128 -p1
 
 
 %patch1001 -p1 -b .lzma
@@ -490,16 +423,11 @@ capabilities.
 %patch1003 -p1
 %patch1004 -p1
 %patch1005 -p1
-%patch1006 -p1
-%patch1007 -p1
-%patch1008 -p1
 
 %patch132 -p0
 %patch133 -p1
 
 %patch134 -p1 -b .defaultbuildroot
-%patch135 -p1
-%patch136 -p1 -b .lastline
 
 %build
 
@@ -706,9 +634,9 @@ fi
 
 %ifarch %{ix86}
 %attr(   -, rpm, rpm) %{rpmdir}/i*86-*
-#%attr(   -, rpm, rpm) %{rpmdir}/k6*
-%attr(   -, rpm, rpm) %{rpmdir}/athlon*
-%attr(   -, rpm, rpm) %{rpmdir}/pentium*
+%attr(   -, rpm, rpm) %{rpmdir}/athlon-*
+%attr(   -, rpm, rpm) %{rpmdir}/pentium*-*
+%attr(   -, rpm, rpm) %{rpmdir}/geode-*
 %endif
 %ifarch alpha
 %attr(   -, rpm, rpm) %{rpmdir}/alpha*
@@ -809,6 +737,7 @@ fi
 %rpmattr	%{_prefix}/lib/rpm/magic.req
 %rpmattr	%{_prefix}/lib/rpm/mono-find-provides
 %rpmattr	%{_prefix}/lib/rpm/mono-find-requires
+%rpmattr	%{_prefix}/lib/rpm/osgideps.pl
 %rpmattr	%{_prefix}/lib/rpm/rpmcache
 %rpmattr	%{_prefix}/lib/rpm/rpmdiff
 %rpmattr	%{_prefix}/lib/rpm/rpmfile
