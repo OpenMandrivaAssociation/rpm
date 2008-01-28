@@ -632,10 +632,12 @@ fi
 %rpmattr	%{rpmdir}/rpm2cpio.sh
 %rpmattr	%{rpmdir}/tgpg
 
-%ifarch %{ix86}
+%ifarch %{ix86} x86_64
 %attr(   -, rpm, rpm) %{rpmdir}/i*86-*
 %attr(   -, rpm, rpm) %{rpmdir}/athlon-*
 %attr(   -, rpm, rpm) %{rpmdir}/pentium*-*
+%endif
+%ifarch %{ix86}
 %attr(   -, rpm, rpm) %{rpmdir}/geode-*
 %endif
 %ifarch alpha
