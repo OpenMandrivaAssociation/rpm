@@ -198,7 +198,7 @@ Patch1005: rpm-4.4.2.2-allow-conflicting-ghost-files.patch
 Patch2000: rpm-4.4.2-serial-tag.patch
 # re-enable "copyright" tag (Kiichiro, 2005)
 Patch2001: rpm-4.4.2-copyright-tag.patch
-# add writeHeaderListTofile function into rpm-python (Toshihiro, 2003)
+# add writeHeaderListTofile function into rpm-python (needed by "buildman" build system) (Toshihiro, 2003)
 Patch2002: rpm-4.2.2-python-writeHdlist.patch
 # Crusoe CPUs say that their CPU family is "5" but they have enough features for i686.
 Patch2003: rpm-4.4.2.3-rc1-transmeta-crusoe-is-686.patch
