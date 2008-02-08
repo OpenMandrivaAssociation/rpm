@@ -194,6 +194,17 @@ Patch1004: rpm-4.4.2.2-add-libpopt-vers.patch
 # default behaviour in rpm >= 4.4.6
 Patch1005: rpm-4.4.2.2-allow-conflicting-ghost-files.patch
 
+# Turbolinux patches
+Patch2000: rpm-4.4.2-serial-tag.patch
+# re-enable "copyright" tag (Kiichiro, 2005)
+Patch2001: rpm-4.4.2-copyright-tag.patch
+# add writeHeaderListTofile function into rpm-python (Toshihiro, 2003)
+Patch2002: rpm-4.2.2-python-writeHdlist.patch
+# Crusoe CPUs say that their CPU family is "5" but they have enough features for i686.
+Patch2003: rpm-4.4.2.3-rc1-transmeta-crusoe-is-686.patch
+# add japanese popt translations
+Patch2004: rpm-4.4.2.3-rc1-popt-ja-translations.patch
+
 License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	zlib-devel
@@ -428,6 +439,12 @@ capabilities.
 %patch133 -p1
 
 %patch134 -p1 -b .defaultbuildroot
+
+%patch2000 -p1 -b .serial-tag
+%patch2001 -p0 -b .copyright-tag
+%patch2002 -p0 -b .python_writeHD
+%patch2003 -p1 -b .crusoe-arch
+%patch2004 -p1 -b .popt-ja
 
 %build
 
