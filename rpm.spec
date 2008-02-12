@@ -182,6 +182,11 @@ Patch134: rpm-4.4.2.2-defaultbuildroot.patch
 # (from Turbolinux) remove a wrong check in case %_topdir is /RPM (ie when it is short)
 Patch135: rpm-4.4.2.3-rc1-fix-debugedit.patch
 
+# (inspired by Turbolinux)
+# get best lang from rpm HEADERI18NTABLE, instead of getting first fuzzy match
+# (eg: zh_TW matches zh_CN whereas zh_TW entry is available)
+Patch136: rpm-4.4.2.3-rc1-use-best-lang-from-HEADERI18NTABLE.patch
+
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.2-lzma-support.patch
 Patch1002: rpm-4.4.2.2-default-topdir--usr-src-rpm.patch
@@ -444,6 +449,7 @@ capabilities.
 %patch134 -p1 -b .defaultbuildroot
 
 %patch135 -p1 -b .debugedit
+%patch136 -p1 -b .i18n
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p0 -b .copyright-tag
