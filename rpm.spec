@@ -156,8 +156,6 @@ Patch111: rpm-check-file-trim-double-slash-in-buildroot.patch
 # (only needed on 4.4.8?)
 Patch112: rpm-4.4.2.2-dont-use-rpmio-to-read-file-for-script.patch
 
-Patch114: rpm-4.4.2.2-read-vendor-macros.patch
-
 # remove unused skipDir functionality that conflicts with patch124 below
 Patch1124: rpm-4.4.2.2-revert-unused-skipDir-functionality.patch
 
@@ -430,8 +428,6 @@ capabilities.
 
 # Fix strange issue making %pre/post/... -f not working
 %patch112 -p1 -b .build-no-rpmio
-
-%patch114 -p1 -b .read-our-macros
 
 %patch1124 -p1 -b .skipDir
 %patch124 -p1 -b .speedup
