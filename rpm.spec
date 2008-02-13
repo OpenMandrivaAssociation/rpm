@@ -184,6 +184,9 @@ Patch135: rpm-4.4.2.3-rc1-fix-debugedit.patch
 # get best lang from rpm HEADERI18NTABLE, instead of getting first fuzzy match
 # (eg: zh_TW matches zh_CN whereas zh_TW entry is available)
 Patch136: rpm-4.4.2.3-rc1-use-best-lang-from-HEADERI18NTABLE.patch
+# convert data in the header to a specific encoding which used in the selected locale.
+# (require patch136)
+Patch137: rpm-4.4.2.3-rc1-headerIconv.patch
 
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.2-lzma-support.patch
@@ -446,6 +449,7 @@ capabilities.
 
 %patch135 -p1 -b .debugedit
 %patch136 -p1 -b .i18n
+%patch137 -p1 -b .iconv
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p0 -b .copyright-tag
