@@ -156,6 +156,8 @@ Patch111: rpm-check-file-trim-double-slash-in-buildroot.patch
 # (only needed on 4.4.8?)
 Patch112: rpm-4.4.2.2-dont-use-rpmio-to-read-file-for-script.patch
 
+# patch only needed when rpmrc is not used (ie jbj's rpm), 
+# otherwise macrofiles from rpmrc always overrides MACROFILES
 Patch114: rpm-4.4.2.2-read-vendor-macros.patch
 
 # remove unused skipDir functionality that conflicts with patch124 below
