@@ -49,7 +49,7 @@
 %define srcver		%rpmversion-rc1
 %define libpoptver	0
 %define libver		4.4
-%define release			    %mkrel 0.rc1.1
+%define release			    %mkrel 0.rc1.2
 %define poptrelease	%mkrel 8
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
@@ -116,8 +116,9 @@ Patch49:	rpm-4.4.2.2-provides-obsoleted.patch
 # Introduce new ppc32 arch. Fix ppc64 bi-arch builds. Fix ppc builds on newer CPUs.
 Patch56:	rpm-4.4.2.2-ppc32.patch
 
-# This patch ask to read /usr/lib/rpm/vendor/rpmpopt too
-Patch64:    rpm-4.4.2.2-vendor-rpmpopt.patch
+# - force /usr/lib/rpm/manbo/rpmrc instead of /usr/lib/rpm/<vendor>/rpmrc
+# - read /usr/lib/rpm/manbo/rpmpopt (not only /usr/lib/rpm/rpmpopt)
+Patch64:    rpm-4.4.2.2-manbo-rpmrc-rpmpopt.patch
 
 # In original rpm, -bb --short-circuit does not work and run all stage
 # From popular request, we allow to do this
@@ -252,6 +253,7 @@ Requires:	glibc >= 2.1.92
 Requires:	mktemp
 Requires:	popt = %{poptver}-%{poptrelease}
 Requires:	setup >= 2.2.0-8mdk
+Requires:	rpm-manbo-setup
 Requires:	rpm-mandriva-setup >= 1.42
 Requires:	update-alternatives
 Requires:	%librpmname = %epoch:%version-%release
