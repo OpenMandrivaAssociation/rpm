@@ -219,6 +219,14 @@ Patch2003: rpm-4.4.2.3-rc1-transmeta-crusoe-is-686.patch
 # add japanese popt translations
 Patch2004: rpm-4.4.2.3-rc1-popt-ja-translations.patch
 
+# The following patch is unneeded for Mandriva, but Turbolinux has it and it can't hurt much
+#
+# This patch fixes the problem when the post-scripts launched by rpm-build. 
+# The post-scripts launched by rpm-build works in LANG environment. If LANG is
+# other locale except C, then some commands launched by post-scripts will not
+# display characters which you expected.
+Patch2005: rpm-4.2.0-buildlang.patch
+
 License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	zlib-devel
@@ -464,6 +472,7 @@ capabilities.
 %patch2002 -p0 -b .python_writeHD
 %patch2003 -p1 -b .crusoe-arch
 %patch2004 -p1 -b .popt-ja
+%patch2005 -p1 -b .buildlang
 
 %build
 
