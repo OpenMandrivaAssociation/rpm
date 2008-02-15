@@ -60,9 +60,11 @@
 
 %define buildnptl 0
 
+%if %vendor == Mandriva
 %if %{mdkversion} >= 200710
 # MDV 2007.1 builds with --hash-style=gnu by default
 %define rpmsetup_version 1.34
+%endif
 %endif
 
 %define builddebug 0
@@ -238,7 +240,9 @@ BuildRequires:	libbeecrypt-devel
 BuildRequires:	ed, gettext-devel
 BuildRequires:  libsqlite3-devel
 BuildRequires:  neon0.26-devel
+%if %vendor == Mandriva
 BuildRequires:  rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
+%endif
 BuildRequires:  readline-devel
 BuildRequires:	ncurses-devel
 BuildRequires:  openssl-devel >= 0.9.8
@@ -262,7 +266,9 @@ Requires:	mktemp
 Requires:	popt = %{poptver}-%{poptrelease}
 Requires:	setup >= 2.2.0-8mdk
 Requires:	rpm-manbo-setup
+%if %vendor == Mandriva
 Requires:	rpm-mandriva-setup >= 1.42
+%endif
 Requires:	update-alternatives
 Requires:	%librpmname = %epoch:%version-%release
 Conflicts:	patch < 2.5
@@ -328,7 +334,9 @@ Requires:	make
 Requires:	unzip
 Requires:	elfutils
 Requires:	rpm = %epoch:%{version}-%{release}
+%if %vendor == Mandriva
 Requires:	rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
+%endif
 
 %description build
 This package contains scripts and executable programs that are used to
