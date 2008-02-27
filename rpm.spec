@@ -195,6 +195,8 @@ Patch136: rpm-4.4.2.3-rc1-use-best-lang-from-HEADERI18NTABLE.patch
 # (require patch136)
 Patch137: rpm-4.4.2.3-rc1-headerIconv.patch
 
+Patch138: rpm-4.4.2.3-rc1-do-not-display-PreReq-instead-of-Requires-when-zapping-looping-require.patch
+
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.2-lzma-support.patch
 Patch1002: rpm-4.4.2.2-default-topdir--usr-src-rpm.patch
@@ -474,6 +476,7 @@ capabilities.
 %patch135 -p1 -b .debugedit
 %patch136 -p1 -b .i18n
 %patch137 -p1 -b .iconv
+%patch138 -p1 -b .PreReq
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p0 -b .copyright-tag
