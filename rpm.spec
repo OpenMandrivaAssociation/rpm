@@ -49,8 +49,8 @@
 %define srcver		%rpmversion-rc1
 %define libpoptver	0
 %define libver		4.4
-%define release			    %manbo_mkrel 0.rc1.2
-%define poptrelease	%mkrel 9
+%define release			    %manbo_mkrel 0.rc1.3
+%define poptrelease	%mkrel 10
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
 %define libpoptnamedevel  %mklibname -d popt
@@ -196,6 +196,9 @@ Patch136: rpm-4.4.2.3-rc1-use-best-lang-from-HEADERI18NTABLE.patch
 Patch137: rpm-4.4.2.3-rc1-headerIconv.patch
 
 Patch138: rpm-4.4.2.3-rc1-do-not-display-PreReq-instead-of-Requires-when-zapping-looping-require.patch
+
+# on x86_64, file conflicts were allowed because of transaction coloring
+Patch139: rpm-4.4.2.3-rc1-do-not-allow-fileconflict-between-non-colored-file.patch
 
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.2-lzma-support.patch
@@ -477,6 +480,7 @@ capabilities.
 %patch136 -p1 -b .i18n
 %patch137 -p1 -b .iconv
 %patch138 -p1 -b .PreReq
+%patch139 -p1 -b .fileconflict
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p0 -b .copyright-tag
