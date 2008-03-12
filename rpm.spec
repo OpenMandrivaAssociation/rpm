@@ -549,8 +549,8 @@ mv $RPM_BUILD_ROOT%{_libdir}/libpopt.so.* $RPM_BUILD_ROOT/%{_lib}
 ln -s ../../%{_lib}/libpopt.so.0 $RPM_BUILD_ROOT%{_libdir}
 ln -sf libpopt.so.0 $RPM_BUILD_ROOT%{_libdir}/libpopt.so
 
-rm -f $RPM_BUILD_ROOT%{_prefix}/lib/rpmpopt
-ln -s rpm/rpmpopt-%{rpmversion} $RPM_BUILD_ROOT%{_prefix}/lib/rpmpopt
+# [pixel - March 2008] this is deprecated afaik, but keeping it for now
+ln -sf rpm/rpmpopt-%{srcver} $RPM_BUILD_ROOT%{_prefix}/lib/rpmpopt
 
 %ifarch ppc powerpc
 ln -sf ppc-mandriva-linux $RPM_BUILD_ROOT%{rpmdir}/powerpc-mandriva-linux
