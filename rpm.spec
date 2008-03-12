@@ -18,8 +18,6 @@
 %define _localstatedir /var
 %define _infodir %_datadir/info
 
-%define _host_vendor mandriva
-
 # Define directory which holds rpm config files, and some binaries actually
 # NOTE: it remains */lib even on lib64 platforms as only one version
 #       of rpm is supported anyway, per architecture
@@ -41,8 +39,10 @@
 %define pyver %(python -V 2>&1 | cut -f2 -d" " | cut -f1,2 -d".")
 %endif
 
+%if vendor == Mandriva
 %define __find_requires %{rpmdir}/mandriva/find-requires %{?buildroot:%{buildroot}} %{?_target_cpu:%{_target_cpu}}
 %define __find_provides %{rpmdir}/mandriva/find-provides
+%endif
 
 %define rpmversion	4.4.2.3
 %define poptver		1.10.8
@@ -610,8 +610,13 @@ EOF
   rm -f  .%{_bindir}/rpmdiff
 )
 
+%if %vendor == Mandriva
 %{rpmdir}/%{_host_vendor}/find-lang.pl $RPM_BUILD_ROOT %{name}
 %{rpmdir}/%{_host_vendor}/find-lang.pl $RPM_BUILD_ROOT popt
+%else
+%find_lang %{name}
+%find_lang popt
+%endif
 
 %check
 
