@@ -39,7 +39,7 @@
 %define pyver %(python -V 2>&1 | cut -f2 -d" " | cut -f1,2 -d".")
 %endif
 
-%if vendor == Mandriva
+%if %vendor == Mandriva
 %define __find_requires %{rpmdir}/mandriva/find-requires %{?buildroot:%{buildroot}} %{?_target_cpu:%{_target_cpu}}
 %define __find_provides %{rpmdir}/mandriva/find-provides
 %endif
