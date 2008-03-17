@@ -39,7 +39,7 @@
 %define pyver %(python -V 2>&1 | cut -f2 -d" " | cut -f1,2 -d".")
 %endif
 
-%if %vendor == Mandriva
+%if %_vendor == Mandriva
 %define __find_requires %{rpmdir}/mandriva/find-requires %{?buildroot:%{buildroot}} %{?_target_cpu:%{_target_cpu}}
 %define __find_provides %{rpmdir}/mandriva/find-provides
 %endif
@@ -60,7 +60,7 @@
 
 %define buildnptl 0
 
-%if %vendor == Mandriva
+%if %_vendor == Mandriva
 %if %{mdkversion} >= 200710
 # MDV 2007.1 builds with --hash-style=gnu by default
 %define rpmsetup_version 1.34
@@ -247,7 +247,7 @@ BuildRequires:	libbeecrypt-devel
 BuildRequires:	ed, gettext-devel
 BuildRequires:  libsqlite3-devel
 BuildRequires:  neon0.26-devel
-%if %vendor == Mandriva
+%if %_vendor == Mandriva
 BuildRequires:  rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 %endif
 BuildRequires:  readline-devel
@@ -273,7 +273,7 @@ Requires:	mktemp
 Requires:	popt = %{poptver}-%{poptrelease}
 Requires:	setup >= 2.2.0-8mdk
 Requires:	rpm-manbo-setup
-%if %vendor == Mandriva
+%if %_vendor == Mandriva
 Requires:	rpm-mandriva-setup >= 1.42
 %endif
 Requires:	update-alternatives
@@ -341,7 +341,7 @@ Requires:	make
 Requires:	unzip
 Requires:	elfutils
 Requires:	rpm = %epoch:%{version}-%{release}
-%if %vendor == Mandriva
+%if %_vendor == Mandriva
 Requires:	rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 %endif
 
@@ -610,7 +610,7 @@ EOF
   rm -f  .%{_bindir}/rpmdiff
 )
 
-%if %vendor == Mandriva
+%if %_vendor == Mandriva
 %{rpmdir}/%{_host_vendor}/find-lang.pl $RPM_BUILD_ROOT %{name}
 %{rpmdir}/%{_host_vendor}/find-lang.pl $RPM_BUILD_ROOT popt
 %else
