@@ -49,7 +49,7 @@
 %define srcver		%rpmversion-rc1
 %define libpoptver	0
 %define libver		4.4
-%define release			    %manbo_mkrel 0.rc1.3
+%define release			    %manbo_mkrel 0.rc1.5
 %define poptrelease	%mkrel 10
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
@@ -177,6 +177,9 @@ Patch124: rpm-4.4.2.2-speedup-by-not-checking-same-files-with-different-paths-th
 Patch132: rpm-4.4.2.2-extcond.patch
 # [from SuSE] handle "Suggests" via RPMTAG_SUGGESTSNAME
 Patch133: rpm-4.4.2.2-weakdeps.patch
+# complement patch above: add "suggests" handling to rpmdsNew
+# (wondering how it works without it?) (nanardon)
+Patch1133: rpm-4.4.2.3-rc1-weakdeps--allow-rpmds.patch
 
 # MDV2008.0 sets %buildroot globally, but default rule is %buildroot overrides BuildRoot
 # this breaks (broken) .spec relying on a specified BuildRoot (#34705).
@@ -475,6 +478,7 @@ capabilities.
 
 %patch132 -p0
 %patch133 -p1
+%patch1133 -p1
 
 %patch134 -p1 -b .defaultbuildroot
 
