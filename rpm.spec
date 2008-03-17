@@ -50,7 +50,7 @@
 %define libpoptver	0
 %define libver		4.4
 %define release			    %manbo_mkrel 0.rc1.5
-%define poptrelease	%mkrel 10
+%define poptrelease	%mkrel 11
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
 %define libpoptnamedevel  %mklibname -d popt
