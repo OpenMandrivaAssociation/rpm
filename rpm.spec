@@ -49,8 +49,8 @@
 %define srcver		%rpmversion-rc1
 %define libpoptver	0
 %define libver		4.4
-%define release			    %manbo_mkrel 0.rc1.6
-%define poptrelease	%mkrel 12
+%define release			    %manbo_mkrel 0.rc1.7
+%define poptrelease	%mkrel 13
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
 %define libpoptnamedevel  %mklibname -d popt
@@ -204,6 +204,8 @@ Patch138: rpm-4.4.2.3-rc1-do-not-display-PreReq-instead-of-Requires-when-zapping
 Patch139: rpm-4.4.2.3-rc1-do-not-allow-fileconflict-between-non-colored-file.patch
 
 Patch140: rpm-4.4.2.3-rc1-russian-translation.patch
+
+Patch141: rpm-4.4.2.3-rc1-postpone-ldconfig-instead-of-skipping-pseudo-redundant-ldconfig.patch
 
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.2-lzma-support.patch
@@ -488,6 +490,7 @@ capabilities.
 %patch138 -p1 -b .PreReq
 %patch139 -p1 -b .fileconflict
 %patch140 -p1
+%patch141 -p1
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p0 -b .copyright-tag
