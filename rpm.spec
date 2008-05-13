@@ -705,8 +705,6 @@ fi
 %attr(   -, rpm, rpm) %{rpmdir}/i*86-*
 %attr(   -, rpm, rpm) %{rpmdir}/athlon-*
 %attr(   -, rpm, rpm) %{rpmdir}/pentium*-*
-%endif
-%ifarch %{ix86}
 %attr(   -, rpm, rpm) %{rpmdir}/geode-*
 %endif
 %ifarch alpha
