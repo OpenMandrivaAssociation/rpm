@@ -46,11 +46,11 @@
 
 %define rpmversion	4.4.2.3
 %define poptver		1.10.8
-%define srcver		%rpmversion-rc1
+%define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %manbo_mkrel 0.rc1.7
-%define poptrelease	%mkrel 13
+%define release			    %manbo_mkrel 1
+%define poptrelease	%mkrel 14
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
 %define libpoptnamedevel  %mklibname -d popt
@@ -190,15 +190,8 @@ Patch134: rpm-4.4.2.2-defaultbuildroot.patch
 # (from Turbolinux) remove a wrong check in case %_topdir is /RPM (ie when it is short)
 Patch135: rpm-4.4.2.3-rc1-fix-debugedit.patch
 
-# (inspired by Turbolinux)
-# get best lang from rpm HEADERI18NTABLE, instead of getting first fuzzy match
-# (eg: zh_TW matches zh_CN whereas zh_TW entry is available)
-Patch136: rpm-4.4.2.3-rc1-use-best-lang-from-HEADERI18NTABLE.patch
 # convert data in the header to a specific encoding which used in the selected locale.
-# (require patch136)
 Patch137: rpm-4.4.2.3-rc1-headerIconv.patch
-
-Patch138: rpm-4.4.2.3-rc1-do-not-display-PreReq-instead-of-Requires-when-zapping-looping-require.patch
 
 # on x86_64, file conflicts were allowed because of transaction coloring
 Patch139: rpm-4.4.2.3-rc1-do-not-allow-fileconflict-between-non-colored-file.patch
@@ -206,6 +199,8 @@ Patch139: rpm-4.4.2.3-rc1-do-not-allow-fileconflict-between-non-colored-file.pat
 Patch140: rpm-4.4.2.3-rc1-russian-translation.patch
 
 Patch141: rpm-4.4.2.3-rc1-postpone-ldconfig-instead-of-skipping-pseudo-redundant-ldconfig.patch
+
+Patch142: rpm-do-not-ignore-failing-chroot.patch
 
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.2-lzma-support.patch
@@ -485,12 +480,11 @@ capabilities.
 %patch134 -p1 -b .defaultbuildroot
 
 %patch135 -p1 -b .debugedit
-%patch136 -p1 -b .i18n
 %patch137 -p1 -b .iconv
-%patch138 -p1 -b .PreReq
 %patch139 -p1 -b .fileconflict
 %patch140 -p1
 %patch141 -p1
+%patch142 -p1
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p0 -b .copyright-tag
