@@ -341,6 +341,7 @@ Requires:	gcc-c++
 Requires:	libtool-base >= 1.4.3-5mdk
 Requires:	patch
 Requires:	make
+Requires:	tar
 Requires:	unzip
 Requires:	elfutils
 Requires:	rpm = %epoch:%{version}-%{release}
