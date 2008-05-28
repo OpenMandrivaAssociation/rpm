@@ -205,6 +205,8 @@ Patch142: rpm-do-not-ignore-failing-chroot.patch
 # (already fixed upstream)
 Patch143: rpm-4.4.2.3-fix-debugedit-build.patch
 
+Patch144: rpm-4.4.2.3-handle-posttrans-p--with-no-body.patch
+
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.2-lzma-support.patch
 Patch1002: rpm-4.4.2.2-default-topdir--usr-src-rpm.patch
@@ -490,6 +492,7 @@ capabilities.
 %patch141 -p1
 %patch142 -p1
 %patch143 -p1
+%patch144 -p1
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p0 -b .copyright-tag
