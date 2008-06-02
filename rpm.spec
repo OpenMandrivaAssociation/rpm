@@ -198,7 +198,7 @@ Patch139: rpm-4.4.2.3-rc1-do-not-allow-fileconflict-between-non-colored-file.pat
 
 Patch140: rpm-4.4.2.3-rc1-russian-translation.patch
 
-Patch141: rpm-4.4.2.3-rc1-postpone-ldconfig-instead-of-skipping-pseudo-redundant-ldconfig.patch
+Patch141: rpm-4.4.2.3-drop-skipping-ldconfig-hack.patch
 
 Patch142: rpm-do-not-ignore-failing-chroot.patch
 
@@ -210,6 +210,9 @@ Patch144: rpm-4.4.2.3-handle-posttrans-p--with-no-body.patch
 # without this patch, "#%define foo bar" is surprisingly equivalent to "%define foo bar"
 # with this patch, "#%define foo bar" is a fatal error
 Patch145: rpm-4.4.2.3-forbid-badly-commented-define-in-spec.patch
+
+# cf http://wiki.mandriva.com/en/Rpm_filetriggers
+Patch146: rpm-4.4.2.3-filetriggers.patch
 
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.2-lzma-support.patch
@@ -498,6 +501,7 @@ capabilities.
 %patch143 -p1
 %patch144 -p1
 %patch145 -p1
+%patch146 -p1 -b .filetriggers
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p0 -b .copyright-tag
