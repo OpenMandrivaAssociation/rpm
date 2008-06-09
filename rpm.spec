@@ -49,8 +49,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %manbo_mkrel 2
-%define poptrelease	%mkrel 14
+%define release			    %manbo_mkrel 3
+%define poptrelease	%mkrel 15
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
 %define libpoptnamedevel  %mklibname -d popt
@@ -213,6 +213,9 @@ Patch145: rpm-4.4.2.3-forbid-badly-commented-define-in-spec.patch
 
 # cf http://wiki.mandriva.com/en/Rpm_filetriggers
 Patch146: rpm-4.4.2.3-filetriggers.patch
+
+# add two fatal errors (during package build)
+Patch147: rpm-4.4.2.3-rpmbuild-check-useless-tags-in-non-existant-binary-packages.patch
 
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.2-lzma-support.patch
@@ -502,6 +505,7 @@ capabilities.
 %patch144 -p1
 %patch145 -p1
 %patch146 -p1 -b .filetriggers
+%patch147 -p1
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p0 -b .copyright-tag
