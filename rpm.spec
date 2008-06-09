@@ -676,11 +676,19 @@ fi
 %postun
 /usr/share/rpm-helper/del-user rpm $1 rpm
 
+%if %mdkversion < 200900
 %post -n %librpmname -p /sbin/ldconfig
+%endif
+%if %mdkversion < 200900
 %postun -n %librpmname -p /sbin/ldconfig
+%endif
 
+%if %mdkversion < 200900
 %post -n %libpoptname -p /sbin/ldconfig
+%endif
+%if %mdkversion < 200900
 %postun -n %libpoptname -p /sbin/ldconfig
+%endif
 
 %define	rpmattr		%attr(0755, rpm, rpm)
 
