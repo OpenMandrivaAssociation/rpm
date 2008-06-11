@@ -49,8 +49,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %manbo_mkrel 3
-%define poptrelease	%mkrel 15
+%define release			    %manbo_mkrel 4
+%define poptrelease	%mkrel 16
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
 %define libpoptnamedevel  %mklibname -d popt
@@ -206,6 +206,12 @@ Patch142: rpm-do-not-ignore-failing-chroot.patch
 Patch143: rpm-4.4.2.3-fix-debugedit-build.patch
 
 Patch144: rpm-4.4.2.3-handle-posttrans-p--with-no-body.patch
+
+# ensure readLine errors are fatal soon
+# (useful for forbid-badly-commented-define-in-spec, 
+#  but also for "%if %xxx" where %xxx is not defined)
+# (already fixed in rpm.org with PART_ERROR which is < 0)
+Patch1450: rpm-4.4.2.3-readLine-errors-are-errors.patch
 
 # without this patch, "#%define foo bar" is surprisingly equivalent to "%define foo bar"
 # with this patch, "#%define foo bar" is a fatal error
@@ -503,6 +509,7 @@ capabilities.
 %patch142 -p1
 %patch143 -p1
 %patch144 -p1
+%patch1450 -p1
 %patch145 -p1
 %patch146 -p1 -b .filetriggers
 %patch147 -p1
