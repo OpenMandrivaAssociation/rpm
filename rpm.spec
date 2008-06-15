@@ -224,7 +224,7 @@ Patch146: rpm-4.4.2.3-filetriggers.patch
 Patch147: rpm-4.4.2.3-rpmbuild-check-useless-tags-in-non-existant-binary-packages.patch
 
 # be compatible with >= 4.4.8 :
-Patch1001: rpm-4.4.2.2-lzma-support.patch
+Patch1001: rpm-4.4.2.3-liblzma-payload.patch
 Patch1002: rpm-4.4.2.2-default-topdir--usr-src-rpm.patch
 
 # keep compatibility with "suggests" the way rpm >= 4.4.7 do it
@@ -261,6 +261,7 @@ License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	zlib-devel
 BuildRequires:  bzip2-devel
+BuildRequires:	liblzma-devel
 BuildRequires:	automake >= 1.8
 BuildRequires:	elfutils-devel
 BuildRequires:	sed >= 4.0.3
@@ -489,7 +490,7 @@ capabilities.
 %patch124 -p1 -b .speedup
 
 
-%patch1001 -p1 -b .lzma
+%patch1001 -p1 -b .liblzma
 %patch1002 -p1
 %patch1003 -p1
 %patch1004 -p1
