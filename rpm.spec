@@ -91,9 +91,6 @@ Patch17:	rpm-4.4.2.2-gendiff-improved.patch
 # (gb) force generation of PIC code for static libs that can be built into a DSO (file)
 Patch3:		rpm-4.4.2.2-pic.patch
 
-# (pixel) resurrected patch. useful when used together with "private" in macros.cdb
-Patch13:	rpm-4.4.8-global-RPMLOCK.patch
-
 # if %post of foo-2 fails,
 # or if %preun of foo-1 fails,
 # or if %postun of foo-1 fails,
@@ -447,8 +444,6 @@ capabilities.
 %setup -q -n %name-%srcver
 
 %patch3 -p1 -b .pic
-
-#%patch13 -p1 -b .lock
 
 %patch17 -p1 -b .improved
 
