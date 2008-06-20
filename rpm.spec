@@ -590,13 +590,6 @@ install -m 755 scripts/rpm.daily ${RPM_BUILD_ROOT}/etc/cron.daily/rpm
 mkdir -p ${RPM_BUILD_ROOT}/etc/logrotate.d
 install -m 644 scripts/rpm.log ${RPM_BUILD_ROOT}/etc/logrotate.d/rpm
 
-mkdir -p $RPM_BUILD_ROOT/etc/rpm/
-cat << E_O_F > $RPM_BUILD_ROOT/etc/rpm/macros.cdb
-%%__dbi_cdb      %%{nil}
-%%__dbi_other    %%{?_tmppath:tmpdir=%%{_tmppath}} usedbenv create \
-                 mpool mp_mmapsize=8Mb mp_size=512kb verify
-E_O_F
-
 mkdir -p $RPM_BUILD_ROOT/var/lib/rpm
 for dbi in \
 	Basenames Conflictname Dirnames Group Installtid Name Providename \
@@ -716,7 +709,6 @@ fi
 %dir %{rpmdir}
 %dir /etc/rpm
 %config(noreplace) /etc/rpm/macros
-%config(noreplace) /etc/rpm/macros.cdb
 %dir /etc/rpm/macros.d
 %attr(0755, rpm, rpm) %{rpmdir}/config.guess
 %attr(0755, rpm, rpm) %{rpmdir}/config.sub
