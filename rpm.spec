@@ -49,8 +49,8 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %manbo_mkrel 10
-%define poptrelease	%mkrel 22
+%define release			    %manbo_mkrel 11
+%define poptrelease	%mkrel 23
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
 %define libpoptnamedevel  %mklibname -d popt
@@ -689,6 +689,12 @@ fi
 %if %mdkversion < 200900
 %postun -n %libpoptname -p /sbin/ldconfig
 %endif
+
+%triggerpostun -- rpm < 1:4.4.2.3-11
+if [ -f /etc/rpm/macros.cdb.rpmsave ]; then
+   echo "warning: restoring /etc/rpm/macros.cdb from macros.cdb.rpmsave, please check you really need the changes"
+   mv /etc/rpm/macros.cdb.rpmsave /etc/rpm/macros.cdb
+fi
 
 %define	rpmattr		%attr(0755, rpm, rpm)
 
