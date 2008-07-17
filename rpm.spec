@@ -49,7 +49,7 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %manbo_mkrel 13
+%define release			    %manbo_mkrel 14
 %define poptrelease	%mkrel 25
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
@@ -265,7 +265,7 @@ BuildRequires:	sed >= 4.0.3
 BuildRequires:	libbeecrypt-devel
 BuildRequires:	ed, gettext-devel
 BuildRequires:  libsqlite3-devel
-BuildRequires:  neon0.26-devel
+BuildRequires:  neon-devel
 %if %_vendor == Mandriva
 BuildRequires:  rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 %endif
