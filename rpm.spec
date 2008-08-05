@@ -49,7 +49,7 @@
 %define srcver		%rpmversion
 %define libpoptver	0
 %define libver		4.4
-%define release			    %manbo_mkrel 14
+%define release			    %manbo_mkrel 15
 %define poptrelease	%mkrel 26
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
@@ -293,7 +293,7 @@ Requires:	popt = %{poptver}-%{poptrelease}
 Requires:	setup >= 2.2.0-8mdk
 Requires:	rpm-manbo-setup
 %if %_vendor == Mandriva
-Requires:	rpm-mandriva-setup >= 1.42
+Requires:	rpm-mandriva-setup >= 1.85
 %endif
 Requires:	update-alternatives
 Requires:	%librpmname = %epoch:%version-%release
