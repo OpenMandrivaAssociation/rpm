@@ -50,8 +50,8 @@
 %define libpoptver	0
 %define libver		4.4
 # be sure to increase both release and poptrelease at the same time
-%define release			    %manbo_mkrel 15
-%define poptrelease	%mkrel 27
+%define release			    %manbo_mkrel 16
+%define poptrelease	%mkrel 28
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
 %define libpoptnamedevel  %mklibname -d popt
@@ -220,6 +220,8 @@ Patch146: rpm-4.4.2.3-filetriggers.patch
 
 # add two fatal errors (during package build)
 Patch147: rpm-4.4.2.3-rpmbuild-check-useless-tags-in-non-existant-binary-packages.patch
+
+Patch148: rpm-4.4.2.3-do-not-ignore-failing-chroot2.patch
 
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.3-liblzma-payload.patch
@@ -510,6 +512,7 @@ capabilities.
 %patch145 -p1
 %patch146 -p1 -b .filetriggers
 %patch147 -p1
+%patch148 -p1
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p0 -b .copyright-tag
