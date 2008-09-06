@@ -50,8 +50,8 @@
 %define libpoptver	0
 %define libver		4.4
 # be sure to increase both release and poptrelease at the same time
-%define release			    %manbo_mkrel 16
-%define poptrelease	%mkrel 28
+%define release			    %manbo_mkrel 17
+%define poptrelease	%mkrel 29
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
 %define libpoptnamedevel  %mklibname -d popt
@@ -223,6 +223,9 @@ Patch147: rpm-4.4.2.3-rpmbuild-check-useless-tags-in-non-existant-binary-package
 
 Patch148: rpm-4.4.2.3-do-not-ignore-failing-chroot2.patch
 
+# upstream rpm.org has already got rid of internal db
+Patch149: rpm-4.4.2.3-external-db.patch
+
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.3-liblzma-payload.patch
 Patch1002: rpm-4.4.2.2-default-topdir--usr-src-rpm.patch
@@ -268,6 +271,7 @@ BuildRequires:	sed >= 4.0.3
 BuildRequires:	libbeecrypt-devel
 BuildRequires:	ed, gettext-devel
 BuildRequires:  libsqlite3-devel
+BuildRequires:  db4.6-devel
 BuildRequires:  neon-devel
 %if %_vendor == Mandriva
 BuildRequires:  rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
@@ -513,6 +517,9 @@ capabilities.
 %patch146 -p1 -b .filetriggers
 %patch147 -p1
 %patch148 -p1
+%patch149 -p1 -b .external-db
+
+rm -rf db db3 rpmdb/db.h
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p0 -b .copyright-tag
