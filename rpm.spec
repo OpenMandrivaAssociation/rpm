@@ -50,8 +50,8 @@
 %define libpoptver	0
 %define libver		4.4
 # be sure to increase both release and poptrelease at the same time
-%define release			    %manbo_mkrel 17
-%define poptrelease	%mkrel 29
+%define release			    %manbo_mkrel 18
+%define poptrelease	%mkrel 30
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
 %define libpoptnamedevel  %mklibname -d popt
@@ -225,6 +225,9 @@ Patch148: rpm-4.4.2.3-do-not-ignore-failing-chroot2.patch
 
 # upstream rpm.org has already got rid of internal db
 Patch149: rpm-4.4.2.3-external-db.patch
+
+# fixed upstream
+Patch150: rpm-4.4.2.3-fix-broken-cpio-for-hardlink-on-softlink.patch
 
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.3-liblzma-payload.patch
@@ -518,6 +521,7 @@ capabilities.
 %patch147 -p1
 %patch148 -p1
 %patch149 -p1 -b .external-db
+%patch150 -p1 -b .hardlink-symlink
 
 rm -rf db db3 rpmdb/db.h
 
@@ -582,8 +586,7 @@ make DESTDIR=%buildroot install
 # from /usr/%_lib
 mkdir -p $RPM_BUILD_ROOT/%{_lib}
 mv $RPM_BUILD_ROOT%{_libdir}/libpopt.so.* $RPM_BUILD_ROOT/%{_lib}
-ln -s ../../%{_lib}/libpopt.so.0 $RPM_BUILD_ROOT%{_libdir}
-ln -sf libpopt.so.0 $RPM_BUILD_ROOT%{_libdir}/libpopt.so
+ln -sf ../../%{_lib}/libpopt.so.0 $RPM_BUILD_ROOT%{_libdir}/libpopt.so
 
 # [pixel - March 2008] this is deprecated afaik, but keeping it for now
 ln -sf rpm/rpmpopt-%{srcver} $RPM_BUILD_ROOT%{_prefix}/lib/rpmpopt
@@ -898,7 +901,6 @@ fi
 %files -n %libpoptname
 %defattr(-,root,root)
 /%{_lib}/libpopt.so.*
-%{_libdir}/libpopt.so.*
 
 %files -n %libpoptnamedevel
 %defattr(-,root,root)
