@@ -50,8 +50,8 @@
 %define libpoptver	0
 %define libver		4.4
 # be sure to increase both release and poptrelease at the same time
-%define release			    %manbo_mkrel 18
-%define poptrelease	%mkrel 30
+%define release			    %manbo_mkrel 19
+%define poptrelease	%mkrel 31
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
 %define libpoptnamedevel  %mklibname -d popt
@@ -228,6 +228,8 @@ Patch149: rpm-4.4.2.3-external-db.patch
 
 # fixed upstream
 Patch150: rpm-4.4.2.3-fix-broken-cpio-for-hardlink-on-softlink.patch
+
+Patch151: rpm-4.4.2.3-protect-against-non-robust-futex.patch
 
 # be compatible with >= 4.4.8 :
 Patch1001: rpm-4.4.2.3-liblzma-payload.patch
@@ -522,6 +524,7 @@ capabilities.
 %patch148 -p1
 %patch149 -p1 -b .external-db
 %patch150 -p1 -b .hardlink-symlink
+%patch151 -p1 -b .lock__db001
 
 rm -rf db db3 rpmdb/db.h
 
