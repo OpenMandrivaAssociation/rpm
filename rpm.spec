@@ -284,7 +284,7 @@ BuildRequires:  rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_versi
 BuildRequires:  readline-devel
 BuildRequires:	ncurses-devel
 BuildRequires:  openssl-devel >= 0.9.8
-BuildRequires:  liblua-devel
+BuildRequires:  lua-devel
 # Need for doc
 BuildRequires:	graphviz
 BuildRequires:	tetex
