@@ -50,7 +50,7 @@
 %define libpoptver	0
 %define libver		4.4
 # be sure to increase both release and poptrelease at the same time
-%define release			    %manbo_mkrel 20
+%define release			    %manbo_mkrel 21
 %define poptrelease	%mkrel 32
 %define libpoptname  %mklibname popt %{libpoptver}
 %define librpmname   %mklibname rpm  %{libver}
@@ -232,7 +232,7 @@ Patch150: rpm-4.4.2.3-fix-broken-cpio-for-hardlink-on-softlink.patch
 Patch151: rpm-4.4.2.3-protect-against-non-robust-futex.patch
 
 # be compatible with >= 4.4.8 :
-Patch1001: rpm-4.4.2.3-liblzma-payload.patch
+Patch1001: rpm-4.4.2.3-liblzma_4.999.6-payload.patch
 Patch1002: rpm-4.4.2.2-default-topdir--usr-src-rpm.patch
 
 # keep compatibility with "suggests" the way rpm >= 4.4.7 do it
