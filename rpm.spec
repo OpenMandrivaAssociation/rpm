@@ -44,22 +44,14 @@
 %define __find_provides %{rpmdir}/mandriva/find-provides
 %endif
 
-%define rpmversion	4.4.2.3
-%define poptver		1.10.8
-%define srcver		%rpmversion
-%define libpoptver	0
-%define libver		4.4
-# be sure to increase both release and poptrelease at the same time
-%define release			    %manbo_mkrel 22
-%define poptrelease	%mkrel 33
-%define libpoptname  %mklibname popt %{libpoptver}
+%define rpmversion	4.6.0
+%define srcver		%rpmversion-rc2
+%define libver		4.6
+%define release			    %manbo_mkrel 0.rc2.1
 %define librpmname   %mklibname rpm  %{libver}
-%define libpoptnamedevel  %mklibname -d popt
 %define librpmnamedevel   %mklibname -d rpm
 
 %define buildpython 1
-
-%define buildnptl 0
 
 %if %_vendor == Mandriva
 %if %{mdkversion} >= 200710
@@ -74,9 +66,6 @@
 %{?_with_python:%define buildpython 1}
 %{?_without_python:%define buildpython 0}
 
-%{?_with_nptl:%define buildnptl 1}
-%{?_without_nptl:%define buildnptl 0}
-
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
@@ -84,13 +73,10 @@ Version:	%{rpmversion}
 Release:	%{release}
 Group:		System/Configuration/Packaging
 
-Source:		http://www.rpm.org/releases/rpm-%{libver}.x/rpm-%{srcver}.tar.gz
+Source:		http://www.rpm.org/releases/rpm-%{libver}.x/rpm-%{srcver}.tar.bz2
 
 # Add some undocumented feature to gendiff
 Patch17:	rpm-4.4.2.2-gendiff-improved.patch
-
-# (gb) force generation of PIC code for static libs that can be built into a DSO (file)
-Patch3:		rpm-4.4.2.2-pic.patch
 
 # if %post of foo-2 fails,
 # or if %preun of foo-1 fails,
@@ -101,29 +87,23 @@ Patch3:		rpm-4.4.2.2-pic.patch
 #
 # (nb: the exit code for pretrans/posttrans & trigger/triggerun/triggerpostun
 #       scripts is ignored with or without this patch)
-Patch22:        rpm-4.4.6-non-pre-scripts-dont-fail.patch
+Patch22:        rpm-4.6.0-rc1-non-pre-scripts-dont-fail.patch
 
 # (fredl) add loging facilities through syslog
-Patch31:	rpm-4.4.2.2-syslog.patch
-
-# Check amd64 vs x86_64, these arch are the same
-Patch44:	rpm-4.4.1-amd64.patch
+Patch31:	rpm-4.6.0-rc1-syslog.patch
 
 # part of Backport from 4.2.1 provides becoming obsoletes bug (fpons)
 # (is it still needed?)
-Patch49:	rpm-4.4.2.2-provides-obsoleted.patch
-
-# Introduce new ppc32 arch. Fix ppc64 bi-arch builds. Fix ppc builds on newer CPUs.
-Patch56:	rpm-4.4.2.2-ppc32.patch
+Patch49:	rpm-4.6.0-rc1-provides-obsoleted.patch
 
 # - force /usr/lib/rpm/manbo/rpmrc instead of /usr/lib/rpm/<vendor>/rpmrc
 # - read /usr/lib/rpm/manbo/rpmpopt (not only /usr/lib/rpm/rpmpopt)
-Patch64:    rpm-4.4.2.2-manbo-rpmrc-rpmpopt.patch
+Patch64:    rpm-4.6.0-rc2-manbo-rpmrc-rpmpopt.patch
 
 # In original rpm, -bb --short-circuit does not work and run all stage
 # From popular request, we allow to do this
 # http://qa.mandriva.com/show_bug.cgi?id=15896
-Patch70:	rpm-4.4.1-bb-shortcircuit.patch
+Patch70:	rpm-4.6.0-rc1-bb-shortcircuit.patch
 
 # http://www.redhat.com/archives/rpm-list/2005-April/msg00131.html
 # http://www.redhat.com/archives/rpm-list/2005-April/msg00132.html
@@ -138,124 +118,78 @@ Patch83: rpm-4.4.2.2-no-doc-conflicts.patch
 Patch84: rpm-4.4.2.2-rpmqv-ghost.patch
 
 # (sqlite) Use temporary table for Depends DB (Olivier Thauvin upstream)
-Patch86: rpm-4.4.2.2-depsdb.patch
+Patch86: rpm-4.6.0-rc1-sqlite-depsdb.patch
 
 # avoids taking into account duplicates in file list when checking
 # for unpackaged files
 Patch91: rpm-4.4.6-check-dupl-files.patch
-
-# without this patch, when pkg rpm-build is not installed,
-# using rpm -bs t.spec returns: "t.spec: No such file or directory"
-Patch100: rpm-4.4.6-fix-error-message-rpmb-not-installed.patch
 
 Patch109: rpm-build-expand-field-for-single-token.patch
 
 # Fix diff issue when buildroot contains some "//"
 Patch111: rpm-check-file-trim-double-slash-in-buildroot.patch
 
-# Fix strange issue making %pre/post/... -f not working
-# (only needed on 4.4.8?)
-Patch112: rpm-4.4.2.2-dont-use-rpmio-to-read-file-for-script.patch
-
 # patch only needed when rpmrc is not used (ie jbj's rpm), 
 # otherwise macrofiles from rpmrc always overrides MACROFILES
-Patch114: rpm-4.4.2.2-read-vendor-macros.patch
+Patch114: rpm-4.6.0-rc1-read-macros_d-dot-macros.patch
 
 # remove unused skipDir functionality that conflicts with patch124 below
-Patch1124: rpm-4.4.2.2-revert-unused-skipDir-functionality.patch
+Patch1124: rpm-4.6.0-rc1-revert-unused-skipDir-functionality.patch
 
 # [pixel] without this patch, "rpm -e" or "rpm -U" will need to stat(2) every dirnames of
 # files from the package (eg COPYING) in the db. This is quite costly when not in cache 
 # (eg on a test here: >300 stats, and so 3 seconds after a "echo 3 > /proc/sys/vm/drop_caches")
 # this breaks urpmi test case test_rpm_i_fail('gd') in superuser--file-conflicts.t,
 # but this is bad design anyway
-Patch124: rpm-4.4.2.2-speedup-by-not-checking-same-files-with-different-paths-through-symlink.patch
+Patch124: rpm-4.6.0-rc1-speedup-by-not-checking-same-files-with-different-paths-through-symlink.patch
 
-# [from SuSE] patch132 needed by patch133
-Patch132: rpm-4.4.2.2-extcond.patch
 # [from SuSE] handle "Suggests" via RPMTAG_SUGGESTSNAME
-Patch133: rpm-4.4.2.2-weakdeps.patch
-# complement patch above: add "suggests" handling to rpmdsNew
-# (wondering how it works without it?) (nanardon)
-Patch1133: rpm-4.4.2.3-rc1-weakdeps--allow-rpmds.patch
-
-# MDV2008.0 sets %buildroot globally, but default rule is %buildroot overrides BuildRoot
-# this breaks (broken) .spec relying on a specified BuildRoot (#34705).
-# Introducing a global %defaultbuildroot which is used when neither %buildroot nor BuildRoot is used
-# So %buildroot/$RPM_BUILD_ROOT in .spec are set to %buildroot or BuildRoot or %defaultbuildroot (in that order)
-Patch134: rpm-4.4.2.2-defaultbuildroot.patch
+Patch133: rpm-4.6.0-rc1-weakdeps.patch
 
 # (from Turbolinux) remove a wrong check in case %_topdir is /RPM (ie when it is short)
 Patch135: rpm-4.4.2.3-rc1-fix-debugedit.patch
 
 # convert data in the header to a specific encoding which used in the selected locale.
-Patch137: rpm-4.4.2.3-rc1-headerIconv.patch
-
-# on x86_64, file conflicts were allowed because of transaction coloring
-Patch139: rpm-4.4.2.3-rc1-do-not-allow-fileconflict-between-non-colored-file.patch
+Patch137: rpm-4.6.0-rc1-headerIconv.patch
 
 Patch140: rpm-4.4.2.3-rc1-russian-translation.patch
 
-Patch141: rpm-4.4.2.3-drop-skipping-ldconfig-hack.patch
-
-Patch142: rpm-do-not-ignore-failing-chroot.patch
-
-# (already fixed upstream)
-Patch143: rpm-4.4.2.3-fix-debugedit-build.patch
-
-Patch144: rpm-4.4.2.3-handle-posttrans-p--with-no-body.patch
-
-# ensure readLine errors are fatal soon
-# (useful for forbid-badly-commented-define-in-spec, 
-#  but also for "%if %xxx" where %xxx is not defined)
-# (already fixed in rpm.org with PART_ERROR which is < 0)
-Patch1450: rpm-4.4.2.3-readLine-errors-are-errors.patch
+Patch141: rpm-4.6.0-rc1-drop-skipping-ldconfig-hack.patch
 
 # without this patch, "#%define foo bar" is surprisingly equivalent to "%define foo bar"
 # with this patch, "#%define foo bar" is a fatal error
 Patch145: rpm-4.4.2.3-forbid-badly-commented-define-in-spec.patch
 
 # cf http://wiki.mandriva.com/en/Rpm_filetriggers
-Patch146: rpm-4.4.2.3-filetriggers.patch
+Patch146: rpm-4.6.0-rc1-filetriggers.patch
 
 # add two fatal errors (during package build)
-Patch147: rpm-4.4.2.3-rpmbuild-check-useless-tags-in-non-existant-binary-packages.patch
+Patch147: rpm-4.6.0-rc1-rpmbuild-check-useless-tags-in-non-existant-binary-packages.patch
 
-Patch148: rpm-4.4.2.3-do-not-ignore-failing-chroot2.patch
+Patch148: rpm-4.6.0-rc1-do-not-ignore-failing-chroot2.patch
 
-# upstream rpm.org has already got rid of internal db
-Patch149: rpm-4.4.2.3-external-db.patch
+Patch151: rpm-4.6.0-rc1-protect-against-non-robust-futex.patch
 
-# fixed upstream
-Patch150: rpm-4.4.2.3-fix-broken-cpio-for-hardlink-on-softlink.patch
+Patch152: rpm-4.6.0-rc1-fix-nss-detection.patch
 
-Patch151: rpm-4.4.2.3-protect-against-non-robust-futex.patch
+# fix for http://rpm.org/ticket/10
+Patch153: rpm-4.6.0-rc1-fix-buildroot-when-subpackage-has-different-version.patch
 
-# be compatible with >= 4.4.8 :
-Patch1001: rpm-4.4.2.3-liblzma_4.999.6-payload.patch
-Patch1002: rpm-4.4.2.2-default-topdir--usr-src-rpm.patch
-
-# keep compatibility with "suggests" the way rpm >= 4.4.7 do it
-# (backport from 4.4.7 + mandriva fix)
-Patch1003: rpm-4.4.2.2-handle-suggests--ignore-requires-hint.patch
-
-# keep libpopt.so versioning from 4.4.8 to avoid warning:
-# xxx: /lib/libpopt.so.0: no version information available (required by xxx)
-Patch1004: rpm-4.4.2.2-add-libpopt-vers.patch
+Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
 
 # default behaviour in rpm >= 4.4.6
 Patch1005: rpm-4.4.2.2-allow-conflicting-ghost-files.patch
 
+Patch1006: rpm-4.6.0-rc1-compat-PayloadIsLzma.patch
+
 # Turbolinux patches
-Patch2000: rpm-4.4.2-serial-tag.patch
+Patch2000: rpm-4.6.0-rc1-serial-tag.patch
 # re-enable "copyright" tag (Kiichiro, 2005)
-Patch2001: rpm-4.4.2-copyright-tag.patch
+Patch2001: rpm-4.6.0-rc1-copyright-tag.patch
 # add writeHeaderListTofile function into rpm-python (needed by "buildman" build system) (Toshihiro, 2003)
-Patch2002: rpm-4.2.2-python-writeHdlist.patch
+Patch2002: rpm-4.6.0-rc1-python-writeHdlist.patch
 # Crusoe CPUs say that their CPU family is "5" but they have enough features for i686.
 Patch2003: rpm-4.4.2.3-rc1-transmeta-crusoe-is-686.patch
-# add japanese popt translations
-Patch2004: rpm-4.4.2.3-rc1-popt-ja-translations.patch
 
 # The following patch is unneeded for Mandriva, but Turbolinux has it and it can't hurt much
 #
@@ -263,7 +197,7 @@ Patch2004: rpm-4.4.2.3-rc1-popt-ja-translations.patch
 # The post-scripts launched by rpm-build works in LANG environment. If LANG is
 # other locale except C, then some commands launched by post-scripts will not
 # display characters which you expected.
-Patch2005: rpm-4.2.0-buildlang.patch
+Patch2005: rpm-4.6.0-rc1-buildlang.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -291,9 +225,6 @@ BuildRequires:	tetex
 %if %buildpython
 BuildRequires:	python-devel
 %endif
-%if %buildnptl
-# BuildRequires:	nptl-devel
-%endif
 
 Requires:	bzip2 >= 0.9.0c-2
 Requires:	lzma
@@ -301,7 +232,6 @@ Requires:	cpio
 Requires:	gawk
 Requires:	glibc >= 2.1.92
 Requires:	mktemp
-Requires:	popt = %{poptver}-%{poptrelease}
 Requires:	setup >= 2.2.0-8mdk
 Requires:	rpm-manbo-setup
 %if %_vendor == Mandriva
@@ -341,7 +271,6 @@ This package contains common files to all applications based on rpm.
 Summary:	Development files for applications which will manipulate RPM packages
 Group:		Development/C
 Requires:	rpm = %epoch:%{version}-%{release}
-Requires:	%libpoptnamedevel = %epoch:%{poptver}-%{poptrelease}
 Provides:	librpm-devel = %version-%release
 Provides:   	rpm-devel = %version-%release
 Obsoletes:  	rpm-devel < 4.4.1
@@ -399,63 +328,8 @@ This package should be installed if you want to develop Python
 programs that will manipulate RPM packages and databases.
 %endif
 
-%package -n popt-data
-Summary: popt static data
-Group:		System/Libraries
-Version:	%{poptver}
-Release:    %{poptrelease}
-
-%description -n popt-data
-This package contains popt data files like locales.
-
-%package -n %libpoptname
-Summary:	A C library for parsing command line parameters
-Group:		System/Libraries
-Version:	%{poptver}
-Release:	%{poptrelease}
-Requires:   popt-data >= %{poptver}
-Provides:   lib%{name} = %{poptver}-%{poptrelease}
-Provides:   popt = %{poptver}-%{poptrelease}
-Obsoletes:  popt <= 1.8.3
-
-%description -n %libpoptname
-Popt is a C library for parsing command line parameters.  Popt was
-heavily influenced by the getopt() and getopt_long() functions, but it
-improves on them by allowing more powerful argument expansion.  Popt
-can parse arbitrary argv[] style arrays and automatically set
-variables based on command line arguments.  Popt allows command line
-arguments to be aliased via configuration files and includes utility
-functions for parsing arbitrary strings into argv[] arrays using
-shell-like rules.
-
-%package -n %libpoptnamedevel
-Summary:	A C library for parsing command line parameters
-Group:		Development/C
-Version:	%{poptver}
-Release:	%{poptrelease}
-Requires:	%libpoptname = %epoch:%{poptver}-%{poptrelease}
-Provides:   popt-devel = %{poptver}-%{poptrelease}
-Provides:   libpopt-devel = %{poptver}-%{poptrelease}
-Obsoletes:  popt-devel <= 1.8.3
-Obsoletes:  %{_lib}popt0-devel
-
-%description -n %libpoptnamedevel
-Popt is a C library for parsing command line parameters.  Popt was
-heavily influenced by the getopt() and getopt_long() functions, but it
-improves on them by allowing more powerful argument expansion.  Popt
-can parse arbitrary argv[] style arrays and automatically set
-variables based on command line arguments.  Popt allows command line
-arguments to be aliased via configuration files and includes utility
-functions for parsing arbitrary strings into argv[] arrays using
-shell-like rules.
-
-Install popt-devel if you're a C programmer and you'd like to use its
-capabilities.
-
 %prep
 %setup -q -n %name-%srcver
-
-%patch3 -p1 -b .pic
 
 %patch17 -p1 -b .improved
 
@@ -463,15 +337,11 @@ capabilities.
 
 %patch31 -p1 -b .syslog
 
-%patch44 -p1 -b .amd64
-
 %patch49 -p1 -b .provides
-
-%patch56 -p1 -b .ppc32
 
 %patch64 -p1 -b .morepopt
 
-%patch70 -p0 -b .shortcircuit
+%patch70 -p1 -b .shortcircuit
 
 %patch71 -p0  -b .ordererase
 
@@ -483,13 +353,8 @@ capabilities.
 
 %patch91 -p0 -b .check-dupl-files
 
-%patch100 -p1 -b .rpmb-missing
-
 # Fix diff issue when buildroot contains some "//"
 %patch111 -p0 -b .trim-slash
-
-# Fix strange issue making %pre/post/... -f not working
-%patch112 -p1 -b .build-no-rpmio
 
 %patch114 -p1 -b .read-our-macros
 
@@ -498,50 +363,32 @@ capabilities.
 
 
 %patch1001 -p1 -b .liblzma
-%patch1002 -p1
-%patch1003 -p1
-%patch1004 -p1
 %patch1005 -p1
+%patch1006 -p1
 
-%patch132 -p0
-%patch133 -p1
-%patch1133 -p1
-
-%patch134 -p1 -b .defaultbuildroot
+%patch133 -p1 -b .weakdeps
 
 %patch135 -p1 -b .debugedit
 %patch137 -p1 -b .iconv
-%patch139 -p1 -b .fileconflict
 %patch140 -p1
 %patch141 -p1
-%patch142 -p1
-%patch143 -p1
-%patch144 -p1
-%patch1450 -p1
 %patch145 -p1
 %patch146 -p1 -b .filetriggers
-%patch147 -p1
+%patch147 -p1 -b .useless-tags
 %patch148 -p1
-%patch149 -p1 -b .external-db
-%patch150 -p1 -b .hardlink-symlink
 %patch151 -p1 -b .lock__db001
-
-rm -rf db db3 rpmdb/db.h
+%patch152 -p1
+%patch153 -p1 -b .buildroot
 
 %patch2000 -p1 -b .serial-tag
-%patch2001 -p0 -b .copyright-tag
-%patch2002 -p0 -b .python_writeHD
+%patch2001 -p1 -b .copyright-tag
+%patch2002 -p1 -b .python_writeHD
 %patch2003 -p1 -b .crusoe-arch
-%patch2004 -p1 -b .popt-ja
 %patch2005 -p1 -b .buildlang
 
 %build
 
-for dir in . popt file; do
-    pushd $dir
-    autoreconf
-    popd
-done
+autoreconf
 
 # rpm takes care of --libdir but explicitelly setting --libdir on
 # configure breaks make install, but this does not matter.
@@ -559,15 +406,12 @@ CFLAGS="$RPM_OPT_FLAGS -fPIC" CXXFLAGS="$RPM_OPT_FLAGS -fPIC" \
         --mandir=%{_mandir} \
         --infodir=%{_infodir} \
         --enable-nls \
+        --enable-python \
         --without-javaglue \
 %if %builddebug
         --enable-debug \
 %endif
-%if %buildnptl
-        --enable-posixmutexes \
-%else
-        --with-mutex=UNIX/fcntl \
-%endif
+	--with-external-db \
 %if %buildpython
         --with-python=%{pyver} \
 %else
@@ -583,16 +427,6 @@ CFLAGS="$RPM_OPT_FLAGS -fPIC" CXXFLAGS="$RPM_OPT_FLAGS -fPIC" \
 rm -rf $RPM_BUILD_ROOT
 
 make DESTDIR=%buildroot install
-
-# We put a popt copy in /%_lib for application in /bin
-# This is not for rpm itself as it requires all rpmlib
-# from /usr/%_lib
-mkdir -p $RPM_BUILD_ROOT/%{_lib}
-mv $RPM_BUILD_ROOT%{_libdir}/libpopt.so.* $RPM_BUILD_ROOT/%{_lib}
-ln -sf ../../%{_lib}/libpopt.so.0 $RPM_BUILD_ROOT%{_libdir}/libpopt.so
-
-# [pixel - March 2008] this is deprecated afaik, but keeping it for now
-ln -sf rpm/rpmpopt-%{srcver} $RPM_BUILD_ROOT%{_prefix}/lib/rpmpopt
 
 %ifarch ppc powerpc
 ln -sf ppc-mandriva-linux $RPM_BUILD_ROOT%{rpmdir}/powerpc-mandriva-linux
@@ -637,7 +471,6 @@ EOF
 (cd $RPM_BUILD_ROOT;
   rm -rf .%{_includedir}/beecrypt/
   rm -f  .%{_libdir}/libbeecrypt.{a,la,so*}
-  rm -f  .%{_libdir}/python*/site-packages/poptmodule.{a,la}
   rm -f  .%{_libdir}/python*/site-packages/rpmmodule.{a,la}
   rm -f  .%{rpmdir}/{Specfile.pm,cpanflute2,cpanflute,sql.prov,sql.req,tcl.req}
   rm -f  .%{rpmdir}/{config.site,cross-build,rpmdiff.cgi}
@@ -647,15 +480,9 @@ EOF
 
 %if %_vendor == Mandriva
 %{rpmdir}/%{_host_vendor}/find-lang.pl $RPM_BUILD_ROOT %{name}
-%{rpmdir}/%{_host_vendor}/find-lang.pl $RPM_BUILD_ROOT popt
 %else
 %find_lang %{name}
-%find_lang popt
 %endif
-
-%check
-
-#make -C popt check-TESTS
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -700,13 +527,6 @@ fi
 %postun -n %librpmname -p /sbin/ldconfig
 %endif
 
-%if %mdkversion < 200900
-%post -n %libpoptname -p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n %libpoptname -p /sbin/ldconfig
-%endif
-
 %triggerpostun -- rpm < 1:4.4.2.3-11
 if [ -f /etc/rpm/macros.cdb.rpmsave ]; then
    echo "warning: restoring /etc/rpm/macros.cdb from macros.cdb.rpmsave, please check you really need the changes"
@@ -723,7 +543,6 @@ fi
 %attr(0755, rpm, rpm) %{_bindir}/gendiff
 %attr(0755, rpm, rpm) %{_bindir}/rpmdb
 %attr(0755, rpm, rpm) %{_bindir}/rpmgraph
-%attr(0755, rpm, rpm) %{_bindir}/rpm[eiukqv]
 %attr(0755, rpm, rpm) %{_bindir}/rpmsign
 %attr(0755, rpm, rpm) %{_bindir}/rpmquery
 %attr(0755, rpm, rpm) %{_bindir}/rpmverify
@@ -740,49 +559,47 @@ fi
 %attr(0644, rpm, rpm) %{rpmdir}/macros
 %attr(0755, rpm, rpm) %{rpmdir}/mkinstalldirs
 %attr(0755, rpm, rpm) %{rpmdir}/rpm.*
-%attr(0755, rpm, rpm) %{rpmdir}/rpm[deiukqv]
 %attr(0644, rpm, rpm) %{rpmdir}/rpmpopt*
 %attr(0644, rpm, rpm) %{rpmdir}/rpmrc
 
-%{_prefix}/lib/rpmpopt
 %rpmattr	%{rpmdir}/rpm2cpio.sh
 %rpmattr	%{rpmdir}/tgpg
 
 %ifarch %{ix86} x86_64
-%attr(   -, rpm, rpm) %{rpmdir}/i*86-*
-%attr(   -, rpm, rpm) %{rpmdir}/athlon-*
-%attr(   -, rpm, rpm) %{rpmdir}/pentium*-*
-%attr(   -, rpm, rpm) %{rpmdir}/geode-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/i*86-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/athlon-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/pentium*-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/geode-*
 %endif
 %ifarch alpha
-%attr(   -, rpm, rpm) %{rpmdir}/alpha*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/alpha*
 %endif
 %ifarch %{sunsparc}
-%attr(   -, rpm, rpm) %{rpmdir}/sparc*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/sparc*
 %endif
 %ifarch ppc powerpc
-%attr(   -, rpm, rpm) %{rpmdir}/ppc-*
-%attr(   -, rpm, rpm) %{rpmdir}/ppc32-*
-%attr(   -, rpm, rpm) %{rpmdir}/ppc64-*
-%attr(   -, rpm, rpm) %{rpmdir}/powerpc-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/ppc-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/ppc32-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/ppc64-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/powerpc-*
 %endif
 %ifarch ppc powerpc ppc64
-%attr(   -, rpm, rpm) %{rpmdir}/ppc*series-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/ppc*series-*
 %endif
 %ifarch ppc64
-%attr(   -, rpm, rpm) %{rpmdir}/ppc-*
-%attr(   -, rpm, rpm) %{rpmdir}/ppc32-*
-%attr(   -, rpm, rpm) %{rpmdir}/ppc64-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/ppc-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/ppc32-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/ppc64-*
 %endif
 %ifarch ia64
-%attr(   -, rpm, rpm) %{rpmdir}/ia64-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/ia64-*
 %endif
 %ifarch x86_64
-%attr(   -, rpm, rpm) %{rpmdir}/amd64-*
-%attr(   -, rpm, rpm) %{rpmdir}/x86_64-*
-%attr(   -, rpm, rpm) %{rpmdir}/ia32e-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/amd64-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/x86_64-*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/ia32e-*
 %endif
-%attr(   -, rpm, rpm) %{rpmdir}/noarch*
+%attr(   -, rpm, rpm) %{rpmdir}/platform/noarch*
 
 %{_mandir}/man[18]/*.[18]*
 %lang(pl) %{_mandir}/pl/man[18]/*.[18]*
@@ -818,25 +635,14 @@ fi
 %defattr(-,root,root)
 %doc CHANGES
 %doc doc-copy/*
-%{_prefix}/src/rpm
 %rpmattr	%{_bindir}/rpmbuild
 %rpmattr	%{_prefix}/lib/rpm/brp-*
 %rpmattr	%{_prefix}/lib/rpm/check-files
 %rpmattr	%{_prefix}/lib/rpm/debugedit
 %rpmattr	%{_prefix}/lib/rpm/find-debuginfo.sh
 %rpmattr	%{_prefix}/lib/rpm/find-lang.sh
-%rpmattr	%{_prefix}/lib/rpm/find-prov.pl
 %rpmattr	%{_prefix}/lib/rpm/find-provides
-%rpmattr	%{_prefix}/lib/rpm/find-provides.perl
-%rpmattr	%{_prefix}/lib/rpm/find-req.pl
 %rpmattr	%{_prefix}/lib/rpm/find-requires
-%rpmattr	%{_prefix}/lib/rpm/find-requires.perl
-%rpmattr	%{_prefix}/lib/rpm/getpo.sh
-%rpmattr	%{_prefix}/lib/rpm/http.req
-%rpmattr	%{_prefix}/lib/rpm/magic
-%rpmattr	%{_prefix}/lib/rpm/magic.mgc
-%rpmattr	%{_prefix}/lib/rpm/magic.mime
-%rpmattr	%{_prefix}/lib/rpm/magic.mime.mgc
 %rpmattr	%{_prefix}/lib/rpm/perldeps.pl
 %rpmattr	%{_prefix}/lib/rpm/perl.prov
 %rpmattr	%{_prefix}/lib/rpm/perl.req
@@ -845,25 +651,19 @@ fi
 %rpmattr	%{_prefix}/lib/rpm/check-prereqs
 %rpmattr	%{_prefix}/lib/rpm/check-rpaths
 %rpmattr	%{_prefix}/lib/rpm/check-rpaths-worker
-%rpmattr	%{_prefix}/lib/rpm/convertrpmrc.sh
-%rpmattr	%{_prefix}/lib/rpm/freshen.sh
-%rpmattr	%{_prefix}/lib/rpm/get_magic.pl
 %rpmattr	%{_prefix}/lib/rpm/javadeps
-%rpmattr	%{_prefix}/lib/rpm/magic.prov
-%rpmattr	%{_prefix}/lib/rpm/magic.req
+%rpmattr	%{_prefix}/lib/rpm/libtooldeps.sh
+%rpmattr	%{_prefix}/lib/rpm/macros.perl
+%rpmattr	%{_prefix}/lib/rpm/macros.php
+%rpmattr	%{_prefix}/lib/rpm/macros.python
 %rpmattr	%{_prefix}/lib/rpm/mono-find-provides
 %rpmattr	%{_prefix}/lib/rpm/mono-find-requires
 %rpmattr	%{_prefix}/lib/rpm/osgideps.pl
-%rpmattr	%{_prefix}/lib/rpm/rpmcache
+%rpmattr	%{_prefix}/lib/rpm/pkgconfigdeps.sh
 %rpmattr	%{_prefix}/lib/rpm/rpmdiff
-%rpmattr	%{_prefix}/lib/rpm/rpmfile
 
-%rpmattr	%{_prefix}/lib/rpm/rpm[bt]
 %rpmattr	%{_prefix}/lib/rpm/rpmdeps
 #%rpmattr	%{_prefix}/lib/rpm/trpm
-%rpmattr	%{_prefix}/lib/rpm/u_pkg.sh
-%rpmattr	%{_prefix}/lib/rpm/vpkg-provides.sh
-%rpmattr	%{_prefix}/lib/rpm/vpkg-provides2.sh
 %rpmattr    %{_prefix}/lib/rpm/pythondeps.sh
 
 %{_mandir}/man8/rpmbuild.8*
@@ -878,37 +678,16 @@ fi
 %files -n %librpmname
 %defattr(-,root,root)
 %{_libdir}/librpm-%{libver}.so
-%{_libdir}/librpmdb-%{libver}.so
 %{_libdir}/librpmio-%{libver}.so
 %{_libdir}/librpmbuild-%{libver}.so
 
 %files -n %librpmnamedevel
 %defattr(-,root,root)
 %{_includedir}/rpm
-%{_libdir}/librpm.a
 %{_libdir}/librpm.la
 %{_libdir}/librpm.so
-%{_libdir}/librpmdb.a
-%{_libdir}/librpmdb.la
-%{_libdir}/librpmdb.so
-%{_libdir}/librpmio.a
 %{_libdir}/librpmio.la
 %{_libdir}/librpmio.so
-%{_libdir}/librpmbuild.a
 %{_libdir}/librpmbuild.la
 %{_libdir}/librpmbuild.so
-
-%files -n popt-data -f popt.lang
-%defattr(-,root,root)
-
-%files -n %libpoptname
-%defattr(-,root,root)
-/%{_lib}/libpopt.so.*
-
-%files -n %libpoptnamedevel
-%defattr(-,root,root)
-%{_libdir}/libpopt.a
-%{_libdir}/libpopt.la
-%{_libdir}/libpopt.so
-%{_includedir}/popt.h
-%{_mandir}/man3/popt.3*
+%{_libdir}/pkgconfig/rpm.pc
