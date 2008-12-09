@@ -212,6 +212,7 @@ BuildRequires:	ed, gettext-devel
 BuildRequires:  libsqlite3-devel
 BuildRequires:  db4.6-devel
 BuildRequires:  neon-devel
+BuildRequires:	magic-devel
 %if %_vendor == Mandriva
 BuildRequires:  rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 %endif
