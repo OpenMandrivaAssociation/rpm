@@ -393,21 +393,11 @@ programs that will manipulate RPM packages and databases.
 
 autoreconf
 
-# rpm takes care of --libdir but explicitelly setting --libdir on
-# configure breaks make install, but this does not matter.
-# --build, we explictly set 'mandriva' as our config subdir and 
-# _host_vendor are 'mandriva'
 %if %builddebug
 RPM_OPT_FLAGS=-g
 %endif
 CFLAGS="$RPM_OPT_FLAGS -fPIC" CXXFLAGS="$RPM_OPT_FLAGS -fPIC" \
-    ./configure \
-        --build=%{_target_cpu}-%{_host_vendor}-%{_target_os}%{?_gnu} \
-        --prefix=%{_prefix} \
-        --sysconfdir=%{_sysconfdir} \
-        --localstatedir=%{_localstatedir} \
-        --mandir=%{_mandir} \
-        --infodir=%{_infodir} \
+    %configure \
         --enable-nls \
         --enable-python \
         --without-javaglue \
