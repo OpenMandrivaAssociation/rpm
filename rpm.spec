@@ -213,6 +213,7 @@ BuildRequires:  libsqlite3-devel
 BuildRequires:  db4.6-devel
 BuildRequires:  neon-devel
 BuildRequires:	popt-devel
+BuildRequires:	nss-devel
 BuildRequires:	magic-devel
 %if %_vendor == Mandriva
 BuildRequires:  rpm-mandriva-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
