@@ -107,11 +107,11 @@ Patch70:	rpm-4.6.0-rc1-bb-shortcircuit.patch
 
 # http://www.redhat.com/archives/rpm-list/2005-April/msg00131.html
 # http://www.redhat.com/archives/rpm-list/2005-April/msg00132.html
-Patch71:    rpm-4.4.4-ordererase.patch
+Patch71:    rpm-4.6.0-ordererase.patch
 
 # don't conflict for doc files
 # (to be able to install lib*-devel together with lib64*-devel even if they have conflicting manpages)
-Patch83: rpm-4.4.2.2-no-doc-conflicts.patch
+Patch83: rpm-4.6.0-no-doc-conflicts.patch
 
 # Fix http://qa.mandriva.com/show_bug.cgi?id=19392
 # (is this working??)
@@ -122,7 +122,7 @@ Patch86: rpm-4.6.0-rc1-sqlite-depsdb.patch
 
 # avoids taking into account duplicates in file list when checking
 # for unpackaged files
-Patch91: rpm-4.4.6-check-dupl-files.patch
+Patch91: rpm-4.6.0-check-dupl-files.patch
 
 Patch109: rpm-build-expand-field-for-single-token.patch
 
@@ -152,19 +152,19 @@ Patch135: rpm-4.4.2.3-rc1-fix-debugedit.patch
 # convert data in the header to a specific encoding which used in the selected locale.
 Patch137: rpm-4.6.0-rc1-headerIconv.patch
 
-Patch140: rpm-4.4.2.3-rc1-russian-translation.patch
+Patch140: rpm-russian-translation.patch
 
 Patch141: rpm-4.6.0-rc1-drop-skipping-ldconfig-hack.patch
 
 # without this patch, "#%define foo bar" is surprisingly equivalent to "%define foo bar"
 # with this patch, "#%define foo bar" is a fatal error
-Patch145: rpm-4.4.2.3-forbid-badly-commented-define-in-spec.patch
+Patch145: rpm-forbid-badly-commented-define-in-spec.patch
 
 # cf http://wiki.mandriva.com/en/Rpm_filetriggers
 Patch146: rpm-4.6.0-rc1-filetriggers.patch
 
 # add two fatal errors (during package build)
-Patch147: rpm-4.6.0-rc1-rpmbuild-check-useless-tags-in-non-existant-binary-packages.patch
+Patch147: rpm-rpmbuild-check-useless-tags-in-non-existant-binary-packages.patch
 
 Patch148: rpm-4.6.0-rc1-do-not-ignore-failing-chroot2.patch
 
@@ -178,7 +178,7 @@ Patch153: rpm-4.6.0-rc1-fix-buildroot-when-subpackage-has-different-version.patc
 Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
 
 # default behaviour in rpm >= 4.4.6
-Patch1005: rpm-4.4.2.2-allow-conflicting-ghost-files.patch
+Patch1005: rpm-allow-conflicting-ghost-files.patch
 
 Patch1006: rpm-4.6.0-rc1-compat-PayloadIsLzma.patch
 
