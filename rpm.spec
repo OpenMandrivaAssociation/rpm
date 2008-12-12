@@ -45,9 +45,9 @@
 %endif
 
 %define rpmversion	4.6.0
-%define srcver		%rpmversion-rc2
+%define srcver		%rpmversion-rc3
 %define libver		4.6
-%define release			    %manbo_mkrel 0.rc2.2
+%define release			    %manbo_mkrel 0.rc3.1
 %define librpmname   %mklibname rpm  %{libver}
 %define librpmnamedevel   %mklibname -d rpm
 
@@ -171,9 +171,6 @@ Patch148: rpm-4.6.0-rc1-do-not-ignore-failing-chroot2.patch
 Patch151: rpm-4.6.0-rc1-protect-against-non-robust-futex.patch
 
 Patch152: rpm-4.6.0-rc1-fix-nss-detection.patch
-
-# fix for http://rpm.org/ticket/10
-Patch153: rpm-4.6.0-rc1-fix-buildroot-when-subpackage-has-different-version.patch
 
 Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
 
@@ -381,7 +378,6 @@ programs that will manipulate RPM packages and databases.
 %patch148 -p1
 %patch151 -p1 -b .lock__db001
 %patch152 -p1
-%patch153 -p1 -b .buildroot
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p1 -b .copyright-tag
