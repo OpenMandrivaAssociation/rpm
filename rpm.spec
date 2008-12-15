@@ -47,7 +47,7 @@
 %define rpmversion	4.6.0
 %define srcver		%rpmversion-rc3
 %define libver		4.6
-%define release			    %manbo_mkrel 0.rc3.1
+%define release			    %manbo_mkrel 0.rc3.2
 %define librpmname   %mklibname rpm  %{libver}
 %define librpmnamedevel   %mklibname -d rpm
 
@@ -396,6 +396,7 @@ CFLAGS="$RPM_OPT_FLAGS -fPIC" CXXFLAGS="$RPM_OPT_FLAGS -fPIC" \
     %configure \
         --enable-nls \
         --enable-python \
+        --enable-sqlite3 \
         --without-javaglue \
 %if %builddebug
         --enable-debug \
