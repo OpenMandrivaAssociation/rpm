@@ -120,10 +120,6 @@ Patch84: rpm-4.4.2.2-rpmqv-ghost.patch
 # (sqlite) Use temporary table for Depends DB (Olivier Thauvin upstream)
 Patch86: rpm-4.6.0-rc1-sqlite-depsdb.patch
 
-# avoids taking into account duplicates in file list when checking
-# for unpackaged files
-Patch91: rpm-4.6.0-check-dupl-files.patch
-
 Patch109: rpm-build-expand-field-for-single-token.patch
 
 # Fix diff issue when buildroot contains some "//"
@@ -350,8 +346,6 @@ programs that will manipulate RPM packages and databases.
 %patch84 -p1 -b .poptQVghost
 
 %patch86 -p1 -b .depsdb
-
-%patch91 -p0 -b .check-dupl-files
 
 # Fix diff issue when buildroot contains some "//"
 %patch111 -p0 -b .trim-slash
