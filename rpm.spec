@@ -120,9 +120,6 @@ Patch84: rpm-4.4.2.2-rpmqv-ghost.patch
 # (sqlite) Use temporary table for Depends DB (Olivier Thauvin upstream)
 Patch86: rpm-4.6.0-rc1-sqlite-depsdb.patch
 
-# workaround specfile parsing check (http://rpm5.org/cvs/tktview?tn=6)
-Patch109: rpm-build-expand-field-for-single-token.patch
-
 # Fix diff issue when buildroot contains some "//"
 Patch111: rpm-check-file-trim-double-slash-in-buildroot.patch
 
