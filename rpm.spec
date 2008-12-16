@@ -107,6 +107,7 @@ Patch70:	rpm-4.6.0-rc1-bb-shortcircuit.patch
 
 # http://www.redhat.com/archives/rpm-list/2005-April/msg00131.html
 # http://www.redhat.com/archives/rpm-list/2005-April/msg00132.html
+# is this useful? at least erasure ordering is just as non-existent as it was in 4.4.x
 Patch71:    rpm-4.6.0-ordererase.patch
 
 # don't conflict for doc files
