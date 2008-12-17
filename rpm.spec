@@ -124,8 +124,7 @@ Patch86: rpm-4.6.0-rc1-sqlite-depsdb.patch
 # Fix diff issue when buildroot contains some "//"
 Patch111: rpm-check-file-trim-double-slash-in-buildroot.patch
 
-# patch only needed when rpmrc is not used (ie jbj's rpm), 
-# otherwise macrofiles from rpmrc always overrides MACROFILES
+# [Dec 2008] macrofiles from rpmrc does not overrides MACROFILES anymore
 Patch114: rpm-4.6.0-rc1-read-macros_d-dot-macros.patch
 
 # remove unused skipDir functionality that conflicts with patch124 below
