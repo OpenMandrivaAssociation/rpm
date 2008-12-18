@@ -160,6 +160,7 @@ Patch146: rpm-4.6.0-rc1-filetriggers.patch
 # add two fatal errors (during package build)
 Patch147: rpm-rpmbuild-check-useless-tags-in-non-existant-binary-packages.patch
 
+# committed upstream
 Patch148: rpm-4.6.0-rc1-do-not-ignore-failing-chroot2.patch
 
 Patch151: rpm-4.6.0-rc1-protect-against-non-robust-futex.patch
