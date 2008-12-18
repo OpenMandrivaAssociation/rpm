@@ -47,7 +47,7 @@
 %define rpmversion	4.6.0
 %define srcver		%rpmversion-rc3
 %define libver		4.6
-%define release			    %manbo_mkrel 0.rc3.2
+%define release			    %manbo_mkrel 0.rc3.3
 %define librpmname   %mklibname rpm  %{libver}
 %define librpmnamedevel   %mklibname -d rpm
 
@@ -165,6 +165,11 @@ Patch148: rpm-4.6.0-rc1-do-not-ignore-failing-chroot2.patch
 Patch151: rpm-4.6.0-rc1-protect-against-non-robust-futex.patch
 
 Patch152: rpm-4.6.0-rc1-fix-nss-detection.patch
+
+# "fix" segfault (#46323)
+Patch153: rpm-4.6.0-rc3-nss-inithack.patch
+
+Patch154: rpm-4.6.0-rc3-fix-for-format-security.patch
 
 Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
 
@@ -370,6 +375,8 @@ programs that will manipulate RPM packages and databases.
 %patch148 -p1
 %patch151 -p1 -b .lock__db001
 %patch152 -p1
+%patch153 -p1
+%patch154 -p1
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p1 -b .copyright-tag
