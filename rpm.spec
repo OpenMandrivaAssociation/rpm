@@ -148,6 +148,7 @@ Patch137: rpm-4.6.0-rc1-headerIconv.patch
 
 Patch140: rpm-russian-translation.patch
 
+# Mandriva does not need the (broken) ldconfig hack since it uses filetriggers
 Patch141: rpm-4.6.0-rc1-drop-skipping-ldconfig-hack.patch
 
 # without this patch, "#%define foo bar" is surprisingly equivalent to "%define foo bar"
