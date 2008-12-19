@@ -47,7 +47,7 @@
 %define rpmversion	4.6.0
 %define srcver		%rpmversion-rc3
 %define libver		4.6
-%define release			    %manbo_mkrel 0.rc3.3
+%define release			    %manbo_mkrel 0.rc3.4
 %define librpmname   %mklibname rpm  %{libver}
 %define librpmnamedevel   %mklibname -d rpm
 
@@ -246,6 +246,8 @@ Conflicts:	locales < 2.3.1.1
 Conflicts:	man-pages-fr < 0.9.7-16mdk
 Conflicts:	man-pages-pl < 0.4-9mdk
 Conflicts:	perl-URPM < 1.63-3mdv2008.0
+# rpm 4.6.0 dropped support for --repackage, so urpmi-recover can not work anymore:
+Conflicts:	urpmi-recover
 URL:            http://rpm.org/
 Requires(pre):		rpm-helper >= 0.8
 Requires(pre):		coreutils
