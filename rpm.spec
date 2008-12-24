@@ -47,7 +47,7 @@
 %define rpmversion	4.6.0
 %define srcver		%rpmversion-rc3
 %define libver		4.6
-%define release			    %manbo_mkrel 0.rc3.4
+%define release			    %manbo_mkrel 0.rc3.5
 %define librpmname   %mklibname rpm  %{libver}
 %define librpmnamedevel   %mklibname -d rpm
 
