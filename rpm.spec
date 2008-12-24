@@ -221,7 +221,7 @@ BuildRequires:	ncurses-devel
 BuildRequires:  openssl-devel >= 0.9.8
 BuildRequires:  lua-devel
 # Need for doc
-BuildRequires:	graphviz
+#BuildRequires:	graphviz
 BuildRequires:	tetex
 %if %buildpython
 BuildRequires:	python-devel
