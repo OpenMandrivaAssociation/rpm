@@ -203,7 +203,7 @@ License:	GPL
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	zlib-devel
 BuildRequires:  bzip2-devel
-BuildRequires:	liblzma-devel
+BuildRequires:	liblzma-devel >= 4.999.6-0.alpha.5
 BuildRequires:	automake >= 1.8
 BuildRequires:	elfutils-devel
 BuildRequires:	sed >= 4.0.3
