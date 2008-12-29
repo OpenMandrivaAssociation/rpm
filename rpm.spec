@@ -173,12 +173,14 @@ Patch153: rpm-4.6.0-rc3-nss-inithack.patch
 
 Patch154: rpm-4.6.0-rc3-fix-for-format-security.patch
 
-Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
+#Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
 
 # default behaviour in rpm >= 4.4.6
 Patch1005: rpm-allow-conflicting-ghost-files.patch
 
 Patch1006: rpm-4.6.0-rc1-compat-PayloadIsLzma.patch
+
+Patch1007: rpm-4.6.0-rc3-xz-support.patch
 
 # Turbolinux patches
 Patch2000: rpm-4.6.0-rc1-serial-tag.patch
@@ -363,9 +365,10 @@ programs that will manipulate RPM packages and databases.
 %patch124 -p1 -b .speedup
 
 
-%patch1001 -p1 -b .liblzma
+#%%patch1001 -p1 -b .liblzma
 %patch1005 -p1
 %patch1006 -p1
+%patch1007 -p1 -b .xz~
 
 %patch133 -p1 -b .weakdeps
 
