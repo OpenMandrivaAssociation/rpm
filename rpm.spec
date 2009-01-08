@@ -107,7 +107,7 @@ Patch70:	rpm-4.6.0-rc1-bb-shortcircuit.patch
 
 # http://www.redhat.com/archives/rpm-list/2005-April/msg00131.html
 # http://www.redhat.com/archives/rpm-list/2005-April/msg00132.html
-# is this useful? at least erasure ordering is just as non-existent as it was in 4.4.x
+# is this useful? "at least erasure ordering is just as non-existent as it was in 4.4.x" says Panu
 Patch71:    rpm-4.6.0-ordererase.patch
 
 # don't conflict for doc files
@@ -118,7 +118,7 @@ Patch83: rpm-4.6.0-no-doc-conflicts.patch
 # (is this working??)
 Patch84: rpm-4.4.2.2-rpmqv-ghost.patch
 
-# (sqlite) Use temporary table for Depends DB (Olivier Thauvin upstream)
+# (sqlite) Use temporary table for Depends DB (Olivier Thauvin, upstream in rpm5)
 Patch86: rpm-4.6.0-rc1-sqlite-depsdb.patch
 
 # Fix diff issue when buildroot contains some "//"
@@ -171,13 +171,15 @@ Patch152: rpm-4.6.0-rc1-fix-nss-detection.patch
 # "fix" segfault (#46323) (committed upstream)
 Patch153: rpm-4.6.0-rc3-nss-inithack.patch
 
+# fix compilation with Werror=format-security
 Patch154: rpm-4.6.0-rc3-fix-for-format-security.patch
 
 #Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
 
-# default behaviour in rpm >= 4.4.6
+# default behaviour in rpm-jbj >= 4.4.6
 Patch1005: rpm-allow-conflicting-ghost-files.patch
 
+# (nb: see the patch for more info about this issue)
 Patch1006: rpm-4.6.0-rc1-compat-PayloadIsLzma.patch
 
 Patch1007: rpm-4.6.0-rc3-xz-support.patch
