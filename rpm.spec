@@ -168,7 +168,7 @@ Patch151: rpm-4.6.0-rc1-protect-against-non-robust-futex.patch
 
 Patch152: rpm-4.6.0-rc1-fix-nss-detection.patch
 
-# "fix" segfault (#46323)
+# "fix" segfault (#46323) (committed upstream)
 Patch153: rpm-4.6.0-rc3-nss-inithack.patch
 
 Patch154: rpm-4.6.0-rc3-fix-for-format-security.patch
