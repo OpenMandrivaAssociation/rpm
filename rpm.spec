@@ -164,6 +164,7 @@ Patch147: rpm-rpmbuild-check-useless-tags-in-non-existant-binary-packages.patch
 # committed upstream
 Patch148: rpm-4.6.0-rc1-do-not-ignore-failing-chroot2.patch
 
+# (nb: see the patch for more info about this issue)
 Patch151: rpm-4.6.0-rc1-protect-against-non-robust-futex.patch
 
 Patch152: rpm-4.6.0-rc1-fix-nss-detection.patch
@@ -173,6 +174,9 @@ Patch153: rpm-4.6.0-rc3-nss-inithack.patch
 
 # fix compilation with Werror=format-security
 Patch154: rpm-4.6.0-rc3-fix-for-format-security.patch
+
+# simple fix, reported upstream
+Patch155: rpm-4.6.0-rc3-fix-segfault.patch
 
 #Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
 
@@ -386,6 +390,7 @@ programs that will manipulate RPM packages and databases.
 %patch152 -p1
 %patch153 -p1
 %patch154 -p1
+%patch155 -p1
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p1 -b .copyright-tag
