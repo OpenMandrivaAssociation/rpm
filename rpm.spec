@@ -47,7 +47,7 @@
 %define rpmversion	4.6.0
 %define srcver		%rpmversion-rc3
 %define libver		4.6
-%define release			    %manbo_mkrel 0.rc3.5
+%define release			    %manbo_mkrel 0.rc3.6
 %define librpmname   %mklibname rpm  %{libver}
 %define librpmnamedevel   %mklibname -d rpm
 
@@ -118,7 +118,7 @@ Patch83: rpm-4.6.0-no-doc-conflicts.patch
 # (is this working??)
 Patch84: rpm-4.4.2.2-rpmqv-ghost.patch
 
-# (sqlite) Use temporary table for Depends DB (Olivier Thauvin, upstream in rpm5)
+# (sqlite) Use temporary table for Depends DB (Olivier Thauvin, upstream in rpm5 & rpm.org)
 Patch86: rpm-4.6.0-rc1-sqlite-depsdb.patch
 
 # Fix diff issue when buildroot contains some "//"
@@ -146,6 +146,7 @@ Patch135: rpm-4.4.2.3-rc1-fix-debugedit.patch
 # convert data in the header to a specific encoding which used in the selected locale.
 Patch137: rpm-4.6.0-rc1-headerIconv.patch
 
+# committed upstream
 Patch140: rpm-russian-translation.patch
 
 # Mandriva does not need the (broken) ldconfig hack since it uses filetriggers
@@ -169,14 +170,17 @@ Patch151: rpm-4.6.0-rc1-protect-against-non-robust-futex.patch
 
 Patch152: rpm-4.6.0-rc1-fix-nss-detection.patch
 
-# "fix" segfault (#46323) (committed upstream)
-Patch153: rpm-4.6.0-rc3-nss-inithack.patch
+# "fix" segfault (#46323) (from upstream)
+Patch153: rpm-Delay-NSS-initialization-until-actually-used.patch
 
 # fix compilation with Werror=format-security
 Patch154: rpm-4.6.0-rc3-fix-for-format-security.patch
 
-# simple fix, reported upstream
+# simple fix, committed upstream
 Patch155: rpm-4.6.0-rc3-fix-segfault.patch
+
+# from upstream
+Patch156: rpm-rpmdsMerge-expects-ds-N-and-ds-EVR-as-argv-style.patch
 
 #Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
 
@@ -391,6 +395,7 @@ programs that will manipulate RPM packages and databases.
 %patch153 -p1
 %patch154 -p1
 %patch155 -p1
+%patch156 -p1
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p1 -b .copyright-tag
