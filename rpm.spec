@@ -192,6 +192,10 @@ Patch1006: rpm-4.6.0-rc1-compat-PayloadIsLzma.patch
 
 Patch1007: rpm-4.6.0-rc3-xz-support.patch
 
+# Prevents $DOCDIR from being wiped out when using %%doc <fileinbuilddir>,
+# as this breaks stuff that installs files to $DOCDIR during %%install
+Patch1008: rpm-4.6.0-rc3-no_rm_-rf_DOCDIR.patch
+
 # Turbolinux patches
 Patch2000: rpm-4.6.0-rc1-serial-tag.patch
 # re-enable "copyright" tag (Kiichiro, 2005)
@@ -379,6 +383,7 @@ programs that will manipulate RPM packages and databases.
 %patch1005 -p1
 %patch1006 -p1
 %patch1007 -p1 -b .xz~
+%patch1008 -p1 -b .no_rm_-rf_DOCDIR~
 
 %patch133 -p1 -b .weakdeps
 
