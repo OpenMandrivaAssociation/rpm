@@ -47,7 +47,7 @@
 %define rpmversion	4.6.0
 %define srcver		%rpmversion-rc3
 %define libver		4.6
-%define release			    %manbo_mkrel 0.rc3.6
+%define release			    %manbo_mkrel 0.rc3.7
 %define librpmname   %mklibname rpm  %{libver}
 %define librpmnamedevel   %mklibname -d rpm
 
@@ -181,6 +181,10 @@ Patch155: rpm-4.6.0-rc3-fix-segfault.patch
 
 # from upstream
 Patch156: rpm-rpmdsMerge-expects-ds-N-and-ds-EVR-as-argv-style.patch
+
+Patch157: introduce-_after_setup-which-is-called-after-setup.patch
+Patch158: introduce-_patch-and-allow-easy-override-when-the-p.patch
+Patch159: introduce-apply_patches-and-lua-var-patches_num.patch
 
 #Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
 
@@ -401,6 +405,9 @@ programs that will manipulate RPM packages and databases.
 %patch154 -p1
 %patch155 -p1
 %patch156 -p1
+%patch157 -p1
+%patch158 -p1
+%patch159 -p1
 
 %patch2000 -p1 -b .serial-tag
 %patch2001 -p1 -b .copyright-tag
