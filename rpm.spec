@@ -45,9 +45,9 @@
 %endif
 
 %define rpmversion	4.6.0
-%define srcver		%rpmversion-rc3
+%define srcver		%rpmversion
 %define libver		4.6
-%define release			    %manbo_mkrel 0.rc3.7
+%define release			    %manbo_mkrel 1
 %define librpmname   %mklibname rpm  %{libver}
 %define librpmnamedevel   %mklibname -d rpm
 
@@ -118,9 +118,6 @@ Patch83: rpm-4.6.0-no-doc-conflicts.patch
 # (is this working??)
 Patch84: rpm-4.4.2.2-rpmqv-ghost.patch
 
-# (sqlite) Use temporary table for Depends DB (Olivier Thauvin, upstream in rpm5 & rpm.org)
-Patch86: rpm-4.6.0-rc1-sqlite-depsdb.patch
-
 # Fix diff issue when buildroot contains some "//"
 Patch111: rpm-check-file-trim-double-slash-in-buildroot.patch
 
@@ -146,7 +143,6 @@ Patch135: rpm-4.4.2.3-rc1-fix-debugedit.patch
 # convert data in the header to a specific encoding which used in the selected locale.
 Patch137: rpm-4.6.0-rc1-headerIconv.patch
 
-# committed upstream
 Patch140: rpm-russian-translation.patch
 
 # Mandriva does not need the (broken) ldconfig hack since it uses filetriggers
@@ -162,25 +158,10 @@ Patch146: rpm-4.6.0-rc1-filetriggers.patch
 # add two fatal errors (during package build)
 Patch147: rpm-rpmbuild-check-useless-tags-in-non-existant-binary-packages.patch
 
-# committed upstream
-Patch148: rpm-4.6.0-rc1-do-not-ignore-failing-chroot2.patch
-
 # (nb: see the patch for more info about this issue)
 Patch151: rpm-4.6.0-rc1-protect-against-non-robust-futex.patch
 
 Patch152: rpm-4.6.0-rc1-fix-nss-detection.patch
-
-# "fix" segfault (#46323) (from upstream)
-Patch153: rpm-Delay-NSS-initialization-until-actually-used.patch
-
-# fix compilation with Werror=format-security
-Patch154: rpm-4.6.0-rc3-fix-for-format-security.patch
-
-# simple fix, committed upstream
-Patch155: rpm-4.6.0-rc3-fix-segfault.patch
-
-# from upstream
-Patch156: rpm-rpmdsMerge-expects-ds-N-and-ds-EVR-as-argv-style.patch
 
 Patch157: introduce-_after_setup-which-is-called-after-setup.patch
 Patch158: introduce-_patch-and-allow-easy-override-when-the-p.patch
@@ -269,6 +250,7 @@ Conflicts:	perl-URPM < 1.63-3mdv2008.0
 # rpm 4.6.0 dropped support for --repackage, so urpmi-recover can not work anymore:
 Conflicts:	urpmi-recover
 URL:            http://rpm.org/
+%define         git_url        http://rpm.org/git/rpm.git
 Requires(pre):		rpm-helper >= 0.8
 Requires(pre):		coreutils
 Requires(postun):	rpm-helper >= 0.8
@@ -353,67 +335,7 @@ programs that will manipulate RPM packages and databases.
 
 %prep
 %setup -q -n %name-%srcver
-
-%patch17 -p1 -b .improved
-
-%patch22 -p1 -b .fail
-
-%patch31 -p1 -b .syslog
-
-%patch49 -p1 -b .provides
-
-%patch64 -p1 -b .morepopt
-
-%patch70 -p1 -b .shortcircuit
-
-%patch71 -p0  -b .ordererase
-
-%patch83 -p1 -b .no-doc-conflicts
-
-%patch84 -p1 -b .poptQVghost
-
-%patch86 -p1 -b .depsdb
-
-# Fix diff issue when buildroot contains some "//"
-%patch111 -p0 -b .trim-slash
-
-%patch114 -p1 -b .read-our-macros
-
-%patch1124 -p1 -b .skipDir
-%patch124 -p1 -b .speedup
-
-
-#%%patch1001 -p1 -b .liblzma
-%patch1005 -p1
-%patch1006 -p1
-%patch1007 -p1 -b .xz~
-%patch1008 -p1 -b .no_rm_-rf_DOCDIR~
-
-%patch133 -p1 -b .weakdeps
-
-%patch135 -p1 -b .debugedit
-%patch137 -p1 -b .iconv
-%patch140 -p1
-%patch141 -p1
-%patch145 -p1
-%patch146 -p1 -b .filetriggers
-%patch147 -p1 -b .useless-tags
-%patch148 -p1
-%patch151 -p1 -b .lock__db001
-%patch152 -p1
-%patch153 -p1
-%patch154 -p1
-%patch155 -p1
-%patch156 -p1
-%patch157 -p1
-%patch158 -p1
-%patch159 -p1
-
-%patch2000 -p1 -b .serial-tag
-%patch2001 -p1 -b .copyright-tag
-%patch2002 -p1 -b .python_writeHD
-%patch2003 -p1 -b .crusoe-arch
-%patch2005 -p1 -b .buildlang
+%apply_patches
 
 %build
 
