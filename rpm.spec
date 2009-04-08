@@ -18,6 +18,10 @@
 %define _localstatedir /var
 %define _infodir %_datadir/info
 
+%if %{?apply_patches:0}%{?!apply_patches:1}
+%define apply_patches %(for p in `grep '^Patch.*:' "%{_specdir}/rpm.spec" | cut -d':' -f2-`; do echo "patch -p1 -F0 -i %{_sourcedir}/$p"; done )
+%endif
+
 # Define directory which holds rpm config files, and some binaries actually
 # NOTE: it remains */lib even on lib64 platforms as only one version
 #       of rpm is supported anyway, per architecture
@@ -301,7 +305,7 @@ Requires:	file
 Requires:	gcc-c++
 # We need cputoolize & amd64-* alias to x86_64-* in config.sub
 Requires:	libtool-base >= 1.4.3-5mdk
-Requires:	patch
+Requires:	patch >= 2.5.9-7mdv2009.1
 Requires:	make
 Requires:	tar
 Requires:	unzip
