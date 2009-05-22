@@ -185,6 +185,11 @@ Patch1007: rpm-4.6.0-rc3-xz-support.patch
 # as this breaks stuff that installs files to $DOCDIR during %%install
 Patch1008: rpm-4.6.0-rc3-no_rm_-rf_DOCDIR.patch
 
+# Exposes packagecolor tag and adds new tags from rpm5 as it otherwise will
+# break when these unknown tags might be found in the rpmdb. Notice that this
+# will only make rpm recognize these, not implement actual support for them..
+Patch1009: rpm-4.6.0-rpm5-tags.patch
+
 # Turbolinux patches
 Patch2000: rpm-4.6.0-rc1-serial-tag.patch
 # re-enable "copyright" tag (Kiichiro, 2005)
