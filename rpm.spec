@@ -190,6 +190,9 @@ Patch1008: rpm-4.6.0-rc3-no_rm_-rf_DOCDIR.patch
 # will only make rpm recognize these, not implement actual support for them..
 Patch1009: rpm-4.6.0-rpm5-tags.patch
 
+# Avoid adding Lua sources/patches twice when recursing. (backport from upstream git)
+Patch1010: rpm-4.6.0-lua-add-sources-and-patches-only-once.patch
+
 # Turbolinux patches
 Patch2000: rpm-4.6.0-rc1-serial-tag.patch
 # re-enable "copyright" tag (Kiichiro, 2005)
