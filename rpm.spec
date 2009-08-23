@@ -51,7 +51,7 @@
 %define rpmversion	4.6.0
 %define srcver		%rpmversion
 %define libver		4.6
-%define release			    %manbo_mkrel 4
+%define release			    %manbo_mkrel 5
 %define librpmname   %mklibname rpm  %{libver}
 %define librpmnamedevel   %mklibname -d rpm
 
@@ -170,6 +170,13 @@ Patch152: rpm-4.6.0-rc1-fix-nss-detection.patch
 Patch157: introduce-_after_setup-which-is-called-after-setup.patch
 Patch158: introduce-_patch-and-allow-easy-override-when-the-p.patch
 Patch159: introduce-apply_patches-and-lua-var-patches_num.patch
+
+# fixes backported from 4.7.1, see patch files for full changelog entries
+# fixes ignored Requires(pre) and (post) when they have a plain Requires counterpart
+Patch161: rpm-fix-corequisites.patch
+Patch162: rpm-fix-islegacyprereq.patch
+# map PreReq into Requires(pre,preun) at build
+Patch163: rpm-map-prereq.patch
 
 #Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
 
