@@ -226,7 +226,6 @@ Patch3001: fix_stack_protector_check.patch
 Patch3002: mips_define_isa_macros.patch
 Patch3003: rpm_arm_mips_isa_macros.patch
 Patch3004: rpm_add_armv5tl.patch
-Patch3005: rpm_mips_n32_support.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
