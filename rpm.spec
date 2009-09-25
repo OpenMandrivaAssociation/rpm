@@ -222,6 +222,7 @@ Patch2003: rpm-4.4.2.3-rc1-transmeta-crusoe-is-686.patch
 Patch2005: rpm-4.6.0-rc1-buildlang.patch
 
 Patch3000: mips_macros.patch
+Patch3001: fix_stack_protector_check.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
