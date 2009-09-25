@@ -39,6 +39,10 @@
 %define mkrel(c:) %{-c: 0.%{-c*}.}%{1}%{?distsuffix:%distsuffix}%{?!distsuffix:mdv}%{?mandriva_release:%mandriva_release}%{?subrel:.%subrel}
 %endif
 
+%if %{?mips:0}%{?!mips:1}
+%define mips		mips mipsel mips32 mips32el mips64 mips64el
+%endif
+
 %if %{?pyver:0}%{?!pyver:1}
 %define pyver %(python -V 2>&1 | cut -f2 -d" " | cut -f1,2 -d".")
 %endif
@@ -216,6 +220,8 @@ Patch2003: rpm-4.4.2.3-rc1-transmeta-crusoe-is-686.patch
 # other locale except C, then some commands launched by post-scripts will not
 # display characters which you expected.
 Patch2005: rpm-4.6.0-rc1-buildlang.patch
+
+Patch3000: mips_macros.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
@@ -559,6 +565,12 @@ fi
 %attr(   -, rpm, rpm) %{rpmdir}/platform/amd64-*
 %attr(   -, rpm, rpm) %{rpmdir}/platform/x86_64-*
 %attr(   -, rpm, rpm) %{rpmdir}/platform/ia32e-*
+%endif
+%ifarch %arm
+%attr(   -, rpm, rpm) %{rpmdir}/platform/armv*
+%endif
+%ifarch %mips
+%attr(   -, rpm, rpm) %{rpmdir}/platform/mips*
 %endif
 %attr(   -, rpm, rpm) %{rpmdir}/platform/noarch*
 
