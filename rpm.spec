@@ -223,6 +223,7 @@ Patch2005: rpm-4.6.0-rc1-buildlang.patch
 
 Patch3000: mips_macros.patch
 Patch3001: fix_stack_protector_check.patch
+Patch3002: mips_define_isa_macros.patch
 
 License:	GPL
 BuildRequires:	autoconf >= 2.57
