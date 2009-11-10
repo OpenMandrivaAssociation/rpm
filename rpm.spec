@@ -536,6 +536,7 @@ fi
 %rpmattr	%{rpmdir}/rpm2cpio.sh
 %rpmattr	%{rpmdir}/tgpg
 
+%dir %attr(   -, rpm, rpm) %{rpmdir}/platform/
 %ifarch %{ix86} x86_64
 %attr(   -, rpm, rpm) %{rpmdir}/platform/i*86-*
 %attr(   -, rpm, rpm) %{rpmdir}/platform/athlon-*
