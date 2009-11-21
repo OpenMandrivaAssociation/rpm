@@ -217,7 +217,7 @@ Patch2002: rpm-4.6.0-rc1-python-writeHdlist.patch
 # Crusoe CPUs say that their CPU family is "5" but they have enough features for i686.
 Patch2003: rpm-4.4.2.3-rc1-transmeta-crusoe-is-686.patch
 
-# The following patch is unneeded for Mandriva, but Turbolinux has it and it can't hurt much
+# The following patch isn't needed for Mandriva, but Turbolinux has it and it can't hurt much
 #
 # This patch fixes the problem when the post-scripts launched by rpm-build. 
 # The post-scripts launched by rpm-build works in LANG environment. If LANG is
