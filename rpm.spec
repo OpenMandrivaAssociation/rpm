@@ -204,9 +204,8 @@ Patch1009: rpm-4.6.0-rpm5-tags.patch
 # Avoid adding Lua sources/patches twice when recursing. (backport from upstream git)
 Patch1010: rpm-4.6.0-lua-add-sources-and-patches-only-once.patch
 
-#FIXME: will break intended dependencies ie. 'Requires: foo = 1.0' (with version only where foo provides release)
-# If release value is missing, add a default "" value and be sure to do vercmp with it (from jbj/rpm5)
-#Patch1011: rpm-4.6.0-fix-conflict-missing-release.patch
+# If release value is missing, add a default "" value and be sure to do vercmp with it (#55810, from jbj/rpm5)
+Patch1011: rpm-4.6.0-rpmvercmp-handle-missing-values.patch
 
 # Turbolinux patches
 Patch2000: rpm-4.6.0-rc1-serial-tag.patch
