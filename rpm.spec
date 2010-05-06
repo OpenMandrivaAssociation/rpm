@@ -207,6 +207,9 @@ Patch1010: rpm-4.6.0-lua-add-sources-and-patches-only-once.patch
 # Check chroot return code before running lua script
 Patch1011: rpm-4.6.0-do-not-run-lua-scripts-when-chroot-fails.patch
 
+# Check chroot return code before running external script
+Patch1012: rpm-4.6.0-do-not-run-scripts-when-chroot-fails.patch
+
 # Turbolinux patches
 Patch2000: rpm-4.6.0-rc1-serial-tag.patch
 # re-enable "copyright" tag (Kiichiro, 2005)
