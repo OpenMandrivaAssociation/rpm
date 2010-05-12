@@ -210,6 +210,9 @@ Patch1011: rpm-4.6.0-do-not-run-lua-scripts-when-chroot-fails.patch
 # Check chroot return code before running external script
 Patch1012: rpm-4.6.0-do-not-run-scripts-when-chroot-fails.patch
 
+# Make sure files in debug packages have good default perms, fixes bug #57758
+Patch1013: rpm-4.6.0-fix-debug-info-default-permissions.patch
+
 # Turbolinux patches
 Patch2000: rpm-4.6.0-rc1-serial-tag.patch
 # re-enable "copyright" tag (Kiichiro, 2005)
