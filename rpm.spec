@@ -213,6 +213,9 @@ Patch1012: rpm-4.6.0-do-not-run-scripts-when-chroot-fails.patch
 # Make sure files in debug packages have good default perms, fixes bug #57758
 Patch1013: rpm-4.6.0-fix-debug-info-default-permissions.patch
 
+# Remove BDB XA support to fix compilation with db 4.8 (upstream)
+Patch1014: rpm-4.6.0-bdb-xa-removal.patch
+
 # Turbolinux patches
 Patch2000: rpm-4.6.0-rc1-serial-tag.patch
 # re-enable "copyright" tag (Kiichiro, 2005)
@@ -247,7 +250,7 @@ BuildRequires:	sed >= 4.0.3
 BuildRequires:	libbeecrypt-devel
 BuildRequires:	ed, gettext-devel
 BuildRequires:  libsqlite3-devel
-BuildRequires:  db4.7-devel
+BuildRequires:  db4.8-devel
 BuildRequires:  neon-devel
 BuildRequires:	popt-devel
 BuildRequires:	nss-devel
