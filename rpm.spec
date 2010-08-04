@@ -216,9 +216,6 @@ Patch1013: rpm-4.6.0-fix-debug-info-default-permissions.patch
 # Remove BDB XA support to fix compilation with db 4.8 (upstream)
 Patch1014: rpm-4.6.0-bdb-xa-removal.patch
 
-# If release value is missing, add a default "" value and be sure to do vercmp with it (#55810, from jbj/rpm5)/mancoosi
-Patch1015: rpm-4.6.0-rpmvercmp-handle-missing-values.patch
-
 # Turbolinux patches
 Patch2000: rpm-4.6.0-rc1-serial-tag.patch
 # re-enable "copyright" tag (Kiichiro, 2005)
