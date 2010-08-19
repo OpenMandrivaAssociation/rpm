@@ -216,6 +216,9 @@ Patch1013: rpm-4.6.0-fix-debug-info-default-permissions.patch
 # Remove BDB XA support to fix compilation with db 4.8 (upstream)
 Patch1014: rpm-4.6.0-bdb-xa-removal.patch
 
+# Refuse to build a rpm with 2 identical triggers (#60699)
+Patch1015: rpm-4.6.0-duplicate-triggers.patch
+
 # Turbolinux patches
 Patch2000: rpm-4.6.0-rc1-serial-tag.patch
 # re-enable "copyright" tag (Kiichiro, 2005)
