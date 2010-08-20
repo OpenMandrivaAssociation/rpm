@@ -145,9 +145,6 @@ Patch124: rpm-4.6.0-rc1-speedup-by-not-checking-same-files-with-different-paths-
 # [from SuSE] handle "Suggests" via RPMTAG_SUGGESTSNAME
 Patch133: rpm-4.6.0-rc1-weakdeps.patch
 
-# (from Turbolinux) remove a wrong check in case %_topdir is /RPM (ie when it is short)
-Patch135: rpm-4.4.2.3-rc1-fix-debugedit.patch
-
 # convert data in the header to a specific encoding which used in the selected locale.
 Patch137: rpm-4.6.0-rc1-headerIconv.patch
 
