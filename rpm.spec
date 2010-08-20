@@ -179,6 +179,14 @@ Patch162: rpm-fix-islegacyprereq.patch
 # map PreReq into Requires(pre,preun) at build
 Patch163: rpm-map-prereq.patch
 
+# avoid "canonicalization unexpectedly shrank by one character" error from 
+# debugedit by adding '/' to the end of the string when the error would be
+# triggered
+# see https://bugzilla.redhat.com/show_bug.cgi?id=304121 and 
+# https://bugzilla.redhat.com/show_bug.cgi?id=482903
+
+Patch164: rpm-4.6.0-fix-debugedit-canonicalization-error.patch
+
 #Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
 
 # default behaviour in rpm-jbj >= 4.4.6
