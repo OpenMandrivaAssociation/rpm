@@ -224,6 +224,12 @@ Patch1014: rpm-4.6.0-bdb-xa-removal.patch
 # Refuse to build a rpm with 2 identical triggers (#60699)
 #Patch1015: rpm-4.6.0-duplicate-triggers.patch
 
+# fix %exclude behaviour to only exclude files from a specific package, not
+# from adding the files to list of files that's not unpackaged.
+# Reintroduces past behaviour as with rpm 4.4.8 & enforces compatibility with
+# rpm5.org
+Patch1016: rpm-4.6.0-dont-add-excluded-files-to-check_fileList.patch
+
 # Turbolinux patches
 Patch2000: rpm-4.6.0-rc1-serial-tag.patch
 # re-enable "copyright" tag (Kiichiro, 2005)
