@@ -185,7 +185,8 @@ Patch163: rpm-map-prereq.patch
 # see https://bugzilla.redhat.com/show_bug.cgi?id=304121 and 
 # https://bugzilla.redhat.com/show_bug.cgi?id=482903
 
-Patch164: rpm-4.6.0-fix-debugedit-canonicalization-error.patch
+Patch164: rpm-4.6.1-updated-debugedit-for-debug_pubtypes-section.patch
+Patch165: rpm-4.6.0-fix-debugedit-canonicalization-error.patch
 
 #Patch1001: rpm-4.6.0-rc1-new-liblzma.patch
 
