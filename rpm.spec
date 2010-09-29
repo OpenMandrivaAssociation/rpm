@@ -236,9 +236,6 @@ Patch1016: rpm-4.6.0-dont-add-excluded-files-to-check_fileList.patch
 Patch1017: rpm-4.6.0-rpmvercmp-handle-missing-values.patch
 
 # Turbolinux patches
-Patch2000: rpm-4.6.0-rc1-serial-tag.patch
-# re-enable "copyright" tag (Kiichiro, 2005)
-Patch2001: rpm-4.6.0-rc1-copyright-tag.patch
 # add writeHeaderListTofile function into rpm-python (needed by "buildman" build system) (Toshihiro, 2003)
 Patch2002: rpm-4.6.0-rc1-python-writeHdlist.patch
 # Crusoe CPUs say that their CPU family is "5" but they have enough features for i686.
