@@ -52,10 +52,10 @@
 %define __find_provides %{rpmdir}/mandriva/find-provides
 %endif
 
-%define rpmversion	4.6.0
+%define rpmversion	4.6.1
 %define srcver		%rpmversion
 %define libver		4.6
-%define release			    %manbo_mkrel 15
+%define release			    %manbo_mkrel 1
 %define librpmname   %mklibname rpm  %{libver}
 %define librpmnamedevel   %mklibname -d rpm
 
@@ -249,8 +249,8 @@ Patch2005: rpm-4.6.0-rc1-buildlang.patch
 
 Patch3000: mips_macros.patch
 Patch3001: fix_stack_protector_check.patch
-Patch3002: mips_define_isa_macros.patch
-Patch3003: rpm_arm_mips_isa_macros.patch
+Patch3002: rpm-4.6.1-mips_define_isa_macros.patch
+Patch3003: rpm-4.6.1-arm_mips_isa_macros.patch
 Patch3004: rpm_add_armv5tl.patch
 
 License:	GPL
