@@ -231,6 +231,10 @@ Patch1014: rpm-4.6.0-bdb-xa-removal.patch
 # rpm5.org
 Patch1016: rpm-4.6.0-dont-add-excluded-files-to-check_fileList.patch
 
+# make rpmvercmp handle missing values and make versioned conflicts behave
+# consistently with requires. (#55810)
+Patch1017: rpm-4.6.0-rpmvercmp-handle-missing-values.patch
+
 # Turbolinux patches
 Patch2000: rpm-4.6.0-rc1-serial-tag.patch
 # re-enable "copyright" tag (Kiichiro, 2005)
