@@ -55,7 +55,7 @@
 %define rpmversion	4.6.1
 %define srcver		%rpmversion
 %define libver		4.6
-%define release			    %manbo_mkrel 2
+%define release			    %manbo_mkrel 3
 %define librpmname   %mklibname rpm  %{libver}
 %define librpmnamedevel   %mklibname -d rpm
 
@@ -234,6 +234,9 @@ Patch1016: rpm-4.6.0-dont-add-excluded-files-to-check_fileList.patch
 # make rpmvercmp handle missing values and make versioned conflicts behave
 # consistently with requires. (#55810)
 Patch1017: rpm-4.6.0-rpmvercmp-handle-missing-values.patch
+
+# Automatically handle ruby gem extraction in %setup
+PAtch1018: rpm-4.6.1-setup-rubygems.patch
 
 # Turbolinux patches
 # add writeHeaderListTofile function into rpm-python (needed by "buildman" build system) (Toshihiro, 2003)
