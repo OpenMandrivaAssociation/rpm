@@ -135,7 +135,7 @@ Summary:	Libraries used by rpm
 Group:		System/Libraries
 # Forcing upgrades of anything else linked against it as rpmdb is incompatible
 # with older versions (#61658, comment #136)
-#Conflicts:	librpm < 5.3
+Conflicts:	librpm < 5.3
 
 %description -n	%{librpmname}
 RPM is a powerful command line driven package management system capable of
