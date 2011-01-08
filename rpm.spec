@@ -77,6 +77,8 @@ Patch1:		rpm-5.3.6-workaround-segfault-with-openmp.patch
 Patch2:		rpm-5.3.7-check-arch-tag-for-platform-score-if-no-match.patch
 # do a quicker --rebuilddb at end of conversion
 Patch3:		rpm-5.3.7-dbconvert-rebuilddb-nofsync.patch
+# fix 'rpm -qf' to work on owned files (#62148)
+Patch4:		rpm-5.3.7-fix-rpm-qf-on-owned-files.patch 
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -228,6 +230,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch1 -p1 -b .openmp~
 %patch2 -p1 -b .platform_arch~
 %patch3 -p1 -b .nofsync~
+%patch4 -p1 -b .rpm_qf~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
