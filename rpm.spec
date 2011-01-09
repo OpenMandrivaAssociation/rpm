@@ -349,9 +349,6 @@ rm -rf %{buildroot}
 # XXX: why isn't this installed by 'make install'?
 install -m755 scripts/symclash.* %{buildroot}%{_rpmhome}
 
-# XXX: doubt this is of still use..? feels dirty ;p
-ln -sf ppc-%{_target_vendor}-linux %{buildroot}%{_usrlibrpm}/platform/powerpc-%{_target_vendor}-linux
-
 # Save list of packages through cron
 # FIXME: will result in conflicts with parallel cooker package...
 install -m755 scripts/rpm.daily -D %{buildroot}%{_sysconfdir}/cron.daily/rpm
@@ -418,6 +415,8 @@ install -d %{buildroot}/bin
 mv %{buildroot}%{_bindir}/rpm %{buildroot}/bin/rpm
 
 cp -r cpu-os-macros %{buildroot}%{_usrlibrpm}/platform
+ln -sf ppc-%{_target_vendor}-linux %{buildroot}%{_usrlibrpm}/platform/powerpc-%{_target_vendor}-linux
+
 install -d %{buildroot}%{_docdir}/rpm
 cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 
