@@ -53,7 +53,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
 # Kill off %mkrel later, just for pushing through filter for now
-Release:	%mkrel %{?prereldate:0.%{prereldate}.}2
+Release:	%mkrel %{?prereldate:0.%{prereldate}.}3
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -71,6 +71,8 @@ Source2:	rpm-GROUPS
 # stripping away the rest (along with os specificity) and create a resulting
 # cpu-macros.tar.gz to push upstream woudl seem like a sane improvement.
 Source3:	cpu-os-macros.tar.gz
+# already merged upstream
+Patch0:		rpm-5.3.8-rpm4compat-add-missing-errno.h.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -219,6 +221,7 @@ This package contains the RPM API documentation generated in HTML format.
 
 %prep
 %setup -q -n rpm-%{srcver}
+%patch0 -p1 -b .errno~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
