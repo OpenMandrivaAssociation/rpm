@@ -350,15 +350,8 @@ rm -rf %{buildroot}
 install -m755 scripts/symclash.* %{buildroot}%{_rpmhome}
 
 # Save list of packages through cron
-# FIXME: will result in conflicts with parallel cooker package...
 install -m755 scripts/rpm.daily -D %{buildroot}%{_sysconfdir}/cron.daily/rpm
 install -m644 scripts/rpm.log -D %{buildroot}%{_sysconfdir}/logrotate.d/rpm
-
-# TODO: I suspect that this dirty workaround shouldn't be needed
-test -d doc-copy || mkdir doc-copy
-rm -rf doc-copy/*
-ln -f doc/manual/* doc-copy/
-rm -f doc-copy/Makefile*
 
 mkdir -p %{buildroot}/var/spool/repackage
 
@@ -520,8 +513,6 @@ rm -rf %{buildroot}
 
 %files build
 %defattr(-,root,root)
-%doc		CHANGES
-%doc		doc-copy/*
 %defattr(755, rpm, rpm)
 %{_bindir}/gendiff
 %{_bindir}/rpmbuild
