@@ -350,9 +350,7 @@ rm -rf %{buildroot}
 install -m755 scripts/symclash.* %{buildroot}%{_rpmhome}
 
 # XXX: doubt this is of still use..? feels dirty ;p
-%ifarch ppc powerpc
-ln -sf ppc-%{_target_vendor}-linux %{buildroot}%{_rpmhome}/powerpc-%{_target_vendor}-linux
-%endif
+ln -sf ppc-%{_target_vendor}-linux %{buildroot}%{_usrlibrpm}/platform/powerpc-%{_target_vendor}-linux
 
 # Save list of packages through cron
 # FIXME: will result in conflicts with parallel cooker package...
