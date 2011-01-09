@@ -41,9 +41,9 @@
 %define	bdb		db51
 
 %define libver		5.3
-%define	minorver	7
+%define	minorver	8
 %define	srcver		%{libver}.%{minorver}
-#define	prereldate	20101229
+%define	prereldate	20110109
 
 %define librpmname	%mklibname rpm  %{libver}
 %define librpmnamedevel	%mklibname -d rpm
@@ -53,7 +53,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
 # Kill off %mkrel later, just for pushing through filter for now
-Release:	%mkrel %{?prereldate:0.%{prereldate}.}2
+Release:	%mkrel %{?prereldate:0.%{prereldate}.}1
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -71,14 +71,6 @@ Source2:	rpm-GROUPS
 # stripping away the rest (along with os specificity) and create a resulting
 # cpu-macros.tar.gz to push upstream woudl seem like a sane improvement.
 Source3:	cpu-os-macros.tar.gz
-# temporary workaround for segfault occuring with rpmdrake (#61658)
-Patch1:		rpm-5.3.6-workaround-segfault-with-openmp.patch
-# temporary workaround for #61746, uncertain about the *correct* fix for upstream
-Patch2:		rpm-5.3.7-check-arch-tag-for-platform-score-if-no-match.patch
-# do a quicker --rebuilddb at end of conversion
-Patch3:		rpm-5.3.7-dbconvert-rebuilddb-nofsync.patch
-# fix 'rpm -qf' to work on owned files (#62148)
-Patch4:		rpm-5.3.7-fix-rpm-qf-on-owned-files.patch 
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -227,10 +219,6 @@ This package contains the RPM API documentation generated in HTML format.
 
 %prep
 %setup -q -n rpm-%{srcver}
-%patch1 -p1 -b .openmp~
-%patch2 -p1 -b .platform_arch~
-%patch3 -p1 -b .nofsync~
-%patch4 -p1 -b .rpm_qf~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
@@ -325,8 +313,6 @@ export CPPFLAGS="-DXP_UNIX=1"
 # set of binaries (does it..?) wrt. Manbo Labs.
 echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config.h
 %make
-# TODO: incomplete, likely just a matter of adding the corresponding files to
-# files section, perhaps making a noarch -doc subpackage as well?
 %if %{with docs}
 %make apidocs
 %endif
@@ -482,7 +468,7 @@ rm -rf %{buildroot}
 %{_rpmhome}/macros
 %{_rpmhome}/rpmpopt
 %{_rpmhome}/platform/*/macros
-%config(noreplace) /var/lib/rpm/DB_CONFIG
+%config(noreplace) %{_localstatedir}/lib/rpm/DB_CONFIG
 
 %defattr(-,root,root)
 %dir %{_localstatedir}/spool/repackage
