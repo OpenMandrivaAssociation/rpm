@@ -60,7 +60,7 @@ URL:		http://rpm5.org/
 
 # snapshot from rpm-5_3 branch: 'cvs -d :pserver:anonymous@rpm5.org:/cvs co -r rpm-5_3 rpm'
 # tarball generated with './devtool tarball.xz'
-Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/rpm-%{srcver}.tar.xz
+Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}-%{srcver}.tar.xz
 Source1:	bootstrap.spec
 # Needed by rpmlint. Still required? If so, this file should rather be carried
 # with rpmlint itself rather than requiring for rpm to carry...
@@ -220,7 +220,7 @@ This package contains the RPM API documentation generated in HTML format.
 %endif
 
 %prep
-%setup -q -n rpm-%{srcver}
+%setup -q
 %patch0 -p1 -b .errno~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
