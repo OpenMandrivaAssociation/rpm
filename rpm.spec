@@ -119,6 +119,7 @@ Requires:	%{librpmname} = %{EVRD}
 Requires(pre):	rpm-helper >= 0.8
 Requires(pre):	coreutils
 Requires(postun):rpm-helper >= 0.8
+%rename		rpmconstant
 
 %description
 RPM is a powerful command line driven package management system capable of
