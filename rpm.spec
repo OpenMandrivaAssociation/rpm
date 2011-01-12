@@ -146,6 +146,7 @@ Group:		Development/C
 Requires:	%{librpmname} = %{EVRD}
 Provides:	librpm-devel = %{EVRD}
 Provides:	rpm-devel = %{EVRD}
+%rename		%{_lib}rpmconstant-devel
 Obsoletes:	%{_lib}rpm4.4-devel
 
 %description -n %{librpmnamedevel}
