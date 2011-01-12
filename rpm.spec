@@ -73,6 +73,7 @@ Source2:	rpm-GROUPS
 Source3:	cpu-os-macros.tar.gz
 # already merged upstream
 Patch0:		rpm-5.3.8-rpm4compat-add-missing-errno.h.patch
+Patch1:		rpm-5.3.8-fix-perl-rpmps-typo.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -223,6 +224,7 @@ This package contains the RPM API documentation generated in HTML format.
 %prep
 %setup -q
 %patch0 -p1 -b .errno~
+%patch1 -p1 -b .rpmps~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
