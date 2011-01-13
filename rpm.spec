@@ -76,6 +76,7 @@ Patch0:		rpm-5.3.8-rpm4compat-add-missing-errno.h.patch
 Patch1:		rpm-5.3.8-fix-perl-rpmps-typo.patch
 Patch2:		rpm-5.3.8-fix-no-longer-existing-binaries-in-scripts.patch
 Patch3:		rpm-5.3.8-set-default-bdb-log-dir.patch
+Patch4:		rpm-5.3.8-dependency-whiteout.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -230,6 +231,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch1 -p1 -b .rpmps~
 %patch2 -p1 -b .rpmquery~
 %patch3 -p1 -b .set_lg_dir~
+%patch4 -p1 -b .dep_whiteout~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
