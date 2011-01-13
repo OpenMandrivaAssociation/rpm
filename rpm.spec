@@ -409,7 +409,7 @@ mv %{buildroot}%{_bindir}/rpm %{buildroot}/bin/rpm
 
 cp -r cpu-os-macros %{buildroot}%{_usrlibrpm}/platform
 install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/dependency_whiteout.macros
-ln -sf ppc-linux %{buildroot}%{_usrlibrpm}/platform/powerpc-%{_target_vendor}-linux
+#ln -sf ppc-linux %{buildroot}%{_usrlibrpm}/platform/powerpc-%{_target_vendor}-linux
 
 install -d %{buildroot}%{_docdir}/rpm
 cp -r apidocs/html %{buildroot}%{_docdir}/rpm
