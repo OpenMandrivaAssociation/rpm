@@ -71,6 +71,7 @@ Source2:	rpm-GROUPS
 # stripping away the rest (along with os specificity) and create a resulting
 # cpu-macros.tar.gz to push upstream woudl seem like a sane improvement.
 Source3:	cpu-os-macros.tar.gz
+Source4:	dependency_whiteout.macros
 # already merged upstream
 Patch0:		rpm-5.3.8-rpm4compat-add-missing-errno.h.patch
 Patch1:		rpm-5.3.8-fix-perl-rpmps-typo.patch
