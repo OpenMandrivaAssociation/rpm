@@ -408,7 +408,8 @@ install -d %{buildroot}/bin
 mv %{buildroot}%{_bindir}/rpm %{buildroot}/bin/rpm
 
 cp -r cpu-os-macros %{buildroot}%{_usrlibrpm}/platform
-ln -sf ppc-%{_target_vendor}-linux %{buildroot}%{_usrlibrpm}/platform/powerpc-%{_target_vendor}-linux
+install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/dependency_whiteout.macros
+ln -sf ppc-linux %{buildroot}%{_usrlibrpm}/platform/powerpc-%{_target_vendor}-linux
 
 install -d %{buildroot}%{_docdir}/rpm
 cp -r apidocs/html %{buildroot}%{_docdir}/rpm
@@ -495,7 +496,8 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}/macros
 %dir %{_sysconfdir}/%{name}/macros.d
 %dir %{_sysconfdir}/%{name}/premacros.d
-%{_sysconfdir}/%{name}/premacros.d/*
+%{_sysconfdir}/%{name}/macros.d/*.macros
+%{_sysconfdir}/%{name}/premacros.d/*.macros
 
 %{_mandir}/man[18]/*.[18]*
 %lang(pl)	%{_mandir}/pl/man[18]/*.[18]*
