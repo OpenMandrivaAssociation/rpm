@@ -69,7 +69,7 @@ Source2:	rpm-GROUPS
 # of use at all anymore! Should ideally just contain the macros different
 # from the default; _arch, optflags, _lib & _multilib*.
 # stripping away the rest (along with os specificity) and create a resulting
-# cpu-macros.tar.gz to push upstream woudl seem like a sane improvement.
+# cpu-macros.tar.gz to push upstream would seem like a sane improvement.
 Source3:	cpu-os-macros.tar.gz
 Source4:	dependency_whiteout.macros
 # already merged upstream
@@ -79,6 +79,7 @@ Patch2:		rpm-5.3.8-fix-no-longer-existing-binaries-in-scripts.patch
 Patch3:		rpm-5.3.8-set-default-bdb-log-dir.patch
 Patch4:		rpm-5.3.8-dependency-whiteout.patch
 Patch5:		rpm-5.3.8-non-pre-scripts-dont-fail.patch
+Patch6:		rpm-5.3.8-increase-bdb-max-locks.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -235,6 +236,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch3 -p1 -b .set_lg_dir~
 %patch4 -p1 -b .dep_whiteout~
 %patch5 -p1 -b .scriptlet~
+%patch6 -p1 -b .max_locks~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
