@@ -80,6 +80,8 @@ Patch3:		rpm-5.3.8-set-default-bdb-log-dir.patch
 Patch4:		rpm-5.3.8-dependency-whiteout.patch
 Patch5:		rpm-5.3.8-non-pre-scripts-dont-fail.patch
 Patch6:		rpm-5.3.8-increase-bdb-max-locks.patch
+# handle missing distepoch (return of #55810 again ;)
+Patch7:		rpm-5.3.8-evrcompare-handle-missing-distepoch.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -237,6 +239,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch4 -p1 -b .dep_whiteout~
 %patch5 -p1 -b .scriptlet~
 %patch6 -p1 -b .max_locks~
+%patch7 -p1 -b .distepoch_55810~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
