@@ -77,7 +77,9 @@ Patch0:		rpm-5.3.8-rpm4compat-add-missing-errno.h.patch
 Patch1:		rpm-5.3.8-fix-perl-rpmps-typo.patch
 Patch2:		rpm-5.3.8-fix-no-longer-existing-binaries-in-scripts.patch
 Patch3:		rpm-5.3.8-set-default-bdb-log-dir.patch
+# TODO: should be disable for cooker, packaging needs to be fixed (enable for legacy compatibility)
 Patch4:		rpm-5.3.8-dependency-whiteout.patch
+# TODO: make conditional & disabled through macro by default (enable for legacy compatibility)
 Patch5:		rpm-5.3.8-non-pre-scripts-dont-fail.patch
 Patch6:		rpm-5.3.8-increase-bdb-max-locks.patch
 # handle missing distepoch (return of #55810 again ;)
