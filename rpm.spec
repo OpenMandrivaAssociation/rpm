@@ -216,6 +216,7 @@ programs that will manipulate RPM packages and databases.
 Summary:	Perl bindings for RPM
 Group:		Development/Perl
 Conflicts:	perl-RPM4
+Requires:	perl-IO-String
 
 %description -n perl-%{perlmod}
 The RPM Perl module provides an object-oriented interface to querying both
