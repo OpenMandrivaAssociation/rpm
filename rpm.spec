@@ -53,7 +53,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
 # Kill off %mkrel later, just for pushing through filter for now
-Release:	%mkrel %{?prereldate:0.%{prereldate}.}5
+Release:	%mkrel %{?prereldate:0.%{prereldate}.}6
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -82,6 +82,8 @@ Patch5:		rpm-5.3.8-non-pre-scripts-dont-fail.patch
 Patch6:		rpm-5.3.8-increase-bdb-max-locks.patch
 # handle missing distepoch (return of #55810 again ;)
 Patch7:		rpm-5.3.8-evrcompare-handle-missing-distepoch.patch
+# disable fsync call for files causing heavy performance penalties (from eugeni)
+Patch8:		rpm-5.3.8-disable-expensive-fsync.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -240,6 +242,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch5 -p1 -b .scriptlet~
 %patch6 -p1 -b .max_locks~
 %patch7 -p1 -b .distepoch_55810~
+%patch8 -p1 .b .fsync~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
