@@ -71,7 +71,7 @@ Source2:	rpm-GROUPS
 # stripping away the rest (along with os specificity) and create a resulting
 # cpu-macros.tar.gz to push upstream would seem like a sane improvement.
 Source3:	cpu-os-macros.tar.gz
-Source4:	dependency_whiteout.macros
+Source4:	legacy_compat.macros
 # already merged upstream
 Patch0:		rpm-5.3.8-rpm4compat-add-missing-errno.h.patch
 Patch1:		rpm-5.3.8-fix-perl-rpmps-typo.patch
@@ -423,7 +423,7 @@ install -d %{buildroot}/bin
 mv %{buildroot}%{_bindir}/rpm %{buildroot}/bin/rpm
 
 cp -r cpu-os-macros %{buildroot}%{_usrlibrpm}/platform
-install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/dependency_whiteout.macros
+install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/legacy_compat.macros
 #ln -sf ppc-linux %{buildroot}%{_usrlibrpm}/platform/powerpc-%{_target_vendor}-linux
 
 install -d %{buildroot}%{_docdir}/rpm
