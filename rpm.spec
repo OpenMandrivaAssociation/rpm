@@ -435,23 +435,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 # smells like an old suid/guid relic of the past...
 /usr/share/rpm-helper/add-user rpm $1 rpm /var/lib/rpm /bin/false
 
-%post
-if [ $1 -eq 1 ]; then
-	touch /var/lib/rpm/.NOCONVERSION
-else
-	rm -f /var/lib/rpm/.NOCONVERSION
-fi
-
-%posttrans
-# This script will check whether the database is converted or not, if not,
-# it will convert it
-if [ -f /var/lib/rpm/.NOCONVERSION ]; then
-	echo "Won't invoke db conversion now as this doesn't seem to be an upgrade."
-	echo "After all transactions has finished, please run %{_rpmhome}/dbconvert.sh"
-else
-	DBREBUILD=1 DBVERBOSE=0 %{_rpmhome}/dbconvert.sh
-fi
-
 %postun
 /usr/share/rpm-helper/del-user rpm $1 rpm
 
