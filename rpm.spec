@@ -36,7 +36,7 @@
 %define	debugcflags	-g -O0
 %endif
 
-#%%include %{_sourcedir}/bootstrap.spec
+#include %{_sourcedir}/bootstrap.spec
 
 %define	bdb		db51
 
@@ -61,7 +61,7 @@ URL:		http://rpm5.org/
 # snapshot from rpm-5_3 branch: 'cvs -d :pserver:anonymous@rpm5.org:/cvs co -r rpm-5_3 rpm'
 # tarball generated with './devtool tarball.xz'
 Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}-%{srcver}.tar.xz
-Source1:	bootstrap.spec
+#Source1:	bootstrap.spec
 # Needed by rpmlint. Still required? If so, this file should rather be carried
 # with rpmlint itself rather than requiring for rpm to carry...
 Source2:	rpm-GROUPS
