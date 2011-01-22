@@ -90,6 +90,8 @@ Patch9:		rpm-5.3.8-no-doc-conflicts.patch
 # use rpmEVRoverlap in rpmds to make use of also rpmEVRcompare(), fixing #55810
 # for when using 'rpm -U' also
 Patch10:	rpm-5.3.8-rpmds-use-rpmEVRoverlap.patch
+# if distsuffix is defined, use it for disttag (from Anssi)
+Patch11:	rpm-5.3.8-disttag-distsuffix-fallback.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -252,6 +254,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch8 -p1 -b .fsync~
 %patch9 -p1 -b .doc_conflicts~
 %patch10 -p1 -b .rpmds_55810~
+%patch11 -p1 -b .distsuffix~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
