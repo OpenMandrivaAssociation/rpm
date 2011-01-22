@@ -53,7 +53,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
 # Kill off %mkrel later, just for pushing through filter for now
-Release:	%mkrel %{?prereldate:0.%{prereldate}.}9
+Release:	%mkrel %{?prereldate:0.%{prereldate}.}10
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -89,7 +89,7 @@ Patch8:		rpm-5.3.8-disable-expensive-fsync.patch
 Patch9:		rpm-5.3.8-no-doc-conflicts.patch
 # use rpmEVRoverlap in rpmds to make use of also rpmEVRcompare(), fixing #55810
 # for when using 'rpm -U' also
-Patch10:	rpm-5.3.8-rpmds-use-rpmEVRoverlap.patch
+Patch10:	rpm-5.3.8-rpmdscompare-handle-missing-release-and-distepoch.patch
 # if distsuffix is defined, use it for disttag (from Anssi)
 Patch11:	rpm-5.3.8-disttag-distsuffix-fallback.patch
 License:	LGPLv2.1+
