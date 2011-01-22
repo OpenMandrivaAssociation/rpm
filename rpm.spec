@@ -53,7 +53,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
 # Kill off %mkrel later, just for pushing through filter for now
-Release:	%mkrel %{?prereldate:0.%{prereldate}.}8
+Release:	%mkrel %{?prereldate:0.%{prereldate}.}9
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -87,6 +87,9 @@ Patch7:		rpm-5.3.8-evrcompare-handle-missing-distepoch.patch
 # disable fsync call for files causing heavy performance penalties (from eugeni)
 Patch8:		rpm-5.3.8-disable-expensive-fsync.patch
 Patch9:		rpm-5.3.8-no-doc-conflicts.patch
+# use rpmEVRoverlap in rpmds to make use of also rpmEVRcompare(), fixing #55810
+# for when using 'rpm -U' also
+Patch10:	rpm-5.3.8-rpmds-use-rpmEVRoverlap.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -248,6 +251,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch7 -p1 -b .distepoch_55810~
 %patch8 -p1 -b .fsync~
 %patch9 -p1 -b .doc_conflicts~
+%patch10 -p1 -b .rpmds_55810~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
