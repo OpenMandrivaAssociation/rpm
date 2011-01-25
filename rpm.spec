@@ -53,7 +53,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
 # Kill off %mkrel later, just for pushing through filter for now
-Release:	%mkrel %{?prereldate:0.%{prereldate}.}11
+Release:	%mkrel %{?prereldate:0.%{prereldate}.}12
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -92,6 +92,10 @@ Patch9:		rpm-5.3.8-no-doc-conflicts.patch
 Patch10:	rpm-5.3.8-rpmdscompare-handle-missing-release-and-distepoch.patch
 # if distsuffix is defined, use it for disttag (from Anssi)
 Patch11:	rpm-5.3.8-disttag-distsuffix-fallback.patch
+# ugly hack to workaround disttag/distepoch pattern matching issue to buy some
+# time to come up with better pattern fix..
+Patch12:	rpm-5.3.8-distepoch-pattern-hack.patch
+
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -255,6 +259,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch9 -p1 -b .doc_conflicts~
 %patch10 -p1 -b .rpmds_55810~
 %patch11 -p1 -b .distsuffix~
+%patch12 -p1 -b .distpatt~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
