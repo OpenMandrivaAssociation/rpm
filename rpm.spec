@@ -43,7 +43,7 @@
 %define libver		5.3
 %define	minorver	8
 %define	srcver		%{libver}.%{minorver}
-%define	prereldate	20110109
+%define	prereldate	20110125
 
 %define librpmname	%mklibname rpm  %{libver}
 %define librpmnamedevel	%mklibname -d rpm
@@ -53,7 +53,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
 # Kill off %mkrel later, just for pushing through filter for now
-Release:	%mkrel %{?prereldate:0.%{prereldate}.}13
+Release:	%mkrel %{?prereldate:0.%{prereldate}.}1
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -73,28 +73,17 @@ Source2:	rpm-GROUPS
 Source3:	cpu-os-macros.tar.gz
 Source4:	legacy_compat.macros
 # already merged upstream
-Patch0:		rpm-5.3.8-rpm4compat-add-missing-errno.h.patch
-Patch1:		rpm-5.3.8-fix-perl-rpmps-typo.patch
-Patch2:		rpm-5.3.8-fix-no-longer-existing-binaries-in-scripts.patch
-Patch3:		rpm-5.3.8-set-default-bdb-log-dir.patch
+Patch0:		rpm-5.3.8-set-default-bdb-log-dir.patch
 # TODO: should be disable for cooker, packaging needs to be fixed (enable for legacy compatibility)
-Patch4:		rpm-5.3.8-dependency-whiteout.patch
+Patch1:		rpm-5.3.8-dependency-whiteout.patch
 # TODO: make conditional & disabled through macro by default (enable for legacy compatibility)
-Patch5:		rpm-5.3.8-non-pre-scripts-dont-fail.patch
-Patch6:		rpm-5.3.8-increase-bdb-max-locks.patch
-# handle missing distepoch (return of #55810 again ;)
-Patch7:		rpm-5.3.8-evrcompare-handle-missing-distepoch.patch
-# disable fsync call for files causing heavy performance penalties (from eugeni)
-Patch8:		rpm-5.3.8-disable-expensive-fsync.patch
-Patch9:		rpm-5.3.8-no-doc-conflicts.patch
-# use rpmEVRoverlap in rpmds to make use of also rpmEVRcompare(), fixing #55810
-# for when using 'rpm -U' also
-Patch10:	rpm-5.3.8-rpmdscompare-handle-missing-release-and-distepoch.patch
+Patch2:		rpm-5.3.8-non-pre-scripts-dont-fail.patch
+Patch3:		rpm-5.3.8-no-doc-conflicts.patch
 # if distsuffix is defined, use it for disttag (from Anssi)
-Patch11:	rpm-5.3.8-disttag-distsuffix-fallback.patch
+Patch4:		rpm-5.3.8-disttag-distsuffix-fallback.patch
 # ugly hack to workaround disttag/distepoch pattern matching issue to buy some
 # time to come up with better pattern fix..
-Patch12:	rpm-5.3.8-distepoch-pattern-hack.patch
+Patch5:		rpm-5.3.8-distepoch-pattern-hack.patch
 
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
@@ -247,19 +236,12 @@ This package contains the RPM API documentation generated in HTML format.
 
 %prep
 %setup -q
-%patch0 -p1 -b .errno~
-%patch1 -p1 -b .rpmps~
-%patch2 -p1 -b .rpmquery~
-%patch3 -p1 -b .set_lg_dir~
-%patch4 -p1 -b .dep_whiteout~
-%patch5 -p1 -b .scriptlet~
-%patch6 -p1 -b .max_locks~
-%patch7 -p1 -b .distepoch_55810~
-%patch8 -p1 -b .fsync~
-%patch9 -p1 -b .doc_conflicts~
-%patch10 -p1 -b .rpmds_55810~
-%patch11 -p1 -b .distsuffix~
-%patch12 -p1 -b .distpatt~
+%patch0 -p1 -b .set_lg_dir~
+%patch1 -p1 -b .dep_whiteout~
+%patch2 -p1 -b .scriptlet~
+%patch3 -p1 -b .doc_conflicts~
+%patch4 -p1 -b .distsuffix~
+%patch5 -p1 -b .distpatt~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
