@@ -341,15 +341,7 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 %endif
 
 %check
-# TODO: this should rather be set by 'check' Makefile target, and fixing up
-# the check suite so that we can just do 'make check'
-export LD_LIBRARY_PATH=$(for d in `find -type d -name .libs|grep -v tests`; do echo -n `pwd`/$d:; done)
-%if %{with perl}
-make -C perl test
-%endif
-%if %{with js}
-# XXX: run js unit tests as well?
-%endif
+make check
 
 %install
 rm -rf %{buildroot}
