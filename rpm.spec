@@ -133,7 +133,6 @@ BuildRequires:	sqlite3-devel
 %endif
 Requires:	cpio gawk mktemp rpm-%{_target_vendor}-setup >= 1.42 update-alternatives
 Requires:	%{bdb}_recover
-Requires(post):	%{bdb}-utils which sed
 Requires:	%{librpmname} = %{EVRD}
 Requires(pre):	rpm-helper >= 0.8
 Requires(pre):	coreutils
