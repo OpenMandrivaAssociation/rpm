@@ -2,6 +2,11 @@
 %{?!_rpmhome: %global _rpmhome /usr/lib/rpm}
 %{?!_usrlibrpm: %global _usrlibrpm /usr/lib/rpm}
 
+# to workaround urpmi having issues with parsing synthesis
+#define	_build_name_fmt	%{ARCH}/%{NAME}-%{VERSION}-%{RELEASE}%|ARCH?{.%|SOURCERPM?{%{ARCH}}:{src}|}:{}|.rpm
+%undefine disttag
+%undefine distepoch
+
 %bcond_with	bootstrap
 %bcond_with	debug
 
@@ -84,6 +89,8 @@ Patch4:		rpm-5.3.8-disttag-distsuffix-fallback.patch
 # ugly hack to workaround disttag/distepoch pattern matching issue to buy some
 # time to come up with better pattern fix..
 Patch5:		rpm-5.3.8-distepoch-pattern-hack.patch
+# fix tool path macros (#62322)
+Patch6:		rpm-5.3.8-fix-macro-tool-paths.patch
 
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
@@ -242,6 +249,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch3 -p1 -b .doc_conflicts~
 %patch4 -p1 -b .distsuffix~
 %patch5 -p1 -b .distpatt~
+%patch6 -p1 -b .toolpaths~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
