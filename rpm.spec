@@ -95,6 +95,8 @@ Patch6:		rpm-5.3.8-fix-macro-tool-paths.patch
 # (#62262, from Theerud Lawtrakul/Jeff Johnson)
 Patch7:		rpm-5.3.8-rpmsq-ignored-signal-return-value.patch
 Patch8:		rpm-5.3.8-python-link.patch
+# don't try adding files awaiting file triggers when --test is used
+Patch9:		rpm-5.3.8-dont-add-files-awaiting-triggers-with-test.patch
 
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
@@ -255,6 +257,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch6 -p1 -b .toolpaths~
 %patch7 -p1 -b .sig~
 %patch8 -p1 -b .linking
+%patch9 -p1 -b .filetriggers_test~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
