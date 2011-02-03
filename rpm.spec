@@ -228,7 +228,7 @@ programs that will manipulate RPM packages and databases.
 %package -n	perl-%{perlmod}
 Summary:	Perl bindings for RPM
 Group:		Development/Perl
-Conflicts:	perl-RPM4
+Obsoletes:	perl-RPM4
 Requires:	perl-IO-String
 
 %description -n perl-%{perlmod}
