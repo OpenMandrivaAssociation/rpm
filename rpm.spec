@@ -58,7 +58,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
 # Kill off %mkrel later, just for pushing through filter for now
-Release:	%mkrel %{?prereldate:0.%{prereldate}.}2
+Release:	%mkrel %{?prereldate:0.%{prereldate}.}3
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
