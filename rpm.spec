@@ -58,7 +58,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
 # Kill off %mkrel later, just for pushing through filter for now
-Release:	%mkrel %{?prereldate:0.%{prereldate}.}1
+Release:	%mkrel %{?prereldate:0.%{prereldate}.}2
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -156,7 +156,7 @@ Summary:	Libraries used by rpm
 Group:		System/Libraries
 # Forcing upgrades of anything else linked against it as rpmdb is incompatible
 # with older versions (#61658, comment #136)
-Obsoletes:	librpm < 5.3
+Conflicts:	librpm < 5.3
 
 %description -n	%{librpmname}
 RPM is a powerful command line driven package management system capable of
