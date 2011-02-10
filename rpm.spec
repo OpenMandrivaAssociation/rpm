@@ -97,6 +97,7 @@ Patch7:		rpm-5.3.8-rpmsq-ignored-signal-return-value.patch
 Patch8:		rpm-5.3.8-python-link.patch
 # don't try adding files awaiting file triggers when --test is used
 Patch9:		rpm-5.3.8-dont-add-files-awaiting-triggers-with-test.patch
+Patch10:	rpm-5.3.8-dbi_sqlconfig-macro-typo.patch
 
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
@@ -258,6 +259,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch7 -p1 -b .sig~
 %patch8 -p1 -b .linking
 %patch9 -p1 -b .filetriggers_test~
+%patch10 -p1 -b .typo~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
