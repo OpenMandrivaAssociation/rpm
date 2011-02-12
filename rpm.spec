@@ -95,6 +95,8 @@ Patch9:		rpm-5.3.8-dont-add-files-awaiting-triggers-with-test.patch
 Patch10:	rpm-5.3.8-dbi_sqlconfig-macro-typo.patch
 # fixes a typo in russian translation (#62333)
 Patch11:	rpm-5.3.8-fix-russian-typo.patch
+# reset db cursor to NULL after use in rpmmiCount() so iterator won't break (#62279)
+Patch12:	rpm-5.3.8-rpmmi_count-reset-db-cursor.patch
 
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
@@ -258,6 +260,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch9 -p1 -b .filetriggers_test~
 %patch10 -p1 -b .typo~
 %patch11 -p1 -b .ru_typo~
+%patch12 -p1 -b .rpmmi_count~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
