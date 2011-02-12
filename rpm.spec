@@ -2,11 +2,6 @@
 %{?!_rpmhome: %global _rpmhome /usr/lib/rpm}
 %{?!_usrlibrpm: %global _usrlibrpm /usr/lib/rpm}
 
-# to workaround urpmi having issues with parsing synthesis
-#define	_build_name_fmt	%{ARCH}/%{NAME}-%{VERSION}-%{RELEASE}%|ARCH?{.%|SOURCERPM?{%{ARCH}}:{src}|}:{}|.rpm
-%undefine disttag
-%undefine distepoch
-
 %bcond_with	bootstrap
 %bcond_with	debug
 
