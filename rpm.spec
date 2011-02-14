@@ -97,6 +97,8 @@ Patch10:	rpm-5.3.8-dbi_sqlconfig-macro-typo.patch
 Patch11:	rpm-5.3.8-fix-russian-typo.patch
 # reset db cursor to NULL after use in rpmmiCount() so iterator won't break (#62279)
 Patch12:	rpm-5.3.8-rpmmi_count-reset-db-cursor.patch
+# set mi->mi_count when rpmmiNext() initializes db cursor so that rpmmiCount() won't break (#62267)
+Patch13:	rpm-5.3.8-rpmmiNext-init-mi_count.patch
 
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
@@ -261,6 +263,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch10 -p1 -b .typo~
 %patch11 -p1 -b .ru_typo~
 %patch12 -p1 -b .rpmmi_count~
+%patch13 -p1 -b .rpmmi_next~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
