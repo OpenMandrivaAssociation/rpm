@@ -53,7 +53,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
 # Kill off %mkrel later, just for pushing through filter for now
-Release:	%mkrel %{?prereldate:0.%{prereldate}.}4
+Release:	%mkrel %{?prereldate:0.%{prereldate}.}5
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -101,6 +101,9 @@ Patch12:	rpm-5.3.8-rpmmi_count-reset-db-cursor.patch
 Patch13:	rpm-5.3.8-rpmmiCount-init-mi_count.patch
 # accept NULL given as argument for rootDir with mandriva filetriggers everywhere (#62395)
 Patch14:	rpm-5.3.8-mandriva-filetriggers-fix-null-rootdir.patch
+# temporary workaround for issues with file triggers firing multiple times and
+# a huge memleak...
+Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
 
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
@@ -267,6 +270,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch12 -p1 -b .rpmmi_count~
 %patch13 -p1 -b .rpmmic_init~
 %patch14 -p1 -b .null_rootdir~
+%patch15 -p1 -b .trigger_once~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
