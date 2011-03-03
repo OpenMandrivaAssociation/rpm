@@ -41,9 +41,9 @@
 %define	bdb		db51
 
 %define libver		5.3
-%define	minorver	8
+%define	minorver	9
 %define	srcver		%{libver}.%{minorver}
-%define	prereldate	20110125
+%define	prereldate	20110303
 
 %define librpmname	%mklibname rpm  %{libver}
 %define librpmnamedevel	%mklibname -d rpm
@@ -52,8 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-# Kill off %mkrel later, just for pushing through filter for now
-Release:	%mkrel %{?prereldate:0.%{prereldate}.}6
+Release:	%{?prereldate:0.%{prereldate}.}1
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -84,23 +83,8 @@ Patch4:		rpm-5.3.8-disttag-distsuffix-fallback.patch
 # ugly hack to workaround disttag/distepoch pattern matching issue to buy some
 # time to come up with better pattern fix..
 Patch5:		rpm-5.3.8-distepoch-pattern-hack.patch
-# fix tool path macros (#62322)
-Patch6:		rpm-5.3.8-fix-macro-tool-paths.patch
-# fix problem with ignored signals causing rpmbuild to break with gnome-terminal
-# (#62262, from Theerud Lawtrakul/Jeff Johnson)
-Patch7:		rpm-5.3.8-rpmsq-ignored-signal-return-value.patch
-Patch8:		rpm-5.3.8-python-link.patch
-# don't try adding files awaiting file triggers when --test is used
-Patch9:		rpm-5.3.8-dont-add-files-awaiting-triggers-with-test.patch
-Patch10:	rpm-5.3.8-dbi_sqlconfig-macro-typo.patch
 # fixes a typo in russian translation (#62333)
 Patch11:	rpm-5.3.8-fix-russian-typo.patch
-# reset db cursor to NULL after use in rpmmiCount() so iterator won't break (#62279)
-Patch12:	rpm-5.3.8-rpmmi_count-reset-db-cursor.patch
-# set mi->mi_count when rpmmiNext() initializes db cursor so that rpmmiCount() won't break (#62267)
-Patch13:	rpm-5.3.8-rpmmiCount-init-mi_count.patch
-# accept NULL given as argument for rootDir with mandriva filetriggers everywhere (#62395)
-Patch14:	rpm-5.3.8-mandriva-filetriggers-fix-null-rootdir.patch
 # temporary workaround for issues with file triggers firing multiple times and
 # a huge memleak...
 Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
@@ -261,15 +245,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch3 -p1 -b .doc_conflicts~
 %patch4 -p1 -b .distsuffix~
 %patch5 -p1 -b .distpatt~
-%patch6 -p1 -b .toolpaths~
-%patch7 -p1 -b .sig~
-%patch8 -p1 -b .linking
-%patch9 -p1 -b .filetriggers_test~
-%patch10 -p1 -b .typo~
 %patch11 -p1 -b .ru_typo~
-%patch12 -p1 -b .rpmmi_count~
-%patch13 -p1 -b .rpmmic_init~
-%patch14 -p1 -b .null_rootdir~
 %patch15 -p1 -b .trigger_once~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
@@ -583,7 +559,8 @@ rm -rf %{buildroot}
 %{_rpmhome}/php.req
 %{_rpmhome}/pkgconfigdeps.sh
 %{_rpmhome}/pythondeps.sh
-
+%{_rpmhome}/pythoneggs.py
+%{_rpmhome}/rubygems.rb
 %{_rpmhome}/symclash.*
 %{_rpmhome}/u_pkg.sh
 %{_rpmhome}/vpkg-provides.sh
