@@ -88,6 +88,8 @@ Patch11:	rpm-5.3.8-fix-russian-typo.patch
 # temporary workaround for issues with file triggers firing multiple times and
 # a huge memleak...
 Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
+# drop duplicates of of package first independent of distepoch
+Patch16:	rpm-5.3.9-check-package-provide-duplicates-first-without-distepoch.patch
 
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
@@ -247,6 +249,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch5 -p1 -b .distpatt~
 %patch11 -p1 -b .ru_typo~
 %patch15 -p1 -b .trigger_once~
+%patch16 -p1 -b .duplicate~
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
