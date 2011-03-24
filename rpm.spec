@@ -7,6 +7,7 @@
 
 %bcond_without	sqlite
 %bcond_without	docs
+%bcond_without	ossp_uuid
 
 #XXX: this macro is a bit awkward, better can be done!
 %if %{with bootstrap}
@@ -90,7 +91,7 @@ Patch11:	rpm-5.3.8-fix-russian-typo.patch
 Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
 # drop duplicates of of package first independent of distepoch
 Patch16:	rpm-5.3.9-check-package-provide-duplicates-first-without-distepoch.patch
-
+Patch17:	rpm-5.3.9-workaround-broken-ossp-uuid-configure-check.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -129,6 +130,9 @@ BuildRequires:	doxygen graphviz tetex
 %endif
 %if %{with sqlite}
 BuildRequires:	sqlite3-devel
+%endif
+%if %{with ossp_uuid}
+BuildRequires:	ossp_uuid-devel
 %endif
 Requires:	cpio gawk mktemp rpm-%{_target_vendor}-setup >= 1.42 update-alternatives
 Requires:	%{bdb}_recover
@@ -254,6 +258,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch16 -p1 -b .duplicate~
 %endif
 %patch11 -p1 -b .ru_typo~
+%patch17 -p1 -b .ossp_uuid~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
@@ -331,6 +336,11 @@ export CPPFLAGS="-DXP_UNIX=1"
 		--with-sqlite \
 %else
 		--without-sqlite \
+%endif
+%if %{with ossp_uuid}
+		--with-uuid=external \
+%else
+		--without-uuid \
 %endif
 %if 0
 		--with-extra-path-macros=%{_usrlibrpm}/macros.d/mandriva \
