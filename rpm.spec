@@ -43,7 +43,7 @@
 %define libver		5.3
 %define	minorver	9
 %define	srcver		%{libver}.%{minorver}
-%define	prereldate	20110303
+%define	prereldate	20110324
 
 %define librpmname	%mklibname rpm  %{libver}
 %define librpmnamedevel	%mklibname -d rpm
@@ -52,7 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}2
+Release:	%{?prereldate:0.%{prereldate}.}1
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -241,15 +241,20 @@ This package contains the RPM API documentation generated in HTML format.
 
 %prep
 %setup -q
+# These patches has been commited hastily upstream for review,
+# keeping them around here for now untill finished...
+%if 0
 %patch0 -p1 -b .set_lg_dir~
 %patch1 -p1 -b .dep_whiteout~
 %patch2 -p1 -b .scriptlet~
 %patch3 -p1 -b .doc_conflicts~
 %patch4 -p1 -b .distsuffix~
 %patch5 -p1 -b .distpatt~
-%patch11 -p1 -b .ru_typo~
 %patch15 -p1 -b .trigger_once~
 %patch16 -p1 -b .duplicate~
+%endif
+%patch11 -p1 -b .ru_typo~
+
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
