@@ -8,6 +8,7 @@
 %bcond_without	sqlite
 %bcond_without	docs
 %bcond_without	ossp_uuid
+%bcond_without	augeas
 
 #XXX: this macro is a bit awkward, better can be done!
 %if %{with bootstrap}
@@ -133,6 +134,9 @@ BuildRequires:	sqlite3-devel
 %endif
 %if %{with ossp_uuid}
 BuildRequires:	ossp_uuid-devel
+%endif
+%if %{with augeas}
+BuildRequires:	augeas-devel
 %endif
 Requires:	cpio gawk mktemp rpm-%{_target_vendor}-setup >= 1.42 update-alternatives
 Requires:	%{bdb}_recover
@@ -342,6 +346,11 @@ export CPPFLAGS="-DXP_UNIX=1"
 %else
 		--without-uuid \
 %endif
+%if %{with augeas}
+		--with-augeas=external \
+%else
+		--without-augeas \
+%endif
 %if 0
 		--with-extra-path-macros=%{_usrlibrpm}/macros.d/mandriva \
 %else
@@ -470,6 +479,7 @@ rm -rf %{buildroot}
 /bin/rpm
 %{_bindir}/rpmconstant*
 %{_bindir}/rpm2cpio*
+%{_rpmhome}/bin/augtool
 #%{_rpmhome}/bin/grep
 %{_rpmhome}/bin/mtree
 %{_rpmhome}/bin/rpmspecdump
