@@ -456,20 +456,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %postun
 /usr/share/rpm-helper/del-user rpm $1 rpm
 
-%clean
-# TODO: I *really* want for clean section to be implicit, ie. missing clean
-# should be threated as below, in stead now you need to add this section which
-# by default is a macro doing the same. Better behavior would be if an empty
-# clean section would override the (desired) implicit clean macro to an empty
-# one in stead which would be more intuitive/closer to "commonly"(?) expected
-# behavior.
-# the clean section can also be skipped by passing the appropriate argument
-# to rpm which would be the more "correct" thing to do rather than commenting
-# it out which many do and that is what I suspect might be related to the
-# behavior currently implemented. (IIRC blame/discuss with cAos linux/michael
-# jennings?)
-rm -rf %{buildroot}
-
 # TODO: review which files goes into what packages...?
 %files -f %{name}.lang
 %doc GROUPS CHANGES doc/manual/[a-z]*
