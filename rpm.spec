@@ -1,7 +1,3 @@
-# kill of later, to workaround repsys issue
-%{?!_rpmhome: %global _rpmhome /usr/lib/rpm}
-%{?!_usrlibrpm: %global _usrlibrpm /usr/lib/rpm}
-
 %bcond_with	bootstrap
 %bcond_with	debug
 
