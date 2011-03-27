@@ -325,7 +325,6 @@ export CPPFLAGS="-DXP_UNIX=1"
 		--with-syck=external \
 		--with-file=external \
 		--with-path-magic=%{_datadir}/misc/magic.mgc \
-		--with-sqlite=external \
 		--with-beecrypt=external \
 		--with-usecrypto=beecrypt \
 		--with-keyutils=external \
@@ -338,7 +337,7 @@ export CPPFLAGS="-DXP_UNIX=1"
 		--with-db-sql \
 		--without-db-tools-integrated \
 %if %{with sqlite}
-		--with-sqlite \
+		--with-sqlite=external \
 %else
 		--without-sqlite \
 %endif
