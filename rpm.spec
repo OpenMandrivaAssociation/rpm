@@ -1,8 +1,6 @@
 %bcond_with	bootstrap
 %bcond_with	debug
 
-%bcond_without	sqlite
-%bcond_without	docs
 %bcond_without	ossp_uuid
 %bcond_without	augeas
 
@@ -10,9 +8,13 @@
 %if %{with bootstrap}
 %bcond_with	perl
 %bcond_with	python
+%bcond_with	docs
+%bcond_with	sqlite
 %else
 %bcond_without	perl
 %bcond_without	python
+%bcond_without	docs
+%bcond_without	sqlite
 %endif
 
 %bcond_with	notyet
