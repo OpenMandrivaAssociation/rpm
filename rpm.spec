@@ -50,7 +50,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}1
+Release:	%{?prereldate:0.%{prereldate}.}2
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -105,7 +105,7 @@ BuildRequires:	wget
 %if %{with xar}
 BuildRequires:	xar-devel
 %endif
-BuildRequires:	%{bdb}-devel
+BuildRequires:	%{bdb}-devel >= 5.1.25
 %if %{with perl}
 BuildRequires:	perl-devel
 %endif
@@ -153,6 +153,7 @@ Group:		System/Libraries
 # Forcing upgrades of anything else linked against it as rpmdb is incompatible
 # with older versions (#61658, comment #136)
 Conflicts:	librpm < 5.3
+Conflicts:	%{_lib}%{bdb} < 5.1.25
 
 %description -n	%{librpmname}
 RPM is a powerful command line driven package management system capable of
