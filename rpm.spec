@@ -457,7 +457,9 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 # TODO: review which files goes into what packages...?
 %files -f %{name}.lang
 %doc GROUPS CHANGES doc/manual/[a-z]*
+%if %{with docs}
 %exclude %{_docdir}/rpm/html
+%endif
 # Are these attributes actually still sane? Smells deprecated/legacy...
 %defattr(755, rpm, rpm, 755)
 /bin/rpm
