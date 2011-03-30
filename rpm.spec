@@ -440,8 +440,10 @@ cp -r cpu-os-macros %{buildroot}%{_usrlibrpm}/platform
 install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/legacy_compat.macros
 #ln -sf ppc-linux %{buildroot}%{_usrlibrpm}/platform/powerpc-%{_target_vendor}-linux
 
+%if %{with docs}
 install -d %{buildroot}%{_docdir}/rpm
 cp -r apidocs/html %{buildroot}%{_docdir}/rpm
+%endif
 
 %pre
 # XXX: really sceptical about rpm actually requiring or even using it's own
