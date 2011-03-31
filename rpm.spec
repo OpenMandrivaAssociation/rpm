@@ -95,7 +95,7 @@ BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
 BuildRequires:	neon0.27-devel rpm-%{_target_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 BuildRequires:	readline-devel ncurses-devel openssl-devel
-BuildRequires:	expat-devel liblzma-devel lua-devel pcre-devel
+BuildRequires:	liblzma-devel lua-devel pcre-devel
 BuildRequires:	magic-devel popt-devel >= 1.15
 BuildRequires:	cpuinfo-devel syck-devel keyutils-devel
 BuildRequires:	libgomp-devel gnutls-devel gnupg2
