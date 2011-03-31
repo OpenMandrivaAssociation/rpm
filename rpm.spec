@@ -425,7 +425,6 @@ for i in {0..9}; do
     echo "%rpmdbattr /var/lib/rpm/__db.00$i" >> %{name}.lang
 done
 
-install -m755 find-provides find-requires %{buildroot}/%{_rpmhome}
 install -d %{buildroot}/bin
 # FIXME: considering that most libraries dynamically linked against is located
 # in /usr/lib*, this doesn't make much sense unless we either statically link
@@ -553,10 +552,8 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_rpmhome}/find-debuginfo.sh
 %{_rpmhome}/find-lang.sh
 %{_rpmhome}/find-prov.pl
-%{_rpmhome}/find-provides
 %{_rpmhome}/find-provides.perl
 %{_rpmhome}/find-req.pl
-%{_rpmhome}/find-requires
 %{_rpmhome}/find-requires.perl
 %{_rpmhome}/gem_helper.rb
 %{_rpmhome}/getpo.sh
