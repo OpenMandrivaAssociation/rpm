@@ -124,7 +124,7 @@ BuildRequires:	ruby-devel
 BuildRequires:	tcl
 %endif
 %if %{with docs}
-BuildRequires:	doxygen graphviz tetex
+BuildRequires:	doxygen graphviz texlive
 %endif
 %if %{with sqlite}
 BuildRequires:	sqlite3-devel
