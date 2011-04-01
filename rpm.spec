@@ -387,7 +387,7 @@ install -m644 scripts/rpm.log -D %{buildroot}%{_sysconfdir}/logrotate.d/rpm
 
 mkdir -p %{buildroot}/var/spool/repackage
 
-mkdir -p %{buildroot}%{_sysconfdir}/%{name}/{pre,}macros.d
+mkdir -p %{buildroot}%{_sysconfdir}/%{name}/{{pre,}macros.d,sysinfo}
 
 # actual usefulness of this seems rather dubious with macros.d now...
 cat > %{buildroot}%{_sysconfdir}/%{name}/macros <<EOF
@@ -501,6 +501,7 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %config(noreplace) %{_sysconfdir}/%{name}/macros
 %dir %{_sysconfdir}/%{name}/macros.d
 %dir %{_sysconfdir}/%{name}/premacros.d
+%dir %{_sysconfdir}/%{name}/sysinfo
 %{_sysconfdir}/%{name}/macros.d/*.macros
 %{_sysconfdir}/%{name}/premacros.d/*.macros
 
