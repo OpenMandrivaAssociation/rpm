@@ -52,7 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}6
+Release:	%{?prereldate:0.%{prereldate}.}7
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -92,6 +92,7 @@ Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
 Patch16:	rpm-5.3.9-check-package-provide-duplicates-first-without-distepoch.patch
 Patch17:	rpm-5.3.9-bdb-log-dir-typo-again-st00pid00.patch
 Patch18:	rpm-5.3.9-fix-deleted-i18n-descriptions.patch
+Patch19:	rpm-5.3.9-fix-file-trigger-firing-multiple-times-hack.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -264,6 +265,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch11 -p1 -b .ru_typo~
 %patch17 -p1 -b .typo~
 %patch18 -p1 -b .i18n~
+%patch19 -p1 -b .trigger_once~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
