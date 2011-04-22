@@ -371,7 +371,6 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 make check
 
 %install
-rm -rf %{buildroot}
 %makeinstall_std
 
 # XXX: why isn't this installed by 'make install'?
@@ -517,7 +516,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_includedir}/multiarch-dispatch.h
 
 %files build
-%defattr(-,root,root)
 %defattr(755, rpm, rpm)
 %{_bindir}/gendiff
 %{_bindir}/rpmbuild
@@ -591,7 +589,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_mandir}/man8/rpmdeps.8*
 
 %files -n %{librpmname}
-%defattr(-,root,root)
 %{_libdir}/librpm-%{libver}.so
 %{_libdir}/librpmconstant-%{libver}.so
 %{_libdir}/librpmdb-%{libver}.so
@@ -610,7 +607,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 #%endif
 
 %files -n %{librpmnamedevel}
-%defattr(-,root,root)
 #%doc apidocs/html
 %{_includedir}/rpm
 %{_libdir}/librpm.la
@@ -644,7 +640,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 
 
 %files -n %{librpmstatic}
-%defattr(-,root,root)
 %{_libdir}/librpm.a
 %{_libdir}/librpmconstant.a
 %{_libdir}/librpmdb.a
@@ -667,7 +662,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 
 %if %{with perl}
 %files -n perl-%{perlmod}
-%defattr(-,root,root)
 #%doc perl/Changes
 %{_mandir}/man3/RPM*
 %{perl_vendorarch}/%{perlmod}.pm
@@ -678,7 +672,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 
 %if %{with python}
 %files -n python-rpm
-%defattr(-,root,root)
 %dir %{py_platsitedir}/rpm
 %{py_platsitedir}/rpm/*.py
 %{py_platsitedir}/rpm/*.so
