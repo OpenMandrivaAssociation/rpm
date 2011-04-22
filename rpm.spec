@@ -349,7 +349,7 @@ export CPPFLAGS="-DXP_UNIX=1"
 %if 0
 		--with-extra-path-macros=%{_usrlibrpm}/macros.d/mandriva \
 %else
-		--with-extra-path-macros=%{_usrlibrpm}/platform/%%{_target}/macros:%{_usrlibrpm}/%{_target_vendor}/platform/%%{_target}/macros:%{_sysconfdir}/rpm/macros.d/*.macros:%{_usrlibrpm}/macros.d/mandriva \
+		--with-extra-path-macros=%{_usrlibrpm}/platform/%%{_target}/macros:%{_sysconfdir}/rpm/macros.d/*.macros:%{_usrlibrpm}/macros.d/mandriva \
 %endif
 		--with-vendor=mandriva \
 		--enable-build-warnings
