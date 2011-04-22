@@ -140,6 +140,7 @@ Requires(pre):	rpm-helper >= 0.8
 Requires(pre):	coreutils
 Requires(postun):rpm-helper >= 0.8
 %rename		rpmconstant
+%rename		multiarch-utils
 
 %description
 RPM is a powerful command line driven package management system capable of
@@ -513,12 +514,15 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %config(noreplace,missingok)	/etc/cron.daily/rpm
 %config(noreplace,missingok)	/etc/logrotate.d/rpm
 
+%{_includedir}/multiarch-dispatch.h
 
 %files build
 %defattr(-,root,root)
 %defattr(755, rpm, rpm)
 %{_bindir}/gendiff
 %{_bindir}/rpmbuild
+%{_bindir}/multiarch-dispatch
+%{_bindir}/multiarch-platform
 %{_rpmhome}/bin/abi-compliance-checker.pl
 %{_rpmhome}/bin/api-sanity-autotest.pl
 %{_rpmhome}/bin/chroot
@@ -546,6 +550,7 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_rpmhome}/vcheck
 %{_rpmhome}/brp-*
 %{_rpmhome}/check-files
+%{_rpmhome}/check-multiarch-files
 #%%{_rpmhome}/cross-build
 %{_rpmhome}/find-debuginfo.sh
 %{_rpmhome}/find-lang.sh
@@ -557,6 +562,7 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_rpmhome}/getpo.sh
 %{_rpmhome}/http.req
 %{_rpmhome}/javadeps.sh
+%{_rpmhome}/mkmultiarch
 %{_rpmhome}/mono-find-provides
 %{_rpmhome}/mono-find-requires
 %{_rpmhome}/executabledeps.sh
