@@ -52,7 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}1
+Release:	%{?prereldate:0.%{prereldate}.}2
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -88,6 +88,8 @@ Patch11:	rpm-5.3.8-fix-russian-typo.patch
 # temporary workaround for issues with file triggers firing multiple times and
 # a huge memleak...
 Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
+# fix wrong path of mkmultiarch script
+Patch16:	rpm-5.3.10-fix-multiarch-path.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -246,6 +248,7 @@ This package contains the RPM API documentation generated in HTML format.
 
 %prep
 %setup -q
+%patch16 -p1
 # These patches has been commited hastily upstream for review,
 # keeping them around here for now untill finished...
 %if 0
@@ -256,7 +259,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch4 -p1 -b .distsuffix~
 %patch5 -p1 -b .distpatt~
 %patch15 -p1 -b .trigger_once~
-%patch16 -p1 -b .duplicate~
 %endif
 
 mkdir -p cpu-os-macros
