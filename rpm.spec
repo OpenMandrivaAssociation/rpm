@@ -52,7 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}2
+Release:	%{?prereldate:0.%{prereldate}.}3
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -138,6 +138,7 @@ BuildRequires:	augeas-devel
 Requires:	cpio gawk mktemp rpm-%{_target_vendor}-setup >= 1.42 update-alternatives
 Requires:	%{bdb}_recover
 Requires:	%{librpmname} = %{EVRD}
+Conflicts:	rpm-build < 1:5.3.10-0.20110422.3
 Requires(pre):	rpm-helper >= 0.8
 Requires(pre):	coreutils
 Requires(postun):rpm-helper >= 0.8
@@ -204,6 +205,7 @@ Requires:	unzip
 Requires:	elfutils
 Requires:	rpm = %{EVRD}
 Requires:	rpm-%{_target_vendor}-setup-build
+Conflicts:	multiarch-utils < 1:5.3.10
 
 %description	build
 This package contains scripts and executable programs that are used to
@@ -462,6 +464,7 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 # Are these attributes actually still sane? Smells deprecated/legacy...
 %defattr(755, rpm, rpm, 755)
 /bin/rpm
+%{_bindir}/multiarch-dispatch
 %{_bindir}/rpmconstant*
 %{_bindir}/rpm2cpio*
 %{_rpmhome}/bin/augtool
@@ -521,7 +524,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %defattr(755, rpm, rpm)
 %{_bindir}/gendiff
 %{_bindir}/rpmbuild
-%{_bindir}/multiarch-dispatch
 %{_bindir}/multiarch-platform
 %{_rpmhome}/bin/abi-compliance-checker.pl
 %{_rpmhome}/bin/api-sanity-autotest.pl
