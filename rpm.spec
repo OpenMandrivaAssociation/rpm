@@ -52,7 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}3
+Release:	%{?prereldate:0.%{prereldate}.}4
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -90,6 +90,8 @@ Patch11:	rpm-5.3.8-fix-russian-typo.patch
 Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
 # fix wrong path of mkmultiarch script
 Patch16:	rpm-5.3.10-fix-multiarch-path.patch
+Patch17:	rpm-5.3.10-pedantic-enum-separator.patch
+Patch18:	rpm-5.3.10-fix-assertion-error-as-non-root.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -262,6 +264,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch5 -p1 -b .distpatt~
 %patch15 -p1 -b .trigger_once~
 %endif
+%patch17 -p1 -b .enum~
+%patch18 -p1 -b .fadvise~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
