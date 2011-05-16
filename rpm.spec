@@ -94,6 +94,7 @@ Patch17:	rpm-5.3.10-pedantic-enum-separator.patch
 Patch18:	rpm-5.3.10-fix-assertion-error-as-non-root.patch
 Patch19:	rpm-5.3.10-doxygen-1.7.4-bug.patch
 Patch20:	rpm-5.3.10-update-doxygen-input-file-paths.patch
+Patch21:	rpm-5.3.10-build-and-install-dbconvert.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -270,6 +271,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch18 -p1 -b .fadvise~
 %patch19 -p1 -b .doxygen~
 %patch20 -p1 -b .doxpath~
+%patch21 -p1 -b .dbconvert~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
@@ -477,6 +479,7 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_bindir}/rpm2cpio*
 %{_bindir}/multiarch-dispatch
 %{_rpmhome}/bin/augtool
+%{_rpmhome}/bin/dbconvert
 #%{_rpmhome}/bin/grep
 %{_rpmhome}/bin/mtree
 %{_rpmhome}/bin/rpmspecdump
