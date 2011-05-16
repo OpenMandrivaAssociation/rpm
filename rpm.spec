@@ -477,7 +477,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_bindir}/multiarch-dispatch
 %{_bindir}/rpmconstant*
 %{_bindir}/rpm2cpio*
-%{_bindir}/multiarch-dispatch
 %{_rpmhome}/bin/augtool
 %{_rpmhome}/bin/dbconvert
 #%{_rpmhome}/bin/grep
