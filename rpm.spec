@@ -1,7 +1,7 @@
 %bcond_with	bootstrap
 %bcond_with	debug
 
-%bcond_without	ossp_uuid
+%bcond_without	ossp-uuid
 %bcond_without	augeas
 
 #XXX: this macro is a bit awkward, better can be done!
@@ -41,9 +41,9 @@
 %define	bdb		db51
 
 %define libver		5.3
-%define	minorver	10
+%define	minorver	11
 %define	srcver		%{libver}.%{minorver}
-%define	prereldate	20110422
+%define	prereldate	20110525
 
 %define librpmname	%mklibname rpm  %{libver}
 %define librpmnamedevel	%mklibname -d rpm
@@ -52,7 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}4
+Release:	%{?prereldate:0.%{prereldate}.}1
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -88,14 +88,7 @@ Patch11:	rpm-5.3.8-fix-russian-typo.patch
 # temporary workaround for issues with file triggers firing multiple times and
 # a huge memleak...
 Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
-# fix wrong path of mkmultiarch script
-Patch16:	rpm-5.3.10-fix-multiarch-path.patch
-Patch17:	rpm-5.3.10-pedantic-enum-separator.patch
-Patch18:	rpm-5.3.10-fix-assertion-error-as-non-root.patch
 Patch19:	rpm-5.3.10-doxygen-1.7.4-bug.patch
-Patch20:	rpm-5.3.10-update-doxygen-input-file-paths.patch
-Patch21:	rpm-5.3.10-build-and-install-dbconvert.patch
-Patch22:	rpm-5.3.10-rpmdb-api-cpp-compat.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -256,7 +249,6 @@ This package contains the RPM API documentation generated in HTML format.
 
 %prep
 %setup -q
-%patch16 -p1
 # These patches has been commited hastily upstream for review,
 # keeping them around here for now untill finished...
 %if 0
@@ -268,12 +260,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch5 -p1 -b .distpatt~
 %patch15 -p1 -b .trigger_once~
 %endif
-%patch17 -p1 -b .enum~
-%patch18 -p1 -b .fadvise~
 %patch19 -p1 -b .doxygen~
-%patch20 -p1 -b .doxpath~
-%patch21 -p1 -b .dbconvert~
-%patch22 -p1 -b .cpp~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
