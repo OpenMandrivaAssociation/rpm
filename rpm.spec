@@ -269,7 +269,6 @@ tar -zxf %{SOURCE3} -C cpu-os-macros
 cp %{SOURCE2} GROUPS
 
 %build
-export CPPFLAGS="-DXP_UNIX=1"
 %configure2_5x	--enable-nls \
 		--with-pic \
 %if %{with debug}
