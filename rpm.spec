@@ -108,6 +108,8 @@ BuildRequires:	wget
 BuildRequires:	xar-devel
 %endif
 BuildRequires:	%{bdb}-devel >= 5.1.25
+# required by test suite
+BuildRequires:	%{bdb}-utils
 %if %{with perl}
 BuildRequires:	perl-devel
 %endif
