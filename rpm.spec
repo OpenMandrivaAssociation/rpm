@@ -128,8 +128,8 @@ BuildRequires:	doxygen graphviz texlive
 %if %{with sqlite}
 BuildRequires:	sqlite3-devel
 %endif
-%if %{with ossp_uuid}
-BuildRequires:	ossp_uuid-devel
+%if %{with ossp-uuid}
+BuildRequires:	ossp-uuid-devel
 %endif
 %if %{with augeas}
 BuildRequires:	augeas-devel
@@ -339,7 +339,7 @@ export CPPFLAGS="-DXP_UNIX=1"
 %else
 		--without-sqlite \
 %endif
-%if %{with ossp_uuid}
+%if %{with ossp-uuid}
 		--with-uuid=external \
 %else
 		--without-uuid \
