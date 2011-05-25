@@ -405,6 +405,7 @@ EOF
 # Get rid of unpackaged files
 # XXX: is there any of these we might want to keep?
 for f in %{py_platsitedir}/poptmodule.{a,la} %{py_platsitedir}/rpmmodule.{a,la} \
+	%{py_platsitedir}/rpm/*.{a,la} \
 	%{_rpmhome}/{Specfile.pm,cpanflute2,cpanflute,sql.prov,sql.req,tcl.req} \
 	%{_rpmhome}/{config.site,cross-build,rpmdiff.cgi} \
 	%{_rpmhome}/trpm %{_bindir}/rpmdiff; do
@@ -632,10 +633,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_rpmhome}/lib/librpmjsm.so
 %{_rpmhome}/lib/rpmjsm.la
 %endif
-%if %{with python}
-# I *really* don't think rpm should have libtool create this one...
-%{py_platsitedir}/rpm/*.la
-%endif
 #%if %{with sqlite}
 #%{_rpmhome}/libsql*.la
 #%{_rpmhome}/libsql*.so
@@ -654,10 +651,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 #FIXME: lib64!
 %{_rpmhome}/lib/librpmjsm.a
 %{_rpmhome}/lib/rpmjsm.a
-%endif
-%if %{with python}
-# generate static library for python module..? prolly' not...
-%{py_platsitedir}/rpm/*.a
 %endif
 #%if %{with sqlite}
 #%{_rpmhome}/libsql*.a
