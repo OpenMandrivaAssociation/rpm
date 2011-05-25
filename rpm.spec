@@ -89,6 +89,7 @@ Patch11:	rpm-5.3.8-fix-russian-typo.patch
 # a huge memleak...
 Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
 Patch19:	rpm-5.3.10-doxygen-1.7.4-bug.patch
+Patch20:	rpm-5.3.11-fix-syslog-b0rkage.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -261,6 +262,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch15 -p1 -b .trigger_once~
 %endif
 %patch19 -p1 -b .doxygen~
+%patch20 -p1 -b .syslog~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
