@@ -118,7 +118,7 @@ BuildRequires:	perl-devel
 BuildRequires:	python-devel
 %endif
 %if %{with js}
-BuildRequires:	js-devel
+BuildRequires:	mozjs-devel
 %endif
 %if %{with ruby}
 BuildRequires:	ruby-devel
@@ -299,9 +299,9 @@ cp %{SOURCE2} GROUPS
 		--without-perl \
 %endif
 %if %{with js}
-		--with-js=external \
+		--with-mozjs185=external \
 %else
-		--without-js \
+		--without-mozjs185 \
 %endif
 %if %{with ruby}
 		--with-ruby=external \
