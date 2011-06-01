@@ -52,7 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}2
+Release:	%{?prereldate:0.%{prereldate}.}3
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -91,6 +91,7 @@ Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
 Patch19:	rpm-5.3.10-doxygen-1.7.4-bug.patch
 Patch20:	rpm-5.3.11-fix-syslog-b0rkage.patch
 Patch21:	rpm-5.3.11-make-query-nvra-disttag-hack-generic.patch
+Patch22:	rpm-5.3.11-check-for-NULL.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -267,6 +268,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch19 -p1 -b .doxygen~
 %patch20 -p1 -b .syslog~
 %patch21 -p1 -b .disttag~
+%patch22 -p1 -b .checknull~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
