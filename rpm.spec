@@ -99,7 +99,10 @@ BuildRequires:	neon0.27-devel rpm-%{_target_vendor}-setup-build %{?rpmsetup_vers
 BuildRequires:	readline-devel ncurses-devel openssl-devel
 BuildRequires:	liblzma-devel lua-devel pcre-devel acl-devel
 BuildRequires:	magic-devel popt-devel >= 1.15
-BuildRequires:	cpuinfo-devel syck-devel keyutils-devel
+%ifarch %{ix86} x86_64 ppc ppc64 ia64
+BuildRequires:	cpuinfo-devel 
+%endif
+BuildRequires:	syck-devel keyutils-devel
 BuildRequires:	libgomp-devel gnutls-devel gnupg2
 # required by parts of test suite...
 BuildRequires:	wget
@@ -325,7 +328,11 @@ cp %{SOURCE2} GROUPS
 		--with-bzip2=external \
 		--with-lua=external \
 		--with-pcre=external \
+%ifarch %{ix86} x86_64 ppc ppc64 ia64
 		--with-cpuinfo=external \
+%else
+		--without-cpuinfo \
+%endif
 		--with-syck=external \
 		--with-file=external \
 		--with-path-magic=%{_datadir}/misc/magic.mgc \
