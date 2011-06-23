@@ -144,6 +144,7 @@ BuildRequires:	augeas-devel
 %endif
 Requires:	cpio gawk mktemp rpm-%{_target_vendor}-setup >= 1.42 update-alternatives
 Requires:	%{bdb}_recover
+Suggests:	%{bdb}-utils
 Requires:	%{librpmname} = %{EVRD}
 Conflicts:	rpm-build < 1:5.3.10-0.20110422.3
 Requires(pre):	rpm-helper >= 0.8
