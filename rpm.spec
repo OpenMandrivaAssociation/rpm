@@ -43,7 +43,7 @@
 %define libver		5.3
 %define	minorver	11
 %define	srcver		%{libver}.%{minorver}
-%define	prereldate	20110525
+%define	prereldate	20110625
 
 %define librpmname	%mklibname rpm  %{libver}
 %define librpmnamedevel	%mklibname -d rpm
@@ -52,7 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}3
+Release:	%{?prereldate:0.%{prereldate}.}1
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -90,8 +90,6 @@ Patch11:	rpm-5.3.8-fix-russian-typo.patch
 Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
 Patch19:	rpm-5.3.10-doxygen-1.7.4-bug.patch
 Patch20:	rpm-5.3.11-fix-syslog-b0rkage.patch
-Patch21:	rpm-5.3.11-make-query-nvra-disttag-hack-generic.patch
-Patch22:	rpm-5.3.11-check-for-NULL.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -271,8 +269,6 @@ This package contains the RPM API documentation generated in HTML format.
 %endif
 %patch19 -p1 -b .doxygen~
 %patch20 -p1 -b .syslog~
-%patch21 -p1 -b .disttag~
-%patch22 -p1 -b .checknull~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
@@ -580,6 +576,7 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_rpmhome}/getpo.sh
 %{_rpmhome}/http.req
 %{_rpmhome}/javadeps.sh
+%{_rpmhome}/kmod-deps.sh
 %{_rpmhome}/mkmultiarch
 %{_rpmhome}/mono-find-provides
 %{_rpmhome}/mono-find-requires
