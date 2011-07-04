@@ -52,7 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}1
+Release:	%{?prereldate:0.%{prereldate}.}2
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -165,6 +165,7 @@ Group:		System/Libraries
 Conflicts:	librpm < 5.3
 Conflicts:	%{_lib}db5.1 < 5.1.25
 Conflicts:	%{_lib}elfutils1 < 0.152
+Conflicts:	%{_lib}beecrypt7 < 4.2.1
 
 %description -n	%{librpmname}
 RPM is a powerful command line driven package management system capable of
