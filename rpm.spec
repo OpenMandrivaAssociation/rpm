@@ -164,6 +164,7 @@ Group:		System/Libraries
 # with older versions (#61658, comment #136)
 Conflicts:	librpm < 5.3
 Conflicts:	%{_lib}db5.1 < 5.1.25
+Conflicts:	%{_lib}elfutils1 < 0.152
 
 %description -n	%{librpmname}
 RPM is a powerful command line driven package management system capable of
