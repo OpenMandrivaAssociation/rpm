@@ -52,7 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}2
+Release:	%{?prereldate:0.%{prereldate}.}3
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -391,6 +391,7 @@ make check
 
 # XXX: why isn't this installed by 'make install'?
 install -m755 scripts/symclash.* %{buildroot}%{_rpmhome}
+install -m755 scripts/gstreamer.sh %{buildroot}%{_rpmhome}
 
 # Save list of packages through cron
 install -m755 scripts/rpm.daily -D %{buildroot}%{_sysconfdir}/cron.daily/rpm
@@ -576,6 +577,7 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_rpmhome}/find-requires.perl
 %{_rpmhome}/gem_helper.rb
 %{_rpmhome}/getpo.sh
+%{_rpmhome}/gstreamer.sh
 %{_rpmhome}/http.req
 %{_rpmhome}/javadeps.sh
 %{_rpmhome}/kmod-deps.sh
