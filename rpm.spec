@@ -384,7 +384,7 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 %endif
 
 %check
-#make check
+make check
 
 %install
 %makeinstall_std
