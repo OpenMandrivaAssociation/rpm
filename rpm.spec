@@ -43,7 +43,7 @@
 %define libver		5.3
 %define	minorver	12
 %define	srcver		%{libver}.%{minorver}
-%define	prereldate	20110625
+%define	prereldate	20110712
 
 %define librpmname	%mklibname rpm  %{libver}
 %define librpmnamedevel	%mklibname -d rpm
@@ -52,7 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}3
+Release:	%{?prereldate:0.%{prereldate}.}1
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -391,7 +391,6 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 
 # XXX: why isn't this installed by 'make install'?
 install -m755 scripts/symclash.* %{buildroot}%{_rpmhome}
-install -m755 scripts/gstreamer.sh %{buildroot}%{_rpmhome}
 
 # Save list of packages through cron
 install -m755 scripts/rpm.daily -D %{buildroot}%{_sysconfdir}/cron.daily/rpm
