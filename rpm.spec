@@ -11,7 +11,7 @@
 %bcond_with	docs
 %bcond_with	sqlite
 %else
-%bcond_with	perl
+%bcond_without	perl
 %bcond_without	python
 %bcond_without	docs
 %bcond_without	sqlite
