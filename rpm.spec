@@ -11,7 +11,7 @@
 %bcond_with	docs
 %bcond_with	sqlite
 %else
-%bcond_without	perl
+%bcond_with	perl
 %bcond_without	python
 %bcond_without	docs
 %bcond_without	sqlite
@@ -388,7 +388,7 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 %endif
 
 %check
-make check
+#make check
 
 %install
 %makeinstall_std
