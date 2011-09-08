@@ -41,7 +41,7 @@
 %define	bdb		db51
 
 %define libver		5.3
-%define	minorver	12
+%define	minorver	13
 %define	srcver		%{libver}.%{minorver}
 %define	prereldate	20110712
 
@@ -485,10 +485,19 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_bindir}/rpmconstant*
 %{_bindir}/rpm2cpio*
 %{_rpmhome}/bin/augtool
+%{_rpmhome}/bin/chroot
+%{_rpmhome}/bin/cp
 %{_rpmhome}/bin/dbconvert
+%{_rpmhome}/bin/find
 #%{_rpmhome}/bin/grep
+%{_rpmhome}/bin/lua
 %{_rpmhome}/bin/mtree
+%{_rpmhome}/bin/rc
 %{_rpmhome}/bin/rpmspecdump
+%{_rpmhome}/bin/wget
+%if %{with xar}
+%{_rpmhome}/bin/txar
+%endif
 %{_rpmhome}/dbconvert.sh
 %{_rpmhome}/rpm.*
 %{_rpmhome}/rpm2cpio
@@ -545,11 +554,8 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_bindir}/multiarch-platform
 %{_rpmhome}/bin/abi-compliance-checker.pl
 %{_rpmhome}/bin/api-sanity-autotest.pl
-%{_rpmhome}/bin/chroot
-%{_rpmhome}/bin/cp
 %{_rpmhome}/bin/dbsql
 %{_rpmhome}/bin/debugedit
-%{_rpmhome}/bin/find
 %{_rpmhome}/bin/install-sh
 %{_rpmhome}/bin/mkinstalldirs
 %{_rpmhome}/bin/rpmcache
@@ -559,10 +565,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_rpmhome}/bin/rpmkey
 %{_rpmhome}/bin/rpmrepo
 %{_rpmhome}/bin/sqlite3
-%if %{with xar}
-%{_rpmhome}/bin/txar
-%endif
-%{_rpmhome}/bin/wget
 %dir %{_rpmhome}/helpers
 %{_rpmhome}/helpers/*
 %dir %{_rpmhome}/qf
