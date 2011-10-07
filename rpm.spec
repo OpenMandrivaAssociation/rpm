@@ -41,7 +41,7 @@
 %define	bdb		db51
 
 %define libver		5.3
-%define	minorver	13
+%define	minorver	12
 %define	srcver		%{libver}.%{minorver}
 %define	prereldate	20110712
 
@@ -52,7 +52,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}3
+Release:	%{?prereldate:0.%{prereldate}.}4
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -83,6 +83,9 @@ Patch4:		rpm-5.3.8-disttag-distsuffix-fallback.patch
 # ugly hack to workaround disttag/distepoch pattern matching issue to buy some
 # time to come up with better pattern fix..
 Patch5:		rpm-5.3.8-distepoch-pattern-hack.patch
+# fix problem with ignored signals causing rpmbuild to break with gnome-terminal	 
+# (#62262, from Theerud Lawtrakul/Jeff Johnson)	
+Patch7:		rpm-5.3.12-rpmsq-ignored-signal-return-value.patch
 # fixes a typo in russian translation (#62333)
 Patch11:	rpm-5.3.8-fix-russian-typo.patch
 # temporary workaround for issues with file triggers firing multiple times and
@@ -269,6 +272,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch3 -p1 -b .doc_conflicts~
 %patch4 -p1 -b .distsuffix~
 %patch5 -p1 -b .distpatt~
+%patch7 -p1 -b .rpmsq_signal~
 %patch15 -p1 -b .trigger_once~
 %endif
 %patch19 -p1 -b .doxygen~
