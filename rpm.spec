@@ -14,7 +14,8 @@
 %bcond_without	perl
 %bcond_without	python
 %bcond_without	docs
-%bcond_without	sqlite
+# use what's in berkeley db
+%bcond_with	sqlite
 %endif
 
 %bcond_with	notyet
@@ -38,12 +39,12 @@
 
 #include %{_sourcedir}/bootstrap.spec
 
-%define	bdb		db51
+%define	bdb		db52
 
-%define libver		5.3
-%define	minorver	12
+%define libver		5.4
+%define	minorver	3
 %define	srcver		%{libver}.%{minorver}
-%define	prereldate	20110712
+#define	prereldate	20110712
 
 %define librpmname	%mklibname rpm  %{libver}
 %define librpmnamedevel	%mklibname -d rpm
@@ -52,14 +53,14 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}3
+Release:	%{?prereldate:0.%{prereldate}.}1
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
 
-# snapshot from rpm-5_3 branch: 'cvs -d :pserver:anonymous@rpm5.org:/cvs co -r rpm-5_3 rpm'
+# snapshot from rpm-5_4 branch: 'cvs -d :pserver:anonymous@rpm5.org:/cvs co -r rpm-5_4 rpm'
 # tarball generated with './devtool tarball.xz'
-Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}-%{srcver}.tar.xz
+Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}-%{srcver}.tar.gz
 #Source1:	bootstrap.spec
 # Needed by rpmlint. Still required? If so, this file should rather be carried
 # with rpmlint itself rather than requiring for rpm to carry...
@@ -92,6 +93,8 @@ Patch19:	rpm-5.3.10-doxygen-1.7.4-bug.patch
 Patch20:	rpm-5.3.11-fix-syslog-b0rkage.patch
 Patch21:	rpm-5.3.12-change-dep-loop-errors-to-warnings.patch
 Patch22:	rpm-5.3.12-55810-rpmevrcmp-again-grf.patch
+# FIXME: later..
+Patch23:	rpm-5.4.3-no-libsql.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -273,8 +276,9 @@ This package contains the RPM API documentation generated in HTML format.
 %endif
 %patch19 -p1 -b .doxygen~
 %patch20 -p1 -b .syslog~
-%patch21 -p1 -b .loop_warnings~
-%patch22 -p1 -b .55810~
+#%%patch21 -p1 -b .loop_warnings~
+#%%patch22 -p1 -b .55810~
+%patch23 -p1 -b .nolibsql~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
@@ -490,9 +494,11 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_rpmhome}/bin/dbconvert
 %{_rpmhome}/bin/find
 #%{_rpmhome}/bin/grep
-%{_rpmhome}/bin/lua
+#%{_rpmhome}/bin/lua
 %{_rpmhome}/bin/mtree
-%{_rpmhome}/bin/rc
+%{_rpmhome}/bin/mgo
+%{_rpmhome}/bin/pom2spec
+#%{_rpmhome}/bin/rc
 %{_rpmhome}/bin/rpmspecdump
 %{_rpmhome}/bin/wget
 %if %{with xar}
