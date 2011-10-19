@@ -96,6 +96,7 @@ Patch22:	rpm-5.3.12-55810-rpmevrcmp-again-grf.patch
 # FIXME: later..
 Patch23:	rpm-5.4.3-no-libsql.patch
 Patch24:	rpm-5.4.3-add-missing-ruby-macros.patch
+Patch25:	rpm-5.4.3-fix-epoch-not-compared-for-same-NVRA.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -281,6 +282,7 @@ This package contains the RPM API documentation generated in HTML format.
 #%%patch22 -p1 -b .55810~
 %patch23 -p1 -b .nolibsql~
 %patch24 -p1 -b .macros~
+%patch25 -p1 -b .mdvbz63711~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
