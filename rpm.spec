@@ -42,7 +42,7 @@
 %define	bdb		db52
 
 %define libver		5.4
-%define	minorver	3
+%define	minorver	4
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}2
+Release:	%{?prereldate:0.%{prereldate}.}1
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -95,11 +95,8 @@ Patch21:	rpm-5.3.12-change-dep-loop-errors-to-warnings.patch
 Patch22:	rpm-5.3.12-55810-rpmevrcmp-again-grf.patch
 # FIXME: later..
 Patch23:	rpm-5.4.3-no-libsql.patch
-Patch24:	rpm-5.4.3-add-missing-ruby-macros.patch
-Patch25:	rpm-5.4.3-fix-epoch-not-compared-for-same-NVRA.patch
 # revert this change for now as it'll break helper scripts such as ie. find-debuginfo.sh
 Patch26:	rpm-5.4.3-revert-envvar-removal-checkin16320.patch
-Patch27:	rpm-5.4.3-nvra-pattern-hack.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -284,10 +281,7 @@ This package contains the RPM API documentation generated in HTML format.
 #%%patch21 -p1 -b .loop_warnings~
 #%%patch22 -p1 -b .55810~
 %patch23 -p1 -b .nolibsql~
-%patch24 -p1 -b .macros~
-%patch25 -p1 -b .mdvbz63711~
 %patch26 -p1 -b .revert16320~
-%patch27 -p1 -b .nvra_pat~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
