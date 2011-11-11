@@ -100,6 +100,7 @@ Patch26:	rpm-5.4.3-revert-envvar-removal-checkin16320.patch
 Patch27:	rpm-5.4.4-merge-find-debuginfo.sh-from-mandriva.patch
 Patch28:	rpm-5.4.4-merge-find-lang.sh-changes-from-rpm.org.patch
 Patch29:	rpm-5.4.4-add-_specfile-macro.patch
+Patch30:	rpm-5.4.4-fix-rpm-qf-on-non-packaged-files.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -290,6 +291,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch27 -p1 -b .mdv~
 %patch28 -p1 -b .rpmorg~
 %patch29 -p1 -b .specfile~
+%patch30 -p1 -b .qf_non~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
