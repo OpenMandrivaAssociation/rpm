@@ -430,10 +430,11 @@ cat > %{buildroot}%{_sysconfdir}/%{name}/macros <<EOF
 
 EOF
 
+# FIXME: weird issue, seems to have issue with lines starting with '%%_'...
 cat > %{buildroot}%{_sysconfdir}/%{name}/premacros.d/cpuinfo_target.macros <<EOF
 # This sets which of the available architectures to prefer when building
 # packages with libcpuinfo support enabled.
-%%_prefer_target_cpu     x86_64 i586
+ %%_prefer_target_cpu     x86_64 i586
 EOF
 
 # Get rid of unpackaged files
