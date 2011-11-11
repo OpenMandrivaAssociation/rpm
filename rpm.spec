@@ -272,8 +272,10 @@ This package contains the RPM API documentation generated in HTML format.
 %if 0
 %patch0 -p1 -b .set_lg_dir~
 %patch1 -p1 -b .dep_whiteout~
+%endif
 %patch2 -p1 -b .scriptlet~
 %patch3 -p1 -b .doc_conflicts~
+%if 0
 %patch4 -p1 -b .distsuffix~
 %patch5 -p1 -b .distpatt~
 %patch15 -p1 -b .trigger_once~
