@@ -481,7 +481,7 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 # XXX: really sceptical about rpm actually requiring or even using it's own
 # dedicated user for any purpose (and there's no suid/guid no binaries either), really
 # smells like an old suid/guid relic of the past...
-/usr/share/rpm-helper/add-user rpm $1 rpm /var/lib/rpm /bin/false
+/usr/share/rpm-helper/add-user rpm $1 rpm /var/lib/rpm /sbin/nologin
 
 %postun
 /usr/share/rpm-helper/del-user rpm $1 rpm
