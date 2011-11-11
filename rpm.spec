@@ -95,8 +95,6 @@ Patch21:	rpm-5.3.12-change-dep-loop-errors-to-warnings.patch
 Patch22:	rpm-5.3.12-55810-rpmevrcmp-again-grf.patch
 # FIXME: later..
 Patch23:	rpm-5.4.3-no-libsql.patch
-# revert this change for now as it'll break helper scripts such as ie. find-debuginfo.sh
-Patch26:	rpm-5.4.3-revert-envvar-removal-checkin16320.patch
 Patch27:	rpm-5.4.4-merge-find-debuginfo.sh-from-mandriva.patch
 Patch28:	rpm-5.4.4-merge-find-lang.sh-changes-from-rpm.org.patch
 Patch29:	rpm-5.4.4-add-_specfile-macro.patch
@@ -287,7 +285,6 @@ This package contains the RPM API documentation generated in HTML format.
 #%%patch21 -p1 -b .loop_warnings~
 #%%patch22 -p1 -b .55810~
 %patch23 -p1 -b .nolibsql~
-%patch26 -p1 -b .revert16320~
 %patch27 -p1 -b .mdv~
 %patch28 -p1 -b .rpmorg~
 %patch29 -p1 -b .specfile~
