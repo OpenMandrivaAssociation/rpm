@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}4
+Release:	%{?prereldate:0.%{prereldate}.}5
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -102,6 +102,12 @@ Patch30:	rpm-5.4.4-fix-rpm-qf-on-non-packaged-files.patch
 Patch31:	rpm-5.4.4-fix-rpm_qa-pattern.patch
 Patch32:	rpm-5.4.4-really-always-invoke-clean-at-end.patch
 Patch33:	rpm-5.4.4-fix-mdvbz62979.patch
+# This patch adds support for untangling dependency loops with prioritized removal
+# of dependencies from loops. It's very crude for now and certainly needs some obvious
+# improvement, but it'll fix the most common scenario giving issues where ie.
+# Requires(post) has been used and shouldn't introduce any regressions..
+# REF: http://rpm5.org/community/rpm-devel/4633.html
+Patch34:	rpm-5.4.4-use-dependency-type-for-ordering.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -295,6 +301,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch31 -p1 -b .rpm_qa~
 %patch32 -p1 -b .clean~
 %patch33 -p1 -b .mdvbz62979~
+%patch34 -p1 -b .ordering~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
