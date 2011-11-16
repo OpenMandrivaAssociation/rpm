@@ -108,6 +108,7 @@ Patch33:	rpm-5.4.4-fix-mdvbz62979.patch
 # Requires(post) has been used and shouldn't introduce any regressions..
 # REF: http://rpm5.org/community/rpm-devel/4633.html
 Patch34:	rpm-5.4.4-use-dependency-type-for-ordering.patch
+Patch35:	rpm-5.4.4-find_lang-with-html.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -302,6 +303,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch32 -p1 -b .clean~
 %patch33 -p1 -b .mdvbz62979~
 %patch34 -p1 -b .ordering~
+%patch35 -p1 -b .html~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
