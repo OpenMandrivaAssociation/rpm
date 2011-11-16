@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}7
+Release:	%{?prereldate:0.%{prereldate}.}8
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -109,6 +109,7 @@ Patch33:	rpm-5.4.4-fix-mdvbz62979.patch
 # REF: http://rpm5.org/community/rpm-devel/4633.html
 Patch34:	rpm-5.4.4-use-dependency-type-for-ordering.patch
 Patch35:	rpm-5.4.4-find_lang-with-html.patch
+Patch36:	rpm-5.4.4-find_lang-support-multiple-names.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -304,6 +305,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch33 -p1 -b .mdvbz62979~
 %patch34 -p1 -b .ordering~
 %patch35 -p1 -b .html~
+%patch36 -p1 -b .multi~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
