@@ -100,6 +100,7 @@ Patch28:	rpm-5.4.4-merge-find-lang.sh-changes-from-rpm.org.patch
 Patch29:	rpm-5.4.4-add-_specfile-macro.patch
 Patch30:	rpm-5.4.4-fix-rpm-qf-on-non-packaged-files.patch
 Patch31:	rpm-5.4.4-fix-rpm_qa-pattern.patch
+# uhm.. broken?
 Patch32:	rpm-5.4.4-really-always-invoke-clean-at-end.patch
 Patch33:	rpm-5.4.4-fix-mdvbz62979.patch
 # This patch adds support for untangling dependency loops with prioritized removal
@@ -308,7 +309,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch29 -p1 -b .specfile~
 %patch30 -p1 -b .qf_non~
 %patch31 -p1 -b .rpm_qa~
-%patch32 -p1 -b .clean~
+#%%patch32 -p1 -b .clean~
 %patch33 -p1 -b .mdvbz62979~
 %patch34 -p1 -b .ordering~
 %patch35 -p1 -b .html~
