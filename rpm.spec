@@ -116,6 +116,7 @@ Patch38:	rpm-5.4.4-find_lang-handle-man-pages-already-compressed.patch
 Patch39:	rpm-5.4.4-find-debuginfo-drop-useless-sort.patch
 Patch40:	rpm-5.4.4-pkgconfigdeps-check-path.patch
 Patch41:	rpm-5.4.4-merge-manbo-macros.patch
+Patch42:	rpm-5.4.4-glob-wildcards-for-loading-macro-files.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -319,6 +320,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch39 -p1 -b .no_sort~
 %patch40 -p1 -b .pc_paths~
 %patch41 -p1 -b .manbo~
+%patch42 -p1 -b .glob~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
