@@ -120,7 +120,7 @@ Patch42:	rpm-5.4.4-glob-wildcards-for-loading-macro-files.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
-BuildRequires:	neon0.27-devel rpm-%{_target_vendor}-setup-build >= 1.132
+BuildRequires:	neon0.27-devel rpm-%{_target_vendor}-setup-build
 BuildRequires:	readline-devel ncurses-devel openssl-devel
 BuildRequires:	liblzma-devel lua-devel pcre-devel acl-devel
 BuildRequires:	magic-devel popt-devel >= 1.15
@@ -167,7 +167,7 @@ BuildRequires:	ossp-uuid-devel
 %if %{with augeas}
 BuildRequires:	augeas-devel
 %endif
-Requires:	cpio gawk mktemp rpm-%{_target_vendor}-setup >= 1.42 update-alternatives
+Requires:	cpio gawk mktemp rpm-%{_target_vendor}-setup >= 1.132 update-alternatives
 Requires:	%{bdb}_recover
 Suggests:	%{bdb}-utils
 Requires:	%{librpmname} = %{EVRD}
