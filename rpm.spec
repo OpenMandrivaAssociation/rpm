@@ -114,10 +114,11 @@ Patch37:	rpm-5.4.4-avoid-dependencies-on-self.patch
 Patch38:	rpm-5.4.4-find_lang-handle-man-pages-already-compressed.patch
 Patch39:	rpm-5.4.4-find-debuginfo-drop-useless-sort.patch
 Patch40:	rpm-5.4.4-pkgconfigdeps-check-path.patch
+Patch41:	rpm-5.4.4-merge-manbo-macros.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
-BuildRequires:	neon0.27-devel rpm-%{_target_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
+BuildRequires:	neon0.27-devel rpm-%{_target_vendor}-setup-build >= 1.132
 BuildRequires:	readline-devel ncurses-devel openssl-devel
 BuildRequires:	liblzma-devel lua-devel pcre-devel acl-devel
 BuildRequires:	magic-devel popt-devel >= 1.15
@@ -174,6 +175,7 @@ Requires(pre):	coreutils
 Requires(postun):rpm-helper >= 0.8
 %rename		rpmconstant
 %rename		multiarch-utils
+%rename		rpm-manbo-setup
 
 %description
 RPM is a powerful command line driven package management system capable of
@@ -238,6 +240,7 @@ Requires:	elfutils
 Requires:	rpm = %{EVRD}
 Requires:	rpm-%{_target_vendor}-setup-build
 Conflicts:	multiarch-utils < 1:5.3.10
+%rename		rpm-manbo-setup-build
 
 %description	build
 This package contains scripts and executable programs that are used to
@@ -314,6 +317,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch38 -p1 -b .man_comp~
 %patch39 -p1 -b .no_sort~
 %patch40 -p1 -b .pc_paths~
+%patch41 -p1 -b .manbo~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
