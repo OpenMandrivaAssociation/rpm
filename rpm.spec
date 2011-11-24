@@ -119,6 +119,7 @@ Patch41:	rpm-5.4.4-merge-manbo-macros.patch
 Patch42:	rpm-5.4.4-glob-wildcards-for-loading-macro-files.patch
 Patch43:	rpm-5.4.4-merge-common-rpm-mandriva-setup-macros.patch
 Patch44:	rpm-5.4.4-use-xz-payload.patch
+Patch45:	rpm-5.4.4-merge-rpm-mandriva-setup-build-macros.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -325,6 +326,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch42 -p1 -b .glob~
 %patch43 -p1 -b .common~
 %patch44 -p1 -b .payload~
+%patch45 -p1 -b .build~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
