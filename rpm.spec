@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}12
+Release:	%{?prereldate:0.%{prereldate}.}11
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -127,7 +127,7 @@ BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
 BuildRequires:	neon0.27-devel rpm-%{_target_vendor}-setup-build
 BuildRequires:	readline-devel ncurses-devel openssl-devel
 BuildRequires:	liblzma-devel lua-devel pcre-devel acl-devel
-BuildRequires:	magic-devel popt-devel >= 1.15
+BuildRequires:	magic-devel popt-devel >= 1.15 libxml2-devel >= 2.7.8-9
 %ifarch %{ix86} x86_64 ppc ppc64 ia64
 BuildRequires:	cpuinfo-devel 
 %endif
