@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}10
+Release:	%{?prereldate:0.%{prereldate}.}11
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -170,7 +170,7 @@ BuildRequires:	ossp-uuid-devel
 %if %{with augeas}
 BuildRequires:	augeas-devel
 %endif
-Requires:	cpio gawk mktemp rpm-%{_target_vendor}-setup >= 1.132 update-alternatives
+Requires:	cpio gawk mktemp update-alternatives
 Requires:	%{bdb}_recover
 Suggests:	%{bdb}-utils
 Requires:	%{librpmname} = %{EVRD}
