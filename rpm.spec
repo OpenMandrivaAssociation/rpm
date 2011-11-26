@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}13
+Release:	%{?prereldate:0.%{prereldate}.}14
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -122,6 +122,7 @@ Patch44:	rpm-5.4.4-use-xz-payload.patch
 Patch45:	rpm-5.4.4-merge-rpm-mandriva-setup-build-macros.patch
 Patch46:	rpm-5.4.4-allow-installation-of-repackaged-rpms.patch
 Patch47:	rpm-5.4.4-fix-removal-of-overlapping-dependencies.patch
+Patch48:	rpm-5.4.4-dont-show-suggests-with-requires.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -331,6 +332,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch45 -p1 -b .build~
 %patch46 -p1 -b .repackage~
 %patch47 -p1 -b .overlap~
+%patch48 -p1 -b .suggests~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
