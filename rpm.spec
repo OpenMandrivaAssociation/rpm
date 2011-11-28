@@ -354,7 +354,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch56 -p1 -b .quotes~
 %patch57 -p1 -b .gdb_index~
 #required by patch55
-autoreconf -f
+./autogen.sh
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
