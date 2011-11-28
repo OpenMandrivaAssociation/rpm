@@ -125,9 +125,9 @@ Patch47:	rpm-5.4.4-fix-removal-of-overlapping-dependencies.patch
 Patch48:	rpm-5.4.4-dont-show-suggests-with-requires.patch
 # syncing debugedit commits from rpm.org
 Patch49:	rpm-5.4.4-debugedit-whitespace-fixups.patch
-Patch50:	rpm-5.4.4-recompute-build-id-only-on-dwarf-change.patch
-Patch51:	rpm-5.4.4-fix-incorrect-error-messages-regarding_-b-and_-d.patch
-Patch52:	rpm-5.4.4-remove-unused-variable.patch
+Patch50:	rpm-5.4.4-debugedit-recompute-build-id-only-on-dwarf-change.patch
+Patch51:	rpm-5.4.4-debugedit-fix-incorrect-error-messages-regarding_-b-and_-d.patch
+Patch52:	rpm-5.4.4-debugedit-remove-unused-variable.patch
 Patch53:	rpm-5.4.4-debugedit-bail-out-of-debuginfo-if-stabs-format-encountered.patch
 Patch54:	rpm-5.4.4-debugedit-add-dwarf4-support.patch
 License:	LGPLv2.1+
