@@ -126,6 +126,7 @@ Patch48:	rpm-5.4.4-dont-show-suggests-with-requires.patch
 # syncing debugedit commits from rpm.org
 Patch49:	rpm-5.4.4-debugedit-whitespace-fixups.patch
 Patch50:	rpm-5.4.4-recompute-build-id-only-on-dwarf-change.patch
+Patch51:	rpm-5.4.4-fix-incorrect-error-messages-regarding_-b-and_-d.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -338,6 +339,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch48 -p1 -b .suggests~
 %patch49 -p1 -b .debugedit_whitespace~
 %patch50 -p1 -b .debugedit_recompute~
+%patch51 -p1 -b .debugedit_errormsgs~
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
