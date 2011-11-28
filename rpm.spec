@@ -130,6 +130,8 @@ Patch51:	rpm-5.4.4-debugedit-fix-incorrect-error-messages-regarding_-b-and_-d.pa
 Patch52:	rpm-5.4.4-debugedit-remove-unused-variable.patch
 Patch53:	rpm-5.4.4-debugedit-bail-out-of-debuginfo-if-stabs-format-encountered.patch
 Patch54:	rpm-5.4.4-debugedit-add-dwarf4-support.patch
+# backport from HEAD
+Patch55:	rpm-5.4.4-find-debuginfo-strip-reloc-debug-sections.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -346,6 +348,9 @@ This package contains the RPM API documentation generated in HTML format.
 %patch52 -p1 -b .debugedit_unused_var~
 %patch53 -p1 -b .debugedit_stabs_fail~
 %patch54 -p1 -b .debugedit_dwarf4~
+%patch55 -p1 -b .strip_reloc_debug~
+#required by patch55
+autoreconf -f
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
