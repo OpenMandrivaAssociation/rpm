@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}15
+Release:	%{?prereldate:0.%{prereldate}.}16
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -134,6 +134,7 @@ Patch54:	rpm-5.4.4-debugedit-add-dwarf4-support.patch
 Patch55:	rpm-5.4.4-find-debuginfo-strip-reloc-debug-sections.patch
 Patch56:	rpm-5.4.4-fix-scripts-breaking-when-RPM_BUILD_ROOT-contains-spaces.patch
 Patch57:	rpm-5.4.4-create-gdb-index-from-find-debuginfo-if-possible.patch
+Patch58:	rpm-5.4.4-use-dwarf4-debug-format.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -353,6 +354,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch55 -p1 -b .strip_reloc_debug~
 %patch56 -p1 -b .quotes~
 %patch57 -p1 -b .gdb_index~
+%patch58 -p1 -b .dwarf4~
 #required by patch55
 ./autogen.sh
 
