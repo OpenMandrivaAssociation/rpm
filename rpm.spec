@@ -135,6 +135,7 @@ Patch55:	rpm-5.4.4-find-debuginfo-strip-reloc-debug-sections.patch
 Patch56:	rpm-5.4.4-fix-scripts-breaking-when-RPM_BUILD_ROOT-contains-spaces.patch
 Patch57:	rpm-5.4.4-create-gdb-index-from-find-debuginfo-if-possible.patch
 Patch58:	rpm-5.4.4-use-dwarf4-debug-format.patch
+Patch59:	rpm-5.4.4-compress-debug-sections.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -355,6 +356,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch56 -p1 -b .quotes~
 %patch57 -p1 -b .gdb_index~
 %patch58 -p1 -b .dwarf4~
+%patch59 -p1 -b .compress_debug~
 #required by patch55
 ./autogen.sh
 
