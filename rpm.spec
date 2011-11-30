@@ -141,15 +141,15 @@ Patch61:	rpm-5.4.4-fix-same-package-with-epoch-possible-to-upgrade.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
-BuildRequires:	neon0.27-devel rpm-%{_target_vendor}-setup-build
-BuildRequires:	readline-devel ncurses-devel openssl-devel
-BuildRequires:	liblzma-devel lua-devel pcre-devel acl-devel
-BuildRequires:	magic-devel popt-devel >= 1.15 libxml2-devel >= 2.7.8-9
+BuildRequires:	pkgconfig(neon) rpm-%{_target_vendor}-setup-build
+BuildRequires:	readline-devel ncurses-devel pkgconfig(libssl) pkgconfig(libcrypto)
+BuildRequires:	pkgconfig(liblzma) pkgconfig(lua) pkgconfig(libpcre) pkgconfig(libpcreposix)
+BuildRequires:	acl-devel magic-devel pkgconfig(popt) >= 1.15 libxml2-devel >= 2.7.8-9
 %ifarch %{ix86} x86_64 ppc ppc64 ia64
-BuildRequires:	cpuinfo-devel 
+BuildRequires:	pkgconfig(libcpuinfo) 
 %endif
 BuildRequires:	syck-devel keyutils-devel
-BuildRequires:	libgomp-devel gnutls-devel gnupg2
+BuildRequires:	libgomp-devel pkgconfig(gnutls) gnupg2
 # required by parts of test suite...
 BuildRequires:	wget
 # Should we prefer internal xar in stead? internal xar contains at least
@@ -168,7 +168,7 @@ BuildRequires:	perl-devel
 BuildRequires:	python-devel
 %endif
 %if %{with js}
-BuildRequires:	mozjs-devel
+BuildRequires:	pkgconfig(mozjs185)
 %endif
 %if %{with ruby}
 BuildRequires:	ruby-devel
@@ -180,13 +180,13 @@ BuildRequires:	tcl
 BuildRequires:	doxygen graphviz texlive
 %endif
 %if %{with sqlite}
-BuildRequires:	sqlite3-devel
+BuildRequires:	pkgconfig(sqlite3)
 %endif
 %if %{with ossp-uuid}
-BuildRequires:	ossp-uuid-devel
+BuildRequires:	pkgconfig(ossp-uuid)
 %endif
 %if %{with augeas}
-BuildRequires:	augeas-devel
+BuildRequires:	pkgconfig(augeas)
 %endif
 Requires:	cpio gawk mktemp update-alternatives
 Requires:	%{bdb}_recover
