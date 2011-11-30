@@ -259,7 +259,7 @@ Requires:	libtool-base
 Requires:	patch >= 2.5.9-7
 Requires:	make
 Requires:	unzip
-Requires:	elfutils
+Requires:	elfutils >= 0.152-4
 Requires:	rpm = %{EVRD}
 Requires:	rpm-%{_target_vendor}-setup-build
 Conflicts:	multiarch-utils < 1:5.3.10
