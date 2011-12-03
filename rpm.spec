@@ -34,7 +34,7 @@
 %endif
 
 %if %{with debug}
-%define	debugcflags	-g -O0
+%global	debugcflags	%{debugcflags} -g3 -O0
 %endif
 
 #include %{_sourcedir}/bootstrap.spec
