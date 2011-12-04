@@ -138,6 +138,7 @@ Patch58:	rpm-5.4.4-use-dwarf4-debug-format.patch
 Patch59:	rpm-5.4.4-compress-debug-sections.patch
 Patch60:	rpm-5.4.4-find-debuginfo-add-missing-partial-strip.patch
 Patch61:	rpm-5.4.4-fix-same-package-with-epoch-possible-to-upgrade.patch
+Patch62:	rpm-5.4.4-fix-_sys_macros_dir-path.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -361,6 +362,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch59 -p1 -b .compress_debug~
 %patch60 -p1 -b .partial_strip~
 %patch61 -p1 -b .epoch_cmp~
+%patch62 -p1 -b ._sys_macros_dir~
 #required by patch55
 ./autogen.sh
 
