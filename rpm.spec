@@ -150,7 +150,7 @@ BuildRequires:	acl-devel magic-devel pkgconfig(popt) >= 1.15 libxml2-devel >= 2.
 BuildRequires:	pkgconfig(libcpuinfo) 
 %endif
 BuildRequires:	syck-devel keyutils-devel
-BuildRequires:	libgomp-devel pkgconfig(gnutls) gnupg2
+BuildRequires:	gomp-devel pkgconfig(gnutls) gnupg2
 # required by parts of test suite...
 BuildRequires:	wget
 # Should we prefer internal xar in stead? internal xar contains at least
