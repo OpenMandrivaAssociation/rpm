@@ -141,6 +141,7 @@ Patch61:	rpm-5.4.4-fix-same-package-with-epoch-possible-to-upgrade.patch
 Patch62:	rpm-5.4.4-fix-_sys_macros_dir-path.patch
 Patch63:	rpm-5.4.4-strip-buildroot-away-from-duplicate-files-list.patch
 Patch64:	rpm-5.4.4-duplicate_files_terminate_build.patch
+Patch65:	rpm-5.4.4-unpackaged_subdirs_terminate_build.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -367,6 +368,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch62 -p1 -b ._sys_macros_dir~
 %patch63 -p1 -b .buildroot_dups~
 %patch64 -p1 -b .dups_terminate~
+%patch65 -p1 -b .subdir_terminate~
 #required by patch55
 ./autogen.sh
 
