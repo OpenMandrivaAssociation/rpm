@@ -144,6 +144,7 @@ Patch64:	rpm-5.4.4-duplicate_files_terminate_build.patch
 Patch65:	rpm-5.4.4-unpackaged_subdirs_terminate_build.patch
 # mdvbz#64898
 Patch66:	rpm-5.4.4-rpmbuild-withoutclean.patch
+Patch67:	rpm-5.4.4-find-debuginfo-avoid-excessive-output-from-eu-strip.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -194,6 +195,7 @@ BuildRequires:	pkgconfig(ossp-uuid)
 %if %{with augeas}
 BuildRequires:	pkgconfig(augeas)
 %endif
+BuildRequires:	spec-helper >= 0.31.7
 Requires:	cpio gawk mktemp update-alternatives
 Requires:	%{bdb}_recover
 Suggests:	%{bdb}-utils
@@ -268,6 +270,7 @@ Requires:	unzip
 Requires:	elfutils >= 0.152-4
 Requires:	rpm = %{EVRD}
 Requires:	rpm-%{_target_vendor}-setup-build
+Requires:	spec-helper >= 0.31.7
 Conflicts:	multiarch-utils < 1:5.3.10
 %rename		rpm-manbo-setup-build
 
@@ -372,6 +375,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch64 -p1 -b .dups_terminate~
 %patch65 -p1 -b .subdir_terminate~
 %patch66 -p1 -b .withoutclean~
+%patch67 -p1 -b .strip_silent~
 #required by patch55
 ./autogen.sh
 
@@ -737,25 +741,17 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %files -n %{librpmnamedevel}
 #%doc apidocs/html
 %{_includedir}/rpm
-%{_libdir}/librpm.la
 %{_libdir}/librpm.so
-%{_libdir}/librpmconstant.la
 %{_libdir}/librpmconstant.so
-%{_libdir}/librpmdb.la
 %{_libdir}/librpmdb.so
-%{_libdir}/librpmio.la
 %{_libdir}/librpmio.so
-%{_libdir}/librpmmisc.la
 %{_libdir}/librpmmisc.so
-%{_libdir}/librpmbuild.la
 %{_libdir}/librpmbuild.so
 %{_libdir}/pkgconfig/rpm.pc
 
 %if %{with js}
 #FIXME: lib64!
-%{_rpmhome}/lib/librpmjsm.la
 %{_rpmhome}/lib/librpmjsm.so
-%{_rpmhome}/lib/rpmjsm.la
 %endif
 #%if %{with sqlite}
 #%{_rpmhome}/libsql*.la
