@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}21
+Release:	%{?prereldate:0.%{prereldate}.}22
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -145,6 +145,8 @@ Patch65:	rpm-5.4.4-unpackaged_subdirs_terminate_build.patch
 # mdvbz#64898
 Patch66:	rpm-5.4.4-rpmbuild-withoutclean.patch
 Patch67:	rpm-5.4.4-find-debuginfo-avoid-excessive-output-from-eu-strip.patch
+# mdvbz#64914
+Patch68:	rpm-5.4.4-enable-rpmgio-net-transport.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -376,6 +378,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch65 -p1 -b .subdir_terminate~
 %patch66 -p1 -b .withoutclean~
 %patch67 -p1 -b .strip_silent~
+%patch68 -p1 -b .rpmgio_ufdio~
 #required by patch55
 ./autogen.sh
 
