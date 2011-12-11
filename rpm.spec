@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}22
+Release:	%{?prereldate:0.%{prereldate}.}23
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -151,6 +151,9 @@ Patch68:	rpm-5.4.4-enable-rpmgio-net-transport.patch
 # have a pkgconfig file, it's not needed for them to be made useful and anything
 # actuallly using pkgconfig for this purpose will pull it in as a dependency anyways...
 Patch69:	rpm-5.4.4-drop-useless-auto-generated-pkgconfig-dependency.patch
+# drop dependencies such as /bin/sh which will always be satisfied by glibc's dependency on
+# bash, and also on /sbin/ldconfig which always will be satisfied by glibc
+Patch70:	rpm-5.4.4-drop-base-dependencies.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
