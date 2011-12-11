@@ -147,6 +147,10 @@ Patch66:	rpm-5.4.4-rpmbuild-withoutclean.patch
 Patch67:	rpm-5.4.4-find-debuginfo-avoid-excessive-output-from-eu-strip.patch
 # mdvbz#64914
 Patch68:	rpm-5.4.4-enable-rpmgio-net-transport.patch
+# no sense in having an additional dependency on 'pkgconfig' on all packages that
+# have a pkgconfig file, it's not needed for them to be made useful and anything
+# actuallly using pkgconfig for this purpose will pull it in as a dependency anyways...
+Patch69:	rpm-5.4.4-drop-useless-auto-generated-pkgconfig-dependency.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -379,6 +383,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch66 -p1 -b .withoutclean~
 %patch67 -p1 -b .strip_silent~
 %patch68 -p1 -b .rpmgio_ufdio~
+%patch69 -p1 -b .oneshot~
 #required by patch55
 ./autogen.sh
 
