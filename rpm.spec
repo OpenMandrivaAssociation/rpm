@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}23
+Release:	%{?prereldate:0.%{prereldate}.}24
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -387,6 +387,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch67 -p1 -b .strip_silent~
 %patch68 -p1 -b .rpmgio_ufdio~
 %patch69 -p1 -b .oneshot~
+%patch70 -p1 -b .drop_deps~
 #required by patch55
 ./autogen.sh
 
