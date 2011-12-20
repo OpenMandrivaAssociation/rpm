@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}27
+Release:	%{?prereldate:0.%{prereldate}.}28
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
