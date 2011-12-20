@@ -159,6 +159,9 @@ Patch71:	rpm-5.4.4-fix-rpmconstant-to-always-use-LC_CTYPE-C-for-case-conversion.
 Patch72:	rpm-5.4.4-debugedit-recognize-debug_macro-section.patch
 # from rpm.org
 Patch73:	rpm-5.4.4-add-_build_pkgcheck.patch
+# $RPM_BUILD_DIR isn't necessarily the same as $PWD, it's %{_builddir}, not
+# %{_builddir}/%{?buildsubdir}, messing up paths in debug packages created..
+Patch74:	rpm-5.4.4-pass-_builddir-properly-to-find-debuginfo.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -397,6 +400,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch71 -p1 -b .locale~
 %patch72 -p1 -b .debug_macro~
 %patch73 -p1 -b .pkgcheck~
+%patch74 -p1 -b .builddir~
 #required by patch55
 ./autogen.sh
 
