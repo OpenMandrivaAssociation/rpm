@@ -164,7 +164,7 @@ Patch73:	rpm-5.4.4-add-_build_pkgcheck.patch
 Patch74:	rpm-5.4.4-pass-_builddir-properly-to-find-debuginfo.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
-BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
+BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
 BuildRequires:	pkgconfig(neon) rpm-%{_target_vendor}-setup-build
 BuildRequires:	readline-devel ncurses-devel pkgconfig(libssl) pkgconfig(libcrypto)
 BuildRequires:	pkgconfig(liblzma) pkgconfig(lua) pkgconfig(libpcre) pkgconfig(libpcreposix)
