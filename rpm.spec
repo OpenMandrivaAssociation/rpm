@@ -62,9 +62,6 @@ URL:		http://rpm5.org/
 # tarball generated with './devtool tarball.xz'
 Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}-%{srcver}.tar.gz
 #Source1:	bootstrap.spec
-# Needed by rpmlint. Still required? If so, this file should rather be carried
-# with rpmlint itself rather than requiring for rpm to carry...
-Source2:	rpm-GROUPS
 # These are a bit dated with a lot of redundant macros and many of them no
 # of use at all anymore! Should ideally just contain the macros different
 # from the default; _arch, optflags, _lib & _multilib*.
@@ -407,9 +404,6 @@ This package contains the RPM API documentation generated in HTML format.
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
 
-# Needed by rpmlint.
-cp %{SOURCE2} GROUPS
-
 %build
 %configure2_5x	--enable-nls \
 		--with-pic \
@@ -603,7 +597,7 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 
 # TODO: review which files goes into what packages...?
 %files -f %{name}.lang
-%doc GROUPS CHANGES doc/manual/[a-z]*
+%doc CHANGES doc/manual/[a-z]*
 %if %{with docs}
 %exclude %{_docdir}/rpm/html
 %endif
