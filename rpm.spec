@@ -155,7 +155,10 @@ Patch69:	rpm-5.4.4-drop-useless-auto-generated-pkgconfig-dependency.patch
 # bash, and also on /sbin/ldconfig which always will be satisfied by glibc
 Patch70:	rpm-5.4.4-drop-base-dependencies.patch
 Patch71:	rpm-5.4.4-fix-rpmconstant-to-always-use-LC_CTYPE-C-for-case-conversion.patch
+# from rpm.org
 Patch72:	rpm-5.4.4-debugedit-recognize-debug_macro-section.patch
+# from rpm.org
+Patch73:	rpm-5.4.4-add-_build_pkgcheck.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel ed gettext-devel byacc
@@ -282,6 +285,7 @@ Requires:	elfutils >= 0.152-4
 Requires:	rpm = %{EVRD}
 Requires:	rpm-%{_target_vendor}-setup-build
 Requires:	spec-helper >= 0.31.7
+Requires:	rpmlint-%{_target_vendor}-policy
 Conflicts:	multiarch-utils < 1:5.3.10
 %rename		rpm-manbo-setup-build
 
@@ -392,6 +396,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch70 -p1 -b .drop_deps~
 %patch71 -p1 -b .locale~
 %patch72 -p1 -b .debug_macro~
+%patch73 -p1 -b .pkgcheck~
 #required by patch55
 ./autogen.sh
 
