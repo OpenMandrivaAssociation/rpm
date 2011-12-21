@@ -37,7 +37,7 @@
 %global	debugcflags	%{debugcflags} -g3 -O0
 %endif
 
-#include %{_sourcedir}/bootstrap.spec
+#include %%{_sourcedir}/bootstrap.spec
 
 %define	bdb		db52
 
@@ -156,8 +156,8 @@ Patch71:	rpm-5.4.4-fix-rpmconstant-to-always-use-LC_CTYPE-C-for-case-conversion.
 Patch72:	rpm-5.4.4-debugedit-recognize-debug_macro-section.patch
 # from rpm.org
 Patch73:	rpm-5.4.4-add-_build_pkgcheck.patch
-# $RPM_BUILD_DIR isn't necessarily the same as $PWD, it's %{_builddir}, not
-# %{_builddir}/%{?buildsubdir}, messing up paths in debug packages created..
+# $RPM_BUILD_DIR isn't necessarily the same as $PWD, it's %%{_builddir}, not
+# %%{_builddir}/%%{?buildsubdir}, messing up paths in debug packages created..
 Patch74:	rpm-5.4.4-pass-_builddir-properly-to-find-debuginfo.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
@@ -573,7 +573,6 @@ mv %{buildroot}%{_bindir}/rpm %{buildroot}/bin/rpm
 
 cp -r cpu-os-macros %{buildroot}%{_usrlibrpm}/platform
 install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/legacy_compat.macros
-#ln -sf ppc-linux %{buildroot}%{_usrlibrpm}/platform/powerpc-%{_target_vendor}-linux
 
 %if %{with docs}
 install -d %{buildroot}%{_docdir}/rpm
@@ -596,12 +595,12 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_rpmhome}/bin/cp
 %{_rpmhome}/bin/dbconvert
 %{_rpmhome}/bin/find
-#%{_rpmhome}/bin/grep
-#%{_rpmhome}/bin/lua
+#%%{_rpmhome}/bin/grep
+#%%{_rpmhome}/bin/lua
 %{_rpmhome}/bin/mtree
 %{_rpmhome}/bin/mgo
 %{_rpmhome}/bin/pom2spec
-#%{_rpmhome}/bin/rc
+#%%{_rpmhome}/bin/rc
 %{_rpmhome}/bin/rpmspecdump
 %{_rpmhome}/bin/wget
 %if %{with xar}
@@ -733,12 +732,12 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_rpmhome}/lib/librpmjsm.so.*
 %{_rpmhome}/lib/rpmjsm.so
 %endif
-#%if %{with sqlite}
-#%{_rpmhome}/libsql*.so.*
-#%endif
+#%%if %%{with sqlite}
+#%%{_rpmhome}/libsql*.so.*
+#%%endif
 
 %files -n %{librpmnamedevel}
-#%doc apidocs/html
+#%%doc apidocs/html
 %{_includedir}/rpm
 %{_libdir}/librpm.so
 %{_libdir}/librpmconstant.so
@@ -752,11 +751,10 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 #FIXME: lib64!
 %{_rpmhome}/lib/librpmjsm.so
 %endif
-#%if %{with sqlite}
-#%{_rpmhome}/libsql*.la
-#%{_rpmhome}/libsql*.so
-#%endif
-
+#%%if %%{with sqlite}
+#%%{_rpmhome}/libsql*.la
+#%%{_rpmhome}/libsql*.so
+#%%endif
 
 %files -n %{librpmstatic}
 %{_libdir}/librpm.a
@@ -771,13 +769,13 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_rpmhome}/lib/librpmjsm.a
 %{_rpmhome}/lib/rpmjsm.a
 %endif
-#%if %{with sqlite}
-#%{_rpmhome}/libsql*.a
-#%endif
+#%%if %%{with sqlite}
+#%%{_rpmhome}/libsql*.a
+#%%endif
 
 %if %{with perl}
 %files -n perl-%{perlmod}
-#%doc perl/Changes
+#%%doc perl/Changes
 %{_mandir}/man3/RPM*
 %{perl_vendorarch}/%{perlmod}.pm
 %dir %{perl_vendorarch}/%{perlmod}
