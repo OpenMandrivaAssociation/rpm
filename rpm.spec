@@ -46,7 +46,7 @@
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
-%define librpmname	%mklibname rpm  %{libver}
+%define librpmname	%mklibname rpm %{libver}
 %define librpmnamedevel	%mklibname -d rpm
 %define	librpmstatic	%mklibname -d -s rpm
 
