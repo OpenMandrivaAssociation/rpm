@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}28
+Release:	%{?prereldate:0.%{prereldate}.}29
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -286,6 +286,7 @@ Requires:	rpm = %{EVRD}
 Requires:	rpm-%{_target_vendor}-setup-build
 Requires:	spec-helper >= 0.31.7
 Requires:	rpmlint-%{_target_vendor}-policy
+Conflicts:	rpmlint < 1.4-2
 Conflicts:	multiarch-utils < 1:5.3.10
 %rename		rpm-manbo-setup-build
 
