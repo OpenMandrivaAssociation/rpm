@@ -215,9 +215,7 @@ Requires:	%{bdb}_recover
 Suggests:	%{bdb}-utils
 Requires:	%{librpmname} = %{EVRD}
 Conflicts:	rpm-build < 1:5.3.10-0.20110422.3
-Requires(pre):	rpm-helper >= 0.8
 Requires(pre):	coreutils
-Requires(postun):rpm-helper >= 0.8
 %rename		rpmconstant
 %rename		multiarch-utils
 %rename		rpm-manbo-setup
@@ -556,15 +554,10 @@ done
 
 %find_lang %{name}
 
-%define	rpmdbattr %attr(0644, rpm, rpm) %verify(not md5 size mtime) %ghost %config(missingok,noreplace)
 mkdir -p %{buildroot}/var/lib/rpm/{log,tmp}
-for dbi in `./rpm --macros macros/macros --eval %_dbi_tags_4|tr : ' '` Seqno; do
+for dbi in `./rpm --macros macros/macros --eval %_dbi_tags_4|tr : ' '` Seqno __db.00{0..9}; do
     touch %{buildroot}/var/lib/rpm/$dbi
-    echo "%rpmdbattr /var/lib/rpm/$dbi" >> %{name}.lang
-done
-for i in {0..9}; do
-    touch %{buildroot}/var/lib/rpm/__db.00$i
-    echo "%rpmdbattr /var/lib/rpm/__db.00$i" >> %{name}.lang
+    echo "%attr(0644, root, root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) %{_localstatedir}/lib/rpm/$dbi" >> %{name}.lang
 done
 
 install -d %{buildroot}/bin
@@ -587,15 +580,6 @@ install -d %{buildroot}%{_docdir}/rpm
 cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %endif
 
-%pre
-# XXX: really sceptical about rpm actually requiring or even using it's own
-# dedicated user for any purpose (and there's no suid/guid no binaries either), really
-# smells like an old suid/guid relic of the past...
-/usr/share/rpm-helper/add-user rpm $1 rpm /var/lib/rpm /sbin/nologin
-
-%postun
-/usr/share/rpm-helper/del-user rpm $1 rpm
-
 # TODO: review which files goes into what packages...?
 %files -f %{name}.lang
 %doc CHANGES doc/manual/[a-z]*
@@ -603,7 +587,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %exclude %{_docdir}/rpm/html
 %endif
 # Are these attributes actually still sane? Smells deprecated/legacy...
-%defattr(755, rpm, rpm, 755)
 /bin/rpm
 %{_bindir}/multiarch-dispatch
 %{_bindir}/rpmconstant*
@@ -635,7 +618,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %dir %{_localstatedir}/lib/rpm/tmp
 
 
-%defattr(0644, rpm, rpm, 755)
 %{_rpmhome}/macros.d/*
 %{_rpmhome}/cpuinfo.yaml
 %{_rpmhome}/macros
@@ -643,7 +625,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_rpmhome}/platform/*/macros
 %config(noreplace) %{_localstatedir}/lib/rpm/DB_CONFIG
 
-%defattr(-,root,root)
 %dir %{_localstatedir}/spool/repackage
 %dir %{_rpmhome}
 %dir %{_rpmhome}/bin
@@ -674,7 +655,6 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %{_includedir}/multiarch-dispatch.h
 
 %files build
-%defattr(755, rpm, rpm)
 %{_bindir}/gendiff
 %{_bindir}/rpmbuild
 %{_bindir}/multiarch-platform
@@ -735,8 +715,7 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %if %{with js}
 %{_rpmhome}/bin/tjs
 %endif
-%attr(0644, rpm, rpm) %{_rpmhome}/macros.rpmbuild
-%defattr(-, root, root)
+%{_rpmhome}/macros.rpmbuild
 %{_mandir}/man8/rpmbuild.8*
 %{_mandir}/man8/rpmdeps.8*
 
