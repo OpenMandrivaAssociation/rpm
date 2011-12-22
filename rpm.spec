@@ -284,7 +284,7 @@ Requires:	rpm = %{EVRD}
 Requires:	rpm-%{_target_vendor}-setup-build
 Requires:	spec-helper >= 0.31.7
 Requires:	rpmlint-%{_target_vendor}-policy
-Conflicts:	rpmlint < 1.4-2
+Conflicts:	rpmlint < 1.4-3
 Conflicts:	multiarch-utils < 1:5.3.10
 %rename		rpm-manbo-setup-build
 
