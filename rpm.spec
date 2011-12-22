@@ -392,7 +392,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch67 -p1 -b .strip_silent~
 %patch68 -p1 -b .rpmgio_ufdio~
 %patch69 -p1 -b .oneshot~
-%patch70 -p1 -b .drop_deps~
+%patch70 -p1 -b .drop_basedeps~
 %patch71 -p1 -b .locale~
 %patch72 -p1 -b .debug_macro~
 %patch73 -p1 -b .pkgcheck~
