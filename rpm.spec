@@ -284,7 +284,7 @@ Requires:	elfutils >= 0.152-4
 Requires:	rpm = %{EVRD}
 Requires:	rpm-%{_target_vendor}-setup-build
 Requires:	spec-helper >= 0.31.7
-Requires:	rpmlint-%{_target_vendor}-policy
+Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
 Conflicts:	rpmlint < 1.4-4
 Conflicts:	multiarch-utils < 1:5.3.10
 %rename		rpm-manbo-setup-build
