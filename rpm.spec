@@ -180,7 +180,7 @@ BuildRequires:	wget
 %if %{with xar}
 BuildRequires:	xar-devel
 %endif
-BuildRequires:	%{bdb}-devel >= 5.1.25
+BuildRequires:	%{bdb}-devel >= 5.2.36-3
 # required by test suite
 BuildRequires:	%{bdb}-utils
 %if %{with perl}
@@ -210,7 +210,7 @@ BuildRequires:	pkgconfig(ossp-uuid)
 %if %{with augeas}
 BuildRequires:	pkgconfig(augeas)
 %endif
-BuildRequires:	spec-helper >= 0.31.7 gcc >= 4.6.2-8
+BuildRequires:	spec-helper >= 0.31.7
 Requires:	cpio gawk mktemp update-alternatives
 Requires:	%{bdb}_recover
 Suggests:	%{bdb}-utils
