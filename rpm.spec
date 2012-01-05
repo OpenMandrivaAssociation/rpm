@@ -210,7 +210,7 @@ BuildRequires:	pkgconfig(ossp-uuid)
 %if %{with augeas}
 BuildRequires:	pkgconfig(augeas)
 %endif
-BuildRequires:	spec-helper >= 0.31.7
+BuildRequires:	spec-helper >= 0.31.7 gcc >= 4.6.2-8
 Requires:	cpio gawk mktemp update-alternatives
 Requires:	%{bdb}_recover
 Suggests:	%{bdb}-utils
