@@ -581,6 +581,9 @@ install -d %{buildroot}%{_docdir}/rpm
 cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %endif
 
+# hm, spec-helper not 100%..?
+rm -f %{buildroot}%{_libdir}/*.la
+
 # TODO: review which files goes into what packages...?
 %files -f %{name}.lang
 %doc CHANGES doc/manual/[a-z]*
