@@ -67,6 +67,7 @@ Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}-%{srcver}.tar.gz
 # from the default; _arch, optflags, _lib & _multilib*.
 # stripping away the rest (along with os specificity) and create a resulting
 # cpu-macros.tar.gz to push upstream would seem like a sane improvement.
+Source2:	rpm.rpmlintrc
 Source3:	cpu-os-macros.tar.gz
 Source4:	legacy_compat.macros
 # already merged upstream
