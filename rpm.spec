@@ -161,6 +161,7 @@ Patch73:	rpm-5.4.4-add-_build_pkgcheck.patch
 # %%{_builddir}/%%{?buildsubdir}, messing up paths in debug packages created..
 Patch74:	rpm-5.4.4-pass-_builddir-properly-to-find-debuginfo.patch
 Patch75:	rpm-5.4.4-srcdefattr.patch
+Patch76:	rpm-5.4.4-files-listed-twice-terminates-build.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -400,6 +401,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch73 -p1 -b .pkgcheck~
 %patch74 -p1 -b .builddir~
 %patch75 -p1 -b .srcdefattr~
+%patch76 -p1 -b .twice_terminate~
 #required by patch55
 ./autogen.sh
 
