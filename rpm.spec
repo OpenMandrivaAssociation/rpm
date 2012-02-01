@@ -289,6 +289,8 @@ Requires:	spec-helper >= 0.31.7
 Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
 Conflicts:	rpmlint < 1.4-4
 Conflicts:	multiarch-utils < 1:5.3.10
+Conflicts:	rpm < 1:5.4.4-32
+Obsoletes:	rpm5-manbo-setup
 %rename		rpm-manbo-setup-build
 
 %description	build
@@ -607,7 +609,6 @@ rm -f %{buildroot}%{_libdir}/*.la
 #%%{_rpmhome}/bin/lua
 %{_rpmhome}/bin/mtree
 %{_rpmhome}/bin/mgo
-%{_rpmhome}/bin/pom2spec
 #%%{_rpmhome}/bin/rc
 %{_rpmhome}/bin/rpmspecdump
 %{_rpmhome}/bin/wget
@@ -671,6 +672,7 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_rpmhome}/bin/debugedit
 %{_rpmhome}/bin/install-sh
 %{_rpmhome}/bin/mkinstalldirs
+%{_rpmhome}/bin/pom2spec
 %{_rpmhome}/bin/rpmcache
 %{_rpmhome}/bin/rpmcmp
 %{_rpmhome}/bin/rpmdeps
