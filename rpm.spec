@@ -39,7 +39,7 @@
 
 #include %%{_sourcedir}/bootstrap.spec
 
-%define	bdb		db52
+%define	bdb		db53
 
 %define libver		5.4
 %define	minorver	4
@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}33
+Release:	%{?prereldate:0.%{prereldate}.}34
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -162,6 +162,7 @@ Patch73:	rpm-5.4.4-add-_build_pkgcheck.patch
 Patch74:	rpm-5.4.4-pass-_builddir-properly-to-find-debuginfo.patch
 Patch75:	rpm-5.4.4-srcdefattr.patch
 Patch76:	rpm-5.4.4-files-listed-twice-terminates-build.patch
+Patch77:	rpm-5.4.4-use-bdb-5.3.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -404,6 +405,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch74 -p1 -b .builddir~
 %patch75 -p1 -b .srcdefattr~
 %patch76 -p1 -b .twice_terminate~
+%patch77 -p1 -b .db53~
 #required by patch55
 ./autogen.sh
 
@@ -668,7 +670,7 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_bindir}/multiarch-platform
 %{_rpmhome}/bin/abi-compliance-checker.pl
 %{_rpmhome}/bin/api-sanity-autotest.pl
-%{_rpmhome}/bin/dbsql
+#%{_rpmhome}/bin/dbsql
 %{_rpmhome}/bin/debugedit
 %{_rpmhome}/bin/install-sh
 %{_rpmhome}/bin/mkinstalldirs
