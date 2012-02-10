@@ -672,7 +672,7 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_bindir}/multiarch-platform
 %{_rpmhome}/bin/abi-compliance-checker.pl
 %{_rpmhome}/bin/api-sanity-autotest.pl
-#%{_rpmhome}/bin/dbsql
+%{_rpmhome}/bin/dbsql
 %{_rpmhome}/bin/debugedit
 %{_rpmhome}/bin/install-sh
 %{_rpmhome}/bin/mkinstalldirs
