@@ -163,6 +163,7 @@ Patch74:	rpm-5.4.4-pass-_builddir-properly-to-find-debuginfo.patch
 Patch75:	rpm-5.4.4-srcdefattr.patch
 Patch76:	rpm-5.4.4-files-listed-twice-terminates-build.patch
 Patch77:	rpm-5.4.4-use-bdb-5.3.patch
+Patch78:	rpm-5.4.4-rubygem-dep-extractor-ruby1.9.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -406,6 +407,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch75 -p1 -b .srcdefattr~
 %patch76 -p1 -b .twice_terminate~
 %patch77 -p1 -b .db53~
+%patch78 -p1 -b .ruby19~
 #required by patch55
 ./autogen.sh
 
