@@ -39,7 +39,7 @@
 
 #include %%{_sourcedir}/bootstrap.spec
 
-%define	bdb		db53
+%define	bdb		db52
 
 %define libver		5.4
 %define	minorver	4
@@ -406,7 +406,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch74 -p1 -b .builddir~
 %patch75 -p1 -b .srcdefattr~
 %patch76 -p1 -b .twice_terminate~
-%patch77 -p1 -b .db53~
+#patch77 -p1 -b .db53~
 %patch78 -p1 -b .ruby19~
 #required by patch55
 ./autogen.sh
