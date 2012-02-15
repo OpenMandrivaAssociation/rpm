@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}35
+Release:	%{?prereldate:0.%{prereldate}.}36
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -164,6 +164,8 @@ Patch75:	rpm-5.4.4-srcdefattr.patch
 Patch76:	rpm-5.4.4-files-listed-twice-terminates-build.patch
 Patch77:	rpm-5.4.4-use-bdb-5.3.patch
 Patch78:	rpm-5.4.4-ruby1.9-fixes.patch
+# mdvbz#65269
+Patch79:	rpm-5.4.4-dont-consider-ranged-dependencies-as-overlapping-for-removal.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -408,6 +410,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch76 -p1 -b .twice_terminate~
 #patch77 -p1 -b .db53~
 %patch78 -p1 -b .ruby19~
+%patch79 -p1 -b .range_nooverlap~
 #required by patch55
 ./autogen.sh
 
