@@ -352,6 +352,7 @@ This package contains the RPM API documentation generated in HTML format.
 %endif
 %patch2 -p1 -b .scriptlet~
 %patch3 -p1 -b .doc_conflicts~
+%patch11 -p1 -b .ru~
 %if 0
 %patch4 -p1 -b .distsuffix~
 %patch5 -p1 -b .distpatt~
