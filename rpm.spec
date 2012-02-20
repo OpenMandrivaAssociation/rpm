@@ -162,7 +162,7 @@ Patch73:	rpm-5.4.4-add-_build_pkgcheck.patch
 Patch74:	rpm-5.4.4-pass-_builddir-properly-to-find-debuginfo.patch
 Patch75:	rpm-5.4.4-srcdefattr.patch
 Patch76:	rpm-5.4.4-files-listed-twice-terminates-build.patch
-Patch77:	rpm-5.4.4-use-bdb-5.3.patch
+Patch77:	rpm-5.4.5-use-bdb-5.2.patch
 Patch78:	rpm-5.4.4-ruby1.9-fixes.patch
 # mdvbz#65269
 Patch79:	rpm-5.4.4-dont-consider-ranged-dependencies-as-overlapping-for-removal.patch
@@ -412,7 +412,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch74 -p1 -b .builddir~
 %patch75 -p1 -b .srcdefattr~
 %patch76 -p1 -b .twice_terminate~
-#patch77 -p1 -b .db53~
+%patch77 -p1 -b .db52~
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
 %patch80 -p1 -b .automake~
@@ -490,7 +490,7 @@ tar -zxf %{SOURCE3} -C cpu-os-macros
 		--with-xar=%{_includedir}/xar \
 %endif
 		--with-db \
-		--with-db-sql \
+		--with-dbsql=external \
 		--without-db-tools-integrated \
 %if %{with sqlite}
 		--with-sqlite=external \
