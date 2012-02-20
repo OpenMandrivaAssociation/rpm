@@ -42,7 +42,7 @@
 %define	bdb		db52
 
 %define libver		5.4
-%define	minorver	4
+%define	minorver	5
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}36
+Release:	%{?prereldate:0.%{prereldate}.}1
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -92,7 +92,7 @@ Patch20:	rpm-5.3.11-fix-syslog-b0rkage.patch
 Patch21:	rpm-5.3.12-change-dep-loop-errors-to-warnings.patch
 Patch22:	rpm-5.3.12-55810-rpmevrcmp-again-grf.patch
 # FIXME: later..
-Patch23:	rpm-5.4.3-no-libsql.patch
+Patch23:	rpm-5.4.5-no-libsql.patch
 Patch27:	rpm-5.4.4-merge-find-debuginfo.sh-from-mandriva.patch
 Patch28:	rpm-5.4.4-merge-find-lang.sh-changes-from-rpm.org.patch
 Patch29:	rpm-5.4.4-add-_specfile-macro.patch
@@ -358,7 +358,7 @@ This package contains the RPM API documentation generated in HTML format.
 #%%patch21 -p1 -b .loop_warnings~
 #%%patch22 -p1 -b .55810~
 %patch23 -p1 -b .nolibsql~
-%patch27 -p1 -b .mdv~
+#patch27 -p1 -b .mdv~
 %patch28 -p1 -b .rpmorg~
 %patch29 -p1 -b .specfile~
 %patch30 -p1 -b .qf_non~
