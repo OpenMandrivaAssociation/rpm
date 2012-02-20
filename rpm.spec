@@ -169,6 +169,7 @@ Patch79:	rpm-5.4.4-dont-consider-ranged-dependencies-as-overlapping-for-removal.
 # references to $pkglibdir wasn't updated in commit on rpm-5_4, resulting in files being
 # installed to %{_libdir}/rpm in stead of %{_prefix}/lib/rpm..
 Patch80:	rpm-5.4.5-automake-1.11.2-fix.patch
+Patch81:	rpm-5.4.5-libsql-conditional.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -360,7 +361,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch20 -p1 -b .syslog~
 #%%patch21 -p1 -b .loop_warnings~
 #%%patch22 -p1 -b .55810~
-%patch23 -p1 -b .nolibsql~
+#patch23 -p1 -b .nolibsql~
 #patch27 -p1 -b .mdv~
 %patch28 -p1 -b .rpmorg~
 %patch29 -p1 -b .specfile~
@@ -415,7 +416,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
 %patch80 -p1 -b .automake~
-#required by P55, P80..
+%patch81 -p1 -b .libsql~
+#required by P55, P80, P81..
 ./autogen.sh
 
 mkdir -p cpu-os-macros
