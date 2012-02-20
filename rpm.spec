@@ -166,6 +166,9 @@ Patch77:	rpm-5.4.4-use-bdb-5.3.patch
 Patch78:	rpm-5.4.4-ruby1.9-fixes.patch
 # mdvbz#65269
 Patch79:	rpm-5.4.4-dont-consider-ranged-dependencies-as-overlapping-for-removal.patch
+# references to $pkglibdir wasn't updated in commit on rpm-5_4, resulting in files being
+# installed to %{_libdir}/rpm in stead of %{_prefix}/lib/rpm..
+Patch80:	rpm-5.4.5-automake-1.11.2-fix.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -411,7 +414,8 @@ This package contains the RPM API documentation generated in HTML format.
 #patch77 -p1 -b .db53~
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
-#required by patch55
+%patch80 -p1 -b .automake~
+#required by P55, P80..
 ./autogen.sh
 
 mkdir -p cpu-os-macros
