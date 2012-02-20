@@ -361,7 +361,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch20 -p1 -b .syslog~
 #%%patch21 -p1 -b .loop_warnings~
 #%%patch22 -p1 -b .55810~
-#patch23 -p1 -b .nolibsql~
+%patch23 -p1 -b .nolibsql~
 #patch27 -p1 -b .mdv~
 %patch28 -p1 -b .rpmorg~
 %patch29 -p1 -b .specfile~
@@ -416,7 +416,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
 %patch80 -p1 -b .automake~
-%patch81 -p1 -b .libsql~
+#patch81 -p1 -b .libsql~
 #required by P55, P80, P81..
 ./autogen.sh
 
