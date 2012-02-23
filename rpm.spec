@@ -109,7 +109,7 @@ Patch33:	rpm-5.4.4-fix-mdvbz62979.patch
 Patch34:	rpm-5.4.4-use-dependency-type-for-ordering.patch
 Patch35:	rpm-5.4.4-find_lang-with-html.patch
 Patch36:	rpm-5.4.4-find_lang-support-multiple-names.patch
-Patch37:	rpm-5.4.4-avoid-dependencies-on-self.patch
+Patch37:	rpm-5.4.5-avoid-dependencies-on-self.patch
 Patch38:	rpm-5.4.4-find_lang-handle-man-pages-already-compressed.patch
 Patch39:	rpm-5.4.4-find-debuginfo-drop-useless-sort.patch
 Patch40:	rpm-5.4.4-pkgconfigdeps-check-path.patch
