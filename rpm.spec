@@ -172,6 +172,7 @@ Patch80:	rpm-5.4.5-automake-1.11.2-fix.patch
 Patch81:	rpm-5.4.5-libsql-conditional.patch
 Patch82:	rpm-5.4.5-fix-python-using-rpm4-function.patch
 Patch83:	rpm-5.4.5-kmod-deps-xz-support.patch
+Patch84:	rpm-5.4.5-enable-internal-dependency-generator.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -421,7 +422,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch80 -p1 -b .automake~
 #patch81 -p1 -b .libsql~
 %patch82 -p1 -b .headerFini~
-%patch83 -p1 .b .kmod_xz~
+%patch83 -p1 -b .kmod_xz~
+%patch84 -p1 -b .int_dep_gen~
 #required by P55, P80, P81..
 ./autogen.sh
 
