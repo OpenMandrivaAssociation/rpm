@@ -39,7 +39,7 @@
 
 #include %%{_sourcedir}/bootstrap.spec
 
-%define	bdb		db52
+%define	bdb		db53
 
 %define libver		5.4
 %define	minorver	5
@@ -171,6 +171,7 @@ Patch79:	rpm-5.4.4-dont-consider-ranged-dependencies-as-overlapping-for-removal.
 Patch80:	rpm-5.4.5-automake-1.11.2-fix.patch
 Patch81:	rpm-5.4.5-libsql-conditional.patch
 Patch82:	rpm-5.4.5-fix-python-using-rpm4-function.patch
+Patch83:	rpm-5.4.5-kmod-deps-xz-support.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -414,12 +415,13 @@ This package contains the RPM API documentation generated in HTML format.
 %patch74 -p1 -b .builddir~
 %patch75 -p1 -b .srcdefattr~
 %patch76 -p1 -b .twice_terminate~
-%patch77 -p1 -b .db52~
+#patch77 -p1 -b .db52~
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
 %patch80 -p1 -b .automake~
 #patch81 -p1 -b .libsql~
 %patch82 -p1 -b .headerFini~
+%patch83 -p1 .b .kmod_xz~
 #required by P55, P80, P81..
 ./autogen.sh
 
