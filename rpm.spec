@@ -267,7 +267,6 @@ This package contains common files to all applications based on rpm.
 Summary:	Development files for applications which will manipulate RPM packages
 Group:		Development/C
 Requires:	%{librpmname} = %{EVRD}
-Provides:	librpm-devel = %{EVRD}
 Provides:	rpm-devel = %{EVRD}
 %rename		%{_lib}rpmconstant-devel
 Obsoletes:	%{_lib}rpm4.4-devel
