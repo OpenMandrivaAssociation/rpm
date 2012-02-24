@@ -179,6 +179,7 @@ Patch85:	rpm-5.4.5-fix-removal-of-overlapping-dependencies-for-internal-dependen
 # but we'll anyways use it as is for now to prevent any potential regressions
 # by switching to the internal dependency generator
 Patch86:	rpm-5.4.5-update-mono-dependency-generator.patch
+Patch87:	rpm-5.4.5-dont-generate-php-dependencies-only-when-executable.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -432,6 +433,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch84 -p1 -b .int_dep_gen~
 %patch85 -p1 -b .int_gen_overlap~
 %patch86 -p1 -b .mono_deps_new~
+%patch87 -p1 -b .php_dep_gen~
 #required by P55, P80, P81..
 ./autogen.sh
 
