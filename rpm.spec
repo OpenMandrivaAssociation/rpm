@@ -183,6 +183,7 @@ Patch87:	rpm-5.4.5-dont-generate-php-dependencies-only-when-executable.patch
 Patch88:	rpm-5.4.5-patchset_16004.patch
 Patch89:	rpm-5.4.5-patchset_16005.patch
 Patch90:	rpm-5.4.5-patchset_16022.patch
+Patch91:	rpm-5.4.5-update-rpmfc-when-removing-dependencies-on-self.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -440,6 +441,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch88 -p1 -b .16004~
 %patch89 -p1 -b .16005~
 %patch90 -p1 -b .16022~
+%patch91 -p1 -b .fc_deps~
 #required by P55, P80, P81..
 ./autogen.sh
 
