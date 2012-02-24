@@ -174,6 +174,11 @@ Patch82:	rpm-5.4.5-fix-python-using-rpm4-function.patch
 Patch83:	rpm-5.4.5-kmod-deps-xz-support.patch
 Patch84:	rpm-5.4.5-enable-internal-dependency-generator.patch
 Patch85:	rpm-5.4.5-fix-removal-of-overlapping-dependencies-for-internal-dependency-generator.patch
+# this updates to using the dependency generator shipped with mono, it has some
+# issues which makes me cautious about actually merging it with rpm5 upstream,
+# but we'll anyways use it as is for now to prevent any potential regressions
+# by switching to the internal dependency generator
+Patch86:	rpm-5.4.5-update-mono-dependency-generator.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -426,6 +431,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch83 -p1 -b .kmod_xz~
 %patch84 -p1 -b .int_dep_gen~
 %patch85 -p1 -b .int_gen_overlap~
+%patch86 -p1 -b .mono_deps_new~
 #required by P55, P80, P81..
 ./autogen.sh
 
