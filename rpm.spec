@@ -240,6 +240,7 @@ Requires(pre):	coreutils
 %rename		rpmconstant
 %rename		multiarch-utils
 %rename		rpm-manbo-setup
+%rename		rpm-%{_target_vendor}-setup
 
 %description
 RPM is a powerful command line driven package management system capable of
