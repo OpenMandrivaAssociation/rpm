@@ -743,6 +743,7 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_rpmhome}/gem_helper.rb
 %{_rpmhome}/getpo.sh
 %{_rpmhome}/gstreamer.sh
+%{_rpmhome}/haskelldeps.sh
 %{_rpmhome}/http.req
 %{_rpmhome}/javadeps.sh
 %{_rpmhome}/kmod-deps.sh
