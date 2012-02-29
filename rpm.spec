@@ -248,6 +248,7 @@ Requires(pre):	coreutils
 %rename		multiarch-utils
 %rename		rpm-manbo-setup
 %rename		rpm-%{_target_vendor}-setup
+Obsoletes:	haskell-macros < 6.4-5
 
 %description
 RPM is a powerful command line driven package management system capable of
