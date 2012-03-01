@@ -646,7 +646,6 @@ rm -f %{buildroot}%{_libdir}/*.la
 %if %{with docs}
 %exclude %{_docdir}/rpm/html
 %endif
-# Are these attributes actually still sane? Smells deprecated/legacy...
 /bin/rpm
 %{_bindir}/multiarch-dispatch
 %{_bindir}/rpmconstant*
