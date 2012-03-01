@@ -707,8 +707,8 @@ rm -f %{buildroot}%{_libdir}/*.la
 %exclude	%{_mandir}/man8/rpmbuild.8*
 %exclude	%{_mandir}/man8/rpmdeps.8*
 
-%config(noreplace,missingok)	/etc/cron.daily/rpm
-%config(noreplace,missingok)	/etc/logrotate.d/rpm
+%{_sysconfdir}/cron.daily/rpm
+%config(noreplace,missingok) %{_sysconfdir}/logrotate.d/rpm
 
 %{_includedir}/multiarch-dispatch.h
 
