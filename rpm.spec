@@ -189,6 +189,7 @@ Patch93:	rpm-5.4.5-rubygems-add-missing-newline.patch
 Patch94:	rpm-5.4.5-generate-haskell-dependencies.patch
 Patch95:	rpm-5.4.5-drop-some-interpreter-deps.patch
 Patch96:	rpm-5.4.5-fix-elf-interpreter-resolving-breaking-uclibc-deps.patch
+Patch97:	rpm-5.4.5-set-proper-file-color-for-scripts-using-env-in-shellbang.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -453,6 +454,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch94 -p1 -b .haskell~
 %patch95 -p1 -b .interpret_deps~
 %patch96 -p1 -b .uclibc~
+%patch97 -p1 -b .env_color~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
