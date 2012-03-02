@@ -193,6 +193,7 @@ Patch97:	rpm-5.4.5-set-proper-file-color-for-scripts-using-env-in-shellbang.patc
 Patch98:	rpm-5.4.5-update-rpmfc-when-removing-overlapping-dependencies.patch
 Patch99:	rpm-5.4.5-python-export-spec-macros.patch
 Patch100:	rpm-5.4.5-do-not-merge-script-dependencies-with-non-script-dependencies.patch
+Patch101:	rpm-5.4.5-font-provides.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -461,6 +462,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch98 -p1 -b .fc_overlap~
 %patch99 -p1 -b .py_macros~
 %patch100 -p1 -b .script_overlap~
+%patch101 -p1 -b .font~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
