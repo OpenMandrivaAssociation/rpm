@@ -195,6 +195,7 @@ Patch99:	rpm-5.4.5-python-export-spec-macros.patch
 Patch100:	rpm-5.4.5-do-not-merge-script-dependencies-with-non-script-dependencies.patch
 Patch101:	rpm-5.4.5-font-provides.patch
 Patch102:	rpm-5.4.5-kmod-dependencies.patch
+Patch103:	rpm-5.4.5-desktop-provides.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -465,6 +466,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch100 -p1 -b .script_overlap~
 %patch101 -p1 -b .font~
 %patch102 -p1 -b .kmod~
+%patch103 -p1 -b .desktop~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
