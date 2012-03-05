@@ -199,6 +199,7 @@ Patch103:	rpm-5.4.5-desktop-provides.patch
 Patch104:	rpm-5.4.5-skip-dependencies-for-character-devices.patch
 Patch105:	rpm-5.4.5-rpmfc-use-strlen-not-sizeof.patch
 Patch106:	rpm-5.4.5-break-out-of-elf-link-loop.patch
+Patch107:	rpm-5.4.5-rpmfc-apply-python-coloring-from-magic.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -473,6 +474,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch104 -p1 -b .skip_chrdev~
 %patch105 -p1 -b .sizeof~
 %patch106 -p1 -b .link_loop~
+%patch107 -p1 -b .python_color~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
