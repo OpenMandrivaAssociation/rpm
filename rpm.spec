@@ -767,6 +767,7 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_rpmhome}/find-provides.perl
 %{_rpmhome}/find-req.pl
 %{_rpmhome}/find-requires.perl
+%{_rpmhome}/fontconfig.prov
 %{_rpmhome}/gem_helper.rb
 %{_rpmhome}/getpo.sh
 %{_rpmhome}/gstreamer.sh
