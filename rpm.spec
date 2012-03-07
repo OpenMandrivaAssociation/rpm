@@ -202,6 +202,7 @@ Patch106:	rpm-5.4.5-break-out-of-elf-link-loop.patch
 Patch107:	rpm-5.4.5-rpmfc-apply-python-coloring-from-magic.patch
 Patch108:	rpm-5.4.5-fix-pythonegg-deps-for-egg-metadata-in-directories.patch
 Patch109:	rpm-5.4.5-fix-generation-of-uclibc-deps-on-non-lib64.patch
+Patch110:	rpm-5.4.5-only-generate-devel-deps-for-symlinks-start-with-lib.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -479,6 +480,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch107 -p1 -b .python_color~
 %patch108 -p1 -b .pyegg_nodirs~
 %patch109 -p1 -b .uclibc_nolib64~
+%patch110 -p1 -b .req_devel~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
