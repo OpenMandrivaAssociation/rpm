@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}1
+Release:	%{?prereldate:0.%{prereldate}.}2
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -197,6 +197,7 @@ Patch108:	rpm-5.4.5-fix-pythonegg-deps-for-egg-metadata-in-directories.patch
 Patch109:	rpm-5.4.5-fix-generation-of-uclibc-deps-on-non-lib64.patch
 Patch110:	rpm-5.4.5-only-generate-devel-deps-for-symlinks-start-with-lib.patch
 Patch111:	rpm-5.4.7-keep-loading-script-macros.patch
+Patch112:	rpm-5.4.7-use-gnu-hash-style-by-default-and-drop-rtld-dep.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -473,6 +474,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch108 -p1 -b .pyegg_nodirs~
 %patch109 -p1 -b .uclibc_nolib64~
 %patch110 -p1 -b .req_devel~
+%patch112 -p1 -b .gnu_hash~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
