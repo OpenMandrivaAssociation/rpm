@@ -13,7 +13,7 @@
 %else
 %bcond_without	perl
 %bcond_without	python
-%bcond_with	docs
+%bcond_without	docs
 # use what's in berkeley db
 %bcond_with	sqlite
 %endif
