@@ -42,7 +42,7 @@
 %define	bdb		db52
 
 %define libver		5.4
-%define	minorver	5
+%define	minorver	7
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}2
+Release:	%{?prereldate:0.%{prereldate}.}1
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -91,9 +91,6 @@ Patch19:	rpm-5.3.10-doxygen-1.7.4-bug.patch
 Patch20:	rpm-5.3.11-fix-syslog-b0rkage.patch
 Patch21:	rpm-5.3.12-change-dep-loop-errors-to-warnings.patch
 Patch22:	rpm-5.3.12-55810-rpmevrcmp-again-grf.patch
-# FIXME: later..
-Patch23:	rpm-5.4.5-no-libsql.patch
-Patch27:	rpm-5.4.4-merge-find-debuginfo.sh-from-mandriva.patch
 Patch28:	rpm-5.4.4-merge-find-lang.sh-changes-from-rpm.org.patch
 Patch29:	rpm-5.4.4-add-_specfile-macro.patch
 Patch30:	rpm-5.4.4-fix-rpm-qf-on-non-packaged-files.patch
@@ -162,15 +159,11 @@ Patch73:	rpm-5.4.4-add-_build_pkgcheck.patch
 Patch74:	rpm-5.4.4-pass-_builddir-properly-to-find-debuginfo.patch
 Patch75:	rpm-5.4.4-srcdefattr.patch
 Patch76:	rpm-5.4.4-files-listed-twice-terminates-build.patch
-Patch77:	rpm-5.4.5-use-bdb-5.2.patch
+Patch77:	rpm-5.4.7-use-bdb-5.2.patch
 Patch78:	rpm-5.4.4-ruby1.9-fixes.patch
 # mdvbz#65269
 Patch79:	rpm-5.4.4-dont-consider-ranged-dependencies-as-overlapping-for-removal.patch
-# references to $pkglibdir wasn't updated in commit on rpm-5_4, resulting in files being
-# installed to %{_libdir}/rpm in stead of %{_prefix}/lib/rpm..
-Patch80:	rpm-5.4.5-automake-1.11.2-fix.patch
 Patch81:	rpm-5.4.5-libsql-conditional.patch
-Patch82:	rpm-5.4.5-fix-python-using-rpm4-function.patch
 Patch83:	rpm-5.4.5-kmod-deps-xz-support.patch
 Patch84:	rpm-5.4.5-enable-internal-dependency-generator.patch
 Patch85:	rpm-5.4.5-fix-removal-of-overlapping-dependencies-for-internal-dependency-generator.patch
@@ -203,6 +196,7 @@ Patch107:	rpm-5.4.5-rpmfc-apply-python-coloring-from-magic.patch
 Patch108:	rpm-5.4.5-fix-pythonegg-deps-for-egg-metadata-in-directories.patch
 Patch109:	rpm-5.4.5-fix-generation-of-uclibc-deps-on-non-lib64.patch
 Patch110:	rpm-5.4.5-only-generate-devel-deps-for-symlinks-start-with-lib.patch
+Patch111:	rpm-5.4.7-keep-loading-script-macros.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -378,6 +372,7 @@ This package contains the RPM API documentation generated in HTML format.
 
 %prep
 %setup -q
+%patch111 -p1 -b .script_macros~
 # These patches has been commited hastily upstream for review,
 # keeping them around here for now untill finished...
 %if 0
@@ -396,7 +391,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch20 -p1 -b .syslog~
 #%%patch21 -p1 -b .loop_warnings~
 #%%patch22 -p1 -b .55810~
-%patch23 -p1 -b .nolibsql~
 #patch27 -p1 -b .mdv~
 %patch28 -p1 -b .rpmorg~
 %patch29 -p1 -b .specfile~
@@ -450,9 +444,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch77 -p1 -b .db52~
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
-%patch80 -p1 -b .automake~
 #patch81 -p1 -b .libsql~
-%patch82 -p1 -b .headerFini~
 %patch83 -p1 -b .kmod_xz~
 %patch84 -p1 -b .int_dep_gen~
 %patch85 -p1 -b .int_gen_overlap~
@@ -742,7 +734,7 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_bindir}/gendiff
 %{_bindir}/rpmbuild
 %{_bindir}/multiarch-platform
-%{_rpmhome}/bin/abi-compliance-checker.pl
+#%%{_rpmhome}/bin/abi-compliance-checker.pl
 %{_rpmhome}/bin/api-sanity-autotest.pl
 %{_rpmhome}/bin/dbsql
 %{_rpmhome}/bin/debugedit
