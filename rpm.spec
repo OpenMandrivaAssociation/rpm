@@ -201,6 +201,7 @@ Patch112:	rpm-5.4.7-use-gnu-hash-style-by-default-and-drop-rtld-dep.patch
 Patch113:	rpm-5.4.7-add-distepoch-rpmlib-feature.patch
 Patch114:	rpm-5.4.7-dont-add-versioneddependency-rpmlib-feature-dependency.patch
 Patch115:	rpm-5.4.7-rpmfc-fix-invalid-free-if-not-_defaultdocdir-set.patch
+Patch116:	rpm-5.4.7-dont-try-generate-rpmfc-dependencies-from-doc-files.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -481,6 +482,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch113 -p1 -b .depoch_rpmlib~
 %patch114 -p1 -b .no_verdepfeat~
 %patch115 -p1 -b .free~
+%patch116 -p1 -b .skip_doc~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
