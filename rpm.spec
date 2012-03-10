@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}3
+Release:	%{?prereldate:0.%{prereldate}.}2
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -256,6 +256,7 @@ BuildRequires:	pkgconfig(ossp-uuid)
 BuildRequires:	pkgconfig(augeas)
 %endif
 BuildRequires:	spec-helper >= 0.31.7 stdc++-static-devel >= 4.6.2-8
+BuildRequires:	elfutils >= 0.153
 Requires:	cpio gawk mktemp update-alternatives
 Requires:	%{bdb}_recover
 Suggests:	%{bdb}-utils
