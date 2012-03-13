@@ -327,7 +327,7 @@ Requires:	autoconf
 Requires:	automake
 Requires:	file
 Requires:	gcc-c++
-Requires:	libtool-base
+Requires:	libtool-base >= 2.4.2-3
 Requires:	patch >= 2.5.9-7
 Requires:	make
 Requires:	unzip
