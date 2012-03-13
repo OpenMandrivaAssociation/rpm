@@ -206,6 +206,7 @@ Patch117:	rpm-5.4.7-only-generate-ruby-and-python-deps-for-executables-and-modul
 Patch118:	rpm-5.4.7-dont-generate-soname-provides-for-dsos-with-no-soname.patch
 Patch119:	rpm-5.4.7-fix-generation-of-ruby-abi-provides.patch
 Patch120:	rpm-5.4.7-print-name-of-files-removed-dependencies-are-generated-from.patch
+Patch121:	rpm-5.4.7-always-choose-equal-only-deps-when-overlapping.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -492,6 +493,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch118 -p1 -b .soname_only~
 %patch119 -p1 -b .rubyabi_prov~
 %patch120 -p1 -b .filedep_origins~
+%patch121 -p1 -b .equal_overlaps~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
