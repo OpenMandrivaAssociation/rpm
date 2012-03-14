@@ -339,6 +339,7 @@ Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
 Conflicts:	rpmlint < 1.4-4
 Conflicts:	multiarch-utils < 1:5.3.10
 Conflicts:	rpm < 1:5.4.4-32
+Conflicts:	libtool < 2.4.2-3
 Obsoletes:	rpm5-manbo-setup
 %rename		rpm-manbo-setup-build
 
