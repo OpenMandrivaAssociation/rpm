@@ -261,6 +261,7 @@ BuildRequires:	pkgconfig(augeas)
 %endif
 BuildRequires:	spec-helper >= 0.31.7 stdc++-static-devel >= 4.6.2-8
 BuildRequires:	elfutils >= 0.153
+BuildRequires:	libtool >= 2.4.2-3
 Requires:	cpio gawk mktemp update-alternatives
 Requires:	%{bdb}_recover
 Suggests:	%{bdb}-utils
@@ -339,7 +340,6 @@ Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
 Conflicts:	rpmlint < 1.4-4
 Conflicts:	multiarch-utils < 1:5.3.10
 Conflicts:	rpm < 1:5.4.4-32
-Conflicts:	libtool < 2.4.2-3
 Obsoletes:	rpm5-manbo-setup
 %rename		rpm-manbo-setup-build
 
