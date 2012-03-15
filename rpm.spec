@@ -685,6 +685,13 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 # hm, spec-helper not 100%..?
 rm -f %{buildroot}%{_libdir}/*.la
 
+install -d %{buildroot}%{multiarch_bindir}
+install -d %{buildroot}%{multiarch_includedir}
+%if "%{_lib}" == "lib64"
+install -d %{buildroot}%(linux32 rpm -E %%{multiarch_bindir})
+install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
+%endif
+
 # TODO: review which files goes into what packages...?
 %files -f %{name}.lang
 %doc CHANGES doc/manual/[a-z]*
@@ -754,6 +761,13 @@ rm -f %{buildroot}%{_libdir}/*.la
 
 %{_sysconfdir}/cron.daily/rpm
 %config(noreplace,missingok) %{_sysconfdir}/logrotate.d/rpm
+
+%dir %{multiarch_bindir}
+%dir %{multiarch_includedir}
+%if "%{_lib}" == "lib64"
+%dir %(linux32 rpm -E %%{multiarch_bindir})
+%dir %(linux32 rpm -E %%{multiarch_includedir})
+%endif
 
 %{_includedir}/multiarch-dispatch.h
 
