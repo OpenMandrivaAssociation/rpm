@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}4
+Release:	%{?prereldate:0.%{prereldate}.}5
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -187,7 +187,7 @@ Patch98:	rpm-5.4.5-update-rpmfc-when-removing-overlapping-dependencies.patch
 Patch99:	rpm-5.4.5-python-export-spec-macros.patch
 Patch100:	rpm-5.4.5-do-not-merge-script-dependencies-with-non-script-dependencies.patch
 Patch101:	rpm-5.4.5-font-provides.patch
-Patch102:	rpm-5.4.5-kmod-dependencies.patch
+Patch102:	rpm-5.4.7-kmod-dependencies.patch
 Patch103:	rpm-5.4.5-desktop-provides.patch
 Patch104:	rpm-5.4.5-skip-dependencies-for-character-devices.patch
 Patch105:	rpm-5.4.5-rpmfc-use-strlen-not-sizeof.patch
