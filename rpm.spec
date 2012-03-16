@@ -260,7 +260,7 @@ BuildRequires:	pkgconfig(ossp-uuid)
 %if %{with augeas}
 BuildRequires:	pkgconfig(augeas)
 %endif
-BuildRequires:	spec-helper >= 0.31.7 stdc++-static-devel >= 4.6.2-8
+BuildRequires:	spec-helper >= 0.31.12 stdc++-static-devel >= 4.6.2-8
 BuildRequires:	elfutils >= 0.153
 BuildRequires:	libtool >= 2.4.2-3
 Requires:	cpio gawk mktemp update-alternatives
