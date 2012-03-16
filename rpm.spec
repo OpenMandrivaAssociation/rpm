@@ -335,7 +335,7 @@ Requires:	unzip
 Requires:	elfutils >= 0.152-4
 Requires:	rpm = %{EVRD}
 Requires:	rpm-%{_target_vendor}-setup-build
-Requires:	spec-helper >= 0.31.7
+Requires:	spec-helper >= 0.31.12
 Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
 Conflicts:	rpmlint < 1.4-4
 Conflicts:	multiarch-utils < 1:5.3.10
@@ -680,9 +680,6 @@ install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/legacy_c
 install -d %{buildroot}%{_docdir}/rpm
 cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %endif
-
-# hm, spec-helper not 100%..?
-rm -f %{buildroot}%{_libdir}/*.la
 
 install -d %{buildroot}%{multiarch_bindir}
 install -d %{buildroot}%{multiarch_includedir}
