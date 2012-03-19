@@ -53,7 +53,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}7
+Release:	%{?prereldate:0.%{prereldate}.}8
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -210,6 +210,8 @@ Patch121:	rpm-5.4.7-always-choose-equal-only-deps-when-overlapping.patch
 Patch122:	rpm-5.4.7-rpmfc-strdup-EVR-in-overlap-removal.patch
 Patch123:	rpm-5.4.7-rpmds-dont-try-fopen-empty-filenames.patch
 Patch124:	rpm-5.4.7-change-to-debuginfo-suffix.patch
+# crash reproducable with 'rpm -qa --triggers'
+Patch125:	rpm-5.4.7-hdrfmt-fix-unitialized-argv-element.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -501,6 +503,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch122 -p1 -b .strdup~
 %patch123 -p1 -b .ds_fopen~
 %patch124 -p1 -b .debuginfo~
+%patch125 -p1 -b .unitialized~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
