@@ -498,7 +498,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch115 -p1 -b .free~
 %patch116 -p1 -b .skip_doc~
 %patch117 -p1 -b .exec_modules~
-%patch118 -p1 -b .soname_only~
+#patch118 -p1 -b .soname_only~
 %patch119 -p1 -b .rubyabi_prov~
 %patch120 -p1 -b .filedep_origins~
 %patch121 -p1 -b .equal_overlaps~
