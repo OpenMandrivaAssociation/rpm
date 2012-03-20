@@ -214,6 +214,7 @@ Patch124:	rpm-5.4.7-change-to-debuginfo-suffix.patch
 Patch125:	rpm-5.4.7-hdrfmt-fix-unitialized-argv-element.patch
 Patch126:	rpm-5.4.7-add-filetriggers-regex-matching-support.patch
 Patch127:	rpm-5.4.7-add-matches-as-arguments-to-triggers.patch
+Patch128:	rpm-5.4.7-dont-consider-trigger-dependencies-as-overlapping.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -508,6 +509,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch125 -p1 -b .unitialized~
 %patch126 -p1 -b .trig_pcre~
 %patch127 -p1 -b .trigger_args~
+%patch128 -p1 -b .triggers_nooverlap~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
