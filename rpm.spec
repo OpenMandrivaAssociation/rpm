@@ -216,6 +216,7 @@ Patch126:	rpm-5.4.7-add-filetriggers-regex-matching-support.patch
 Patch127:	rpm-5.4.7-add-matches-as-arguments-to-triggers.patch
 Patch128:	rpm-5.4.7-dont-consider-trigger-dependencies-as-overlapping.patch
 Patch129:	rpm-5.4.7-fix-minor-memleaks.patch
+Patch130:	rpm-5.4.7-mire-fix-strings-lacking-null-terminator.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -512,6 +513,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch127 -p1 -b .trigger_args~
 %patch128 -p1 -b .triggers_nooverlap~
 %patch129 -p1 -b .memleak~
+%patch130 -p1 -b .str_nul~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
