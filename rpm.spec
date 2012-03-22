@@ -218,6 +218,7 @@ Patch129:	rpm-5.4.7-fix-minor-memleaks.patch
 Patch130:	rpm-5.4.7-mire-fix-strings-lacking-null-terminator.patch
 Patch131:	rpm-5.4.7-dlopen-embedded-python.patch
 Patch132:	rpm-5.4.7-dlopen-embedded-perl.patch
+Patch133:	rpm-5.4.7-dlopen-embedded-ruby.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -383,6 +384,16 @@ The RPM Perl module provides an object-oriented interface to querying both
 the installed RPM database as well as files on the filesystem.
 %endif
 
+%if %{with ruby}
+%package -n	rpm-rubyembed
+Summary:	Ruby embedding module for rpm
+Group:		Development/Ruby
+Requires:	ruby(abi)
+
+%description -n rpm-rubyembed
+This package provides embedded ruby interpreter support for RPM.
+%endif
+
 %if %{with docs}
 %package 	apidocs
 Summary:	API documentation for RPM
@@ -517,6 +528,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch130 -p1 -b .str_nul~
 %patch131 -p1 -b .python_dlopen~
 %patch132 -p1 -b .perl_dlopen~
+%patch133 -p1 -b .ruby_dlopen~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
@@ -665,7 +677,7 @@ EOF
 # Get rid of unpackaged files
 # XXX: is there any of these we might want to keep?
 for f in %{py_platsitedir}/poptmodule.a %{py_platsitedir}/rpmmodule.a \
-	%{py_platsitedir}/rpm/*.a %{_rpmhome}/*.a \
+	%{py_platsitedir}/rpm/*.a %{_rpmhome}/*.a %{_rpmhome}/lib/*.a\
 	%{_rpmhome}/{Specfile.pm,cpanflute2,cpanflute,sql.prov,sql.req,tcl.req} \
 	%{_rpmhome}/{config.site,cross-build,rpmdiff.cgi} \
 	%{_rpmhome}/trpm %{_bindir}/rpmdiff; do
@@ -929,6 +941,13 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %dir %{py_platsitedir}/rpm
 %{py_platsitedir}/rpm/*.py
 %{py_platsitedir}/rpm/*.so
+%endif
+
+%if %{with ruby}
+%files -n rpm-rubyembed
+%{_rpmhome}/bin/trb
+%{_rpmhome}/lib/rpm.so
+%{_rpmhome}/rpmruby.so
 %endif
 
 %if %{with docs}
