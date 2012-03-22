@@ -8,11 +8,13 @@
 %if %{with bootstrap}
 %bcond_with	perl
 %bcond_with	python
+%bcond_with	tcl
 %bcond_with	docs
 %bcond_with	sqlite
 %else
 %bcond_without	perl
 %bcond_without	python
+%bcond_without	tcl
 %bcond_without	embed
 %bcond_without	docs
 # use what's in berkeley db
@@ -24,12 +26,10 @@
 %bcond_without	xar
 %bcond_without	ruby
 %bcond_without	js
-%bcond_without	tcl
 %else
 %bcond_with	xar
 %bcond_with	ruby
 %bcond_with	js
-%bcond_with	tcl
 %endif
 
 %if %{with debug}
@@ -219,6 +219,7 @@ Patch130:	rpm-5.4.7-mire-fix-strings-lacking-null-terminator.patch
 Patch131:	rpm-5.4.7-dlopen-embedded-python.patch
 Patch132:	rpm-5.4.7-dlopen-embedded-perl.patch
 Patch133:	rpm-5.4.7-dlopen-embedded-ruby.patch
+Patch134:	rpm-5.4.7-dlopen-embedded-tcl.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -255,7 +256,7 @@ BuildRequires:	pkgconfig(mozjs185)
 BuildRequires:	ruby-devel
 %endif
 %if %{with tcl}
-BuildRequires:	tcl
+BuildRequires:	tcl-devel
 %endif
 %if %{with docs}
 BuildRequires:	doxygen graphviz texlive
@@ -394,6 +395,16 @@ Requires:	ruby(abi)
 This package provides embedded ruby interpreter support for RPM.
 %endif
 
+%if %{with tcl}
+%package -n	rpm-tclembed
+Summary:	Tcl embedding module for rpm
+Group:		Development/Other
+Requires:	tcl
+
+%description -n rpm-tclembed
+This package provides embedded Tcl interpreter support for RPM.
+%endif
+
 %if %{with docs}
 %package 	apidocs
 Summary:	API documentation for RPM
@@ -529,6 +540,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch131 -p1 -b .python_dlopen~
 %patch132 -p1 -b .perl_dlopen~
 %patch133 -p1 -b .ruby_dlopen~
+%patch134 -p1 -b .tcl_dlopen~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
@@ -948,6 +960,11 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %{_rpmhome}/bin/trb
 %{_rpmhome}/lib/rpm.so
 %{_rpmhome}/rpmruby.so
+%endif
+
+%if %{with tcl}
+%files -n rpm-tclembed
+%{_rpmhome}/rpmtcl.so
 %endif
 
 %if %{with docs}
