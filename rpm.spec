@@ -13,6 +13,7 @@
 %else
 %bcond_without	perl
 %bcond_without	python
+%bcond_without	embed
 %bcond_without	docs
 # use what's in berkeley db
 %bcond_with	sqlite
@@ -24,13 +25,11 @@
 %bcond_without	ruby
 %bcond_without	js
 %bcond_without	tcl
-%bcond_without	embed
 %else
 %bcond_with	xar
 %bcond_with	ruby
 %bcond_with	js
 %bcond_with	tcl
-%bcond_with	embed
 %endif
 
 %if %{with debug}
@@ -218,6 +217,7 @@ Patch128:	rpm-5.4.7-dont-consider-trigger-dependencies-as-overlapping.patch
 Patch129:	rpm-5.4.7-fix-minor-memleaks.patch
 Patch130:	rpm-5.4.7-mire-fix-strings-lacking-null-terminator.patch
 Patch131:	rpm-5.4.7-dlopen-embedded-python.patch
+Patch132:	rpm-5.4.7-dlopen-embedded-perl.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -515,7 +515,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch128 -p1 -b .triggers_nooverlap~
 %patch129 -p1 -b .memleak~
 %patch130 -p1 -b .str_nul~
-%patch131 -p1 -b .dlopen~
+%patch131 -p1 -b .python_dlopen~
+%patch132 -p1 -b .perl_dlopen~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
@@ -532,7 +533,9 @@ tar -zxf %{SOURCE3} -C cpu-os-macros
 		--enable-posixmutexes \
 %if %{with python}
 		--with-python=%{python_version} \
+%if %{with embed}
 		--with-pythonembed=external \
+%endif
 %else
 		--without-python \
 %endif
@@ -908,6 +911,9 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %if %{with perl}
 %files -n perl-%{perlmod}
 #%%doc perl/Changes
+%if %{with embed}
+%{_rpmhome}/rpmperl.so
+%endif
 %{_mandir}/man3/RPM*
 %{perl_vendorarch}/%{perlmod}.pm
 %dir %{perl_vendorarch}/%{perlmod}
@@ -917,7 +923,9 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 
 %if %{with python}
 %files -n python-rpm
+%if %{with embed}
 %{_rpmhome}/rpmpython.so
+%endif
 %dir %{py_platsitedir}/rpm
 %{py_platsitedir}/rpm/*.py
 %{py_platsitedir}/rpm/*.so
