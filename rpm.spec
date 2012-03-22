@@ -355,6 +355,8 @@ Requires:	rpm = %{EVRD}
 Requires:	rpm-%{_target_vendor}-setup-build
 Requires:	spec-helper >= 0.31.12
 Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
+Requires:	python-rpm = %{EVRD}
+Requires:	perl-RPM = %{EVRD}
 Conflicts:	rpmlint < 1.4-4
 Conflicts:	multiarch-utils < 1:5.3.10
 Conflicts:	rpm < 1:5.4.4-32
