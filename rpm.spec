@@ -906,9 +906,6 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %{_libdir}/librpmmisc-%{libver}.so
 %{_libdir}/librpmbuild-%{libver}.so
 %if %{with js}
-#FIXME: lib64! why not just place in _libdir?
-# at least this one is(/seems to be(?)) a "regular" & "unique" (without risk of
-# any conflicts) shared library with "normal" soname, libtool versioning and all...
 %{_rpmhome}/lib/librpmjsm.so.*
 %{_rpmhome}/lib/rpmjsm.so
 %endif
@@ -928,11 +925,9 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %{_libdir}/pkgconfig/rpm.pc
 
 %if %{with js}
-#FIXME: lib64!
 %{_rpmhome}/lib/librpmjsm.so
 %endif
 #%%if %%{with sqlite}
-#%%{_rpmhome}/libsql*.la
 #%%{_rpmhome}/libsql*.so
 #%%endif
 
@@ -943,15 +938,6 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %{_libdir}/librpmio.a
 %{_libdir}/librpmmisc.a
 %{_libdir}/librpmbuild.a
-
-%if %{with js}
-#FIXME: lib64!
-%{_rpmhome}/lib/librpmjsm.a
-%{_rpmhome}/lib/rpmjsm.a
-%endif
-#%%if %%{with sqlite}
-#%%{_rpmhome}/libsql*.a
-#%%endif
 
 %if %{with perl}
 %files -n perl-%{perlmod}
