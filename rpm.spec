@@ -936,7 +936,7 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %files -n perl-%{perlmod}
 #%%doc perl/Changes
 %if %{with embed}
-%{_rpmhome}/rpmperl.so
+%{_rpmhome}/lib/rpmperl.so
 %endif
 %{_mandir}/man3/RPM*
 %{perl_vendorarch}/%{perlmod}.pm
@@ -948,7 +948,7 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %if %{with python}
 %files -n python-rpm
 %if %{with embed}
-%{_rpmhome}/rpmpython.so
+%{_rpmhome}/lib/rpmpython.so
 %endif
 %dir %{py_platsitedir}/rpm
 %{py_platsitedir}/rpm/*.py
@@ -959,12 +959,12 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %files -n rpm-rubyembed
 %{_rpmhome}/bin/trb
 %{_rpmhome}/lib/rpm.so
-%{_rpmhome}/rpmruby.so
+%{_rpmhome}/lib/rpmruby.so
 %endif
 
 %if %{with tcl}
 %files -n rpm-tclembed
-%{_rpmhome}/rpmtcl.so
+%{_rpmhome}/lib/rpmtcl.so
 %endif
 
 %if %{with docs}
