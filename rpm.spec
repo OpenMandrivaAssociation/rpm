@@ -661,8 +661,8 @@ EOF
 
 # Get rid of unpackaged files
 # XXX: is there any of these we might want to keep?
-for f in %{py_platsitedir}/poptmodule.{a,la} %{py_platsitedir}/rpmmodule.{a,la} \
-	%{py_platsitedir}/rpm/*.{a,la} \
+for f in %{py_platsitedir}/poptmodule.a %{py_platsitedir}/rpmmodule.a \
+	%{py_platsitedir}/rpm/*.a \
 	%{_rpmhome}/{Specfile.pm,cpanflute2,cpanflute,sql.prov,sql.req,tcl.req} \
 	%{_rpmhome}/{config.site,cross-build,rpmdiff.cgi} \
 	%{_rpmhome}/trpm %{_bindir}/rpmdiff; do
