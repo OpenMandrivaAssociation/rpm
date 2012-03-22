@@ -9,12 +9,15 @@
 %bcond_with	perl
 %bcond_with	python
 %bcond_with	tcl
+%bcond_with	squirrel
+%bcond_with	embed
 %bcond_with	docs
 %bcond_with	sqlite
 %else
 %bcond_without	perl
 %bcond_without	python
 %bcond_without	tcl
+%bcond_without	squirrel
 %bcond_without	embed
 %bcond_without	docs
 # use what's in berkeley db
@@ -220,6 +223,7 @@ Patch131:	rpm-5.4.7-dlopen-embedded-python.patch
 Patch132:	rpm-5.4.7-dlopen-embedded-perl.patch
 Patch133:	rpm-5.4.7-dlopen-embedded-ruby.patch
 Patch134:	rpm-5.4.7-dlopen-embedded-tcl.patch
+Patch135:	rpm-5.4.7-dlopen-embedded-squirrel.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -257,6 +261,9 @@ BuildRequires:	ruby-devel
 %endif
 %if %{with tcl}
 BuildRequires:	tcl-devel
+%endif
+%if %{with squirrel}
+BuildRequires:	squirrel-devel
 %endif
 %if %{with docs}
 BuildRequires:	doxygen graphviz texlive
@@ -405,6 +412,16 @@ Requires:	tcl
 This package provides embedded Tcl interpreter support for RPM.
 %endif
 
+%if %{with squirrel}
+%package -n	rpm-squirrelembed
+Summary:	Squirrel embedding module for rpm
+Group:		Development/Other
+Requires:	squirrel
+
+%description -n rpm-squirrelembed
+This package provides embedded Squirrel interpreter support for RPM.
+%endif
+
 %if %{with docs}
 %package 	apidocs
 Summary:	API documentation for RPM
@@ -541,6 +558,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch132 -p1 -b .perl_dlopen~
 %patch133 -p1 -b .ruby_dlopen~
 %patch134 -p1 -b .tcl_dlopen~
+%patch135 -p1 -b .squirrel_dlopen~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
@@ -584,6 +602,9 @@ tar -zxf %{SOURCE3} -C cpu-os-macros
 %endif
 %if %{with tcl}
 		--with-tcl=external \
+%endif
+%if %{with squirrel}
+		--with-squirrel=external \
 %endif
 		--with-glob \
 		--without-selinux \
@@ -965,6 +986,11 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %if %{with tcl}
 %files -n rpm-tclembed
 %{_rpmhome}/lib/rpmtcl.so
+%endif
+
+%if %{with squirrel}
+%files -n rpm-squirrelembed
+%{_rpmhome}/lib/rpmsquirrel.so
 %endif
 
 %if %{with docs}
