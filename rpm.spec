@@ -221,6 +221,7 @@ Patch129:	rpm-5.4.7-fix-minor-memleaks.patch
 Patch130:	rpm-5.4.7-mire-fix-strings-lacking-null-terminator.patch
 Patch131:	rpm-5.4.7-dlopen-embedded-interpreters.patch
 Patch132:	rpm-5.4.7-rpmpython-fix-input.patch
+Patch133:	rpm-5.4.7-generate-devel-provides-outside-of-libdirs.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -555,6 +556,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch130 -p1 -b .str_nul~
 %patch131 -p1 -b .dlopen~
 %patch132 -p1 -b .py_input~
+%patch133 -p1 -b .devel_prov~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
