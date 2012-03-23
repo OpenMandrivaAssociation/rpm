@@ -219,11 +219,7 @@ Patch127:	rpm-5.4.7-add-matches-as-arguments-to-triggers.patch
 Patch128:	rpm-5.4.7-dont-consider-trigger-dependencies-as-overlapping.patch
 Patch129:	rpm-5.4.7-fix-minor-memleaks.patch
 Patch130:	rpm-5.4.7-mire-fix-strings-lacking-null-terminator.patch
-Patch131:	rpm-5.4.7-dlopen-embedded-python.patch
-Patch132:	rpm-5.4.7-dlopen-embedded-perl.patch
-Patch133:	rpm-5.4.7-dlopen-embedded-ruby.patch
-Patch134:	rpm-5.4.7-dlopen-embedded-tcl.patch
-Patch135:	rpm-5.4.7-dlopen-embedded-squirrel.patch
+Patch131:	rpm-5.4.7-dlopen-embedded-interpreters.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -556,11 +552,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch128 -p1 -b .triggers_nooverlap~
 %patch129 -p1 -b .memleak~
 %patch130 -p1 -b .str_nul~
-%patch131 -p1 -b .python_dlopen~
-%patch132 -p1 -b .perl_dlopen~
-%patch133 -p1 -b .ruby_dlopen~
-%patch134 -p1 -b .tcl_dlopen~
-%patch135 -p1 -b .squirrel_dlopen~
+%patch131 -p1 -b .dlopen~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
