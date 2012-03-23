@@ -55,7 +55,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}9
+Release:	%{?prereldate:0.%{prereldate}.}10
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -222,13 +222,16 @@ Patch130:	rpm-5.4.7-mire-fix-strings-lacking-null-terminator.patch
 Patch131:	rpm-5.4.7-dlopen-embedded-interpreters.patch
 Patch132:	rpm-5.4.7-rpmpython-fix-input.patch
 Patch133:	rpm-5.4.7-generate-devel-provides-outside-of-libdirs.patch
+Patch134:	rpm-5.4.7-actually-perform-linking-against-internal-lua.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
 BuildRequires:	pkgconfig(neon) rpm-%{_target_vendor}-setup-build
 BuildRequires:	readline-devel ncurses-devel pkgconfig(libssl) pkgconfig(libcrypto)
-BuildRequires:	pkgconfig(liblzma) pkgconfig(lua) pkgconfig(libpcre) pkgconfig(libpcreposix)
+BuildRequires:	pkgconfig(liblzma) pkgconfig(libpcre) pkgconfig(libpcreposix)
 BuildRequires:	acl-devel magic-devel pkgconfig(popt) >= 1.15 libxml2-devel >= 2.7.8-9
+# we're now building with internal..
+#BuildRequires:	pkgconfig(lua)
 %ifarch %{ix86} x86_64 ppc ppc64 ia64
 BuildRequires:	pkgconfig(libcpuinfo) 
 %endif
@@ -557,6 +560,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch131 -p1 -b .dlopen~
 %patch132 -p1 -b .py_input~
 %patch133 -p1 -b .devel_prov~
+%patch134 -p1 -b .lua~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
@@ -613,7 +617,7 @@ tar -zxf %{SOURCE3} -C cpu-os-macros
 		--with-popt=external \
 		--with-xz=external \
 		--with-bzip2=external \
-		--with-lua=external \
+		--with-lua=internal \
 		--with-pcre=external \
 %ifarch %{ix86} x86_64 ppc ppc64 ia64
 		--with-cpuinfo=external \
