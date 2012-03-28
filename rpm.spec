@@ -846,6 +846,8 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %{_rpmhome}/bin/dbsql
 %{_rpmhome}/bin/debugedit
 %{_rpmhome}/bin/install-sh
+%{_rpmhome}/bin/lua
+%{_rpmhome}/bin/luac
 %{_rpmhome}/bin/mkinstalldirs
 %{_rpmhome}/bin/pom2spec
 %{_rpmhome}/bin/rpmcache
@@ -853,6 +855,8 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %{_rpmhome}/bin/rpmdeps
 %{_rpmhome}/bin/rpmdigest
 %{_rpmhome}/bin/rpmkey
+%{_rpmhome}/bin/rpmlua
+%{_rpmhome}/bin/rpmluac
 %{_rpmhome}/bin/rpmrepo
 %{_rpmhome}/bin/sqlite3
 %dir %{_rpmhome}/helpers
