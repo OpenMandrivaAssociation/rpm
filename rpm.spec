@@ -233,6 +233,8 @@ BuildRequires:	pkgconfig(liblzma) pkgconfig(libpcre) pkgconfig(libpcreposix)
 BuildRequires:	acl-devel magic-devel pkgconfig(popt) >= 1.15 libxml2-devel >= 2.7.8-9
 # we're now building with internal..
 #BuildRequires:	pkgconfig(lua)
+# needed by internal lua
+BuildRequires:	expat-devel
 %ifarch %{ix86} x86_64 ppc ppc64 ia64
 BuildRequires:	pkgconfig(libcpuinfo) 
 %endif
@@ -620,6 +622,7 @@ tar -zxf %{SOURCE3} -C cpu-os-macros
 		--with-xz=external \
 		--with-bzip2=external \
 		--with-lua=internal \
+		--with-expat=external \
 		--with-pcre=external \
 %ifarch %{ix86} x86_64 ppc ppc64 ia64
 		--with-cpuinfo=external \
