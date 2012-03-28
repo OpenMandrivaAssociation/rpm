@@ -225,6 +225,7 @@ Patch133:	rpm-5.4.7-generate-devel-provides-outside-of-libdirs.patch
 Patch134:	rpm-5.4.7-actually-perform-linking-against-internal-lua.patch
 Patch135:	rpm-5.4.7-no-seqid_init-on-rdonly-database.patch
 Patch136:	rpm-5.4.7-add-support-for-using-rpmdsMerge-with-filepath-tags.patch
+Patch137:	rpm-5.4.7-avoid-double-slash-in-path-for-dirname-filetrigger-matching.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -567,6 +568,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch134 -p1 -b .lua~
 %patch135 -p1 -b .db_rdonly~
 %patch136 -p1 -b .ds_merge~
+%patch137 -p1 -b .slash~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
