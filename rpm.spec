@@ -228,6 +228,7 @@ Patch136:	rpm-5.4.7-add-support-for-using-rpmdsMerge-with-filepath-tags.patch
 Patch137:	rpm-5.4.7-avoid-double-slash-in-path-for-dirname-filetrigger-matching.patch
 Patch138:	rpm-5.4.7-trigtrans.patch
 Patch139:	rpm-5.3.12-fix-verify-segfault.patch
+Patch140:	rpm-5.4.7-rpmv3-support.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -573,6 +574,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch137 -p1 -b .slash~
 %patch138 -p1 -b .trigtrag~
 %patch139 -p1 -b .fix_verify~
+%patch140 -p1 -b .rpmv3~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
