@@ -55,7 +55,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}12
+Release:	%{?prereldate:0.%{prereldate}.}13
 Epoch:		1
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -229,6 +229,7 @@ Patch137:	rpm-5.4.7-avoid-double-slash-in-path-for-dirname-filetrigger-matching.
 Patch138:	rpm-5.4.7-trigtrans.patch
 Patch139:	rpm-5.3.12-fix-verify-segfault.patch
 Patch140:	rpm-5.4.7-rpmv3-support.patch
+Patch141:	rpm-5.4.7-revert-hash-instead-of-truncation.patch
 License:	LGPLv2.1+
 BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
 BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
@@ -575,6 +576,7 @@ This package contains the RPM API documentation generated in HTML format.
 #patch138 -p1 -b .trigtrans~
 %patch139 -p1 -b .fix_verify~
 %patch140 -p1 -b .rpmv3~
+%patch141 -p1 -b .dev_unfuck~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
