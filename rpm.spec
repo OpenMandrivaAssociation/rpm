@@ -572,7 +572,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch135 -p1 -b .db_rdonly~
 %patch136 -p1 -b .ds_merge~
 %patch137 -p1 -b .slash~
-%patch138 -p1 -b .trigtrag~
+#patch138 -p1 -b .trigtrans~
 %patch139 -p1 -b .fix_verify~
 %patch140 -p1 -b .rpmv3~
 #required by P55, P80, P81, P94..
