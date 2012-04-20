@@ -54,12 +54,12 @@
 
 Summary:	The RPM package management system
 Name:		rpm
+Epoch:		1
 Version:	%{libver}.%{minorver}
 Release:	%{?prereldate:0.%{prereldate}.}13
-Epoch:		1
+License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
-
 # snapshot from rpm-5_4 branch: 'cvs -d :pserver:anonymous@rpm5.org:/cvs co -r rpm-5_4 rpm'
 # tarball generated with './devtool tarball.xz'
 Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}-%{srcver}.tar.gz
@@ -230,13 +230,31 @@ Patch138:	rpm-5.4.7-trigtrans.patch
 Patch139:	rpm-5.3.12-fix-verify-segfault.patch
 Patch140:	rpm-5.4.7-rpmv3-support.patch
 Patch141:	rpm-5.4.7-revert-hash-instead-of-truncation.patch
-License:	LGPLv2.1+
-BuildRequires:	autoconf >= 2.57 bzip2-devel automake >= 1.8 elfutils-devel
-BuildRequires:	sed >= 4.0.3 beecrypt-devel >= 4.2.1-8 ed gettext-devel byacc
-BuildRequires:	pkgconfig(neon) rpm-%{_target_vendor}-setup-build
-BuildRequires:	readline-devel ncurses-devel pkgconfig(libssl) pkgconfig(libcrypto)
-BuildRequires:	pkgconfig(liblzma) pkgconfig(libpcre) pkgconfig(libpcreposix)
-BuildRequires:	acl-devel magic-devel pkgconfig(popt) >= 1.15 libxml2-devel >= 2.7.8-9
+# MD rediffed from upstream
+Patch142:	rpm-5.4.7_typelib.patch
+
+BuildRequires:	autoconf >= 2.57
+BuildRequires:	bzip2-devel
+BuildRequires:	automake >= 1.8
+BuildRequires:	elfutils-devel
+BuildRequires:	sed >= 4.0.3
+BuildRequires:	beecrypt-devel >= 4.2.1-8
+BuildRequires:	ed
+BuildRequires:	gettext-devel
+BuildRequires:	byacc
+BuildRequires:	pkgconfig(neon)
+BuildRequires:	rpm-%{_target_vendor}-setup-build
+BuildRequires:	readline-devel
+BuildRequires:	ncurses-devel
+BuildRequires:	pkgconfig(libssl)
+BuildRequires:	pkgconfig(libcrypto)
+BuildRequires:	pkgconfig(liblzma)
+BuildRequires:	pkgconfig(libpcre)
+BuildRequires:	pkgconfig(libpcreposix)
+BuildRequires:	acl-devel
+BuildRequires:	magic-devel
+BuildRequires:	pkgconfig(popt) >= 1.15
+BuildRequires:	libxml2-devel >= 2.7.8-9
 # we're now building with internal..
 #BuildRequires:	pkgconfig(lua)
 # needed by internal lua
@@ -244,8 +262,11 @@ BuildRequires:	expat-devel
 %ifarch %{ix86} x86_64 ppc ppc64 ia64
 BuildRequires:	pkgconfig(libcpuinfo) 
 %endif
-BuildRequires:	syck-devel keyutils-devel
-BuildRequires:	gomp-devel pkgconfig(gnutls) gnupg2
+BuildRequires:	syck-devel
+BuildRequires:	keyutils-devel
+BuildRequires:	gomp-devel
+BuildRequires:	pkgconfig(gnutls)
+BuildRequires:	gnupg2
 # required by parts of test suite...
 BuildRequires:	wget
 # Should we prefer internal xar in stead? internal xar contains at least
@@ -276,7 +297,9 @@ BuildRequires:	tcl-devel
 BuildRequires:	squirrel-devel
 %endif
 %if %{with docs}
-BuildRequires:	doxygen graphviz texlive
+BuildRequires:	doxygen
+BuildRequires:	graphviz
+BuildRequires:	texlive
 %endif
 %if %{with sqlite}
 BuildRequires:	pkgconfig(sqlite3)
@@ -287,10 +310,14 @@ BuildRequires:	pkgconfig(ossp-uuid)
 %if %{with augeas}
 BuildRequires:	pkgconfig(augeas)
 %endif
-BuildRequires:	spec-helper >= 0.31.12 stdc++-static-devel >= 4.6.2-8
+BuildRequires:	spec-helper >= 0.31.12
+BuildRequires:	stdc++-static-devel >= 4.6.2-8
 BuildRequires:	elfutils >= 0.153
 BuildRequires:	libtool >= 2.4.2-3
-Requires:	cpio gawk mktemp update-alternatives
+Requires:	cpio
+Requires:	gawk
+Requires:	mktemp
+Requires:	update-alternatives
 Requires:	%{bdb}_recover
 Suggests:	%{bdb}-utils
 Requires:	%{librpmname} = %{EVRD}
@@ -577,6 +604,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch139 -p1 -b .fix_verify~
 %patch140 -p1 -b .rpmv3~
 %patch141 -p1 -b .dev_unfuck~
+%patch142 -p1 -b .typelib~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
