@@ -56,7 +56,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}14
+Release:	%{?prereldate:0.%{prereldate}.}15
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -232,6 +232,7 @@ Patch140:	rpm-5.4.7-rpmv3-support.patch
 Patch141:	rpm-5.4.7-revert-hash-instead-of-truncation.patch
 # MD rediffed from upstream
 Patch142:	rpm-5.4.7_typelib.patch
+Patch143:	rpm-5.4.7-mono-find-requires-strip-newlines.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -605,6 +606,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch140 -p1 -b .rpmv3~
 %patch141 -p1 -b .dev_unfuck~
 %patch142 -p1 -b .typelib~
+%patch143 -p1 -b .mono_newline~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
