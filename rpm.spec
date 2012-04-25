@@ -44,7 +44,7 @@
 %define	bdb		db52
 
 %define libver		5.4
-%define	minorver	7
+%define	minorver	8
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -56,7 +56,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}15
+Release:	%{?prereldate:0.%{prereldate}.}1
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -119,7 +119,7 @@ Patch44:	rpm-5.4.4-use-xz-payload.patch
 Patch45:	rpm-5.4.4-merge-rpm-mandriva-setup-build-macros.patch
 Patch46:	rpm-5.4.4-allow-installation-of-repackaged-rpms.patch
 Patch47:	rpm-5.4.4-fix-removal-of-overlapping-dependencies.patch
-Patch48:	rpm-5.4.4-dont-show-suggests-with-requires.patch
+Patch48:	rpm-5.4.8-dont-show-suggests-with-requires.patch
 # syncing debugedit commits from rpm.org
 Patch49:	rpm-5.4.4-debugedit-whitespace-fixups.patch
 Patch50:	rpm-5.4.4-debugedit-recompute-build-id-only-on-dwarf-change.patch
@@ -200,7 +200,7 @@ Patch109:	rpm-5.4.5-fix-generation-of-uclibc-deps-on-non-lib64.patch
 Patch110:	rpm-5.4.7-only-generate-devel-deps-for-symlinks-start-with-lib.patch
 Patch111:	rpm-5.4.7-keep-loading-script-macros.patch
 Patch112:	rpm-5.4.7-use-gnu-hash-style-by-default-and-drop-rtld-dep.patch
-Patch113:	rpm-5.4.7-add-distepoch-rpmlib-feature.patch
+Patch113:	rpm-5.4.8-add-distepoch-rpmlib-feature.patch
 Patch114:	rpm-5.4.7-dont-add-versioneddependency-rpmlib-feature-dependency.patch
 Patch115:	rpm-5.4.7-rpmfc-fix-invalid-free-if-not-_defaultdocdir-set.patch
 Patch116:	rpm-5.4.7-dont-try-generate-rpmfc-dependencies-from-doc-files.patch
@@ -219,7 +219,7 @@ Patch127:	rpm-5.4.7-add-matches-as-arguments-to-triggers.patch
 Patch128:	rpm-5.4.7-dont-consider-trigger-dependencies-as-overlapping.patch
 Patch129:	rpm-5.4.7-fix-minor-memleaks.patch
 Patch130:	rpm-5.4.7-mire-fix-strings-lacking-null-terminator.patch
-Patch131:	rpm-5.4.7-dlopen-embedded-interpreters.patch
+Patch131:	rpm-5.4.8-dlopen-embedded-interpreters.patch
 Patch132:	rpm-5.4.7-rpmpython-fix-input.patch
 Patch133:	rpm-5.4.7-generate-devel-provides-outside-of-libdirs.patch
 Patch134:	rpm-5.4.7-actually-perform-linking-against-internal-lua.patch
@@ -233,6 +233,7 @@ Patch141:	rpm-5.4.7-revert-hash-instead-of-truncation.patch
 # MD rediffed from upstream
 Patch142:	rpm-5.4.7_typelib.patch
 Patch143:	rpm-5.4.7-mono-find-requires-strip-newlines.patch
+Patch144:	rpm-5.4.8-URPM-build-fix.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -597,7 +598,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch131 -p1 -b .dlopen~
 %patch132 -p1 -b .py_input~
 %patch133 -p1 -b .devel_prov~
-%patch134 -p1 -b .lua~
+#patch134 -p1 -b .lua~
 %patch135 -p1 -b .db_rdonly~
 %patch136 -p1 -b .ds_merge~
 %patch137 -p1 -b .slash~
@@ -607,6 +608,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch141 -p1 -b .dev_unfuck~
 %patch142 -p1 -b .typelib~
 %patch143 -p1 -b .mono_newline~
+%patch144 -p1 -b .urpm~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
