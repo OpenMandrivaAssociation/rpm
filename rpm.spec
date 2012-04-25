@@ -1,7 +1,7 @@
 %bcond_with	bootstrap
 %bcond_with	debug
 
-%bcond_without	ossp-uuid
+%bcond_without	ossp_uuid
 %bcond_without	augeas
 
 #XXX: this macro is a bit awkward, better can be done!
@@ -306,7 +306,7 @@ BuildRequires:	texlive
 %if %{with sqlite}
 BuildRequires:	pkgconfig(sqlite3)
 %endif
-%if %{with ossp-uuid}
+%if %{with ossp_uuid}
 BuildRequires:	pkgconfig(ossp-uuid)
 %endif
 %if %{with augeas}
@@ -693,7 +693,7 @@ tar -zxf %{SOURCE3} -C cpu-os-macros
 %else
 		--without-sqlite \
 %endif
-%if %{with ossp-uuid}
+%if %{with ossp_uuid}
 		--with-uuid=external \
 %else
 		--without-uuid \
