@@ -694,7 +694,7 @@ tar -zxf %{SOURCE3} -C cpu-os-macros
 		--without-sqlite \
 %endif
 %if %{with ossp_uuid}
-		--with-uuid=external \
+		--with-uuid=%{_libdir}:%{_includedir}/ossp-uuid \
 %else
 		--without-uuid \
 %endif
