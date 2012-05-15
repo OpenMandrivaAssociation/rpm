@@ -827,7 +827,7 @@ done
 %find_lang %{name}
 
 mkdir -p %{buildroot}/var/lib/rpm/{log,tmp}
-for dbi in `./rpm --macros macros/macros --eval %_dbi_tags_4|tr : ' '` Seqno __db.00{0..9}; do
+for dbi in `./rpm --macros macros/macros --eval %_dbi_tags_4|tr : ' '` __db.00{0..9}; do
     touch %{buildroot}/var/lib/rpm/$dbi
     echo "%attr(0644, root, root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) %{_localstatedir}/lib/rpm/$dbi" >> %{name}.lang
 done
