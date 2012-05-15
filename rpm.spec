@@ -47,7 +47,7 @@
 %define	bdb		db52
 
 %define libver		5.4
-%define	minorver	8
+%define	minorver	9
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -82,9 +82,9 @@ Patch0:		rpm-5.3.8-set-default-bdb-log-dir.patch
 Patch1:		rpm-5.3.8-dependency-whiteout.patch
 # TODO: make conditional & disabled through macro by default (enable for legacy compatibility)
 # status: to be removed later
-Patch2:		rpm-5.3.8-non-pre-scripts-dont-fail.patch
+Patch2:		rpm-5.4.9-non-pre-scripts-dont-fail.patch
 # status: to be removed later
-Patch3:		rpm-5.3.8-no-doc-conflicts.patch
+Patch3:		rpm-5.4.9-no-doc-conflicts.patch
 # if distsuffix is defined, use it for disttag (from Anssi)
 # status: merged upstream IIRC, could probably be dropped
 Patch4:		rpm-5.3.8-disttag-distsuffix-fallback.patch
@@ -94,31 +94,19 @@ Patch4:		rpm-5.3.8-disttag-distsuffix-fallback.patch
 Patch5:		rpm-5.3.8-distepoch-pattern-hack.patch
 # fixes a typo in russian translation (#62333)
 # status: needs to be pushed back to the Russian i18n project
-Patch11:	rpm-5.3.8-fix-russian-typo.patch
+Patch11:	rpm-5.4.9-fix-russian-typo.patch
 # temporary workaround for issues with file triggers firing multiple times and
 # a huge memleak...
 # DIE
 Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
-# workaround for a doxygen bug that may or may not have been fixed in doxygen since
-# status: reluctant to merge upstream as I'd rather see the doxygen bug fixed and
-# have a reproducer for actually testing it as well
-Patch19:	rpm-5.3.10-doxygen-1.7.4-bug.patch
-# status: okay, but needs cleanup..
-Patch20:	rpm-5.3.11-fix-syslog-b0rkage.patch
 # status: keep as mandriva specific for now
 Patch21:	rpm-5.3.12-change-dep-loop-errors-to-warnings.patch
 # status: need to be revisited and made sure that we get the correct behaviour,
 # regression tests certainly required
 Patch22:	rpm-5.3.12-55810-rpmevrcmp-again-grf.patch
-# status: ready for merge
-Patch28:	rpm-5.4.4-merge-find-lang.sh-changes-from-rpm.org.patch
 # status: ready to merge, it's already been merged on HEAD, so commiting it to rpm-5_4
 # would basically just mean backporting it..
 Patch29:	rpm-5.4.4-add-_specfile-macro.patch
-# status: probably okay to merge upstream
-Patch30:	rpm-5.4.4-fix-rpm-qf-on-non-packaged-files.patch
-# status: ready for merge
-Patch31:	rpm-5.4.4-fix-rpm_qa-pattern.patch
 # uhm.. broken?
 # status: this one was fixed for real in 5.3.12, but I forgot commiting it
 # on rpm-5_4 branch back then, and I've been unable to remember and not
@@ -126,7 +114,7 @@ Patch31:	rpm-5.4.4-fix-rpm_qa-pattern.patch
 Patch32:	rpm-5.4.4-really-always-invoke-clean-at-end.patch
 # status: i18n strings is getting dropped, so this one might be of less relevance,
 # but feel free to discuss it on rpm-devel
-Patch33:	rpm-5.4.4-fix-mdvbz62979.patch
+Patch33:	rpm-5.4.9-fix-mdvbz62979.patch
 # This patch adds support for untangling dependency loops with prioritized removal
 # of dependencies from loops. It's very crude for now and certainly needs some obvious
 # improvement, but it'll fix the most common scenario giving issues where ie.
@@ -136,38 +124,19 @@ Patch33:	rpm-5.4.4-fix-mdvbz62979.patch
 # so keep locally for now, but feel free to discuss it on rpm-devel if you run out
 # of things to do.. :p
 Patch34:	rpm-5.4.4-use-dependency-type-for-ordering.patch
-# status: ready to merge
-Patch35:	rpm-5.4.4-find_lang-with-html.patch
-# status: ready to merge
-Patch36:	rpm-5.4.4-find_lang-support-multiple-names.patch
 # status: needs to be cleaned up and properly reviewed together with rest
 # of the patches related to dependency generation
-Patch37:	rpm-5.4.5-avoid-dependencies-on-self.patch
-# status: ready to merge
-Patch38:	rpm-5.4.4-find_lang-handle-man-pages-already-compressed.patch
-# status: ready to merge
-Patch39:	rpm-5.4.4-find-debuginfo-drop-useless-sort.patch
+Patch37:	rpm-5.4.9-avoid-dependencies-on-self.patch
 # status: probably ready to merge
 Patch40:	rpm-5.4.4-pkgconfigdeps-check-path.patch
-# status: ready to merge
-Patch41:	rpm-5.4.4-merge-manbo-macros.patch
 # status: probably okay to merge, but discuss on rpm-devel first
 Patch42:	rpm-5.4.4-glob-wildcards-for-loading-macro-files.patch
-# status: ready to merge
-Patch43:	rpm-5.4.4-merge-common-rpm-mandriva-setup-macros.patch
-# status: ready to merge
-Patch44:	rpm-5.4.4-use-xz-payload.patch
-# status: ready to merge
-Patch45:	rpm-5.4.4-merge-rpm-mandriva-setup-build-macros.patch
 # status: needs to be discussed
 Patch46:	rpm-5.4.4-allow-installation-of-repackaged-rpms.patch
 # status: same as for other dependency generation related patches
 Patch47:	rpm-5.4.4-fix-removal-of-overlapping-dependencies.patch
 # status: ready to merge
 Patch48:	rpm-5.4.8-dont-show-suggests-with-requires.patch
-# syncing debugedit commits from rpm.org
-# status: all ready to be merged
-Patch49:	rpm-5.4.4-debugedit-whitespace-fixups.patch
 Patch50:	rpm-5.4.4-debugedit-recompute-build-id-only-on-dwarf-change.patch
 Patch51:	rpm-5.4.4-debugedit-fix-incorrect-error-messages-regarding_-b-and_-d.patch
 Patch52:	rpm-5.4.4-debugedit-remove-unused-variable.patch
@@ -176,27 +145,15 @@ Patch54:	rpm-5.4.4-debugedit-add-dwarf4-support.patch
 # backport from HEAD
 # status: almost ready for merge, the strip reloc flag to debugedit needs to be made
 # conditional first in order to not break backwards compatibility with older elfutils versions
-Patch55:	rpm-5.4.4-find-debuginfo-strip-reloc-debug-sections.patch
-# status: ready for merge
-Patch56:	rpm-5.4.4-fix-scripts-breaking-when-RPM_BUILD_ROOT-contains-spaces.patch
-# status: ready for merge
-Patch57:	rpm-5.4.4-create-gdb-index-from-find-debuginfo-if-possible.patch
-# status: ready for merge
-Patch58:	rpm-5.4.4-use-dwarf4-debug-format.patch
-# status: ready for merge
-Patch59:	rpm-5.4.4-compress-debug-sections.patch
-# status: ready for merge
-Patch60:	rpm-5.4.4-find-debuginfo-add-missing-partial-strip.patch
+Patch55:	rpm-5.4.9-find-debuginfo-strip-reloc-debug-sections.patch
 # status: ready for merge
 Patch61:	rpm-5.4.4-fix-same-package-with-epoch-possible-to-upgrade.patch
 # status: ready for merge
-Patch62:	rpm-5.4.4-fix-_sys_macros_dir-path.patch
-# status: ready for merge
-Patch63:	rpm-5.4.4-strip-buildroot-away-from-duplicate-files-list.patch
+Patch63:	rpm-5.4.9-strip-buildroot-away-from-duplicate-files-list.patch
 # status: probably okay to merge, but discuss on rpm-devel first
-Patch64:	rpm-5.4.4-duplicate_files_terminate_build.patch
+Patch64:	rpm-5.4.9-duplicate_files_terminate_build.patch
 # status: same as above
-Patch65:	rpm-5.4.4-unpackaged_subdirs_terminate_build.patch
+Patch65:	rpm-5.4.9-unpackaged_subdirs_terminate_build.patch
 # mdvbz#64898
 # status: uncertain, might be okay to merge, discuss on rpm-devel first
 Patch66:	rpm-5.4.4-rpmbuild-withoutclean.patch
@@ -221,7 +178,7 @@ Patch71:	rpm-5.4.4-fix-rpmconstant-to-always-use-LC_CTYPE-C-for-case-conversion.
 Patch72:	rpm-5.4.4-debugedit-recognize-debug_macro-section.patch
 # from rpm.org
 # status: ready for merge
-Patch73:	rpm-5.4.4-add-_build_pkgcheck.patch
+Patch73:	rpm-5.4.9-add-_build_pkgcheck.patch
 # $RPM_BUILD_DIR isn't necessarily the same as $PWD, it's %%{_builddir}, not
 # %%{_builddir}/%%{?buildsubdir}, messing up paths in debug packages created..
 # status: needs to be discussed and investigated a bit better..
@@ -241,8 +198,6 @@ Patch79:	rpm-5.4.4-dont-consider-ranged-dependencies-as-overlapping-for-removal.
 Patch81:	rpm-5.4.5-libsql-conditional.patch
 # status: ready for merge
 Patch83:	rpm-5.4.5-kmod-deps-xz-support.patch
-# status: ready for merge
-Patch84:	rpm-5.4.5-enable-internal-dependency-generator.patch
 # status: same as for other dependency generation patches
 Patch85:	rpm-5.4.5-fix-removal-of-overlapping-dependencies-for-internal-dependency-generator.patch
 # this updates to using the dependency generator shipped with mono, it has some
@@ -258,13 +213,13 @@ Patch88:	rpm-5.4.5-patchset_16004.patch
 Patch89:	rpm-5.4.5-patchset_16005.patch
 Patch90:	rpm-5.4.5-patchset_16022.patch
 # status: same as for other dep gen patches
-Patch91:	rpm-5.4.5-update-rpmfc-when-removing-dependencies-on-self.patch
+Patch91:	rpm-5.4.9-update-rpmfc-when-removing-dependencies-on-self.patch
 # status: idem
-Patch92:	rpm-5.4.5-rpmfc-extract-dependencies-for-all-files.patch
+Patch92:	rpm-5.4.9-rpmfc-extract-dependencies-for-all-files.patch
 # status: ready for merge
 Patch93:	rpm-5.4.5-rubygems-add-missing-newline.patch
 # status: ugly, keep locally for now
-Patch94:	rpm-5.4.5-generate-haskell-dependencies.patch
+Patch94:	rpm-5.4.9-generate-haskell-dependencies.patch
 # status: same as for other dep gen patches
 Patch95:	rpm-5.4.5-drop-some-interpreter-deps.patch
 # status: probably okay to merge..
@@ -277,7 +232,7 @@ Patch99:	rpm-5.4.5-python-export-spec-macros.patch
 # status: same as for other dep gen patches
 Patch100:	rpm-5.4.5-do-not-merge-script-dependencies-with-non-script-dependencies.patch
 # status: idem
-Patch101:	rpm-5.4.5-font-provides.patch
+Patch101:	rpm-5.4.9-font-provides.patch
 # status: idem
 Patch102:	rpm-5.4.7-kmod-dependencies.patch
 # status: idem
@@ -290,20 +245,18 @@ Patch105:	rpm-5.4.5-rpmfc-use-strlen-not-sizeof.patch
 Patch106:	rpm-5.4.5-break-out-of-elf-link-loop.patch
 # status: probably okay to merge
 Patch107:	rpm-5.4.5-rpmfc-apply-python-coloring-from-magic.patch
-# status: ready for merge
-Patch108:	rpm-5.4.5-fix-pythonegg-deps-for-egg-metadata-in-directories.patch
 # status: same as for other dep gen patches
 Patch109:	rpm-5.4.5-fix-generation-of-uclibc-deps-on-non-lib64.patch
 # status: idem
 Patch110:	rpm-5.4.7-only-generate-devel-deps-for-symlinks-start-with-lib.patch
 # status: keep locally
-Patch111:	rpm-5.4.7-keep-loading-script-macros.patch
+Patch111:	rpm-5.4.9-keep-loading-script-macros.patch
 # status: ready for merge
 Patch112:	rpm-5.4.7-use-gnu-hash-style-by-default-and-drop-rtld-dep.patch
 # status: keep locally only
-Patch113:	rpm-5.4.8-add-distepoch-rpmlib-feature.patch
+Patch113:	rpm-5.4.9-add-distepoch-rpmlib-feature.patch
 # status: probably okay to merge, but discuss on rpm-devel first
-Patch114:	rpm-5.4.7-dont-add-versioneddependency-rpmlib-feature-dependency.patch
+Patch114:	rpm-5.4.9-dont-add-versioneddependency-rpmlib-feature-dependency.patch
 # status: ready to merge
 Patch115:	rpm-5.4.7-rpmfc-fix-invalid-free-if-not-_defaultdocdir-set.patch
 # status: probably okay to merge
@@ -328,19 +281,19 @@ Patch124:	rpm-5.4.7-change-to-debuginfo-suffix.patch
 # status: ready
 Patch125:	rpm-5.4.7-hdrfmt-fix-unitialized-argv-element.patch
 # status: probably okay to merge, discuss on rpm-devel first
-Patch126:	rpm-5.4.7-add-filetriggers-regex-matching-support.patch
+Patch126:	rpm-5.4.9-add-filetriggers-regex-matching-support.patch
 # status: idem
-Patch127:	rpm-5.4.7-add-matches-as-arguments-to-triggers.patch
+Patch127:	rpm-5.4.9-add-matches-as-arguments-to-triggers.patch
 # status: same as for other dep gen patches
 Patch128:	rpm-5.4.7-dont-consider-trigger-dependencies-as-overlapping.patch
 # status: ready
 Patch129:	rpm-5.4.7-fix-minor-memleaks.patch
 # status: ready
-Patch130:	rpm-5.4.7-mire-fix-strings-lacking-null-terminator.patch
+Patch130:	rpm-5.4.9-mire-fix-strings-lacking-null-terminator.patch
 # status: keep locally for now
-Patch131:	rpm-5.4.8-dlopen-embedded-interpreters.patch
+Patch131:	rpm-5.4.9-dlopen-embedded-interpreters.patch
 # status: ready
-Patch132:	rpm-5.4.7-rpmpython-fix-input.patch
+Patch132:	rpm-5.4.9-rpmpython-fix-input.patch
 # status: same as for other dep gen patches
 Patch133:	rpm-5.4.7-generate-devel-provides-outside-of-libdirs.patch
 # status: ready
@@ -348,19 +301,15 @@ Patch134:	rpm-5.4.7-actually-perform-linking-against-internal-lua.patch
 # status: ready
 Patch135:	rpm-5.4.7-no-seqid_init-on-rdonly-database.patch
 # status: same as for other dep gen patches
-Patch136:	rpm-5.4.7-add-support-for-using-rpmdsMerge-with-filepath-tags.patch
+Patch136:	rpm-5.4.9-add-support-for-using-rpmdsMerge-with-filepath-tags.patch
 # status: probably ready for merging
-Patch137:	rpm-5.4.7-avoid-double-slash-in-path-for-dirname-filetrigger-matching.patch
+Patch137:	rpm-5.4.9-avoid-double-slash-in-path-for-dirname-filetrigger-matching.patch
 # status: unfinished
 Patch138:	rpm-5.4.7-trigtrans.patch
 # status: probably ready to merge, discuss on rpm-devel first
-Patch139:	rpm-5.3.12-fix-verify-segfault.patch
+Patch139:	rpm-5.4.9-fix-verify-segfault.patch
 # status: keep locally
 Patch140:	rpm-5.4.7-rpmv3-support.patch
-# status: should be merged upstream already..?
-Patch141:	rpm-5.4.7-revert-hash-instead-of-truncation.patch
-# (mdawkins): rediffed from upstream
-Patch142:	rpm-5.4.7_typelib.patch
 # status: ready
 Patch143:	rpm-5.4.7-mono-find-requires-strip-newlines.patch
 # status: ready
@@ -623,46 +572,20 @@ This package contains the RPM API documentation generated in HTML format.
 %patch5 -p1 -b .distpatt~
 %patch15 -p1 -b .trigger_once~
 %endif
-%patch19 -p1 -b .doxygen~
-%patch20 -p1 -b .syslog~
 #%%patch21 -p1 -b .loop_warnings~
 #%%patch22 -p1 -b .55810~
 #patch27 -p1 -b .mdv~
-%patch28 -p1 -b .rpmorg~
 %patch29 -p1 -b .specfile~
-%patch30 -p1 -b .qf_non~
-%patch31 -p1 -b .rpm_qa~
 #%%patch32 -p1 -b .clean~
-%patch33 -p1 -b .mdvbz62979~
 %patch34 -p1 -b .ordering~
-%patch35 -p1 -b .html~
-%patch36 -p1 -b .multi~
 %patch37 -p1 -b .drop_deps~
-%patch38 -p1 -b .man_comp~
-%patch39 -p1 -b .no_sort~
 %patch40 -p1 -b .pc_paths~
-%patch41 -p1 -b .manbo~
 %patch42 -p1 -b .glob~
-%patch43 -p1 -b .common~
-%patch44 -p1 -b .payload~
-%patch45 -p1 -b .build~
 %patch46 -p1 -b .repackage~
 %patch47 -p1 -b .overlap~
 %patch48 -p1 -b .suggests~
-%patch49 -p1 -b .debugedit_whitespace~
-%patch50 -p1 -b .debugedit_recompute~
-%patch51 -p1 -b .debugedit_errormsgs~
-%patch52 -p1 -b .debugedit_unused_var~
-%patch53 -p1 -b .debugedit_stabs_fail~
-%patch54 -p1 -b .debugedit_dwarf4~
 %patch55 -p1 -b .strip_reloc_debug~
-%patch56 -p1 -b .quotes~
-%patch57 -p1 -b .gdb_index~
-%patch58 -p1 -b .dwarf4~
-%patch59 -p1 -b .compress_debug~
-%patch60 -p1 -b .partial_strip~
 %patch61 -p1 -b .epoch_cmp~
-%patch62 -p1 -b ._sys_macros_dir~
 %patch63 -p1 -b .buildroot_dups~
 %patch64 -p1 -b .dups_terminate~
 %patch65 -p1 -b .subdir_terminate~
@@ -682,7 +605,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch79 -p1 -b .range_nooverlap~
 #patch81 -p1 -b .libsql~
 %patch83 -p1 -b .kmod_xz~
-%patch84 -p1 -b .int_dep_gen~
 %patch85 -p1 -b .int_gen_overlap~
 %patch86 -p1 -b .mono_deps_new~
 %patch87 -p1 -b .php_dep_gen~
@@ -706,7 +628,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch105 -p1 -b .sizeof~
 %patch106 -p1 -b .link_loop~
 %patch107 -p1 -b .python_color~
-%patch108 -p1 -b .pyegg_nodirs~
 %patch109 -p1 -b .uclibc_nolib64~
 %patch110 -p1 -b .req_devel~
 %patch112 -p1 -b .gnu_hash~
@@ -738,8 +659,6 @@ This package contains the RPM API documentation generated in HTML format.
 #patch138 -p1 -b .trigtrans~
 %patch139 -p1 -b .fix_verify~
 %patch140 -p1 -b .rpmv3~
-%patch141 -p1 -b .dev_unfuck~
-%patch142 -p1 -b .typelib~
 %patch143 -p1 -b .mono_newline~
 %patch144 -p1 -b .urpm~
 #required by P55, P80, P81, P94..
@@ -747,7 +666,7 @@ This package contains the RPM API documentation generated in HTML format.
 
 mkdir -p cpu-os-macros
 tar -zxf %{SOURCE3} -C cpu-os-macros
-%patch145 -p1 -b .armv7l~
+%patch145 -p1
 
 %build
 %configure2_5x	--enable-nls \
@@ -1024,6 +943,7 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %{_bindir}/multiarch-platform
 #%%{_rpmhome}/bin/abi-compliance-checker.pl
 %{_rpmhome}/bin/api-sanity-autotest.pl
+%{_rpmhome}/bin/api-sanity-checker.pl
 %{_rpmhome}/bin/dbsql
 %{_rpmhome}/bin/debugedit
 %{_rpmhome}/bin/install-sh
