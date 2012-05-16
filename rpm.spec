@@ -107,6 +107,8 @@ Patch22:	rpm-5.3.12-55810-rpmevrcmp-again-grf.patch
 # status: ready to merge, it's already been merged on HEAD, so commiting it to rpm-5_4
 # would basically just mean backporting it..
 Patch29:	rpm-5.4.4-add-_specfile-macro.patch
+# status: ready for merge
+Patch31:	rpm-5.4.9-fix-rpm_qa-pattern.patch
 # uhm.. broken?
 # status: this one was fixed for real in 5.3.12, but I forgot commiting it
 # on rpm-5_4 branch back then, and I've been unable to remember and not
@@ -578,6 +580,7 @@ This package contains the RPM API documentation generated in HTML format.
 #%%patch22 -p1 -b .55810~
 #patch27 -p1 -b .mdv~
 %patch29 -p1 -b .specfile~
+%patch31 -p1 -b .rpm_qa~
 #%%patch32 -p1 -b .clean~
 %patch34 -p1 -b .ordering~
 %patch37 -p1 -b .drop_deps~
