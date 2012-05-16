@@ -316,6 +316,8 @@ Patch143:	rpm-5.4.7-mono-find-requires-strip-newlines.patch
 Patch144:	rpm-5.4.8-URPM-build-fix.patch
 # status: undefined
 Patch145:	rpm-5.4.8-add-armv7l-specific-macros.patch
+# status: keep locally, might drop this one later..
+Patch146:	rpm-5.4.9-support-signatures-and-digest-disablers.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -661,6 +663,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch140 -p1 -b .rpmv3~
 %patch143 -p1 -b .mono_newline~
 %patch144 -p1 -b .urpm~
+%patch146 -p1 -b .nosig~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
