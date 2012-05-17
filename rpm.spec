@@ -320,7 +320,8 @@ Patch144:	rpm-5.4.8-URPM-build-fix.patch
 Patch145:	rpm-5.4.8-add-armv7l-specific-macros.patch
 # status: keep locally, might drop this one later..
 Patch146:	rpm-5.4.9-support-signatures-and-digest-disablers.patch
-
+# status: undefined
+Patch147:	rpm-5.4.9-add-x32-macros.patch
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -667,6 +668,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch143 -p1 -b .mono_newline~
 %patch144 -p1 -b .urpm~
 %patch146 -p1 -b .nosig~
+%patch147 -p1
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
