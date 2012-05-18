@@ -326,11 +326,11 @@ Patch147:	rpm-5.4.9-add-x32-macros.patch
 Patch148:	rpm-5.4.9-dont-try-compile-with-libgit2-funcs-unless-enabled.patch
 # status: ready and should be merged
 Patch149:	rpm-5.4.9-fix-typo-in-rpmtag-header.patch
-# This fixes a bug where i18n strings were remapped when enabled, which they
-# most likely shouldn't be..?
-# status: not 100% sure on what's correct behaviour, but this patch fixes
-# a bug where description, summary & group tag gets messed up for src.rpms
+# status: can be merged, but doesn't really matter as it's to be removed and
+# we now anyways disable the support in question..
 Patch150:	rpm-5.4.9-dont-remap-i18n-strings-if-enabled.patch
+# status: just keep around and toss away when ripped out upstream...
+Patch151:	rpm-5.4.9-disable-support-for-i18nstring-type.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -682,6 +682,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch148 -p1 -b .nogit~
 %patch149 -p1 -b .typo~
 %patch150 -p1 -b .i18n_str~
+%patch151 -p1 -b .noi18n~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
