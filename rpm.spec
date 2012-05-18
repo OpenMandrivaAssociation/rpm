@@ -331,6 +331,10 @@ Patch149:	rpm-5.4.9-fix-typo-in-rpmtag-header.patch
 Patch150:	rpm-5.4.9-dont-remap-i18n-strings-if-enabled.patch
 # status: just keep around and toss away when ripped out upstream...
 Patch151:	rpm-5.4.9-disable-support-for-i18nstring-type.patch
+# lack insight on actual functionality, which anyways seems broken, so let's
+# disable it to avoid errors from berkeley db..
+# status: keep locally
+Patch152:	rpm-5.4.9-disable-l10ndir.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -683,6 +687,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch149 -p1 -b .typo~
 %patch150 -p1 -b .i18n_str~
 %patch151 -p1 -b .noi18n~
+%patch152 -p1 -b .l10ndir~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
