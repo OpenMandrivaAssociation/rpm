@@ -59,7 +59,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}4
+Release:	%{?prereldate:0.%{prereldate}.}5
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -335,6 +335,9 @@ Patch151:	rpm-5.4.9-disable-support-for-i18nstring-type.patch
 # disable it to avoid errors from berkeley db..
 # status: keep locally
 Patch152:	rpm-5.4.9-disable-l10ndir.patch
+# applied upstream @rpm5.org
+# adds detection for new gnome help directory
+Patch153:	rpm-5.4.9-find-lang_newgnomehelp.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -688,6 +691,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch150 -p1 -b .i18n_str~
 %patch151 -p1 -b .noi18n~
 %patch152 -p1 -b .l10ndir~
+%patch153 -p1
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
