@@ -139,11 +139,6 @@ Patch46:	rpm-5.4.4-allow-installation-of-repackaged-rpms.patch
 Patch47:	rpm-5.4.4-fix-removal-of-overlapping-dependencies.patch
 # status: ready to merge
 Patch48:	rpm-5.4.8-dont-show-suggests-with-requires.patch
-Patch50:	rpm-5.4.4-debugedit-recompute-build-id-only-on-dwarf-change.patch
-Patch51:	rpm-5.4.4-debugedit-fix-incorrect-error-messages-regarding_-b-and_-d.patch
-Patch52:	rpm-5.4.4-debugedit-remove-unused-variable.patch
-Patch53:	rpm-5.4.4-debugedit-bail-out-of-debuginfo-if-stabs-format-encountered.patch
-Patch54:	rpm-5.4.4-debugedit-add-dwarf4-support.patch
 # backport from HEAD
 # status: almost ready for merge, the strip reloc flag to debugedit needs to be made
 # conditional first in order to not break backwards compatibility with older elfutils versions
