@@ -336,6 +336,8 @@ Patch153:	rpm-5.4.9-find-lang_newgnomehelp.patch
 # drop this dead macro
 # status: ready
 Patch154:	rpm-5.4.9-drop-dead-cputoolize-macro.patch
+# idem
+Patch155:	rpm-5.4.9-ditch-install-info-macros.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -691,6 +693,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch152 -p1 -b .l10ndir~
 %patch153 -p1
 %patch154 -p1 -b .cputoolize~
+%patch155 -p1 -b .install_info~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
