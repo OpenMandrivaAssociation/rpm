@@ -333,6 +333,9 @@ Patch152:	rpm-5.4.9-disable-l10ndir.patch
 # applied upstream @rpm5.org
 # adds detection for new gnome help directory
 Patch153:	rpm-5.4.9-find-lang_newgnomehelp.patch
+# drop this dead macro
+# status: ready
+Patch154:	rpm-5.4.9-drop-dead-cputoolize-macro.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -687,6 +690,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch151 -p1 -b .noi18n~
 %patch152 -p1 -b .l10ndir~
 %patch153 -p1
+%patch154 -p1 -b .cputoolize~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
