@@ -338,6 +338,13 @@ Patch153:	rpm-5.4.9-find-lang_newgnomehelp.patch
 Patch154:	rpm-5.4.9-drop-dead-cputoolize-macro.patch
 # idem
 Patch155:	rpm-5.4.9-ditch-install-info-macros.patch
+# the php dependency generator carried with rpm5 is based on a version from PLD
+# that they've backed out later on, reverting to their older version.
+# this patch replaces current upstream rpm5 version with mandriva one, which is
+# based on the same as PLD currently uses.
+# status: current version carried upstream seems useless and unmaintained, so
+# replacing it with this one shouldn't hurt..
+Patch156:	rpm-5.4.9-updated-pld-mandriva-php-dep-generator.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -694,6 +701,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch153 -p1
 %patch154 -p1 -b .cputoolize~
 %patch155 -p1 -b .install_info~
+%patch156 -p1 -b .php_deps~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
