@@ -345,6 +345,11 @@ Patch155:	rpm-5.4.9-ditch-install-info-macros.patch
 # status: current version carried upstream seems useless and unmaintained, so
 # replacing it with this one shouldn't hurt..
 Patch156:	rpm-5.4.9-updated-pld-mandriva-php-dep-generator.patch
+# this patch contains changes from rpm-setup & rpm.org
+# status: not entirely convinced by the perl version conversion macro stuff
+# in the script, which might not be upstream material, but rest of the patch
+# should otherwise be sane 'nuff
+Patch157:	rpm-5.4.9-merge-rpm.org-and-mandriva-perl-dep-gen-changes.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -702,6 +707,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch154 -p1 -b .cputoolize~
 %patch155 -p1 -b .install_info~
 %patch156 -p1 -b .php_deps~
+%patch157 -p1 -b .perl_deps~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
