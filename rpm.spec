@@ -59,7 +59,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}5
+Release:	%{?prereldate:0.%{prereldate}.}6
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -350,6 +350,15 @@ Patch156:	rpm-5.4.9-updated-pld-mandriva-php-dep-generator.patch
 # in the script, which might not be upstream material, but rest of the patch
 # should otherwise be sane 'nuff
 Patch157:	rpm-5.4.9-merge-rpm.org-and-mandriva-perl-dep-gen-changes.patch
+# Due to rpmdav/neon being written in a different fashion than other rpmio clients,
+# the inconsistent behaviour affects code elsewhere which expects consistent behaviour,
+# with the result being that when unable to download files, neon will save error
+# page as the target file.
+# status: should go upstream, but uncertain about "correct" fix, ie. this is
+# more of a workaround, while rewriting rpmdav code to behave consistently
+# would be "the right thing to do". Yet I'm not fully able to grasp all of the
+# code and don't want to spend more time just to get the API..
+Patch158:	rpm-5.4.9-fix-neon-saving-error-pages-as-target-file.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -708,6 +717,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch155 -p1 -b .install_info~
 %patch156 -p1 -b .php_deps~
 %patch157 -p1 -b .perl_deps~
+%patch158 -p1 -b .dl_error~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
