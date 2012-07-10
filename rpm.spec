@@ -47,7 +47,7 @@
 %define	bdb		db52
 
 %define libver		5.4
-%define	minorver	9
+%define	minorver	10
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -59,7 +59,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}6
+Release:	%{?prereldate:0.%{prereldate}.}1
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -148,17 +148,14 @@ Patch61:	rpm-5.4.4-fix-same-package-with-epoch-possible-to-upgrade.patch
 # status: ready for merge
 Patch63:	rpm-5.4.9-strip-buildroot-away-from-duplicate-files-list.patch
 # status: probably okay to merge, but discuss on rpm-devel first
-Patch64:	rpm-5.4.9-duplicate_files_terminate_build.patch
+Patch64:	rpm-5.4.10-duplicate_files_terminate_build.patch
 # status: same as above
-Patch65:	rpm-5.4.9-unpackaged_subdirs_terminate_build.patch
+Patch65:	rpm-5.4.10-unpackaged_subdirs_terminate_build.patch
 # mdvbz#64898
 # status: uncertain, might be okay to merge, discuss on rpm-devel first
 Patch66:	rpm-5.4.4-rpmbuild-withoutclean.patch
 # status: ready for merge
 Patch67:	rpm-5.4.4-find-debuginfo-avoid-excessive-output-from-eu-strip.patch
-# mdvbz#64914
-# status: ready for merging
-Patch68:	rpm-5.4.4-enable-rpmgio-net-transport.patch
 # no sense in having an additional dependency on 'pkgconfig' on all packages that
 # have a pkgconfig file, it's not needed for them to be made useful and anything
 # actuallly using pkgconfig for this purpose will pull it in as a dependency anyways...
@@ -170,20 +167,12 @@ Patch69:	rpm-5.4.4-drop-useless-auto-generated-pkgconfig-dependency.patch
 Patch70:	rpm-5.4.4-drop-base-dependencies.patch
 # status: ready for merge
 Patch71:	rpm-5.4.4-fix-rpmconstant-to-always-use-LC_CTYPE-C-for-case-conversion.patch
-# from rpm.org
-# status: ready for merge
-Patch72:	rpm-5.4.4-debugedit-recognize-debug_macro-section.patch
-# from rpm.org
-# status: ready for merge
-Patch73:	rpm-5.4.9-add-_build_pkgcheck.patch
 # $RPM_BUILD_DIR isn't necessarily the same as $PWD, it's %%{_builddir}, not
 # %%{_builddir}/%%{?buildsubdir}, messing up paths in debug packages created..
 # status: needs to be discussed and investigated a bit better..
 Patch74:	rpm-5.4.4-pass-_builddir-properly-to-find-debuginfo.patch
-# status: ready for merge
-Patch75:	rpm-5.4.4-srcdefattr.patch
 # status: probably okay to merge, but discuss on rpm-devel first
-Patch76:	rpm-5.4.4-files-listed-twice-terminates-build.patch
+Patch76:	rpm-5.4.10-files-listed-twice-terminates-build.patch
 # status: don't merge
 Patch77:	rpm-5.4.7-use-bdb-5.2.patch
 # status: probably okay to merge
@@ -193,8 +182,6 @@ Patch78:	rpm-5.4.4-ruby1.9-fixes.patch
 Patch79:	rpm-5.4.4-dont-consider-ranged-dependencies-as-overlapping-for-removal.patch
 # status: ignoree for now
 Patch81:	rpm-5.4.5-libsql-conditional.patch
-# status: ready for merge
-Patch83:	rpm-5.4.5-kmod-deps-xz-support.patch
 # status: same as for other dependency generation patches
 Patch85:	rpm-5.4.5-fix-removal-of-overlapping-dependencies-for-internal-dependency-generator.patch
 # this updates to using the dependency generator shipped with mono, it has some
@@ -288,7 +275,7 @@ Patch129:	rpm-5.4.7-fix-minor-memleaks.patch
 # status: ready
 Patch130:	rpm-5.4.9-mire-fix-strings-lacking-null-terminator.patch
 # status: keep locally for now
-Patch131:	rpm-5.4.9-dlopen-embedded-interpreters.patch
+Patch131:	rpm-5.4.10-dlopen-embedded-interpreters.patch
 # status: ready
 Patch132:	rpm-5.4.9-rpmpython-fix-input.patch
 # status: same as for other dep gen patches
@@ -317,8 +304,6 @@ Patch145:	rpm-5.4.8-add-armv7l-specific-macros.patch
 Patch146:	rpm-5.4.9-support-signatures-and-digest-disablers.patch
 # status: undefined
 Patch147:	rpm-5.4.9-add-x32-macros.patch
-# status: ready and should definitely be merged
-Patch148:	rpm-5.4.9-dont-try-compile-with-libgit2-funcs-unless-enabled.patch
 # status: ready and should be merged
 Patch149:	rpm-5.4.9-fix-typo-in-rpmtag-header.patch
 # status: can be merged, but doesn't really matter as it's to be removed and
@@ -330,9 +315,6 @@ Patch151:	rpm-5.4.9-disable-support-for-i18nstring-type.patch
 # disable it to avoid errors from berkeley db..
 # status: keep locally
 Patch152:	rpm-5.4.9-disable-l10ndir.patch
-# applied upstream @rpm5.org
-# adds detection for new gnome help directory
-Patch153:	rpm-5.4.9-find-lang_newgnomehelp.patch
 # drop this dead macro
 # status: ready
 Patch154:	rpm-5.4.9-drop-dead-cputoolize-macro.patch
@@ -349,7 +331,7 @@ Patch156:	rpm-5.4.9-updated-pld-mandriva-php-dep-generator.patch
 # status: not entirely convinced by the perl version conversion macro stuff
 # in the script, which might not be upstream material, but rest of the patch
 # should otherwise be sane 'nuff
-Patch157:	rpm-5.4.9-merge-rpm.org-and-mandriva-perl-dep-gen-changes.patch
+Patch157:	rpm-5.4.10-merge-rpm.org-and-mandriva-perl-dep-gen-changes.patch
 # Due to rpmdav/neon being written in a different fashion than other rpmio clients,
 # the inconsistent behaviour affects code elsewhere which expects consistent behaviour,
 # with the result being that when unable to download files, neon will save error
@@ -635,20 +617,15 @@ This package contains the RPM API documentation generated in HTML format.
 %patch65 -p1 -b .subdir_terminate~
 %patch66 -p1 -b .withoutclean~
 %patch67 -p1 -b .strip_silent~
-%patch68 -p1 -b .rpmgio_ufdio~
 %patch69 -p1 -b .oneshot~
 %patch70 -p1 -b .drop_basedeps~
 %patch71 -p1 -b .locale~
-%patch72 -p1 -b .debug_macro~
-%patch73 -p1 -b .pkgcheck~
 %patch74 -p1 -b .builddir~
-%patch75 -p1 -b .srcdefattr~
 %patch76 -p1 -b .twice_terminate~
 %patch77 -p1 -b .db52~
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
 #patch81 -p1 -b .libsql~
-%patch83 -p1 -b .kmod_xz~
 %patch85 -p1 -b .int_gen_overlap~
 %patch86 -p1 -b .mono_deps_new~
 %patch87 -p1 -b .php_dep_gen~
@@ -707,12 +684,10 @@ This package contains the RPM API documentation generated in HTML format.
 %patch144 -p1 -b .urpm~
 %patch146 -p1 -b .nosig~
 %patch147 -p1
-%patch148 -p1 -b .nogit~
 %patch149 -p1 -b .typo~
 %patch150 -p1 -b .i18n_str~
 %patch151 -p1 -b .noi18n~
 %patch152 -p1 -b .l10ndir~
-%patch153 -p1
 %patch154 -p1 -b .cputoolize~
 %patch155 -p1 -b .install_info~
 %patch156 -p1 -b .php_deps~
