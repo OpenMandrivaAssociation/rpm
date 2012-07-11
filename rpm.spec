@@ -340,7 +340,7 @@ Patch157:	rpm-5.4.10-merge-rpm.org-and-mandriva-perl-dep-gen-changes.patch
 # more of a workaround, while rewriting rpmdav code to behave consistently
 # would be "the right thing to do". Yet I'm not fully able to grasp all of the
 # code and don't want to spend more time just to get the API..
-Patch158:	rpm-5.4.9-fix-neon-saving-error-pages-as-target-file.patch
+Patch158:	rpm-5.4.10-fix-neon-saving-error-pages-as-target-file.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
