@@ -816,7 +816,7 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 #make check
 
 %install
-%makeinstall_std
+%makeinstall_std -k
 
 # XXX: why isn't this installed by 'make install'?
 install -m755 scripts/symclash.* %{buildroot}%{_rpmhome}
