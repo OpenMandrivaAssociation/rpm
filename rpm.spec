@@ -693,6 +693,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch156 -p1 -b .php_deps~
 %patch157 -p1 -b .perl_deps~
 %patch158 -p1 -b .dl_error~
+%patch138 -p1 -b .trigtrans~
+
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
