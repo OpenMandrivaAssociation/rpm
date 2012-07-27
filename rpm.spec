@@ -341,7 +341,12 @@ Patch157:	rpm-5.4.10-merge-rpm.org-and-mandriva-perl-dep-gen-changes.patch
 # would be "the right thing to do". Yet I'm not fully able to grasp all of the
 # code and don't want to spend more time just to get the API..
 Patch158:	rpm-5.4.10-fix-neon-saving-error-pages-as-target-file.patch
-
+# As the transaction flags for ignoring arch & os are no longer used, there's
+# currently no way to ignore arch & os of packages anymore. This patch adds
+# support for doing this again by defining rpm variables and overriding
+# --ignorearch & --ignoreos to set these.
+# status: needs to be discussed upstream before thinking about merging
+Patch159:	rpm-5.4.10-support-ignore-arch-and-os-again.patch
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -694,6 +699,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch157 -p1 -b .perl_deps~
 %patch158 -p1 -b .dl_error~
 #patch138 -p1 -b .trigtrans~
+%patch159 -p1 -b .ignore_arch~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
