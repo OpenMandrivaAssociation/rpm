@@ -289,7 +289,7 @@ Patch136:	rpm-5.4.9-add-support-for-using-rpmdsMerge-with-filepath-tags.patch
 # status: probably ready for merging
 Patch137:	rpm-5.4.9-avoid-double-slash-in-path-for-dirname-filetrigger-matching.patch
 # status: unfinished
-Patch138:	rpm-5.4.7-trigtrans.patch
+Patch138:	rpm-5.4.10-trigtrans.patch
 # status: probably ready to merge, discuss on rpm-devel first
 Patch139:	rpm-5.4.9-fix-verify-segfault.patch
 # status: keep locally
@@ -693,7 +693,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch156 -p1 -b .php_deps~
 %patch157 -p1 -b .perl_deps~
 %patch158 -p1 -b .dl_error~
-%patch138 -p1 -b .trigtrans~
+#patch138 -p1 -b .trigtrans~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
