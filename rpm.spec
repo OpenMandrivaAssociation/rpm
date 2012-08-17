@@ -59,7 +59,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}2
+Release:	%{?prereldate:0.%{prereldate}.}3
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -244,7 +244,7 @@ Patch114:	rpm-5.4.9-dont-add-versioneddependency-rpmlib-feature-dependency.patch
 # status: ready to merge
 Patch115:	rpm-5.4.7-rpmfc-fix-invalid-free-if-not-_defaultdocdir-set.patch
 # status: probably okay to merge
-Patch116:	rpm-5.4.7-dont-try-generate-rpmfc-dependencies-from-doc-files.patch
+Patch116:	rpm-5.4.10-dont-try-generate-rpmfc-dependencies-from-doc-files.patch
 # status: ready to merge
 Patch117:	rpm-5.4.7-only-generate-ruby-and-python-deps-for-executables-and-modules.patch
 # status: same as for other dep gen patches
