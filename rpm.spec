@@ -347,6 +347,7 @@ Patch158:	rpm-5.4.10-fix-neon-saving-error-pages-as-target-file.patch
 # --ignorearch & --ignoreos to set these.
 # status: needs to be discussed upstream before thinking about merging
 Patch159:	rpm-5.4.10-support-ignore-arch-and-os-again.patch
+Patch160:	rpm-5.4.10-bump-up-to-default-xz-compression-level.patch
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -700,6 +701,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch158 -p1 -b .dl_error~
 #patch138 -p1 -b .trigtrans~
 %patch159 -p1 -b .ignore_arch~
+%patch160 -p1 -b .xz_level~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
