@@ -59,7 +59,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}3
+Release:	%{?prereldate:0.%{prereldate}.}4
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -176,7 +176,7 @@ Patch76:	rpm-5.4.10-files-listed-twice-terminates-build.patch
 # status: don't merge
 Patch77:	rpm-5.4.7-use-bdb-5.2.patch
 # status: probably okay to merge
-Patch78:	rpm-5.4.4-ruby1.9-fixes.patch
+Patch78:	rpm-5.4.9-ruby1.9-fixes.patch
 # mdvbz#65269
 # status: same as for other dependency generation patches
 Patch79:	rpm-5.4.4-dont-consider-ranged-dependencies-as-overlapping-for-removal.patch
