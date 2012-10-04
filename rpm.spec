@@ -59,7 +59,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}4
+Release:	%{?prereldate:0.%{prereldate}.}5
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -348,6 +348,9 @@ Patch158:	rpm-5.4.10-fix-neon-saving-error-pages-as-target-file.patch
 # status: needs to be discussed upstream before thinking about merging
 Patch159:	rpm-5.4.10-support-ignore-arch-and-os-again.patch
 Patch160:	rpm-5.4.10-bump-up-to-default-xz-compression-level.patch
+# fix so that we search through library dirs within buildroot for uclibc libraries
+# status: same as for other dep gen patches
+Patch161:	rpm-5.4.10-search-through-buildroot-library-dirs-for-uclibc-deps.patch
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -702,6 +705,7 @@ This package contains the RPM API documentation generated in HTML format.
 #patch138 -p1 -b .trigtrans~
 %patch159 -p1 -b .ignore_arch~
 %patch160 -p1 -b .xz_level~
+%patch161 -p1 -b .uclibc_buildroot~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
