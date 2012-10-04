@@ -907,6 +907,10 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_bindir})
 install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %endif
 
+# should really be handled by make script..
+ln -f %{buildroot}%{_rpmhome}/bin/{rpmlua,lua}
+ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
+
 # TODO: review which files goes into what packages...?
 %files -f %{name}.lang
 %doc CHANGES doc/manual/[a-z]*
