@@ -953,6 +953,7 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %dir %{_localstatedir}/spool/repackage
 %dir %{_rpmhome}
 %dir %{_rpmhome}/bin
+%dir %{_rpmhome}/lib
 %dir %{_rpmhome}/platform/
 %dir %{_rpmhome}/platform/*/
 %dir %{_rpmhome}/macros.d
