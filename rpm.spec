@@ -353,6 +353,7 @@ Patch160:	rpm-5.4.10-bump-up-to-default-xz-compression-level.patch
 Patch161:	rpm-5.4.10-search-through-buildroot-library-dirs-for-uclibc-deps.patch
 # status: same as for other dep gen patches
 Patch162:	rpm-5.4.10-fix-uninitialized-variable.patch
+Patch163:	rpm-5.4.10-mdk-disttag.patch
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -709,6 +710,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch160 -p1 -b .xz_level~
 %patch161 -p1 -b .uclibc_buildroot~
 %patch162 -p1 -b .uninitialized~
+%patch163 -p1 -b .disttag~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
