@@ -354,6 +354,10 @@ Patch161:	rpm-5.4.10-search-through-buildroot-library-dirs-for-uclibc-deps.patch
 # status: same as for other dep gen patches
 Patch162:	rpm-5.4.10-fix-uninitialized-variable.patch
 Patch163:	rpm-5.4.10-new-moondrake-name.patch
+# pass --disable-silent-rules to configure so that we'll by default always get
+# consistent behaviour of verbose build output
+# status: ready
+Patch164:	rpm-5.4.10-configure-disable-silent-rules.patch
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -711,6 +715,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch161 -p1 -b .uclibc_buildroot~
 %patch162 -p1 -b .uninitialized~
 %patch163 -p1 -b .mdk~
+%patch164 -p1 -b .verbosebuilds~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
