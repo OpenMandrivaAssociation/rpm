@@ -714,7 +714,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch160 -p1 -b .xz_level~
 %patch161 -p1 -b .uclibc_buildroot~
 %patch162 -p1 -b .uninitialized~
-%patch163 -p1 -b .mdk~
+# keep disabled for now to make sure not holding anything up for alpha 2..
+#patch163 -p1 -b .mdk~
 %patch164 -p1 -b .verbosebuilds~
 
 #required by P55, P80, P81, P94..
