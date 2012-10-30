@@ -59,7 +59,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}6.1
+Release:	%{?prereldate:0.%{prereldate}.}7
 ExclusiveArch:	x86_64
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
@@ -359,6 +359,11 @@ Patch163:	rpm-5.4.10-new-moondrake-name.patch
 # consistent behaviour of verbose build output
 # status: ready
 Patch164:	rpm-5.4.10-configure-disable-silent-rules.patch
+# our own helper scripts needs to be run first so that library permissions gets
+# fixed for find-debuginfo.sh to properly strip them
+# status: ready as they only modify our own distribution specific macros..
+Patch165:	rpm-5.4.10-post-install-helper-order.patch
+
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -718,6 +723,7 @@ This package contains the RPM API documentation generated in HTML format.
 # keep disabled for now to make sure not holding anything up for alpha 2..
 #patch163 -p1 -b .mdk~
 %patch164 -p1 -b .verbosebuilds~
+%patch165 -p1 -b .helper_order~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
