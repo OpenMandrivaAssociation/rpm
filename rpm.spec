@@ -59,7 +59,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}8
+Release:	%{?prereldate:0.%{prereldate}.}9
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -362,6 +362,9 @@ Patch164:	rpm-5.4.10-configure-disable-silent-rules.patch
 # fixed for find-debuginfo.sh to properly strip them
 # status: ready as they only modify our own distribution specific macros..
 Patch165:	rpm-5.4.10-post-install-helper-order.patch
+# fixes issue with ldflags getting duplicated when configure is run more than once
+# status: ready
+Patch166:	rpm-5.4.10-fix-ldflags-passing.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -723,6 +726,7 @@ This package contains the RPM API documentation generated in HTML format.
 #patch163 -p1 -b .mdk~
 %patch164 -p1 -b .verbosebuilds~
 %patch165 -p1 -b .helper_order~
+%patch166 -p1 -b .ldflags~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
