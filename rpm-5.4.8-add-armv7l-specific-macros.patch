@@ -1,0 +1,36 @@
+From 727484174300654bc4b3881f3db2889a05f3895c Mon Sep 17 00:00:00 2001
+From: Franck Bui <franck.bui@mandriva.com>
+Date: Thu, 26 Apr 2012 13:21:45 +0000
+Subject: [PATCH 1/1] Add armv7l target
+
+Signed-off-by: Franck Bui <franck.bui@mandriva.com>
+---
+ cpu-os-macros/armv7l-linux/macros |   82 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 83 insertions(+), 1 deletions(-)
+ create mode 100644 cpu-os-macros/armv7l-linux/macros
+
+diff --git a/cpu-os-macros/armv7l-linux/macros b/cpu-os-macros/armv7l-linux/macros
+new file mode 100644
+index 0000000..f12a8a2
+--- /dev/null
++++ b/cpu-os-macros/armv7l-linux/macros
+@@ -0,0 +1,19 @@
++# Per-platform rpm configuration file.
++
++#==============================================================================
++# ---- per-platform macros.
++#
++%_arch			arm
++%_os			linux
++%_gnu			-gnueabi
++%optflags		-O2 -g -fpic -fPIC -fno-strict-volatile-bitfields
++
++#==============================================================================
++# ---- configure macros.
++#
++%_lib			lib
++
++#---------------------------------------------------------------------
++#	Multilibs
++%_multilibno		1
++%_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$

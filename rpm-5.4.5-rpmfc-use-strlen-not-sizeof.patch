@@ -1,0 +1,11 @@
+--- rpm-5.4.5/lib/rpmfc.c.sizeof~	2012-03-05 21:01:46.845529682 +0100
++++ rpm-5.4.5/lib/rpmfc.c	2012-03-05 21:01:51.679533439 +0100
+@@ -909,7 +909,7 @@ static int rpmfcSCRIPT(rpmfc fc)
+     	if (defaultdocdir == NULL || *defaultdocdir == '\0') 
+             defaultdocdir = "/usr/share/doc";
+ 
+-	if (strncmp(fn, defaultdocdir, sizeof(defaultdocdir)-1)) {
++	if (strncmp(fn, defaultdocdir, strlen(defaultdocdir))) {
+ 	    if (fc->fcolor->vals[fc->ix] & RPMFC_MODULE)
+ 		xx = rpmfcHelper(fc, 'P', "perl");
+ 	    if (is_executable || (fc->fcolor->vals[fc->ix] & RPMFC_MODULE))

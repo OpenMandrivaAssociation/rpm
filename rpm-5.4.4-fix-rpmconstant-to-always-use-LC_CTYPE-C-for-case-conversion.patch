@@ -1,0 +1,20 @@
+--- rpm-5.4.4/rpmconstant/rpmconstant.c.locale~	2008-08-18 12:57:58.000000000 +0200
++++ rpm-5.4.4/rpmconstant/rpmconstant.c	2011-12-16 16:41:27.721549143 +0100
+@@ -89,7 +89,7 @@ int rpmconstInitToContext(rpmconst c, co
+     int rc = 0;
+     if (!context) return 0; /* programmer error */
+     for (ptr = lccontext; *ptr != 0; ptr++)
+-        *ptr = (char)tolower(*ptr);
++        *ptr = (char)xtolower(*ptr);
+     rpmconstInitL(c);
+     while (rpmconstNextL(c)) {
+         if (!strcmp(lccontext, rpmconstContext(c))) {
+@@ -108,7 +108,7 @@ int rpmconstNameMatch(rpmconst c, const
+     char * ucname = strdup(name);
+     
+     for (uc = ucname; *uc != 0; uc++)
+-        *uc = (char)toupper(*uc);
++        *uc = (char)xtoupper(*uc);
+     
+     if (!prefixed) prefixed = ALLCASE_PREFIX;
+     if (prefixed & WITH_PREFIX)

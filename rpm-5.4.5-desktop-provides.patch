@@ -1,0 +1,70 @@
+--- rpm-5.4.5/lib/rpmfc.c.desktop~	2012-03-03 04:52:25.531739631 +0100
++++ rpm-5.4.5/lib/rpmfc.c	2012-03-03 04:52:28.659741193 +0100
+@@ -993,6 +993,17 @@ static int rpmfcSCRIPT(rpmfc fc)
+ 		xx = rpmfcHelper(fc, 'R', "kernel");
+ 	    }
+ 	mire = mireFree(mire);
++    }
++    if ((fc->fcolor->vals[fc->ix] & RPMFC_SCRIPT)) {
++	miRE mire = mireNew(RPMMIRE_REGEX, RPMTAG_FILEPATHS);
++	if (!mireRegcomp(mire, "^.*/usr/share/applications/.*\\.desktop$"))
++	    if (mireRegexec(mire, fc->fn[fc->ix], (size_t) 0) >= 0) {
++		fc->fcolor->vals[fc->ix] |= (RPMFC_MODULE|RPMFC_SCRIPT);
++		xx = rpmfcHelper(fc, 'P', "desktop");
++		/* XXX: currently of no use, but for the sake of consistency... */
++		xx = rpmfcHelper(fc, 'R', "desktop");
++	    }
++	mire = mireFree(mire);
+ #endif
+     }
+ 
+@@ -1208,6 +1219,12 @@ assert(fc->fn != NULL);
+ 		    if (mireRegexec(mire, fc->fn[fc->ix], (size_t) 0) >= 0)
+ 			fc->fcolor->vals[fc->ix] |= (RPMFC_MODULE|RPMFC_SCRIPT);
+ 		mire = mireFree(mire);
++		mire = mireNew(RPMMIRE_REGEX, RPMTAG_FILEPATHS);
++		/* buttfuckin' retarded, but whatever.. it'll work at least! ;) */
++		if (!mireRegcomp(mire, "^.*/usr/share/applications/.*\\.desktop$"))
++		    if (mireRegexec(mire, fc->fn[fc->ix], (size_t) 0) >= 0)
++			fc->fcolor->vals[fc->ix] |= RPMFC_SCRIPT;
++		mire = mireFree(mire);
+ #endif
+ 	    }
+ 	}
+--- rpm-5.4.5/macros/macros.rpmbuild.in.desktop~	2012-03-03 04:51:07.041700511 +0100
++++ rpm-5.4.5/macros/macros.rpmbuild.in	2012-03-03 04:51:50.048721947 +0100
+@@ -685,5 +685,8 @@ done \
+ %__font_provides        %{_rpmhome}/fontconfig.prov
+ #%__font_requires        %{_rpmhome}/fontconfig.req
+ 
++%__desktop_provides        %{_rpmhome}/mandriva/desktop-file.prov
++#%__desktop_requires        %{_rpmhome}/mandriva/desktop-file.prov
++
+ # \endverbatim
+ #*/
+--- rpm-5.4.5/scripts/desktop-file.prov.desktop~	2012-03-03 04:54:39.103806210 +0100
++++ rpm-5.4.5/scripts/desktop-file.prov	2012-03-03 04:54:27.703800528 +0100
+@@ -0,0 +1,23 @@
++#!/bin/sh
++#
++# Transform desktop mimetype info into RPM mimehandler(type) provides
++#
++# Author: Richard Hughes <richard@hughsie.com>
++# Based on other provides scripts from RPM
++
++OLD_IFS="$IFS"
++while read instfile ; do
++	case "$instfile" in
++	*.desktop)
++		if ! grep -q '^Type=Application$' "$instfile"; then continue; fi
++		if ! grep -q '^Exec=' "$instfile"; then continue; fi
++		mime=`grep '^MimeType=' "$instfile" | cut -d'=' -f2`
++		IFS=';'
++		for type in $mime ; do
++			echo 'mimehandler('$type')'
++		done
++		;;
++	esac
++done
++IFS=$OLD_IFS
++

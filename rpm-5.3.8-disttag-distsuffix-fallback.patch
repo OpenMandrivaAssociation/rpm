@@ -1,0 +1,11 @@
+--- rpm-5.3.8/macros/mandriva.in.distsuffix~	2011-01-22 23:54:04.320131003 +0100
++++ rpm-5.3.8/macros/mandriva.in	2011-01-23 00:09:48.251131004 +0100
+@@ -31,7 +31,7 @@
+ # %release with such.
+ %evr_tuple_select	1234
+ %evr_tuple_order	EVRD
+-%disttag		mdv
++%disttag		%{!?distsuffix:mdv}%{?distsuffix}
+ %distepoch		%(sed -e 's#.*release\\ \\(\\S*\\).*#\\1#' /etc/release)
+ 
+ # Dynamic EVRD tags macro for use with versioned provides/requires in place of

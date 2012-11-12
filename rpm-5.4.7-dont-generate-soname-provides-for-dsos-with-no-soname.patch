@@ -1,0 +1,18 @@
+--- rpm-5.4.7/lib/rpmds.c.soname_only~	2012-03-10 21:25:25.174794826 +0100
++++ rpm-5.4.7/lib/rpmds.c	2012-03-10 21:25:42.414809878 +0100
+@@ -3472,6 +3472,7 @@ assert(s != NULL);
+     }
+ #endif
+ 
++#if !defined(RPM_VENDOR_MANDRIVA)
+     /* For DSO's, provide the basename of the file if DT_SONAME not found. */
+     if (!skipP && isDSO && !gotDEBUG && !gotSONAME) {
+ 	s = strrchr(fn, '/');
+@@ -3489,6 +3490,7 @@ assert(s != NULL);
+ 	(void)rpmdsFree(ds);
+ 	ds = NULL;
+     }
++#endif
+ 
+ exit:
+     soname = _free(soname);

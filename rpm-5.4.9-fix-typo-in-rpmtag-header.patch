@@ -1,0 +1,11 @@
+--- rpm-5.4.9/rpmdb/rpmtag.h.typo~	2012-05-03 20:39:52.000000000 +0200
++++ rpm-5.4.9/rpmdb/rpmtag.h	2012-05-18 05:30:09.780867642 +0200
+@@ -948,7 +948,7 @@ Header headerCopyLoad(const void * uh)
+ int headerIsEntry(/*@null@*/ Header h, rpmTag tag)
+ 	/*@*/;
+ 
+-#if defined(SUPPORT_I18BSTRING_TYPE)
++#if defined(SUPPORT_I18NSTRING_TYPE)
+ /** \ingroup header
+  * Add locale specific tag to header.
+  * A NULL lang is interpreted as the C locale. Here are the rules:

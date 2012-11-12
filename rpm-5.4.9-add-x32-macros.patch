@@ -1,0 +1,23 @@
+--- rpm-5.4.9/cpu-os-macros/x32-linux/macros.x32~	2012-05-17 06:09:01.611004408 +0200
++++ rpm-5.4.9/cpu-os-macros/x32-linux/macros	2012-05-17 06:06:14.725072024 +0200
+@@ -0,0 +1,20 @@
++# Per-platform rpm configuration file.
++
++#==============================================================================
++# ---- per-platform macros.
++#
++%_arch			x86_64
++%_os			linux
++%_gnu			-gnu
++%_target_platform	%{_arch}-%{_target_vendor}-%{_target_os}%{?_gnu}
++%optflags		%{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-Os -g -mx32 -march=atom -mtune=core-avx-i}
++
++#==============================================================================
++# ---- configure macros.
++#
++%_lib			lib32
++
++#---------------------------------------------------------------------
++#	Multilibs
++%_multilibno		1
++%_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$

@@ -1,0 +1,5 @@
+sources:
+  "cpu-os-macros.tar.gz:"	99c5fa561dd0d897bfa8cd97f2aa60781bc578d4
+  "legacy_compat.macros:"	ead631c8d23ad4df01d02b5c5633d86aa6321377
+  "rpm-5.4.10.tar.gz:"	8b525f6762d0a4f3bd5af44971f1199c6805d7dd
+  "rpm.rpmlintrc:"	9f3f5104756f73b838927ba810011815a9efc84b

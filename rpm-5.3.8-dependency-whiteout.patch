@@ -1,0 +1,9 @@
+--- rpm-5.3.8/macros/mandriva.in.dep_whiteout~	2011-01-09 07:19:01.000000000 +0100
++++ rpm-5.3.8/macros/mandriva.in	2011-01-13 21:55:16.000000000 +0100
+@@ -66,4 +66,6 @@ end\
+ # mdvbz#61851
+ %__tar_wildcards   --wildcards
+ 
++%_loop_detection_loglevel 3
++
+ %{load:/etc/rpm/macros.d/*.macros}

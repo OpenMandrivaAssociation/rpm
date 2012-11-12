@@ -1,0 +1,12 @@
+--- rpm-5.4.5/lib/Makefile.am.libsql~	2011-08-15 22:33:15.000000000 +0200
++++ rpm-5.4.5/lib/Makefile.am	2012-02-20 13:33:03.143259035 +0100
+@@ -88,7 +88,9 @@ librpm.la: $(librpm_la_OBJECTS) $(librpm
+ 	$(librpm_la_LINK) -rpath $(usrlibdir) $(librpm_la_OBJECTS) $(librpm_la_LIBADD)
+ 
+ libsql_la_SOURCES	= libsql.c
++if WITH_DBSQL
+ libsql_la_LIBADD	= librpm.la $(RPMDB_LDADD_COMMON)
++endif
+ 
+ install-data-hook:
+ if !ENABLE_BUILD_LAFILES

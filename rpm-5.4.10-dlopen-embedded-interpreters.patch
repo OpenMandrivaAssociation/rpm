@@ -1,0 +1,924 @@
+--- rpm-5.4.10/build/parseScript.c.dlopen~	2012-04-15 17:04:14.000000000 +0200
++++ rpm-5.4.10/build/parseScript.c	2012-07-10 20:20:02.578979876 +0200
+@@ -305,6 +305,12 @@ int parseScript(Spec spec, int parsePart
+     iob = rpmiobRTrim(iob);
+     p = rpmiobStr(iob);
+ 
++#if __WORDSIZE == 64 /* XXX lame, whatever.. :p */
++#define SO_EXT "()(64bit)"
++#else
++#define SO_EXT ""
++#endif
++
+ #ifdef WITH_LUA
+     if (!strcmp(progArgv[0], "<lua>")) {
+ 	rpmlua lua = NULL; /* Global state. */
+@@ -338,18 +344,21 @@ int parseScript(Spec spec, int parsePart
+     if (!strcmp(progArgv[0], "<perl>")) {
+ 	(void) rpmlibNeedsFeature(pkg->header,
+ 				  "BuiltinPerlScripts", "5.2-1");
++	addReqProv(NULL, pkg->header, RPMTAG_REQUIRENAME, "rpmperl.so" SO_EXT, NULL, RPMSENSE_INTERP, 0);
+     } else
+ #endif
+ #ifdef WITH_PYTHONEMBED
+     if (!strcmp(progArgv[0], "<python>")) {
+ 	(void) rpmlibNeedsFeature(pkg->header,
+ 				  "BuiltinPythonScripts", "5.2-1");
++	addReqProv(NULL, pkg->header, RPMTAG_REQUIRENAME, "rpmpython.so" SO_EXT, NULL, RPMSENSE_INTERP, 0);
+     } else
+ #endif
+ #ifdef WITH_RUBYEMBED
+     if (!strcmp(progArgv[0], "<ruby>")) {
+ 	(void) rpmlibNeedsFeature(pkg->header,
+ 				  "BuiltinRubyScripts", "5.2-1");
++	addReqProv(NULL, pkg->header, RPMTAG_REQUIRENAME, "rpmruby.so" SO_EXT, NULL, RPMSENSE_INTERP, 0);
+     } else
+ #endif
+ #ifdef WITH_SEMANAGE
+@@ -368,12 +377,14 @@ int parseScript(Spec spec, int parsePart
+     if (!strcmp(progArgv[0], "<squirrel>")) {
+ 	(void) rpmlibNeedsFeature(pkg->header,
+ 				  "BuiltinSquirrelScripts", "5.2-1");
++	addReqProv(NULL, pkg->header, RPMTAG_REQUIRENAME, "rpmsquirrel.so" SO_EXT, NULL, RPMSENSE_INTERP, 0);
+     } else
+ #endif
+ #ifdef WITH_TCL
+     if (!strcmp(progArgv[0], "<tcl>")) {
+ 	(void) rpmlibNeedsFeature(pkg->header,
+ 				  "BuiltinTclScripts", "5.2-1");
++	addReqProv(NULL, pkg->header, RPMTAG_REQUIRENAME, "rpmtcl.so" SO_EXT, NULL, RPMSENSE_INTERP, 0);
+     } else
+ #endif
+     if (progArgv[0][0] == '<') {
+--- rpm-5.4.10/configure.ac.dlopen~	2012-07-10 20:20:02.224984301 +0200
++++ rpm-5.4.10/configure.ac	2012-07-10 20:20:02.581979838 +0200
+@@ -1720,44 +1720,95 @@ RPM_CHECK_LIB(
+ AC_SUBST(WITH_CUDF_CUDFTOOL)
+ 
+ dnl # Perl ExtUtils::Embed
++WITH_PERL_INCDIR="`perl -MExtUtils::Embed -e perl_inc| sed -e 's#^ -I##' -e 's# ##g'`"
++WITH_PERL_LIB="`perl -MConfig -e 'print \"$Config{archlibexp}/CORE/\"'`"
++WITH_PERL_CFLAGS="`perl -MExtUtils::Embed -e ccopts`"
++WITH_PERL_LDFLAGS="`perl -MExtUtils::Embed -e ldopts`"
++export LD_RUN_PATH=$WITH_PERL_LIB
++export LIBRARY_PATH=$LD_RUN_PATH
++export C_INCLUDE_PATH=$WITH_PERL_INCDIR
+ RPM_CHECK_LIB(
+     [Perl ExtUtils::Embed], [perlembed],
+     [perl], [perl_alloc], [EXTERN.h],
+     [no,external:none], [],
+-    [
+-    ], [])
++    [ AM_CONDITIONAL(
++      [WITH_PERLEMBED],
++      [true])
++    ],
++    [ AM_CONDITIONAL(
++      [WITH_PERLEMBED],
++      [false])
++    ])
++LIBS="`echo $LIBS|sed -e s/-lperl//g`"
++AC_SUBST(WITH_PERL_CFLAGS)
++AC_SUBST(WITH_PERL_LDFLAGS)
++unset LD_RUN_PATH
++unset LIBRARY_PATH
++unset C_INCLUDE_PATH
+ 
++export C_INCLUDE_PATH=$WITH_PYTHON_INCDIR
+ dnl # Python embedding
+ RPM_CHECK_LIB(
+     [Python embedding], [pythonembed],
+-    [python2.7 python2.6 python2.5 python2.4], [Py_Initialize], [Python.h],
++    [python2.7], [Py_Initialize], [Python.h],
+     [no,external:none], [],
+-    [
+-    ], [])
++    [ AM_CONDITIONAL(
++      [WITH_PYTHONEMBED],
++      [true])
++    ],
++    [ AM_CONDITIONAL(
++      [WITH_PYTHONEMBED],
++      [false])
++     ])
++unset C_INCLUDE_PATH
+ 
+ dnl # Ruby
+ WITH_RUBY_SUBDIR=""
+-WITH_RUBY_CPPFLAGS=""
++WITH_RUBY_CPPFLAGS="`pkg-config --cflags ruby-1.9`"
++WITH_RUBY_LDFLAGS="`pkg-config --libs ruby-1.9`"
+ WITH_RUBY_VENDORARCHDIR=""
++export C_INCLUDE_PATH="`pkg-config --cflags-only-I ruby-1.9|sed -e 's#-I##g' -e 's# /#:/#g' -e 's# ##g'`"
+ RPM_CHECK_LIB(
+     [Ruby], [ruby],
+     [ruby], [ruby_init], [ruby.h],
+     [no,external:none], [],
+     [ AC_DEFINE(WITH_RUBYEMBED, 1, [Define to 1 if you want embedded Ruby])
+       WITH_RUBY_SUBDIR=ruby
+-    ], [])
++      AM_CONDITIONAL(
++      [WITH_RUBYEMBED],
++      [true])
++    ],
++    [ AM_CONDITIONAL(
++      [WITH_RUBYEMBED],
++      [false])
++    ])
++LIBS="`echo $LIBS|sed -e s/-lruby//g`"
+ AC_SUBST(WITH_RUBY_CPPFLAGS)
++AC_SUBST(WITH_RUBY_LDFLAGS)
+ AC_SUBST(WITH_RUBY_SUBDIR)
+ AC_SUBST(WITH_RUBY_VENDORARCHDIR)
++unset C_INCLUDE_PATH
+ 
+ 
+ dnl # Squirrel
++export C_INCLUDE_PATH="/usr/include/squirrel"
++SQUIRREL_CPPFLAGS="-I$C_INCLUDE_PATH"
++SQUIRREL_LIBS="-lsquirrel"
+ RPM_CHECK_LIB(
+     [Squirrel], [squirrel],
+     [squirrel], [sq_open], [squirrel.h],
+     [no,external:none], [],
+-    [
+-    ], [])
++    [ AM_CONDITIONAL(
++      [WITH_SQUIRREL],
++      [true])
++    ],
++    [ AM_CONDITIONAL(
++      [WITH_SQUIRREL],
++      [false])
++    ])
++AC_SUBST(SQUIRREL_CPPFLAGS)
++AC_SUBST(SQUIRREL_LIBS)
++unset C_INCLUDE_PATH
+ 
+ dnl # Tcl (should tcl8.4 be supported too?)
+ WITH_TCL_SUBDIR=""
+@@ -1765,8 +1816,14 @@ RPM_CHECK_LIB(
+     [Tcl], [tcl],
+     [tcl8.6 tcl8.5 tcl], [Tcl_CreateInterp], [tcl.h],
+     [no,external:none], [],
+-    [
+-    ], [])
++    [ AM_CONDITIONAL(
++      [WITH_TCL],
++      [true])
++    ],
++    [ AM_CONDITIONAL(
++      [WITH_TCL],
++      [false])
++    ])
+ AC_SUBST(WITH_TCL_SUBDIR)
+ 
+ dnl # FICL
+--- rpm-5.4.10/rpmio/Makefile.am.dlopen~	2012-04-16 22:53:32.000000000 +0200
++++ rpm-5.4.10/rpmio/Makefile.am	2012-07-10 20:20:02.582979826 +0200
+@@ -92,8 +92,8 @@ RPM_LDADD_COMMON = \
+ 	$(top_builddir)/rpmdb/librpmdb.la \
+ 	$(RPMIO_LDADD_COMMON)
+ 
+-#pkglibdir = @USRLIBRPM@
+-#pkglib_LTLIBRARIES = libsqlio.la
++zpkglibdir = @USRLIBRPM@/lib
++zpkglib_LTLIBRARIES = #libsqlio.la
+ 
+ pkgincdir = $(pkgincludedir)$(WITH_PATH_VERSIONED_SUFFIX)
+ pkginc_HEADERS = argv.h mire.h rpmzlog.h yarn.h \
+@@ -210,6 +210,52 @@ endif
+ #librpmio.la: $(librpmio_la_OBJECTS) $(librpmio_la_DEPENDENCIES) 
+ #	$(librpmio_la_LINK) -rpath $(usrlibdir) $(librpmio_la_OBJECTS) $(librpmio_la_LIBADD)
+ 
++if WITH_PERLEMBED
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
++zpkglib_LTLIBRARIES	+= rpmperl.la
++rpmperl_la_SOURCES	= rpmperl.c
++rpmperl_la_CPPFLAGS	= -DMODULE_EMBED
++rpmperl_la_CFLAGS	= $(WITH_PERL_CFLAGS)
++rpmperl_la_LDFLAGS	= -module -avoid-version $(WITH_PERL_LDFLAGS)
++rpmperl_la_LIBADD	= $(RPMIO_LDADD_COMMON)
++endif
++
++if WITH_PYTHONEMBED
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
++zpkglib_LTLIBRARIES	+= rpmpython.la
++rpmpython_la_SOURCES	= rpmpython.c
++rpmpython_la_CPPFLAGS	= -I@WITH_PYTHON_INCDIR@ -DMODULE_EMBED
++rpmpython_la_LDFLAGS	= -module -avoid-version
++rpmpython_la_LIBADD	= $(RPMIO_LDADD_COMMON)
++endif
++
++if WITH_RUBYEMBED
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
++zpkglib_LTLIBRARIES	+= rpmruby.la
++rpmruby_la_SOURCES	= rpmruby.c
++rpmruby_la_CPPFLAGS	= $(WITH_RUBY_CPPFLAGS) -DMODULE_EMBED
++rpmruby_la_LDFLAGS	= -module -avoid-version $(WITH_RUBY_LDFLAGS)
++rpmruby_la_LIBADD	= $(RPMIO_LDADD_COMMON)
++endif
++
++if WITH_SQUIRREL
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
++zpkglib_LTLIBRARIES	+= rpmsquirrel.la
++rpmsquirrel_la_SOURCES	= rpmsquirrel.c
++rpmsquirrel_la_CPPFLAGS	= $(SQUIRREL_CPPFLAGS) -DMODULE_EMBED
++rpmsquirrel_la_LDFLAGS	= -module -avoid-version
++rpmsquirrel_la_LIBADD	= $(RPMIO_LDADD_COMMON) $(SQUIRREL_LIBS)
++endif
++
++if WITH_TCL
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
++zpkglib_LTLIBRARIES	+= rpmtcl.la
++rpmtcl_la_SOURCES	= rpmtcl.c
++rpmtcl_la_CPPFLAGS	= -DMODULE_EMBED
++rpmtcl_la_LDFLAGS	= -module -avoid-version
++rpmtcl_la_LIBADD	= $(RPMIO_LDADD_COMMON) -ltcl
++endif
++
+ #libsqlio_la_SOURCES	= libsqlio.c
+ #libsqlio_la_LIBADD	= $(RPMIO_LDADD_COMMON)
+ 
+--- rpm-5.4.10/rpmio/rpmperl.c.dlopen~	2012-04-15 23:20:53.000000000 +0200
++++ rpm-5.4.10/rpmio/rpmperl.c	2012-07-10 20:20:02.582979826 +0200
+@@ -7,9 +7,15 @@
+ #include "rpmperl.h"
+ #include <rpmmacro.h>
+ 
+-#if defined(WITH_PERLEMBED)
++#if defined(MODULE_EMBED)
+ #include <EXTERN.h>
+ #include <perl.h>
++#undef WITH_PERLEMBED
++#endif
++
++#if defined(WITH_PERLEMBED)
++#include <dlfcn.h>
++#include <rpmlog.h>
+ #endif
+ 
+ #undef	UNLIKELY	/* XXX everyone gotta be different */
+@@ -21,6 +27,12 @@ int _rpmperl_debug = 0;
+ /*@unchecked@*/ /*@relnull@*/
+ rpmperl _rpmperlI = NULL;
+ 
++#if defined(WITH_PERLEMBED)
++static int dlopened = 0;
++static rpmperl (*rpmperlNew_p) (char ** av, uint32_t flags);
++static rpmRC (*rpmperlRun_p) (rpmperl perl, const char * str, const char ** resultp);
++#endif
++
+ #define	my_perl	((PerlInterpreter *)perl->I)
+ 
+ static void rpmperlFini(void * _perl)
+@@ -29,7 +41,7 @@ static void rpmperlFini(void * _perl)
+ {
+     rpmperl perl = (rpmperl) _perl;
+ 
+-#if defined(WITH_PERLEMBED)
++#if defined(MODULE_EMBED)
+     PERL_SET_CONTEXT(my_perl);
+     PL_perl_destruct_level = 1;
+     perl_destruct(my_perl);
+@@ -57,7 +69,7 @@ static rpmperl rpmperlGetPool(/*@null@*/
+     return (rpmperl) rpmioGetPool(pool, sizeof(*perl));
+ }
+ 
+-#if defined(WITH_PERLEMBED)
++#if defined(MODULE_EMBED)
+ EXTERN_C void xs_init (PerlInterpreter * _my_perl PERL_UNUSED_DECL);
+ 
+ EXTERN_C void boot_DynaLoader (PerlInterpreter* _my_perl, CV* cv);
+@@ -90,14 +102,40 @@ static rpmperl rpmperlI(void)
+     return _rpmperlI;
+ }
+ 
++#if defined(WITH_PERLEMBED)
++static void loadModule(void) {
++    const char librpmperl[] = "rpmperl.so";
++    void *h;
++
++    h = dlopen (librpmperl, RTLD_NOW|RTLD_GLOBAL);
++    if (!h)
++    {
++	rpmlog(RPMLOG_WARNING, D_("Unable to open \"%s\" (%s), "
++		    "embedded perl will not be available\n"),
++		librpmperl, dlerror());
++    }
++    else if(!((rpmperlNew_p = dlsym(h, "rpmperlNew"))
++		&& (rpmperlRun_p = dlsym(h, "rpmperlRun")))) {
++	rpmlog(RPMLOG_WARNING, D_("Opened library \"%s\" is incompatible (%s), "
++		    "embedded perl will not be available\n"),
++		librpmperl, dlerror());
++	if (dlclose (h))
++	    rpmlog(RPMLOG_WARNING, "Error closing library \"%s\": %s", librpmperl,
++		    dlerror());
++    } else
++	dlopened = 1;
++}
++#endif
++
+ rpmperl rpmperlNew(char ** av, uint32_t flags)
+ {
+-    rpmperl perl =
+-#ifdef	NOTYET
+-	(flags & 0x80000000) ? rpmperlI() :
+-#endif
+-	rpmperlGetPool(_rpmperlPool);
+ #if defined(WITH_PERLEMBED)
++    if (!dlopened) loadModule();
++    if (dlopened) return rpmperlNew_p(av, flags);
++#endif
++    rpmperl perl = (flags & 0x80000000)
++	? rpmperlI() : rpmperlGetPool(_rpmperlPool);
++#if defined(MODULE_EMBED)
+     static const char * _av[] = { "rpmperl", NULL };
+     static int initialized = 0;
+     ARGV_t argv = NULL;
+@@ -143,6 +181,9 @@ rpmperl rpmperlNew(char ** av, uint32_t
+ 
+ rpmRC rpmperlRun(rpmperl perl, const char * str, const char ** resultp)
+ {
++#if defined(WITH_PERLEMBED)
++    if (dlopened) return rpmperlRun_p(perl, str, resultp);
++#endif
+     rpmRC rc = RPMRC_FAIL;
+ 
+ if (_rpmperl_debug)
+@@ -151,7 +192,7 @@ fprintf(stderr, "==> %s(%p,%s)\n", __FUN
+     if (perl == NULL) perl = rpmperlI();
+ 
+     if (str != NULL) {
+-#if defined(WITH_PERLEMBED)
++#if defined(MODULE_EMBED)
+ 	STRLEN n_a;
+ 	SV * retSV;
+ 
+--- rpm-5.4.10/rpmio/rpmpython.c.dlopen~	2012-07-06 17:39:19.000000000 +0200
++++ rpm-5.4.10/rpmio/rpmpython.c	2012-07-10 20:20:37.177547334 +0200
+@@ -8,9 +8,15 @@
+ #define _RPMPYTHON_INTERNAL
+ #include "rpmpython.h"
+ 
+-#if defined(WITH_PYTHONEMBED)
++#if defined(MODULE_EMBED)
+ #include <Python.h>
+ #include <cStringIO.h>
++#undef WITH_PYTHONEMBED
++#endif
++
++#if defined(WITH_PYTHONEMBED)
++#include <dlfcn.h>
++#include <rpmlog.h>
+ #endif
+ 
+ #include "debug.h"
+@@ -21,13 +27,20 @@ int _rpmpython_debug = 0;
+ /*@unchecked@*/ /*@relnull@*/
+ rpmpython _rpmpythonI = NULL;
+ 
++#if defined(WITH_PYTHONEMBED)
++static int dlopened = 0;
++static rpmpython (*rpmpythonNew_p) (char ** av, uint32_t flags);
++static rpmRC (*rpmpythonRunFile_p) (rpmpython python, const char * fn, const char ** resultp);
++static rpmRC (*rpmpythonRun_p) (rpmpython python, const char * str, const char ** resultp);
++#endif
++
+ static void rpmpythonFini(void * _python)
+         /*@globals fileSystem @*/
+         /*@modifies *_python, fileSystem @*/
+ {
+     rpmpython python = (rpmpython) _python;
+ 
+-#if defined(WITH_PYTHONEMBED)
++#if defined(MODULE_EMBED)
+     Py_Finalize();
+ #endif
+     python->I = NULL;
+@@ -51,7 +64,7 @@ static rpmpython rpmpythonGetPool(/*@nul
+ }
+ 
+ /*@unchecked@*/
+-#if defined(WITH_PYTHONEMBED)
++#if defined(MODULE_EMBED)
+ static const char * _rpmpythonI_init = "\
+ import sys\n\
+ from cStringIO import StringIO\n\
+@@ -68,10 +81,40 @@ static rpmpython rpmpythonI(void)
+     return _rpmpythonI;
+ }
+ 
++#if defined(WITH_PYTHONEMBED)
++static void loadModule(void) {
++    const char librpmpython[] = "rpmpython.so";
++    void *h;
++
++    h = dlopen (librpmpython, RTLD_NOW|RTLD_GLOBAL);
++    if (!h)
++    {
++	rpmlog(RPMLOG_WARNING, D_("Unable to open \"%s\" (%s), "
++		    "embedded python will not be available\n"),
++		librpmpython, dlerror());
++    }
++    else if(!((rpmpythonNew_p = dlsym(h, "rpmpythonNew"))
++		&& (rpmpythonRunFile_p = dlsym(h, "rpmpythonRunFile"))
++		&& (rpmpythonRun_p = dlsym(h, "rpmpythonRun")))) {
++	rpmlog(RPMLOG_WARNING, D_("Opened library \"%s\" is incompatible (%s), "
++		    "embedded python will not be available\n"),
++		librpmpython, dlerror());
++	if (dlclose (h))
++	    rpmlog(RPMLOG_WARNING, "Error closing library \"%s\": %s", librpmpython,
++		    dlerror());
++    } else
++	dlopened = 1;
++}
++#endif
++
+ rpmpython rpmpythonNew(char ** av, uint32_t flags)
+ {
+-    static char * _av[] = { (char *) "rpmpython", NULL };
+ #if defined(WITH_PYTHONEMBED)
++    if (!dlopened) loadModule();
++    if (dlopened) return rpmpythonNew_p(av, flags);
++#endif
++    static char * _av[] = { "rpmpython", NULL };
++#if defined(MODULE_EMBED)
+     int initialize = (!(flags & 0x80000000) || _rpmpythonI == NULL);
+ #endif
+     rpmpython python = (flags & 0x80000000)
+@@ -82,7 +125,7 @@ fprintf(stderr, "==> %s(%p, %d) python %
+ 
+     if (av == NULL) av = _av;
+ 
+-#if defined(WITH_PYTHONEMBED)
++#if defined(MODULE_EMBED)
+     if (!Py_IsInitialized()) {
+ 	Py_SetProgramName((char *)_av[0]);
+ 	Py_Initialize();
+@@ -107,6 +150,9 @@ fprintf(stderr, "==========\n%s\n=======
+ 
+ rpmRC rpmpythonRunFile(rpmpython python, const char * fn, const char ** resultp)
+ {
++#if defined(WITH_PYTHONEMBED)
++    if (dlopened) return rpmpythonRunFile_p(python, fn, resultp);
++#endif
+     rpmRC rc = RPMRC_FAIL;
+ 
+ if (_rpmpython_debug)
+@@ -115,7 +161,7 @@ fprintf(stderr, "==> %s(%p,%s)\n", __FUN
+     if (python == NULL) python = rpmpythonI();
+ 
+     if (fn != NULL) {
+-#if defined(WITH_PYTHONEMBED)
++#if defined(MODULE_EMBED)
+ 	const char * pyfn = ((fn == NULL || !strcmp(fn, "-")) ? "<stdin>" : fn);
+ 	FILE * pyfp = (!strcmp(pyfn, "<stdin>") ? stdin : fopen(fn, "rb"));
+ 	int closeit = (pyfp != stdin);
+@@ -156,6 +202,9 @@ static const char * rpmpythonSlurp(const
+ 
+ rpmRC rpmpythonRun(rpmpython python, const char * str, const char ** resultp)
+ {
++#if defined(WITH_PYTHONEMBED)
++    if (dlopened) return rpmpythonRun_p(python, str, resultp);
++#endif
+     rpmRC rc = RPMRC_FAIL;
+ 
+ if (_rpmpython_debug)
+@@ -165,7 +214,7 @@ fprintf(stderr, "==> %s(%p,%s,%p)\n", __
+ 
+     if (str != NULL) {
+ 	const char * val = rpmpythonSlurp(str);
+-#if defined(WITH_PYTHONEMBED)
++#if defined(MODULE_EMBED)
+ 	PyCompilerFlags cf = { 0 };
+ 	PyObject * m = PyImport_AddModule("__main__");
+ 	PyObject * d = (m ? PyModule_GetDict(m) : NULL);
+--- rpm-5.4.10/rpmio/rpmruby.c.dlopen~	2012-04-15 23:20:53.000000000 +0200
++++ rpm-5.4.10/rpmio/rpmruby.c	2012-07-10 20:20:02.585979790 +0200
+@@ -1,17 +1,26 @@
+ #include "system.h"
+ #include <argv.h>
+ 
+-#if defined(WITH_RUBYEMBED)
++#if defined(MODULE_EMBED)
+ 
+ /* Make sure Ruby's fun stuff has its own xmalloc & Co functions available */
+ #undef xmalloc
+ #undef xcalloc
+ #undef xrealloc
+ 
++/* XXX avoid conflicting definitions in ruby.h */
++#define HAVE_SETPROCTITLE 1
++ 
+ #include <ruby.h>
++#undef WITH_RUBYEMBED
+ 
+ #endif
+ 
++#if defined(WITH_RUBYEMBED)
++#include <dlfcn.h>
++#include <rpmlog.h>
++#endif
++
+ #define _RPMRUBY_INTERNAL 1
+ #include "rpmruby.h"
+ 
+@@ -32,7 +41,7 @@ static void rpmrubyFini(void *_ruby)
+ {
+     rpmruby ruby = (rpmruby) _ruby;
+ 
+-#if defined(WITH_RUBYEMBED)
++#   if defined(MODULE_EMBED)
+     ruby_cleanup(0); 
+ #endif
+     ruby->I = NULL;
+@@ -88,20 +97,51 @@ static rpmruby rpmrubyI()
+     return _rpmrubyI;
+ }
+ 
++#if defined(WITH_RUBYEMBED)
++static void loadModule(void) {
++    const char librpmruby[] = "rpmruby.so";
++    void *h;
++
++    h = dlopen (librpmruby, RTLD_NOW|RTLD_GLOBAL);
++    if (!h)
++    {
++	rpmlog(RPMLOG_WARNING, D_("Unable to open \"%s\" (%s), "
++		    "embedded ruby will not be available\n"),
++		librpmruby, dlerror());
++    }
++    else if(!((rpmrubyNew_p = dlsym(h, "rpmrubyNew"))
++		&& (rpmrubyRun_p = dlsym(h, "rpmrubyRun")))) {
++	rpmlog(RPMLOG_WARNING, D_("Opened library \"%s\" is incompatible (%s), "
++		    "embedded ruby will not be available\n"),
++		librpmruby, dlerror());
++	if (dlclose (h))
++	    rpmlog(RPMLOG_WARNING, "Error closing library \"%s\": %s", librpmruby,
++		    dlerror());
++    } else
++	dlopened = 1;
++}
++#endif
++
+ rpmruby rpmrubyNew(char **av, uint32_t flags)
+ {
++#if defined(WITH_RUBYEMBED)
++    if (!dlopened) loadModule();
++    if (dlopened) return rpmrubyNew_p(av, flags);
++#endif
++
+     static const char *_av[] = { "rpmruby", NULL };
+     
+     /* XXX FIXME: recurse like every other embedded interpreter. */
+     if (_rpmrubyI)
+         return _rpmrubyI;
+ 
+-    rpmruby ruby = rpmrubyGetPool(_rpmrubyPool);
++    rpmruby ruby =  (flags & 0x80000000)
++	? rpmrubyI() : rpmrubyGetPool(_rpmrubyPool);
+ 
+     if (av == NULL)
+         av = (char **) _av;
+ 
+-#if defined(WITH_RUBYEMBED)
++#   if defined(MODULE_EMBED)
+     RUBY_INIT_STACK;
+     ruby_init();
+     ruby_init_loadpath();
+@@ -114,9 +154,18 @@ rpmruby rpmrubyNew(char **av, uint32_t f
+     return rpmrubyLink(ruby);
+ }
+ 
++#if defined(WITH_RUBYEMBED)
++static int dlopened = 0;
++static rpmruby (*rpmrubyNew_p) (char ** av, uint32_t flags);
++static rpmRC (*rpmrubyRun_p) (rpmruby ruby, const char * str, const char ** resultp);
++#endif
+ 
+ rpmRC rpmrubyRun(rpmruby ruby, const char *str, const char **resultp)
+ {
++#if defined(WITH_RUBYEMBED)
++    if (dlopened) return rpmrubyRun_p(ruby, str, resultp);
++#endif
++
+     rpmRC rc = RPMRC_FAIL;
+ 
+ if (_rpmruby_debug)
+@@ -125,7 +174,7 @@ fprintf(stderr, "==> %s(%p,%s,%p)\n", __
+     if (ruby == NULL)
+         ruby = rpmrubyI();
+ 
+-#if defined(WITH_RUBYEMBED)
++#if defined(MODULE_EMBED)
+     if (str) {
+ 	int state = -1;
+ 	ruby->state = rb_eval_string_protect(str, &state);
+--- rpm-5.4.10/rpmio/rpmsquirrel.c.dlopen~	2012-04-15 23:20:53.000000000 +0200
++++ rpm-5.4.10/rpmio/rpmsquirrel.c	2012-07-10 20:20:02.586979777 +0200
+@@ -3,9 +3,16 @@
+ 
+ #include <argv.h>
+ 
+-#ifdef	WITH_SQUIRREL
++#if defined(MODULE_EMBED)
+ #include <squirrel.h>
++#undef WITH_SQUIRREL
+ #endif
++
++#if defined(WITH_SQUIRREL)
++#include <dlfcn.h>
++#include <rpmlog.h>
++#endif
++
+ #define _RPMSQUIRREL_INTERNAL
+ #include "rpmsquirrel.h"
+ 
+@@ -17,13 +24,20 @@ int _rpmsquirrel_debug = 0;
+ /*@unchecked@*/ /*@relnull@*/
+ rpmsquirrel _rpmsquirrelI = NULL;
+ 
++#if defined(WITH_SQUIRREL)
++static int dlopened = 0;
++static rpmsquirrel (*rpmsquirrelNew_p) (char ** av, uint32_t flags);
++static rpmRC (*rpmsquirrelRunFile_p) (rpmsquirrel squirrel, const char * fn, const char ** resultp);
++static rpmRC (*rpmsquirrelRun_p) (rpmsquirrel squirrel, const char * str, const char ** resultp);
++#endif
++
+ static void rpmsquirrelFini(void * _squirrel)
+         /*@globals fileSystem @*/
+         /*@modifies *_squirrel, fileSystem @*/
+ {
+     rpmsquirrel squirrel = (rpmsquirrel) _squirrel;
+ 
+-#if defined(WITH_SQUIRREL)
++#if defined(MODULE_EMBED)
+     sq_close((HSQUIRRELVM)squirrel->I);
+ #endif
+     squirrel->I = NULL;
+@@ -48,7 +62,7 @@ static rpmsquirrel rpmsquirrelGetPool(/*
+     return (rpmsquirrel) rpmioGetPool(pool, sizeof(*squirrel));
+ }
+ 
+-#if defined(WITH_SQUIRREL)
++#if defined(MODULE_EMBED)
+ static void rpmsquirrelPrint(HSQUIRRELVM v, const SQChar *s, ...)
+ {
+     rpmsquirrel squirrel = sq_getforeignptr(v);
+@@ -84,15 +98,42 @@ static rpmsquirrel rpmsquirrelI(void)
+     return _rpmsquirrelI;
+ }
+ 
++#if defined(WITH_SQUIRREL)
++static void loadModule(void) {
++    const char librpmsquirrel[] = "rpmsquirrel.so";
++    void *h;
++
++    h = dlopen (librpmsquirrel, RTLD_NOW|RTLD_GLOBAL);
++    if (!h)
++    {
++	rpmlog(RPMLOG_WARNING, D_("Unable to open \"%s\" (%s), "
++		    "embedded squirrel will not be available\n"),
++		librpmsquirrel, dlerror());
++    }
++    else if(!((rpmsquirrelNew_p = dlsym(h, "rpmsquirrelNew"))
++		&& (rpmsquirrelRunFile_p = dlsym(h, "rpmsquirrelRunFile"))
++		&& (rpmsquirrelRun_p = dlsym(h, "rpmsquirrelRun")))) {
++	rpmlog(RPMLOG_WARNING, D_("Opened library \"%s\" is incompatible (%s), "
++		    "embedded squirrel will not be available\n"),
++		librpmsquirrel, dlerror());
++	if (dlclose (h))
++	    rpmlog(RPMLOG_WARNING, "Error closing library \"%s\": %s", librpmsquirrel,
++		    dlerror());
++    } else
++	dlopened = 1;
++}
++#endif
++
+ rpmsquirrel rpmsquirrelNew(char ** av, uint32_t flags)
+ {
+-    rpmsquirrel squirrel =
+-#ifdef	NOTYET
+-	(flags & 0x80000000) ? rpmsquirrelI() :
++#if defined(WITH_SQUIRREL)
++    if (!dlopened) loadModule();
++    if (dlopened) return rpmsquirrelNew_p(av, flags);
+ #endif
+-	rpmsquirrelGetPool(_rpmsquirrelPool);
++    rpmsquirrel squirrel = (flags & 0x80000000)
++	? rpmsquirrelI() : rpmsquirrelGetPool(_rpmsquirrelPool);
+ 
+-#if defined(WITH_SQUIRREL)
++#if defined(MODULE_EMBED)
+     static const char * _av[] = { "rpmsquirrel", NULL };
+     SQInteger stacksize = 1024;
+     HSQUIRRELVM v = sq_open(stacksize);
+@@ -119,13 +160,18 @@ rpmsquirrel rpmsquirrelNew(char ** av, u
+     }
+ #endif
+ #endif
++#if !defined(WITH_SQUIRREL)
+     squirrel->iob = rpmiobNew(0);
++#endif
+ 
+     return rpmsquirrelLink(squirrel);
+ }
+ 
+ rpmRC rpmsquirrelRunFile(rpmsquirrel squirrel, const char * fn, const char ** resultp)
+ {
++#if defined(WITH_SQUIRREL)
++    if (dlopened) return rpmsquirrelRunFile_p(squirrel, fn, resultp);
++#endif
+     rpmRC rc = RPMRC_FAIL;
+ 
+ if (_rpmsquirrel_debug)
+@@ -145,6 +191,10 @@ fprintf(stderr, "==> %s(%p,%s)\n", __FUN
+ 
+ rpmRC rpmsquirrelRun(rpmsquirrel squirrel, const char * str, const char ** resultp)
+ {
++#if defined(WITH_SQUIRREL)
++    if (dlopened) return rpmsquirrelRun_p(squirrel, str, resultp);
++#endif
++
+     rpmRC rc = RPMRC_FAIL;
+ 
+ if (_rpmsquirrel_debug)
+@@ -152,7 +202,7 @@ fprintf(stderr, "==> %s(%p,%s)\n", __FUN
+ 
+     if (squirrel == NULL) squirrel = rpmsquirrelI();
+ 
+-#if defined(WITH_SQUIRREL)
++#if defined(MODULE_EMBED)
+     if (str != NULL) {
+ 	size_t ns = strlen(str);
+ 	if (ns > 0) {
+--- rpm-5.4.10/rpmio/rpmtcl.c.dlopen~	2012-04-15 23:20:53.000000000 +0200
++++ rpm-5.4.10/rpmio/rpmtcl.c	2012-07-10 20:20:02.588979751 +0200
+@@ -2,9 +2,16 @@
+ 
+ #include <argv.h>
+ 
+-#ifdef	WITH_TCL
++#if defined(MODULE_EMBED)
+ #include <tcl.h>
++#undef WITH_TCL
+ #endif
++
++#if defined(WITH_TCL)
++#include <dlfcn.h>
++#include <rpmlog.h>
++#endif
++
+ #define _RPMTCL_INTERNAL
+ #include "rpmtcl.h"
+ 
+@@ -16,13 +23,20 @@ int _rpmtcl_debug = 0;
+ /*@unchecked@*/ /*@relnull@*/
+ rpmtcl _rpmtclI = NULL;
+ 
++#if defined(WITH_TCL)
++static int dlopened = 0;
++static rpmtcl (*rpmtclNew_p) (char ** av, uint32_t flags);
++static rpmRC (*rpmtclRunFile_p) (rpmtcl tcl, const char * fn, const char ** resultp);
++static rpmRC (*rpmtclRun_p) (rpmtcl tcl, const char * str, const char ** resultp);
++#endif
++
+ static void rpmtclFini(void * _tcl)
+         /*@globals fileSystem @*/
+         /*@modifies *_tcl, fileSystem @*/
+ {
+     rpmtcl tcl = (rpmtcl) _tcl;
+ 
+-#if defined(WITH_TCL)
++#if defined(MODULE_EMBED)
+     Tcl_DeleteInterp((Tcl_Interp *)tcl->I);
+ #endif
+     tcl->I = NULL;
+@@ -47,7 +61,7 @@ static rpmtcl rpmtclGetPool(/*@null@*/ r
+     return (rpmtcl) rpmioGetPool(pool, sizeof(*tcl));
+ }
+ 
+-#if defined(WITH_TCL)
++#if defined(MODULE_EMBED)
+ static int rpmtclIOclose(ClientData CD, Tcl_Interp *I)
+ 	/*@*/
+ {
+@@ -122,15 +136,42 @@ static rpmtcl rpmtclI(void)
+     return _rpmtclI;
+ }
+ 
++#if defined(WITH_TCL)
++static void loadModule(void) {
++    const char librpmtcl[] = "rpmtcl.so";
++    void *h;
++
++    h = dlopen (librpmtcl, RTLD_NOW|RTLD_GLOBAL);
++    if (!h)
++    {
++	rpmlog(RPMLOG_WARNING, D_("Unable to open \"%s\" (%s), "
++		    "embedded tcl will not be available\n"),
++		librpmtcl, dlerror());
++    }
++    else if(!((rpmtclNew_p = dlsym(h, "rpmtclNew"))
++		&& (rpmtclRunFile_p = dlsym(h, "rpmtclRunFile"))
++		&& (rpmtclRun_p = dlsym(h, "rpmtclRun")))) {
++	rpmlog(RPMLOG_WARNING, D_("Opened library \"%s\" is incompatible (%s), "
++		    "embedded tcl will not be available\n"),
++		librpmtcl, dlerror());
++	if (dlclose (h))
++	    rpmlog(RPMLOG_WARNING, "Error closing library \"%s\": %s", librpmtcl,
++		    dlerror());
++    } else
++	dlopened = 1;
++}
++#endif
++
+ rpmtcl rpmtclNew(char ** av, uint32_t flags)
+ {
+-    rpmtcl tcl =
+-#ifdef	NOTYET
+-	(flags & 0x80000000) ? rpmtclI() :
++#if defined(WITH_TCL)
++    if (!dlopened) loadModule();
++    if (dlopened) return rpmtclNew_p(av, flags);
+ #endif
+-	rpmtclGetPool(_rpmtclPool);
++    rpmtcl tcl = (flags & 0x80000000)
++	? rpmtclI() : rpmtclGetPool(_rpmtclPool);
+ 
+-#if defined(WITH_TCL)
++#if defined(MODULE_EMBED)
+     static char * _av[] = { "rpmtcl", NULL };
+     Tcl_Interp * tclI = Tcl_CreateInterp();
+     char b[32];
+@@ -152,13 +193,18 @@ rpmtcl rpmtclNew(char ** av, uint32_t fl
+ 	tcl->tclout = (void *) tclout;
+     }
+ #endif
++#if !defined(WITH_TCL)
+     tcl->iob = rpmiobNew(0);
++#endif
+ 
+     return rpmtclLink(tcl);
+ }
+ 
+ rpmRC rpmtclRunFile(rpmtcl tcl, const char * fn, const char ** resultp)
+ {
++#if defined(WITH_TCL)
++    if (dlopened) return rpmtclRunFile_p(tcl, fn, resultp);
++#endif
+     rpmRC rc = RPMRC_FAIL;
+ 
+ if (_rpmtcl_debug)
+@@ -166,7 +212,7 @@ fprintf(stderr, "==> %s(%p,%s)\n", __FUN
+ 
+     if (tcl == NULL) tcl = rpmtclI();
+ 
+-#if defined(WITH_TCL)
++#if defined(MODULE_EMBED)
+     if (fn != NULL && Tcl_EvalFile((Tcl_Interp *)tcl->I, fn) == TCL_OK) {
+ 	rc = RPMRC_OK;
+ 	if (resultp)
+@@ -178,6 +224,9 @@ fprintf(stderr, "==> %s(%p,%s)\n", __FUN
+ 
+ rpmRC rpmtclRun(rpmtcl tcl, const char * str, const char ** resultp)
+ {
++#if defined(WITH_TCL)
++    if (dlopened) return rpmtclRun_p(tcl, str, resultp);
++#endif
+     rpmRC rc = RPMRC_FAIL;
+ 
+ if (_rpmtcl_debug)
+@@ -185,7 +234,7 @@ fprintf(stderr, "==> %s(%p,%s)\n", __FUN
+ 
+     if (tcl == NULL) tcl = rpmtclI();
+ 
+-#if defined(WITH_TCL)
++#if defined(MODULE_EMBED)
+     if (str != NULL && Tcl_Eval((Tcl_Interp *)tcl->I, str) == TCL_OK) {
+ 	rc = RPMRC_OK;
+ 	if (resultp)
+--- rpm-5.4.10/ruby/Makefile.am.dlopen~	2011-09-13 03:12:53.000000000 +0200
++++ rpm-5.4.10/ruby/Makefile.am	2012-07-10 20:20:02.588979751 +0200
+@@ -50,8 +50,8 @@ pkgbindir =     @USRLIBRPM@/bin
+ pkgbin_PROGRAMS =       trb
+ pkglib_LTLIBRARIES =    rpm.la
+ 
+-rpm_la_CFLAGS = -fno-strict-aliasing
+-rpm_la_LDFLAGS = -module -avoid-version
++rpm_la_CFLAGS = -fno-strict-aliasing $(WITH_RUBY_CFLAGS)
++rpm_la_LDFLAGS = -module -avoid-version $(WITH_RUBY_LDFLAGS)
+ rpm_la_LIBADD = \
+ 	$(top_builddir)/build/librpmbuild.la \
+ 	$(top_builddir)/lib/librpm.la \
+--- rpm-5.4.10/ruby/system.h.dlopen~	2010-12-01 17:09:50.000000000 +0100
++++ rpm-5.4.10/ruby/system.h	2012-07-10 20:20:02.589979738 +0200
+@@ -2,6 +2,7 @@
+ #define	H_SYSTEM_RUBY
+ 
+ #include "../system.h"
++#define HAVE_SETPROCTITLE 1
+ 
+ /* XXX ruby-1.8.6 grrr, ruby.h includes its own config.h too. */
+ #undef  PACKAGE_NAME

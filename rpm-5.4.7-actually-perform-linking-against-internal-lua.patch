@@ -1,0 +1,36 @@
+--- rpm-5.4.7/configure.ac.lua~	2012-03-23 20:27:46.088488158 +0100
++++ rpm-5.4.7/configure.ac	2012-03-23 20:27:46.102488172 +0100
+@@ -1886,10 +1886,12 @@ RPM_CHECK_LIB(
+           esac
+           AC_DEFINE(WITH_LUA_INTERNAL, 1, [Define if building with internal Lua])
+           AC_CONFIG_FILES([lua/Makefile])
++	  AM_CONDITIONAL(WITH_LUA_INTERNAL, [true])
+       else
+           AC_CHECK_LIB(m, fabs)
+           AC_CHECK_LIB(dl, dlopen)
+           AC_CHECK_FUNC(dlopen)
++	  AM_CONDITIONAL(WITH_LUA_INTERNAL, [false])
+       fi
+     ], [])
+ AC_SUBST(WITH_LUA_SUBDIR_DEF)
+--- rpm-5.4.7/rpmio/Makefile.am.lua~	2012-03-23 20:27:46.088488158 +0100
++++ rpm-5.4.7/rpmio/Makefile.am	2012-03-23 20:34:09.546888175 +0100
+@@ -114,13 +114,17 @@ librpmio_la_LDFLAGS += -Wl,@LD_VERSION_S
+ endif
+ librpmio_la_LIBADD = -lm
+ if ENABLE_BUILD_INTLIBDEP
+-librpmio_la_LIBADD +=
++librpmio_la_LIBADD += \
+ 	$(top_builddir)/misc/librpmmisc.la
+ endif
+ if ENABLE_BUILD_MAXEXTLIBDEP
+ librpmio_la_LDFLAGS += $(LDFLAGS)
+ #librpmio_la_LIBADD  += $(LIBS)
+ endif
++if WITH_LUA_INTERNAL
++librpmio_la_LIBADD += \
++	$(top_builddir)/lua/liblua.la
++endif
+ #librpmio.la: $(librpmio_la_OBJECTS) $(librpmio_la_DEPENDENCIES) 
+ #	$(librpmio_la_LINK) -rpath $(usrlibdir) $(librpmio_la_OBJECTS) $(librpmio_la_LIBADD)
+ 

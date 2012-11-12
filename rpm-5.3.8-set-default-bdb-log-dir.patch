@@ -1,0 +1,22 @@
+--- rpm-5.3.8/rpmdb/db3.c.set_lg_dir~	2011-01-25 15:52:56.000000000 +0100
++++ rpm-5.3.8/rpmdb/db3.c	2011-01-25 16:20:29.860333978 +0100
+@@ -920,6 +920,19 @@ static int db_init(dbiIndex dbi, const c
+     }
+ 
+ /* ==== Logging: */
++    const char *logdir;
++
++    logdir = rpmGetPath(dbhome, "/", "log", NULL);
++    /*
++     * Create the /var/lib/rpm/log directory if it doesn't exist (root only).
++     */
++    rpmioMkpath(logdir, 0755, getuid(), getgid());
++
++    xx = dbenv->set_lg_dir(dbenv, logdir);
++    xx = cvtdberr(dbi, "dbenv->set_lg_dir", xx, _debug);
++
++    _free(logdir);
++
+ 
+ /* ==== Memory pool: */
+     if (eflags & DB_INIT_MPOOL) {
