@@ -1,0 +1,4 @@
+from Config import *
+from os import environ
+
+addFilter('rpm\..*: standard-dir-owned-by-package (\(.*\) |)/var/lib/rpm')
