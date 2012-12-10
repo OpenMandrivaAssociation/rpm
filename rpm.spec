@@ -1,3 +1,5 @@
+%define	_target_vendor mandriva
+
 %bcond_with	bootstrap
 %bcond_with	debug
 
