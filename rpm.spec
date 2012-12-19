@@ -1280,7 +1280,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 + Revision: 799275
 - support signature & digest disablers
 - Seqno is now part of %%_dbi_tags_4, so be sure to not make it duplicate in
-  %files list
+  %%files list
 - rebase on rpm 5.4.9 (tons of patches merged upstream, beware of possible
   regressions..)
 - prepare and comment with instructions and status for mdawkins to take care
@@ -1499,7 +1499,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 + Revision: 758125
 - workaround spec-helper not properly removing all .la files properly..(?)
 - support loading local rpmlint configuration file from
-  %{_sourcedir}/%%{name}.rpmlintrc
+  %%{_sourcedir}/%%{name}.rpmlintrc
 - add a versioned dependency on rpmlint-mandriva-policy
 - add support for %%_srcdefattr macro, setting it to (644,root,root)
 - bump rpmlint version conflicts again.. ;)
@@ -2391,7 +2391,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 
 * Tue Jan 08 2008 Pixel <pixel@mandriva.com> 4.4.2.2-5mdv2008.1
 + Revision: 146377
-- %triggerprein were missing in 4.4.2.2, adding them
+- %%triggerprein were missing in 4.4.2.2, adding them
 
 * Thu Dec 20 2007 Pixel <pixel@mandriva.com> 4.4.2.2-4mdv2008.1
 + Revision: 135996
