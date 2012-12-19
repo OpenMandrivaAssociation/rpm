@@ -61,7 +61,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}11
+Release:	%{?prereldate:0.%{prereldate}.}12
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -371,6 +371,11 @@ Patch166:	rpm-5.4.10-fix-ldflags-passing.patch
 # version than system version
 # status: ready
 Patch167:	rpm-5.4.10-fix-perl-abi-provides-version.patch
+# in our perl package, the perl library now has a versioned soname, so there's no
+# longer any need for special treatment of perl extension with explicitly
+# versioned perl(abi) dependencies anymore
+# status: relies on mandriva specific behaviour with local patches, so keep locally
+Patch168:	rpm-5.4.10-no-more-explicit-perl-abi-version-reqs.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -2984,7 +2989,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix mono patch (bug #7201)
 
 * Wed Jul 28 2004 Frederic Lepied <flepied@mandrakesoft.com> 4.2.2-13mdk
-- use mono-find-requires and mono-find-provides if present (Götz Waschk) (bug #7201)
+- use mono-find-requires and mono-find-provides if present (GÃ¶tz Waschk) (bug #7201)
 
 * Wed Jul 28 2004 Frederic Lepied <flepied@mandrakesoft.com> 4.2.2-12mdk
 - use a correct implementation of cpuid (Gwenole)
