@@ -61,7 +61,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}13
+Release:	%{?prereldate:0.%{prereldate}.}14
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -543,6 +543,9 @@ Conflicts:	multiarch-utils < 1:5.3.10
 Conflicts:	rpm < 1:5.4.4-32
 Obsoletes:	rpm5-manbo-setup
 %rename		rpm-manbo-setup-build
+# avoid depnendencies outside of standard perl library, rather make optional
+%define __noautoreqfiles %{_rpmhome}/bin/pom2spec
+Suggests:	perl(LWP::UserAgent) perl(XML::LibXML)
 
 %description	build
 This package contains scripts and executable programs that are used to
@@ -1184,32 +1187,35 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 
 
 %changelog
-* Mon Nov 05 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.10-10
+* Wed Dec 19 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-14
+- avoid perl dependencies outside of perl standard library in rpm-build
+
+* Mon Nov 05 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-10
 + Revision: 821918
 - drop rpmv3 compatibility patch due to security concerns
 - fix %%ldflags issue when %%configure is used more than once within a spec (P166)
 
-* Tue Oct 30 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.10-8
+* Tue Oct 30 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-8
 + Revision: 820705
 - darnfudgit, forgot to remove exclusivearch workaround..
 
-* Tue Oct 30 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.10-7
+* Tue Oct 30 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-7
 + Revision: 820703
 - fix so that spec-helper scripts gets run before find-debuginfo.sh so that any
   file permissions fixed it relies gets done first (P165)
 
-* Mon Oct 29 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.10-6.1
+* Mon Oct 29 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-6.1
 + Revision: 820313
 - try sneak around bs bs with x86_64 exclusive build
 
-* Mon Oct 29 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.10-6
+* Mon Oct 29 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-6
 + Revision: 820284
 - pass --disable-silent-rules to configure so that we'll by default always get
   consistent behaviour of verbose build output (P164)
 - change name otherwise as well..
 - change disttag to 'mdk'
 
-* Thu Oct 04 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.10-5
+* Thu Oct 04 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-5
 + Revision: 818380
 - fix duplicate /usr/lib/rpm/bin/{{rpmlua,lua},{rpmluac,luac} files to be
   hardlinks in stead
@@ -1217,28 +1223,28 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix a possibly unitialized variable being used (P162)
 - search through library dirs within buildroot for uclibc dependencies (P161)
 
-* Thu Aug 30 2012 Andrey Bondrov <abondrov@mandriva.org> 1:5.4.10-4
+* Thu Aug 30 2012 Andrey Bondrov <abondrov@mandriva.org> 5.4.10-4
 + Revision: 816074
 - Update ruby1.9-fixes patch to deal with new psych
 
-* Wed Aug 22 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.10-3
+* Wed Aug 22 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-3
 + Revision: 815594
 - bump binary payload compression level up to xz' default level (6)
 - fix so that dependencies really doesn't get generated from doc files, also
   allow for enabling generation with %%_generate_dependencies_from_docdir (P116)
 
-* Tue Aug 14 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.10-2
+* Tue Aug 14 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-2
 + Revision: 814815
 - rebuild for missing x86_64 packages..
 
-* Fri Jul 27 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.10-1
+* Fri Jul 27 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-1
 + Revision: 811384
 - support --ignorearch & --ignoreos again (P159)
 - try workaround strange issue with tests being run during install when built
   on build server...
 - new version
 
-* Wed Jul 04 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.9-6
+* Wed Jul 04 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.9-6
 + Revision: 808116
 - fix issue with noen saving error pages to target file when hitting errors
   after connecting to http server (P158)
@@ -1248,29 +1254,29 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - ditch install-info macros
 - drop dead %%cputoolize macro (P154)
 
-* Sat May 19 2012 Matthew Dawkins <mattydaw@mandriva.org> 1:5.4.9-5
+* Sat May 19 2012 Matthew Dawkins <mattydaw@mandriva.org> 5.4.9-5
 + Revision: 799683
 - added p153 for findlang of the new gnome help directory
 - taken from upstream rpm5.org
 
-* Fri May 18 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.9-4
+* Fri May 18 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.9-4
 + Revision: 799528
 - disable sqlite stuff which seems broken, giving berkeley db errors (P152)
 - disable support for localized strings (P150)
 
-* Fri May 18 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.9-3
+* Fri May 18 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.9-3
 + Revision: 799483
 - fix broken description, group & summary tag for src.rpms generated (P150)
 - fix a typo in the internal rpmtag.h header (P149)
 - fix build breakage due to use of libgit2 functions when not enabled (P148)
 - add initial x32 support (P147)
 
-* Thu May 17 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.9-2
+* Thu May 17 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.9-2
 + Revision: 799292
 - add back fix for 'rpm -qa \*foo\*' which were wrongly assumed to have been
   merged upstream
 
-* Thu May 17 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.9-1
+* Thu May 17 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.9-1
 + Revision: 799275
 - support signature & digest disablers
 - Seqno is now part of %%_dbi_tags_4, so be sure to not make it duplicate in
@@ -1284,7 +1290,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
     - clean up the armv7l macro file so it contains target-specific macros only
     - Add armv7l specific macros
 
-* Wed Apr 25 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.8-1
+* Wed Apr 25 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.8-1
 + Revision: 793419
 - fix lua ossp-uuid as well
 - fix uuid being disable (enabling it for real)
@@ -1293,16 +1299,16 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
   * update to 5.4.8
 - fix newline from mono dependency generator which will produce empty deps (P143)
 
-* Sat Apr 21 2012 Matthew Dawkins <mattydaw@mandriva.org> 1:5.4.7-14
+* Sat Apr 21 2012 Matthew Dawkins <mattydaw@mandriva.org> 5.4.7-14
 + Revision: 792633
 - added p142 for typelib (rediffed from upstream)
 - made spec more readable
 
-* Thu Apr 12 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.7-13
+* Thu Apr 12 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.7-13
 + Revision: 790449
 - revert "Hash instead of 64b->16b truncate to prevent aliasing" (P141)
 
-* Thu Apr 12 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.7-12
+* Thu Apr 12 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.7-12
 + Revision: 790425
 - disable %%triggerposttransin & %%triggerposttransun support for now as
   implementation details likely needs to change in ways that will affect any
@@ -1311,20 +1317,20 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix --verify segfaulting on packages using old signature type (#64378)
 - implement %%triggerposttransin  & %%triggerposttransun (P138)
 
-* Thu Mar 29 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.7-11
+* Thu Mar 29 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.7-11
 + Revision: 788049
 - fix dependency generator not generating kmod() deps for all dkms packages
 - fix so that we don't get double '/' in path for dirname matching against
   file triggers (P137)
 - add support for using rpmdsMerge() with file path tags (P136)
 
-* Wed Mar 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.7-10
+* Wed Mar 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.7-10
 + Revision: 787993
 - libexpat is needed by lua, so let's enable use of libexpat for rpm as well also
 - don't do seqid_init() on read-only database (P135)
 - enable internal lua per jbj request
 
-* Fri Mar 23 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.7-9
+* Fri Mar 23 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.7-9
 + Revision: 786436
 - allow generating devel() provides for files outside of standard libdirs (P133)
 - fix rpmpython input issue resulting in 'BDB4511 Error' (P132)
@@ -1341,7 +1347,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - load embedded perl interpreter via dlopen() (P132) and enable it
 - load embedded python interpreter via dlopen() (P131) and enable it
 
-* Thu Mar 22 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.7-8
+* Thu Mar 22 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.7-8
 + Revision: 785965
 - fix regex & glob matching against strings that's not NUL terminated (P130)
 - fix a couple of minor memleak (P129)
@@ -1351,23 +1357,23 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - add filename regex matching support for file triggers (P126)
 - fix unitialized value resulting in segfault for 'rpm -qa --triggers' (P125)
 
-* Fri Mar 16 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.7-7
+* Fri Mar 16 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.7-7
 + Revision: 785403
 - only generate devel() deps for files under /lib, /lib64, /usr/lib & /usr/lib64
 
-* Fri Mar 16 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.7-6
+* Fri Mar 16 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.7-6
 + Revision: 785399
 - change debug package suffix to '-debuginfo' (P124)
 - .la files now gets automatically removed since spec-helper 0.31.12
 
-* Fri Mar 16 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.7-5
+* Fri Mar 16 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.7-5
 + Revision: 785347
 - fix devel() dependencies not being generated if soname has '.' before '.so'
 - fix kmod() dependencies not being generated
 - own multiarch directories
 - don't generate rpmlib(DistEpoch) dependencies quite yet..
 
-* Wed Mar 14 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.7-3
+* Wed Mar 14 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.7-3
 + Revision: 784990
 - pull in fixed libtool version
 - don't try fopen() empty filenames when trying to resolve elf interpreter (P123)
@@ -1375,7 +1381,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - always choose dependencies with equal only when overlapping (P121)
 - print the name of the files that removed dependencies are generated from (P120)
 
-* Sat Mar 10 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.7-2
+* Sat Mar 10 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.7-2
 + Revision: 783945
 - eu-strip in elfutils 0.152-5 seems to have suddenly started segfaulting on me,
   so let's be sure that we pull in 0.153 when we build rpm
@@ -1391,12 +1397,12 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - don't bother generating rtld(GNU_HASH) dependencies for packages using gnu
   hash style as our glibc has provided this for ages now anyways (P112)
 
-* Fri Mar 09 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.7-1
+* Fri Mar 09 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.7-1
 + Revision: 783464
 - new version
 - reenable docs
 
-* Fri Mar 09 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.5-2
+* Fri Mar 09 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.5-2
 + Revision: 783454
 - disable docs for a brief moment to squeeze by dependenci issues on buildsystem
 - set _use_internal_dependency_generator to 1 (disabling scriptlet dependencies)
@@ -1404,7 +1410,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix generation of uClibc() depsn on non-lib64 (P109)
 - fix fontconfig.prov not being installed
 
-* Tue Mar 06 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.5-1
+* Tue Mar 06 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.5-1
 + Revision: 782550
 - be sure to scan /usr/lib{,64} for elf interpreter
 - fix issue with pythonegg() dependencies not generated with internal dependency
@@ -1454,16 +1460,16 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix automake 1.11.2 fix (P80)
 - new version
 
-* Wed Feb 15 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-36
+* Wed Feb 15 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-36
 + Revision: 774475
 - do not consider dependency ranges as overlapping for removal (#65269)
 
-* Sun Feb 12 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-35
+* Sun Feb 12 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-35
 + Revision: 773377
 - update ruby macro for ruby 1.9 to avoid deprecation warnings
 - fix gem_helper.rb to work with ruby 1.9
 
-* Fri Feb 10 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-34
+* Fri Feb 10 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-34
 + Revision: 772526
 - hold on with db 5.3 migration a bit, need to get ruby dep extractor working
   again first...
@@ -1471,11 +1477,11 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - update rubygem dependency extractor for ruby 1.9
 - switch to berkeley db 5.3
 
-* Tue Feb 07 2012 Oden Eriksson <oeriksson@mandriva.com> 1:5.4.4-33
+* Tue Feb 07 2012 Oden Eriksson <oeriksson@mandriva.com> 5.4.4-33
 + Revision: 771559
 - rebuilt against new pcre (second time)
 
-* Sun Feb 05 2012 Oden Eriksson <oeriksson@mandriva.com> 1:5.4.4-32
+* Sun Feb 05 2012 Oden Eriksson <oeriksson@mandriva.com> 5.4.4-32
 + Revision: 771270
 - rebuilt against new pcre
 
@@ -1483,13 +1489,13 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
     - moved pom2spec to rpm-build package
     - added Obsoletes for rpm5-manbo-setup package
 
-* Mon Jan 23 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-31
+* Mon Jan 23 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-31
 + Revision: 766961
 - terminate build on file listed twice
 - hardcore path to rpmlint to prevent breakage with people redefining %%_bindir
 - add rpmlintrc file
 
-* Fri Jan 06 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-30
+* Fri Jan 06 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-30
 + Revision: 758125
 - workaround spec-helper not properly removing all .la files properly..(?)
 - support loading local rpmlint configuration file from
@@ -1506,19 +1512,19 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - silence rpmlint 'macro-in-comment' complaints
 - ditch dedicated rpm user and file/directory ownership of
 
-* Wed Dec 21 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-29
+* Wed Dec 21 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-29
 + Revision: 744043
 - reenable rpmlint invokation from rpmbuild and add conflict on older rpmlint
   releaes that has bug with paths to extracted files from src.rpm
 
-* Tue Dec 20 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-28
+* Tue Dec 20 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-28
 + Revision: 744028
 - disable rpmlint invokation during rpmbuild untill network transport issues with
   src.rpms is resolved
 - drop 'GROUPS' file carried and included as doc for 'rpm' package, earlier
   required by rpmlint, but no longer... :)
 
-* Tue Dec 20 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-27
+* Tue Dec 20 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-27
 + Revision: 743978
 - add '>= 4.2.1-8' to 'beecrypt-devel' buildrequires to get proper libtool files
 - add back $RPM_BUILD_DIR again for now to properly generate paths for debug pkgs
@@ -1528,28 +1534,28 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - teach debugedit about .debug_macro dwarf section (rhbz#759272, P72 from rpm.org)
 - switch to using rpm's own xtoupper() & xtolower() in stead of changing LC_CTYPE
 
-* Fri Dec 16 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-26
+* Fri Dec 16 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-26
 + Revision: 743086
 - fix locale-dependent behaviour of toupper()/tolower() breaking conversion of
   string casing and the lookup of rpm constants in languages such as turkish
   where 'i' is considered uppercase and 'I' lowercase (P71, fixes mdv#63860)
 
-* Wed Dec 14 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-25
+* Wed Dec 14 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-25
 + Revision: 741297
 - change log level of message about dropping dependencies to debug, way too
   annoying otherwise..
 
-* Wed Dec 14 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-24
+* Wed Dec 14 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-24
 + Revision: 741197
 - actually enable dropping of dependencies on '/bin/sh' & '/sbin/ldconfig' (P70)
 
-* Sun Dec 11 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-23
+* Sun Dec 11 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-23
 + Revision: 740189
 - drop dependencies such as /bin/sh which will always be satisfied by glibc's
   dependency on bash, and also on /sbin/ldconfig which always will be satisfied
   by glibc (P70)
 
-* Sun Dec 11 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-22
+* Sun Dec 11 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-22
 + Revision: 740168
 - drop useless dependency on 'pkgconfig' on all files which has a pkgconfig file,
   it's not really needed to make the packages usable, and any package actually
@@ -1557,7 +1563,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix %%find_lang --with-html
 - enable net transport for 'rpm -qp' (closes mdv#64914)
 
-* Tue Dec 06 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-21
+* Tue Dec 06 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-21
 + Revision: 738087
 - avoid excessive output from eu-strip in find-debuginfo.sh now that
 --reloc-debug-sections is used (P67)
@@ -1570,30 +1576,30 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix path of %%_sys_macros_dir
 - don't redefine %%{debugcflags} completely, extend it in stead and add '-g3'
 
-* Wed Nov 30 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-20
+* Wed Nov 30 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-20
 + Revision: 735832
 - fix NULL pointer dereferencing
 - add a versioned requires on elfutils to ensure we get --reloc-debug-sections
 
-* Wed Nov 30 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-19
+* Wed Nov 30 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-19
 + Revision: 735726
 - update buildrequires to use pkgconfig(foo)
 - fix so that --reloc-debug-sections isn't used when DISABLE_DEBUG is set
 
-* Tue Nov 29 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-18
+* Tue Nov 29 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-18
 + Revision: 735479
 - fix same package with epoch being possible to upgrade (P60, reported by Ze)
 
-* Tue Nov 29 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-17
+* Tue Nov 29 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-17
 + Revision: 735473
 - add missing partial stripping part from our old find-debuginfo.sh (P60)
 - add -Wa,--compress-debug-sections to %%debugcflags
 
-* Tue Nov 29 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-16
+* Tue Nov 29 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-16
 + Revision: 735302
 - use DWARF 4 for debugging format (P58)
 
-* Tue Nov 29 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-15
+* Tue Nov 29 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-15
 + Revision: 735291
 - create GDB index from find-debuginfo if possible (rhbz#617166, from rpm.org)
 - add quotes around $RPM_BUILD_ROOT everywhere to avoid breakage with filename
@@ -1608,21 +1614,21 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
   changed (P50, from rpm.org)
 - Whitespace fixups for tools/debugedit.c (P49, from rpm.org)
 
-* Sat Nov 26 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-14
+* Sat Nov 26 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-14
 + Revision: 733515
 - don't show suggests with --requires
 - only log as debug message when only merging flags
 
-* Fri Nov 25 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-13
+* Fri Nov 25 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-13
 + Revision: 733452
 - fix dependencies with different attributes overlapping being removed, they will
   now rather have their attributes merged in stead
 
-* Fri Nov 25 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-12
+* Fri Nov 25 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-12
 + Revision: 733368
 - fix buggy removal of overlapping dependencies, also add detection warning (P47)
 
-* Thu Nov 24 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-11
+* Thu Nov 24 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-11
 + Revision: 733223
 - fix build issue caused by libxml libtool files removal
 - drop dependency whiteout, time to clean up loops
@@ -1636,7 +1642,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix versioned dependencies on rpm-mandriva-setup
 - implement support for glob for loading macros with %%{load:} (P42)
 
-* Thu Nov 17 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-10
+* Thu Nov 17 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-10
 + Revision: 731397
 - don't apply %%clean patch (P32), it seems to be broken..
 - merge most of macros from rpm-manbo-setup & obsolete it
@@ -1646,41 +1652,41 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - make find-lang.sh handle man pages that's compressed (P38)
 - drop auto-generated dependencies for packages that they satisfy themself (P37)
 
-* Wed Nov 16 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-9
+* Wed Nov 16 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-9
 + Revision: 731099
 - fix missing output file with --all-name
 
-* Wed Nov 16 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-8
+* Wed Nov 16 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-8
 + Revision: 731068
 - support passing multiple names to find-lang.sh (last argument will be output
   file name) (P36)
 
-* Wed Nov 16 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-7
+* Wed Nov 16 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-7
 + Revision: 730854
 - be sure to rescan for dependency loops again when dependencies has been skipped
 
-* Wed Nov 16 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-6
+* Wed Nov 16 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-6
 + Revision: 730839
 - add support for --with-html to find-lang.sh (P35)
 - fix a memleak in ordering patch, and also report dependencies not being removed
   from tsort relations
 
-* Sun Nov 13 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-5
+* Sun Nov 13 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-5
 + Revision: 730423
 - apply ordering patch for helping solving dependency loops where ie.
   Requires(post) etc. has been used to try solve ordering with loops.. (P33)
 
-* Sun Nov 13 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-4
+* Sun Nov 13 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-4
 + Revision: 730407
 - fix mdvbz#62979 again (P33, forgotten on rpm-5_3)
 - really always invoke %%clean at end (P32, forgotten on rpm-5_3)
 
-* Sat Nov 12 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-3
+* Sat Nov 12 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-3
 + Revision: 730209
 - workaround strange issue for lines starting with '%%_'...
 - fix rpm -qa \*foo\* regression (P31)
 
-* Fri Nov 11 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-2
+* Fri Nov 11 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-2
 + Revision: 730073
 - use /sbin/nologin rather than /bin/false as login shell for 'rpm' user
 - drop patch reverting $RPM_BUILD_DIR++ removal, it's no longer required as we're
@@ -1689,17 +1695,17 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - add %%_specfile macro (P29, commit forgotten on rpm-5_3)
 - reenable scriptlet failure & no doc conflict patches (commits forgotten)
 
-* Fri Nov 11 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.4-1
+* Fri Nov 11 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.4-1
 + Revision: 729992
 - merge find-lang.sh changes from rpm.org (P28)
 - merge changes from rpm-setup's find-debuginfo.sh (P27)
 - new version
 
-* Mon Nov 07 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.3-2
+* Mon Nov 07 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.3-2
 + Revision: 727143
 - add back NVRA pattern hack that got lost on rpm-5_3 branch (P27, fixes urpme)
 
-* Wed Oct 19 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.3-1
+* Wed Oct 19 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.3-1
 + Revision: 705415
 - revert removal of env vars breaking ie. find-debuginfo.sh (P26, reverts r16320)
 - fix different epoch being ignored for packages with same NVRA compared (P25)
@@ -1714,11 +1720,11 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
       - moved various {_rpmhome}/bin/ binaries  to main rpm pkg from rpm-build as defined in /usr/lib/rpm/macros
       - added {_rpmhome}/bin/lua as it was missing from the spec
 
-* Tue Jul 12 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.12-0.20110712.2
+* Tue Jul 12 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.12-0.20110712.2
 + Revision: 689790
 - revert a previous commit of mine which broke deps without distepoch (rushed)
 
-* Tue Jul 12 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.12-0.20110712.1
+* Tue Jul 12 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.12-0.20110712.1
 + Revision: 689687
 - change errors on dependency loops to warnings
 - update to new cvs snapshot:
@@ -1727,16 +1733,16 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
   	o fix /usr/lib/rpm/bin/dbconvert segfaulting when no root is provided
   	o automatically install gstreamer.sh dep genereator
 
-* Wed Jul 06 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.12-0.20110625.3
+* Wed Jul 06 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.12-0.20110625.3
 + Revision: 689009
 - install gstreamer.sh dependency generator
 
-* Mon Jul 04 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.12-0.20110625.2
+* Mon Jul 04 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.12-0.20110625.2
 + Revision: 688659
 - add a conflicts on older beecrypt version to fix upgrade from 2009.0
 - add a conflicts on older elfutils to handle upgrade from 2009.0
 
-* Sat Jun 25 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.12-0.20110625.1
+* Sat Jun 25 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.12-0.20110625.1
 + Revision: 687193
 - new cvs snapshot
 - add a suggests on db51-utils
@@ -1745,7 +1751,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
   + Matthew Dawkins <mattydaw@mandriva.org>
     - added arm support for rpm5, cpuinfo doesn't support arm
 
-* Wed Jun 01 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.11-0.20110525.3
+* Wed Jun 01 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.11-0.20110525.3
 + Revision: 682280
 - add a null pointer check for nvra disttag hack, otherwise we'll easily segfault
 - update javascript enabler to pass the right arguments
@@ -1753,7 +1759,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
   on plf packages with disttag should now *finally* be working properly..;)
 - add buildrequires on db51-utils (required by testsuite)
 
-* Wed May 25 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.11-0.20110525.1
+* Wed May 25 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.11-0.20110525.1
 + Revision: 679105
 - reenable regression checks
 - fix too hasty merged syslog patch (P20)
@@ -1762,7 +1768,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - follow s/ossp_uuid/ossp-uuid/ package name change
 - update to latest cvs snapshot (for cleaning and also fixes #63318)
 
-* Mon May 16 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.10-0.20110422.4
+* Mon May 16 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.10-0.20110422.4
 + Revision: 675030
 - fix c++ compatibility in rpmdb.h api (P22)
 - fix build of dbconvert & install it by default (P21)
@@ -1770,18 +1776,18 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - workaround doxygen 1.7.4 issue blocking build (P19 from pcpa)
 - fix assertion error when trying to extract archives without required perms
 
-* Mon May 02 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.10-0.20110422.3
+* Mon May 02 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.10-0.20110422.3
 + Revision: 662260
 - move multiarch-dispatch to main package (#63160)
 
   + Funda Wang <fwang@mandriva.org>
     - move multiarch-dispath into main rpm package (bug#63160)
 
-* Mon Apr 25 2011 Funda Wang <fwang@mandriva.org> 1:5.3.10-0.20110422.2
+* Mon Apr 25 2011 Funda Wang <fwang@mandriva.org> 5.3.10-0.20110422.2
 + Revision: 658722
 - fix wrong path of mkmultiarch script
 
-* Sun Apr 24 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.10-0.20110422.1
+* Sun Apr 24 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.10-0.20110422.1
 + Revision: 658161
 - drop redundant %%defattr usage & buildroot cleaning at beginning of %%install
 - don't load arch specific macros from rpm-mandriva-setup anymore, they've been
@@ -1789,21 +1795,21 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - obsolete multiarch-utils
 - new cvs snapshot
 
-* Sun Apr 10 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.9-0.20110330.7
+* Sun Apr 10 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.9-0.20110330.7
 + Revision: 652164
 - fix filetriggers firing multiple times hack (P19)
 
-* Thu Apr 07 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.9-0.20110330.6
+* Thu Apr 07 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.9-0.20110330.6
 + Revision: 651738
 - add proper fix for i18n descriptions from Jeff
 - fix %%_arch to be canonical
 
-* Tue Apr 05 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.9-0.20110330.5
+* Tue Apr 05 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.9-0.20110330.5
 + Revision: 650797
 - fix translated descriptions not being added to packages (P18, #62979)
 - add /etc/rpm/sysinfo dir
 
-* Fri Apr 01 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.9-0.20110330.4
+* Fri Apr 01 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.9-0.20110330.4
 + Revision: 649644
 - fix stupid typo that managed to sneak itself back in again to mess up db log dir
 - don't ship find-provides & find-requires, we're using our own version anyways..
@@ -1813,15 +1819,15 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix --without docs
 - disable sqlite & docs build for bootstrap builds
 
-* Wed Mar 30 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.9-0.20110330.3
+* Wed Mar 30 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.9-0.20110330.3
 + Revision: 649239
 - bah, fix incorrect package name in conflicts on db5.1
 
-* Wed Mar 30 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.9-0.20110330.2
+* Wed Mar 30 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.9-0.20110330.2
 + Revision: 649233
 - add versioned buildrequires & conflicts to ensure >= db 5.1.25
 
-* Wed Mar 30 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.9-0.20110330.1
+* Wed Mar 30 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.9-0.20110330.1
 + Revision: 649206
 - new cvs snapshot
 - add rpm-helper>rpm to _dependency_whiteout_mandriva
@@ -1831,18 +1837,18 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix duplicate %%clean section (thx andrey for noticing!)
 - fix mess happening while merging file trigger workaround upstream (#62865)
 
-* Fri Mar 25 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.9-0.20110324.1
+* Fri Mar 25 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.9-0.20110324.1
 + Revision: 648434
 - drop %%clean now that it's enabled by default
 - enable build of augeas support
 - build with uuid support
 - new cvs snapshot
 
-* Sun Mar 06 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.9-0.20110303.2
+* Sun Mar 06 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.9-0.20110303.2
 + Revision: 642259
 - drop duplicates of of package first independent of distepoch (P16)
 
-* Thu Mar 03 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.9-0.20110303.1
+* Thu Mar 03 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.9-0.20110303.1
 + Revision: 641499
 - new cvs snapshot
 - get rid of some compile warnings for ugly distepoch pattern hack..
@@ -1850,25 +1856,25 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
   + Funda Wang <fwang@mandriva.org>
     - rebuild to obsolete old packages
 
-* Mon Feb 21 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.8-0.20110125.5
+* Mon Feb 21 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.8-0.20110125.5
 + Revision: 639230
 - work around file triggers firing multiple times and a related critical memleak
 - set count in rpmmiCount() rather than rpmmiNext() for iterators with db cursor
   set to reduce unnecessary overhead
 
-* Tue Feb 15 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.8-0.20110125.4
+* Tue Feb 15 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.8-0.20110125.4
 + Revision: 637879
 - accept NULL as argument for rootDir with mandriva filetriggers (#62395)
 - fix issue with uninstall triggers always being run during upgrade (#62267)
 - reset db cursor to NULL at end of rpmmiCount() so iterator won't break (#62279)
 - drop feeble attempt to hack around disttag/distepoch issues by undefining it...
 
-* Thu Feb 10 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.8-0.20110125.3
+* Thu Feb 10 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.8-0.20110125.3
 + Revision: 637195
 - fix typo in russian translation (#62333)
 - fix %%__dbi_sqlconfig typo (#62386)
 
-* Sat Feb 05 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.8-0.20110125.2
+* Sat Feb 05 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.8-0.20110125.2
 + Revision: 636294
 - revert st00pid conflicts->obsoletes change which broke upgrades...
 - replace conflict on perl-RPM4 with an obsolete
@@ -1878,7 +1884,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
     - add python link patch
     - link python module with python lib
 
-* Mon Jan 31 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.8-0.20110125.1
+* Mon Jan 31 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.8-0.20110125.1
 + Revision: 634521
 - fix problem with ignored signals causing rpmbuild to break with gnome-terminal
   (fixes #62262, P7 from Theerud Lawtrakul/Jeff Johnson)
@@ -1896,11 +1902,11 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
   + Funda Wang <fwang@mandriva.org>
     - really fix tool path
 
-* Sun Jan 23 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.8-0.20110109.11
+* Sun Jan 23 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.8-0.20110109.11
 + Revision: 632404
 - d'oh, missed a line in previous patch..
 
-* Sun Jan 23 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.8-0.20110109.10
+* Sun Jan 23 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.8-0.20110109.10
 + Revision: 632396
 - replace rpmdsCompare() patch with a simpler and less intrusive for now
 - if distsuffix is defined, use it for disttag (from Anssi)
@@ -1931,16 +1937,16 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix typo in perl bindings giving issues with 'mdvsys' on missing buildrequires
 - rpmconstant is part of rpm5, so obsolete/provide this..
 
-* Sun Jan 09 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.8-0.20110109.3mdv2011.0
+* Sun Jan 09 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.8-0.20110109.3mdv2011.0
 + Revision: 630755
 - use default directory for %%setup
 - add missing errno.h header to rpm4compat.h (P0)
 
-* Sun Jan 09 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.8-0.20110109.2mdv2011.0
+* Sun Jan 09 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.8-0.20110109.2mdv2011.0
 + Revision: 630735
 - add back conflicts: librpm < 5.3 now that 'abrt' is linked against this version
 
-* Sun Jan 09 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.3.8-0.20110109.1mdv2011.0
+* Sun Jan 09 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.3.8-0.20110109.1mdv2011.0
 + Revision: 630713
 - new cvs snapshot
 - get rid of doc-copy workarond and duplication of docs in 'rpm-build'
@@ -1950,23 +1956,23 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - reenable conflict on older librpm versions
 - merge 5.3 branch
 
-* Sat Nov 27 2010 Funda Wang <fwang@mandriva.org> 1:4.6.1-5mnb2
+* Sat Nov 27 2010 Funda Wang <fwang@mandriva.org> 4.6.1-5mnb2
 + Revision: 601652
 - rebuild for liblzma 5
 
-* Fri Oct 29 2010 Michael Scherer <misc@mandriva.org> 1:4.6.1-4mnb2
+* Fri Oct 29 2010 Michael Scherer <misc@mandriva.org> 4.6.1-4mnb2
 + Revision: 589999
 - rebuild for python 2.7
 
-* Mon Oct 18 2010 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:4.6.1-3mnb2
+* Mon Oct 18 2010 Per Øyvind Karlsen <peroyvind@mandriva.org> 4.6.1-3mnb2
 + Revision: 586616
 - automatically handle ruby gem extraction in %%setup
 
-* Thu Oct 07 2010 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:4.6.1-2mnb2
+* Thu Oct 07 2010 Per Øyvind Karlsen <peroyvind@mandriva.org> 4.6.1-2mnb2
 + Revision: 583901
 - fix regression introduced with %%exclude change in previous release (fixes #61207)
 
-* Wed Sep 29 2010 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:4.6.1-1mnb2
+* Wed Sep 29 2010 Per Øyvind Karlsen <peroyvind@mandriva.org> 4.6.1-1mnb2
 + Revision: 582007
 - add '~' suffix to backup files created when using %%apply_patches
 - finally put copyright & serial tags to death for real
@@ -1979,7 +1985,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
   and breaks building of any packages which incorrectly uses %%exclude for this
   purpose. Please fix any packages doing so! (P1016)
 
-* Fri Aug 20 2010 Christophe Fergeau <cfergeau@mandriva.com> 1:4.6.0-15mnb2
+* Fri Aug 20 2010 Christophe Fergeau <cfergeau@mandriva.com> 4.6.0-15mnb2
 + Revision: 571456
 - drop Pascal's patch for now
 - fix "canonicalization unexpectedly shrank by one character" errors, patch by Anssi
@@ -1994,7 +2000,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
     - reapply fix for #55i810 (if not fully comprehended, those of us who wrote it
       does, ao removing out of ignorance and lack of insight will not e tolerated.
 
-* Mon May 17 2010 Christophe Fergeau <cfergeau@mandriva.com> 1:4.6.0-14mnb2
+* Mon May 17 2010 Christophe Fergeau <cfergeau@mandriva.com> 4.6.0-14mnb2
 + Revision: 544968
 - use db 4.8
 - fix default perms in debug packages, #59083
@@ -2003,18 +2009,18 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
     - Check chroot return code before running external script
     - Check chroot return code before running lua script
 
-* Fri Apr 16 2010 Christophe Fergeau <cfergeau@mandriva.com> 1:4.6.0-12mnb2
+* Fri Apr 16 2010 Christophe Fergeau <cfergeau@mandriva.com> 4.6.0-12mnb2
 + Revision: 535522
 - fix file trigger hang when several filetrigger scripts are run in parallel (#57878)
 
   + Oden Eriksson <oeriksson@mandriva.com>
     - rebuilt against nss-3.12.6
 
-* Wed Feb 17 2010 Christophe Fergeau <cfergeau@mandriva.com> 1:4.6.0-10mnb2
+* Wed Feb 17 2010 Christophe Fergeau <cfergeau@mandriva.com> 4.6.0-10mnb2
 + Revision: 507168
 - don't diverge from upstream wrt EVR comparisons
 
-* Tue Feb 16 2010 Funda Wang <fwang@mandriva.org> 1:4.6.0-9mnb2
+* Tue Feb 16 2010 Funda Wang <fwang@mandriva.org> 4.6.0-9mnb2
 + Revision: 506733
 - rebuild for libpopt file path change
 
@@ -2024,12 +2030,12 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
       revert fix and hopefully no other regressions either.. ;)
       (P1010, http://rpm5.org/community/rpm-devel/4011.html)
 
-* Fri Nov 20 2009 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:4.6.0-8mnb2
+* Fri Nov 20 2009 Per Øyvind Karlsen <peroyvind@mandriva.org> 4.6.0-8mnb2
 + Revision: 467682
 - revert previous change as it'll break == dependencies on version only
   (which even requires-on-release policy requires) :/
 
-* Fri Nov 20 2009 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:4.6.0-7mnb2
+* Fri Nov 20 2009 Per Øyvind Karlsen <peroyvind@mandriva.org> 4.6.0-7mnb2
 + Revision: 467652
 - don't skip release comparision when checking conflicts if release value is
   missing (P1011 from Jeff Johnson, fixes #55810)
@@ -2038,7 +2044,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
     - fix unowned directory, reported by bitshuffler on irc, causing problem
       when installing rpm and using the wrong umask
 
-* Fri Sep 25 2009 Olivier Blin <blino@mandriva.org> 1:4.6.0-6mnb2
+* Fri Sep 25 2009 Olivier Blin <blino@mandriva.org> 4.6.0-6mnb2
 + Revision: 448653
 - remove n32 support for now (not actually used)
 - handle n32 ABI in find-requires and find-provides (from Arnaud Patard)
@@ -2053,7 +2059,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
   the test case fixes the issue (from Arnaud Patard)
 - add %%mips macro define all mips abi (from Arnaud Patard)
 
-* Sun Aug 23 2009 Anssi Hannula <anssi@mandriva.org> 1:4.6.0-5mnb2
+* Sun Aug 23 2009 Anssi Hannula <anssi@mandriva.org> 4.6.0-5mnb2
 + Revision: 419760
 - fix ignored Requires(pre) and (post) when they have a plain Requires
   counterpart (rpm-fix-corequisites.patch backported from upstream 4.7.1)
@@ -2065,17 +2071,17 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
   + Per Øyvind Karlsen <peroyvind@mandriva.org>
     - Avoid adding Lua sources/patches twice when recursing (P1010, git backport)
 
-* Fri Jul 24 2009 Anssi Hannula <anssi@mandriva.org> 1:4.6.0-4mnb2
+* Fri Jul 24 2009 Anssi Hannula <anssi@mandriva.org> 4.6.0-4mnb2
 + Revision: 399298
 - fix filetriggers to be called on package removal as well (regression
   introduced in 4.6.0 package because of an error in rediffing of
   filetriggers.patch; fixes bug #52333)
 
-* Tue Jun 30 2009 Thierry Vignaud <tv@mandriva.org> 1:4.6.0-3mnb2
+* Tue Jun 30 2009 Thierry Vignaud <tv@mandriva.org> 4.6.0-3mnb2
 + Revision: 391017
 - bump release so that cooker's rpm is newer than 2009.1's one
 
-* Thu Jun 11 2009 Christophe Fergeau <cfergeau@mandriva.com> 1:4.6.0-2mnb2
+* Thu Jun 11 2009 Christophe Fergeau <cfergeau@mandriva.com> 4.6.0-2mnb2
 + Revision: 385093
 - add missing calls to rpmluaPop to patch 159, might fix #50579
 - Revert switch to db4.7
@@ -2094,11 +2100,11 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
     - fix dependency on patch as rpm-build is now using "patch -U" which has
       been introduced in version 2.5.9-7mdv2009.1.
 
-* Fri Feb 13 2009 Christophe Fergeau <cfergeau@mandriva.com> 1:4.6.0-1mnb2
+* Fri Feb 13 2009 Christophe Fergeau <cfergeau@mandriva.com> 4.6.0-1mnb2
 + Revision: 340115
 - Update to rpm 4.6.0
 
-* Thu Jan 29 2009 Pixel <pixel@mandriva.com> 1:4.6.0-0.rc3.7mnb2
+* Thu Jan 29 2009 Pixel <pixel@mandriva.com> 4.6.0-0.rc3.7mnb2
 + Revision: 335221
 - add %%apply_patches: it can be used to replace all "%%patchN" lines,
   but it forces all patches to be "-p1".
@@ -2109,7 +2115,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
     - don't wipe out $DOCDIR when using %%doc as it will wipe out any files that would
       happen to be installed during %%install. (P1008)
 
-* Tue Jan 20 2009 Pixel <pixel@mandriva.com> 1:4.6.0-0.rc3.6mnb2
+* Tue Jan 20 2009 Pixel <pixel@mandriva.com> 4.6.0-0.rc3.6mnb2
 + Revision: 331759
 - replace nss-inithack patch with upstream patch
   (which is more complete, esp fixes rpmresign in perl-RPM4)
@@ -2123,7 +2129,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
       changes :)
     - update lzma payload support to add support for new xz format in parallel(P1007)
 
-* Wed Dec 24 2008 Funda Wang <fwang@mandriva.org> 1:4.6.0-0.rc3.5mnb2
+* Wed Dec 24 2008 Funda Wang <fwang@mandriva.org> 4.6.0-0.rc3.5mnb2
 + Revision: 318370
 - temporarily disable graphviz BR
 
@@ -2133,27 +2139,27 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
   + Pixel <pixel@mandriva.com>
     - add conflict on urpmi-recover since rpm 4.6.0 dropped support for --repackage
 
-* Thu Dec 18 2008 Pixel <pixel@mandriva.com> 1:4.6.0-0.rc3.3mnb2
+* Thu Dec 18 2008 Pixel <pixel@mandriva.com> 4.6.0-0.rc3.3mnb2
 + Revision: 315608
 - add patch153: "fix" segfault in mdkapplet (#46323)
 - add patch154: fix compilation with Werror=format-security
 - merge patch91 (check-dupl-files) into patch111 (check-files fix for "//" in buildroot)
 
-* Mon Dec 15 2008 Pixel <pixel@mandriva.com> 1:4.6.0-0.rc3.2mnb2
+* Mon Dec 15 2008 Pixel <pixel@mandriva.com> 4.6.0-0.rc3.2mnb2
 + Revision: 314562
 - enable sqlite (was disabled after rpm-4.6.0 switch)
 
-* Fri Dec 12 2008 Pixel <pixel@mandriva.com> 1:4.6.0-0.rc3.1mnb2
+* Fri Dec 12 2008 Pixel <pixel@mandriva.com> 4.6.0-0.rc3.1mnb2
 + Revision: 313584
 - 4.6.0-rc3
 - drop patch153 (buildroot-subpackage), fixed upstream
 
-* Thu Dec 11 2008 Pixel <pixel@mandriva.com> 1:4.6.0-0.rc2.2mnb2
+* Thu Dec 11 2008 Pixel <pixel@mandriva.com> 4.6.0-0.rc2.2mnb2
 + Revision: 312890
 - rediff patch71, patch83, patch91, patch140, patch145, patch147, patch1005
 - fix patch2002 (python-writeHdlist), was broken with rpm 4.6 API
 
-* Tue Dec 09 2008 Pixel <pixel@mandriva.com> 1:4.6.0-0.rc2.1mnb2
+* Tue Dec 09 2008 Pixel <pixel@mandriva.com> 4.6.0-0.rc2.1mnb2
 + Revision: 312303
 - use %%configure (so that libdir is correctly on x86_64)
 - 4.6.0-rc2
@@ -2188,88 +2194,88 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - rediff patch49, patch64, patch70, patch141, patch146, patch147, patch148,
   patch151, patch2002, patch2005
 
-* Sun Oct 19 2008 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:4.4.2.3-22mnb2
+* Sun Oct 19 2008 Per Øyvind Karlsen <peroyvind@mandriva.org> 4.4.2.3-22mnb2
 + Revision: 295367
 - rebuild against liblzma which I had to bump the major of yet again
 - actually remember to bump popt release as well this time (popt should REALLY
   be split out!!!)
 
-* Sat Oct 18 2008 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:4.4.2.3-21mnb2
+* Sat Oct 18 2008 Per Øyvind Karlsen <peroyvind@mandriva.org> 4.4.2.3-21mnb2
 + Revision: 294824
 - fix build with new liblzma (updates P1001)
 
   + Pixel <pixel@mandriva.com>
     - failing triggers must not block an update (otherwise both packages are kept)
 
-* Wed Oct 01 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-20mnb2
+* Wed Oct 01 2008 Pixel <pixel@mandriva.com> 4.4.2.3-20mnb2
 + Revision: 290443
 - protect-against-non-robust-futex patch: remove the ugly error messages
   when non-root
 
-* Wed Oct 01 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-19mnb2
+* Wed Oct 01 2008 Pixel <pixel@mandriva.com> 4.4.2.3-19mnb2
 + Revision: 290325
 - ensure stale futex locks do not block (#41868)
 
-* Thu Sep 11 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-18mnb2
+* Thu Sep 11 2008 Pixel <pixel@mandriva.com> 4.4.2.3-18mnb2
 + Revision: 283690
 - fix broken cpio for hardlink on softlink (#43737)
 - remove /usr/lib/libpopt.so.0 symlink (unneeded)
 
-* Sat Sep 06 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-17mnb2
+* Sat Sep 06 2008 Pixel <pixel@mandriva.com> 4.4.2.3-17mnb2
 + Revision: 281842
 - use external libdb-4.6.so instead of internal one (was DB 4.3.27: December 22, 2004).
   (hopefully fixing #41868)
 
-* Tue Aug 26 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-16mnb2
+* Tue Aug 26 2008 Pixel <pixel@mandriva.com> 4.4.2.3-16mnb2
 + Revision: 276212
 - add patch148 which ensures chroot errors are not ignored
   (the bug occured on mandriva build system, the files
   were installed on the non rooted system)
 
-* Tue Aug 05 2008 Frederic Crozat <fcrozat@mandriva.com> 1:4.4.2.3-15mnb2
+* Tue Aug 05 2008 Frederic Crozat <fcrozat@mandriva.com> 4.4.2.3-15mnb2
 + Revision: 263799
 - bump popt release too
 - Bump minimal version of rpm-mandriva-setup, to ensure filetriggers
   are enabled during upgrade from older distributions
 
-* Thu Jul 17 2008 Oden Eriksson <oeriksson@mandriva.com> 1:4.4.2.3-14mnb2
+* Thu Jul 17 2008 Oden Eriksson <oeriksson@mandriva.com> 4.4.2.3-14mnb2
 + Revision: 237798
 - bump release for popt as well
 - fix deps and rebuild against latest neon-devel
 
-* Fri Jul 04 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-13mnb2
+* Fri Jul 04 2008 Pixel <pixel@mandriva.com> 4.4.2.3-13mnb2
 + Revision: 231680
 - fix memory leak in patch124 (regression introduced on 2008-06-23)
 - fix detecting wether filetriggers are activated (through %%_filetriggers_dir)
 
-* Thu Jun 26 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-12mnb2
+* Thu Jun 26 2008 Pixel <pixel@mandriva.com> 4.4.2.3-12mnb2
 + Revision: 229317
 - fix --testing errors introduced by filetriggers
 
-* Tue Jun 24 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-11mnb2
+* Tue Jun 24 2008 Pixel <pixel@mandriva.com> 4.4.2.3-11mnb2
 + Revision: 228550
 - nicely handle /etc/rpm/macros.cdb disappearance (esp. for people having %%_dbapi set there)
 
-* Mon Jun 23 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-10mnb2
+* Mon Jun 23 2008 Pixel <pixel@mandriva.com> 4.4.2.3-10mnb2
 + Revision: 228082
 - enhance patch124 to use "Dirnames" db before using "Packages" db
   (hence much less db accesses in the pathological "COPYING" case)
 - rpm must feature PayloadIsLzma = 4.4.2-1 to be the most compatible (?!)
   (with SuSE, and with temporary cooker packages with PayloadIsLzma <= 4.4.2.2-1)
 
-* Sun Jun 22 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-8mnb2
+* Sun Jun 22 2008 Pixel <pixel@mandriva.com> 4.4.2.3-8mnb2
 + Revision: 227894
 - PayloadIsLzma version must be at least 4.4.6-1 to be compatible with mdv2008.0
 - fix segfault when transaction fails
 
-* Fri Jun 20 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-7mnb2
+* Fri Jun 20 2008 Pixel <pixel@mandriva.com> 4.4.2.3-7mnb2
 + Revision: 227396
 - drop our old macros.cdb, which was forcing old values,
   esp "verify" which forcing rpm to verify db after each changes
   (which was making rpm quite slow when rpmdb was not in cache)
 - cleanup: drop not applied global-RPMLOCK patch
 
-* Thu Jun 19 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-6mnb2
+* Thu Jun 19 2008 Pixel <pixel@mandriva.com> 4.4.2.3-6mnb2
 + Revision: 226213
 - fix filetriggers (librpm was exiting in case of sigpipe in filetrigger script)
 - checks on "non packaged binary packages" now depend on %%_missing_subpackage_terminate_build (patch147)
@@ -2279,11 +2285,11 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
     - fix version typo
     - switch to use liblzma for lzma payload (P1000, partly derived from rpm5.org & OpenSuSE)
 
-* Wed Jun 11 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-4mnb2
+* Wed Jun 11 2008 Pixel <pixel@mandriva.com> 4.4.2.3-4mnb2
 + Revision: 218093
 - rpmbuild: add patch to ensure some parse errors are really fatal as they should
 
-* Mon Jun 09 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-3mnb2
+* Mon Jun 09 2008 Pixel <pixel@mandriva.com> 4.4.2.3-3mnb2
 + Revision: 217217
 - add new fatal errors (during package build):
   o disallow scriptlets for non packaged binary packages
@@ -2296,7 +2302,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - add "requires tar" in rpm-build
 - fix build of debugedit (patch143)
 
-* Tue May 13 2008 Thierry Vignaud <tv@mandriva.org> 1:4.4.2.3-1mnb2
+* Tue May 13 2008 Thierry Vignaud <tv@mandriva.org> 4.4.2.3-1mnb2
 + Revision: 206778
 - fix build on x86_64
 
@@ -2308,15 +2314,15 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
     - drop patches applied upstream: 136, 138
     - rediff patch17
 
-* Tue Apr 01 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-0.rc1.7mnb1
+* Tue Apr 01 2008 Pixel <pixel@mandriva.com> 4.4.2.3-0.rc1.7mnb1
 + Revision: 191469
 - postpone and group ldconfig %%post in %%posttrans instead of wrongly skipping ldconfig
 
-* Fri Mar 28 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-0.rc1.6mnb1
+* Fri Mar 28 2008 Pixel <pixel@mandriva.com> 4.4.2.3-0.rc1.6mnb1
 + Revision: 190842
 - rebuild with fixed libneon0.26-devel
 
-* Mon Mar 17 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-0.rc1.5mnb1
+* Mon Mar 17 2008 Pixel <pixel@mandriva.com> 4.4.2.3-0.rc1.5mnb1
 + Revision: 188330
 - add support for "suggests" and "enhances" in rpmds (needed for "sophie") (nanardon)
 - use %%_vendor instead of %%vendor (thanks-to/required-by nanardon)
@@ -2328,7 +2334,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
     - get rid of _host_vendor definition. It should be defined by rpm-xxx-macros.
     - use original find-requires,find-provides,find-lang when build with turbolinux.
 
-* Sat Mar 01 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-0.rc1.3mnb1
+* Sat Mar 01 2008 Pixel <pixel@mandriva.com> 4.4.2.3-0.rc1.3mnb1
 + Revision: 177474
 - fix file conflicts wrongly allowed on x86_64
 - when dropping requires during tsort, do not display "PreReq" when it really is "Requires"
@@ -2338,7 +2344,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
   + Thierry Vignaud <tv@mandriva.org>
     - replace %%mkrel with %%manbo_mkrel for Manbo Core 1
 
-* Thu Feb 14 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-0.rc1.2mdv2008.1
+* Thu Feb 14 2008 Pixel <pixel@mandriva.com> 4.4.2.3-0.rc1.2mdv2008.1
 + Revision: 167788
 - use rpmrc and rpmpopt from rpm-manbo-setup
 - get best lang from rpm HEADERI18NTABLE, instead of getting first fuzzy match
@@ -2355,7 +2361,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
     - headerIconv.patch: check realloc() value
     - convert the data to a specific encoding which used in the selected locale.
 
-* Mon Jan 28 2008 Pixel <pixel@mandriva.com> 1:4.4.2.3-0.rc1.1mdv2008.1
+* Mon Jan 28 2008 Pixel <pixel@mandriva.com> 4.4.2.3-0.rc1.1mdv2008.1
 + Revision: 159090
 - 4.4.2.3 adds ix86 macros files to x86_64
 - new release 4.4.2.3-rc1
@@ -2370,29 +2376,29 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - drop patch135 (truncated rpmProblemString): no more needed, workarounded
   upstream
 
-* Wed Jan 23 2008 Pixel <pixel@mandriva.com> 1:4.4.2.2-7mdv2008.1
+* Wed Jan 23 2008 Pixel <pixel@mandriva.com> 4.4.2.2-7mdv2008.1
 + Revision: 157054
 - fix rpmbuild not printing Requires after build (fix backported from 4.4.8) (#36672)
 - allow doc conflict in same transaction (#37040)
   (it was already allowed in different transactions)
 - fix russian translation (#36974)
 
-* Sat Jan 12 2008 Anssi Hannula <anssi@mandriva.org> 1:4.4.2.2-6mdv2008.1
+* Sat Jan 12 2008 Anssi Hannula <anssi@mandriva.org> 4.4.2.2-6mdv2008.1
 + Revision: 149522
 - allow conflicting ghost file types as sometimes the same ghost file
   is a file in one package and a symlink in another package (modifies
   rpm-4.4.2.2-allow-conflicting-ghost-files.patch)
 
-* Tue Jan 08 2008 Pixel <pixel@mandriva.com> 1:4.4.2.2-5mdv2008.1
+* Tue Jan 08 2008 Pixel <pixel@mandriva.com> 4.4.2.2-5mdv2008.1
 + Revision: 146377
 - %triggerprein were missing in 4.4.2.2, adding them
 
-* Thu Dec 20 2007 Pixel <pixel@mandriva.com> 1:4.4.2.2-4mdv2008.1
+* Thu Dec 20 2007 Pixel <pixel@mandriva.com> 4.4.2.2-4mdv2008.1
 + Revision: 135996
 - fix multiline macro handling on last line of spec file (#27417)
 - fix truncated "file conflict" error message in russian (#31680)
 
-* Tue Dec 18 2007 Pixel <pixel@mandriva.com> 1:4.4.2.2-3mdv2008.1
+* Tue Dec 18 2007 Pixel <pixel@mandriva.com> 4.4.2.2-3mdv2008.1
 + Revision: 132430
 - re-introduce temporarily BuildRoot so that rpm builds
 - drop patch for SOURCEPACKAGE (unneeded in rpm 4.4.2.2 which keeps compatibility)
@@ -2402,7 +2408,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - for compatibility with rpm 4.4.8, allow conflicting doc files in
   /usr/share/man, /usr/share/gtk-doc/html /usr/share/gnome/html
 
-* Mon Dec 17 2007 Pixel <pixel@mandriva.com> 1:4.4.2.2-2mdv2008.1
+* Mon Dec 17 2007 Pixel <pixel@mandriva.com> 4.4.2.2-2mdv2008.1
 + Revision: 125038
 - patch134 introduces %%defaultbuildroot to use instead of %%buildroot in our global macros
 - keep libpopt.so versioning from 4.4.8 (to avoid warnings)
