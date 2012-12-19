@@ -59,7 +59,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}10
+Release:	%{?prereldate:0.%{prereldate}.}11
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -365,6 +365,10 @@ Patch165:	rpm-5.4.10-post-install-helper-order.patch
 # fixes issue with ldflags getting duplicated when configure is run more than once
 # status: ready
 Patch166:	rpm-5.4.10-fix-ldflags-passing.patch
+# fixes extraction of perl version from Config.pm when it's of a different
+# version than system version
+# status: ready
+Patch167:	rpm-5.4.10-fix-perl-abi-provides-version.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -727,6 +731,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch164 -p1 -b .verbosebuilds~
 %patch165 -p1 -b .helper_order~
 %patch166 -p1 -b .ldflags~
+%patch167 -p1 -b .perl_abiver~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
