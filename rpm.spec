@@ -1,3 +1,5 @@
+%define	_target_vendor mandriva
+
 %bcond_with	bootstrap
 %bcond_with	debug
 
@@ -1173,6 +1175,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %dir %{_docdir}/rpm/html
 %{_docdir}/rpm/html/*
 %endif
+
 
 %changelog
 * Mon Nov 05 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1:5.4.10-10
@@ -2981,7 +2984,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix mono patch (bug #7201)
 
 * Wed Jul 28 2004 Frederic Lepied <flepied@mandrakesoft.com> 4.2.2-13mdk
-- use mono-find-requires and mono-find-provides if present (Götz Waschk) (bug #7201)
+- use mono-find-requires and mono-find-provides if present (G�tz Waschk) (bug #7201)
 
 * Wed Jul 28 2004 Frederic Lepied <flepied@mandrakesoft.com> 4.2.2-12mdk
 - use a correct implementation of cpuid (Gwenole)
