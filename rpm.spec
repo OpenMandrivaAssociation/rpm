@@ -744,7 +744,7 @@ This package contains the RPM API documentation generated in HTML format.
 ./autogen.sh
 
 mkdir -p cpu-os-macros
-tar -zxf %{SOURCE3} -C cpu-os-macros
+tar -xf %{SOURCE3} -C cpu-os-macros
 %patch145 -p1
 
 %build
