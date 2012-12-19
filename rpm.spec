@@ -739,6 +739,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch165 -p1 -b .helper_order~
 %patch166 -p1 -b .ldflags~
 %patch167 -p1 -b .perl_abiver~
+%patch168 -p1 -b .perl_abireq~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
