@@ -61,7 +61,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}15
+Release:	%{?prereldate:0.%{prereldate}.}16
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -380,6 +380,8 @@ Patch168:	rpm-5.4.10-no-more-explicit-perl-abi-version-reqs.patch
 # our own locally maintained compress-files script from spec-helper
 # status: ready
 Patch169:	rpm-5.4.10-update-and-use-brp-compress.patch
+# ready
+Patch170:	rpm-5.4.10-arch_tagged-consistent-with-mark64-provides.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -750,6 +752,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch167 -p1 -b .perl_abiver~
 %patch168 -p1 -b .perl_abireq~
 %patch169 -p1 -b .brpcomp~
+%patch170 -p1 -b .archtagged~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
