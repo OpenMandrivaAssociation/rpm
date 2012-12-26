@@ -61,7 +61,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}14
+Release:	%{?prereldate:0.%{prereldate}.}15
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -376,6 +376,10 @@ Patch167:	rpm-5.4.10-fix-perl-abi-provides-version.patch
 # versioned perl(abi) dependencies anymore
 # status: relies on mandriva specific behaviour with local patches, so keep locally
 Patch168:	rpm-5.4.10-no-more-explicit-perl-abi-version-reqs.patch
+# this patch updates the upstream brp-compress scripts, which will be replacing
+# our own locally maintained compress-files script from spec-helper
+# status: ready
+Patch169:	rpm-5.4.10-update-and-use-brp-compress.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -745,6 +749,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch166 -p1 -b .ldflags~
 %patch167 -p1 -b .perl_abiver~
 %patch168 -p1 -b .perl_abireq~
+%patch169 -p1 -b .brpcomp~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
