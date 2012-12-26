@@ -382,6 +382,9 @@ Patch168:	rpm-5.4.10-no-more-explicit-perl-abi-version-reqs.patch
 Patch169:	rpm-5.4.10-update-and-use-brp-compress.patch
 # ready
 Patch170:	rpm-5.4.10-arch_tagged-consistent-with-mark64-provides.patch
+# ready
+Patch171:	rpm-5.4.10-set-lc_ctype-to-utf8-when-building-gem.patch
+
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -753,6 +756,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch168 -p1 -b .perl_abireq~
 %patch169 -p1 -b .brpcomp~
 %patch170 -p1 -b .archtagged~
+%patch171 -p1 -b .ruby_utf8~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
