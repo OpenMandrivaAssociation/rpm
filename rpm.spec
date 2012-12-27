@@ -384,6 +384,9 @@ Patch169:	rpm-5.4.10-update-and-use-brp-compress.patch
 Patch170:	rpm-5.4.10-arch_tagged-consistent-with-mark64-provides.patch
 # ready
 Patch171:	rpm-5.4.10-set-lc_ctype-to-utf8-when-building-gem.patch
+# see http://www.mail-archive.com/rpm-maint@lists.rpm.org/msg01819.html
+# ready
+Patch172:	rpm-5.4.10-debugedit-resolve-paths-to-absolute-paths.patch
 
 
 BuildRequires:	autoconf >= 2.57
@@ -757,6 +760,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch169 -p1 -b .brpcomp~
 %patch170 -p1 -b .archtagged~
 %patch171 -p1 -b .ruby_utf8~
+%patch172 -p1 -b .debug_path~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
