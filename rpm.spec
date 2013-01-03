@@ -61,7 +61,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}16
+Release:	%{?prereldate:0.%{prereldate}.}17
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -385,7 +385,7 @@ Patch170:	rpm-5.4.10-arch_tagged-consistent-with-mark64-provides.patch
 # ready
 Patch171:	rpm-5.4.10-set-lc_ctype-to-utf8-when-building-gem.patch
 # see http://www.mail-archive.com/rpm-maint@lists.rpm.org/msg01819.html
-# ready
+# broken, don't apply
 Patch172:	rpm-5.4.10-debugedit-resolve-paths-to-absolute-paths.patch
 
 
@@ -760,7 +760,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch169 -p1 -b .brpcomp~
 %patch170 -p1 -b .archtagged~
 %patch171 -p1 -b .ruby_utf8~
-%patch172 -p1 -b .debug_path~
+#patch172 -p1 -b .debug_path~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1204,6 +1204,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %changelog
+* Thu Jan  3 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
+- revert debugedit patch as it's broken
+
 * Thu Dec 27 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-16
 - fix debugedit issues with certain paths, resulting in debuginfo packages
   without sources (P172, from Guilherme Destefani)
