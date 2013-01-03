@@ -380,13 +380,16 @@ Patch168:	rpm-5.4.10-no-more-explicit-perl-abi-version-reqs.patch
 # our own locally maintained compress-files script from spec-helper
 # status: ready
 Patch169:	rpm-5.4.10-update-and-use-brp-compress.patch
-# ready
+# status: ready
 Patch170:	rpm-5.4.10-arch_tagged-consistent-with-mark64-provides.patch
-# ready
+# status: ready
 Patch171:	rpm-5.4.10-set-lc_ctype-to-utf8-when-building-gem.patch
 # see http://www.mail-archive.com/rpm-maint@lists.rpm.org/msg01819.html
 # broken, don't apply
 Patch172:	rpm-5.4.10-debugedit-resolve-paths-to-absolute-paths.patch
+# just fix a couple of minor memleaks at exit..
+# status: ready
+Patch173:	rpm-5.4.10-fix-a-couple-of-debugedit-memleaks.patch
 
 
 BuildRequires:	autoconf >= 2.57
@@ -761,6 +764,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch170 -p1 -b .archtagged~
 %patch171 -p1 -b .ruby_utf8~
 #patch172 -p1 -b .debug_path~
+%patch173 -p1 -b .debugedit_memleaks~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1205,6 +1209,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 
 %changelog
 * Thu Jan  3 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
+- fix a couple of memleaks in debugedit (P173)
 - revert debugedit patch as it's broken
 
 * Thu Dec 27 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-16
