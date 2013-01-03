@@ -2,3 +2,5 @@ from Config import *
 from os import environ
 
 addFilter('rpm\..*: standard-dir-owned-by-package (\(.*\) |)/var/lib/rpm')
+# temporary workaround for broken debugedit..
+addFilter('rpm-debuginfo\..*: debuginfo-without-sources.*')
