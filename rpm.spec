@@ -386,7 +386,11 @@ Patch170:	rpm-5.4.10-arch_tagged-consistent-with-mark64-provides.patch
 Patch171:	rpm-5.4.10-set-lc_ctype-to-utf8-when-building-gem.patch
 # see http://www.mail-archive.com/rpm-maint@lists.rpm.org/msg01819.html
 # broken, don't apply
-Patch172:	rpm-5.4.10-debugedit-resolve-paths-to-absolute-paths.patch
+#Patch172:	rpm-5.4.10-debugedit-resolve-paths-to-absolute-paths.patch
+# resolve absolute path before setting $RPM_BUILD_DIR rather to fix same issue
+# without regression
+# status: ready
+Patch172:	rpm-5.4.10-resolve-absolute-path-to-RPM_BUILD_DIR-for-debugedit.patch
 # just fix a couple of minor memleaks at exit..
 # status: ready
 Patch173:	rpm-5.4.10-fix-a-couple-of-debugedit-memleaks.patch
@@ -765,7 +769,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch169 -p1 -b .brpcomp~
 %patch170 -p1 -b .archtagged~
 %patch171 -p1 -b .ruby_utf8~
-#patch172 -p1 -b .debug_path~
+%patch172 -p1 -b .debug_path~
 %patch173 -p1 -b .debugedit_memleaks~
 %patch174 -p1 -b .debugedit_errmsg~
 
@@ -1215,7 +1219,8 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - print more meaningful error message for debugedit "shrank by one"
   (P174, from Thierry Vignaud)
 - fix a couple of memleaks in debugedit (P173)
-- revert debugedit patch as it's broken
+- replace debugedit patch, rather just resolve absolute path to %%_builddir
+  when setting $RPM_BUILD_DIR so that debugedit doesn't burn and crash (P172)
 
 * Thu Dec 27 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-16
 - fix debugedit issues with certain paths, resulting in debuginfo packages
