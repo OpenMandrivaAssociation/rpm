@@ -61,7 +61,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}17
+Release:	%{?prereldate:0.%{prereldate}.}18
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -397,6 +397,8 @@ Patch173:	rpm-5.4.10-fix-a-couple-of-debugedit-memleaks.patch
 # make "canonicalization(...)shrank by one character" error message more useful
 # status: ready
 Patch174:	rpm-5.4.10-debugedit-saner-error-msg.patch
+Patch175:	rpm-5.4.10-automake-1.13.patch
+Patch176:	rpm-5.4.10-crosscompile.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -772,6 +774,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch172 -p1 -b .debug_path~
 %patch173 -p1 -b .debugedit_memleaks~
 %patch174 -p1 -b .debugedit_errmsg~
+%patch175 -p1 -b .automake13~
+%patch176 -p1 -b .cross~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1215,6 +1219,10 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %changelog
+* Sat Jan  5 2013 Bernhard Rosenkraenzer <bero@lindev.ch> 5.4.10-18
+- Add support for crosscompiling
+- Fix automake 1.13 warnings
+
 * Thu Jan  3 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
 - print more meaningful error message for debugedit "shrank by one"
   (P174, from Thierry Vignaud)

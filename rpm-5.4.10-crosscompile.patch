@@ -1,0 +1,143 @@
+--- rpm-5.4.10/macros/cmake.in.bero	2013-01-04 00:03:04.152720010 +0100
++++ rpm-5.4.10/macros/cmake.in	2013-01-04 00:09:27.177007581 +0100
+@@ -10,10 +10,14 @@
+ %_cmake_version		%(%{__cmake} --version|sed -e 's#.* \(\S*\)$#\1#g')
+ 
+ %cmake \
+-  CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
+-  CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
+-  FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
++  %setup_compile_flags \
++  CROSSCOMPILE="" ; \
++%if %cross_compiling \
++  CROSSCOMPILE="-DCMAKE_TOOLCHAIN_FILE=\"%_prefix/%_target_platform/share/cmake/%_target_platform.toolchain\"" ; \
++%endif \
++  export CROSSCOMPILE ; \
+   %{__cmake} \\\
++	$CROSSCOMPILE \\\
+ 	%{_cmake_skip_rpath} \\\
+         %{_cmake_verbose} \\\
+         -DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \\\
+--- rpm-5.4.10/macros/macros.in.bero	2013-01-03 23:32:12.352491298 +0100
++++ rpm-5.4.10/macros/macros.in	2013-01-03 23:33:47.560321374 +0100
+@@ -898,9 +898,10 @@ $_arbitrary_tags_tests	Foo:Bar
+ %_vendor		@RPMCANONVENDOR@
+ %_os			@RPMCANONOS@
+ %_gnu			@RPMCANONGNU@
++%_build_gnu		@RPMCANONGNU@
+ 
+ %_host_platform		%{_host_cpu}-%{_host_vendor}-%{_host_os}%{?_gnu}
+-%_build_platform	%{_build_cpu}-%{_build_vendor}-%{_build_os}%{?_gnu}
++%_build_platform	%{_build_cpu}-%{_build_vendor}-%{_build_os}%{?_build_gnu}
+ %_target_platform	%{_target_cpu}-%{_target_vendor}-%{_target_os}%{?_gnu}
+ 
+ #==============================================================================
+@@ -937,11 +938,11 @@ $_arbitrary_tags_tests	Foo:Bar
+ # ---- config.guess platform macros.
+ #	Macro(s) similar to the tokens used by configure.
+ #
+-%_build			%{_host}
+-%_build_alias		%{_host_alias}
+-%_build_cpu		%{_host_cpu}
+-%_build_vendor		%{_host_vendor}
+-%_build_os		%{_host_os}
++%_build			@target@
++%_build_alias		@target_alias@%nil
++%_build_cpu		@target_cpu@
++%_build_vendor		@target_vendor@
++%_build_os		@target_os@
+ %_host			@host@
+ %_host_alias		@host_alias@%{nil}
+ %_host_cpu		@host_cpu@
+--- rpm-5.4.10/macros/macros.rpmbuild.in.bero	2013-01-03 23:33:54.304238587 +0100
++++ rpm-5.4.10/macros/macros.rpmbuild.in	2013-01-03 23:48:29.256475289 +0100
+@@ -531,7 +531,19 @@ echo "Patch #%{__patch_number} (%{basena
+   CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
+   CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
+   FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
+-  ./configure --host=%{_host} --build=%{_build} \\\
++  LDFLAGS="${LDFLAGS:-%optflags}" ; export LDFLAGS ; \
++  if [ "%cross_compiling" = "1" ]; then PKG_CONFIG_PATH=/usr/%_target_platform/sys-root%_libdir/pkgconfig:/usr/%_target_platform/sys-root%_datadir/pkgconfig:%_libdir/pkgconfig:%_datadir/pkgconfig:$PKG_CONFIG_PATH; export PKG_CONFIG_PATH; \
++    CROSSCOMPILE="--target=%{_target_platform} --host=%{_target_platform} --build=%_build" ; \
++  else \
++    CROSSCOMPILE="--target=%{_target_platform} --host=%{_target_platform} --build=%{_target_platform}" ; \
++  fi ; \
++  if [ "%cross" != "%%cross" -a -n "%cross" ]; then CROSSCOMPILE="--target=%cross --host=%_target_platform --build=%_build"; fi ; \
++  export CROSSCOMPILE ; \
++%ifarch noarch \
++  ./configure \\\
++%else \
++  ./configure $CROSSCOMPILE \\\
++%endif \
+ 	--target=%{_target_platform} \\\
+ 	--program-prefix=%{?_program_prefix} \\\
+  	--prefix=%{_prefix} \\\
+@@ -688,5 +700,27 @@ done \
+ %__desktop_provides        %{_rpmhome}/mandriva/desktop-file.prov
+ #%__desktop_requires        %{_rpmhome}/mandriva/desktop-file.prov
+ 
++#------------------------------------------------------------------------
++# Some useful macros for cross-compiling
++#
++# Get the base architecture (e.g. i386 for any x86, arm for any arm)
++#
++%_base_arch()	%(TARGET='%*'; \
++		echo $TARGET |grep -q '^i[0-9]86$' && TARGET=i386 \
++		echo $TARGET |grep -q '^pentium[1-9]$' && TARGET=i386 \
++		echo $TARGET |grep -Eq '^(prescott|nocona|i7_32)$' && TARGET=i386 \
++		echo $TARGET |grep -Eq '^(athlon|duron|geode)$' && TARGET=i386 \
++		echo $TARGET |grep -Eq '^(viac3|viac3_2)$' && TARGET=i386 \
++		echo $TARGET |grep -Eq '^(mips.*)$' && TARGET=mips \
++		echo $TARGET |grep -Eq '^(amd64|intel64|atom|i7)$' && TARGET=x86_64 \
++		echo $TARGET |grep -Eq '^(arm.*|xscale)$' && TARGET=arm \
++		echo $TARGET |grep -Eq '^(arm64|aarch64)$' && TARGET=aarch64 \
++		echo -n $TARGET)
++
++#
++# 1 if cross-compiling, 0 if doing a regular build
++#
++%cross_compiling	%(if [ %{_base_arch %_host_cpu} != %{_base_arch %_target_cpu} -a %_target_cpu != noarch ]; then echo -n 1; else echo -n 0; fi)
++
+ # \endverbatim
+ #*/
+--- rpm-5.4.10/macros/mandriva.in.bero	2013-01-03 23:32:00.835632362 +0100
++++ rpm-5.4.10/macros/mandriva.in	2013-01-04 00:08:22.368802832 +0100
+@@ -351,6 +351,18 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
+   CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
+   FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
+   %{?ldflags:LDFLAGS="${LDFLAGS:-%{ldflags}}"; export LDFLAGS ;} \
++%if %cross_compiling \
++    PKG_CONFIG_PATH=/usr/%_target_platform/sys-root%_libdir/pkgconfig:/usr/%_target_platform/sys-root%_datadir/pkgconfig:%_libdir/pkgconfig:%_datadir/pkgconfig:$PKG_CONFIG_PATH; export PKG_CONFIG_PATH; \
++%ifnarch noarch \
++    CROSSCOMPILE="--target=%{_target_platform} --host=%{_target_platform} --build=%_build" ; \
++%endif \
++%else \
++%ifnarch noarch \
++    CROSSCOMPILE="--target=%{_target_platform} --host=%{_target_platform} --build=%{_target_platform}" ; \
++%endif \
++%endif \
++  %{?cross:CROSSCOMPILE="--target=%cross --host=%_target_platform --build=%_build" ; } \
++  export CROSSCOMPILE ; \
+   %{nil}
+ 
+ %before_configure \
+@@ -368,7 +380,7 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
+   %{?!_disable_libtoolize:%{?__libtoolize_configure:%{__libtoolize_configure};}} \
+   [ -f $CONFIGURE_TOP/configure.in -o -f $CONFIGURE_TOP/configure.ac ] && \
+   CONFIGURE_XPATH="--x-includes=%{_prefix}/include --x-libraries=%{_prefix}/%{_lib}" \
+-  $CONFIGURE_TOP/configure %{_target_platform} \\\
++  $CONFIGURE_TOP/configure $CROSSCOMPILE \\\
+   	--disable-silent-rules \\\
+ 	--program-prefix=%{?_program_prefix} \\\
+  	--prefix=%{_prefix} \\\
+@@ -391,8 +403,9 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
+   %{?_enable_libtoolize:%{?__libtoolize_configure:%{__libtoolize_configure};}} \
+   [ -f $CONFIGURE_TOP/configure.in -o -f $CONFIGURE_TOP/configure.ac ] && \
+   CONFIGURE_XPATH="--x-includes=%{_prefix}/include --x-libraries=%{_prefix}/%{_lib}" \
+-  $CONFIGURE_TOP/configure --build=%{_target_platform} \\\
++  $CONFIGURE_TOP/configure $CROSSCOMPILE \\\
+   	--disable-silent-rules \\\
++  	--program-prefix=%{?_program_prefix} \\\
+  	--prefix=%{_prefix} \\\
+ 	--exec-prefix=%{_exec_prefix} \\\
+ 	--bindir=%{_bindir} \\\
