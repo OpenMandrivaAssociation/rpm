@@ -405,6 +405,10 @@ Patch174:	rpm-5.4.10-debugedit-saner-error-msg.patch
 # while not feeling exactly perfectly implemented either, but works more than
 # satisfactory 'nuff for us, so should be discussed before merging upstream..
 Patch175:	rpm-5.4.10-run-fix_eol-after-doc-stage.patch
+# reverts change upstream that adds rpath to perl module
+# status: as it reverts a previous upstream change, it prolly' shouldn't be
+# merged, but probably worthwhile a discussion at least...
+Patch176:	rpm-5.4.10-drop-rpath-from-perl-module.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -781,6 +785,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch173 -p1 -b .debugedit_memleaks~
 %patch174 -p1 -b .debugedit_errmsg~
 %patch175 -p1 -b .doc_post~
+%patch176 -p1 -b .droprpath~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1225,6 +1230,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 
 %changelog
 * Sun Jan  6 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
+- get rid of rpath from perl module (P176)
 - reenable regression tests again as network access is working just fine from
   build environment on ABF
 - make fix_eol script run after %%doc, so that wrong-file-end-of-line-encoding
