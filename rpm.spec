@@ -608,7 +608,7 @@ programs that will manipulate RPM packages and databases.
 Summary:	Perl bindings for RPM
 Group:		Development/Perl
 Obsoletes:	perl-RPM4
-Requires:	perl-IO-String
+Requires:	perl(IO::String)
 
 %description -n perl-%{perlmod}
 The RPM Perl module provides an object-oriented interface to querying both
@@ -1234,6 +1234,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 
 %changelog
 * Sun Jan  6 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
+- convert explicit perl-IO-String dependency to canonical perl(IO::String)
 - get rid of rpath from perl module (P176)
 - reenable regression tests again as network access is working just fine from
   build environment on ABF
