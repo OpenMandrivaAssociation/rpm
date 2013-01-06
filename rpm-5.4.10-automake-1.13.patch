@@ -1,0 +1,11 @@
+--- rpm-5.4.10/syck/configure.ac.bero	2013-01-03 23:16:02.335023872 +0100
++++ rpm-5.4.10/syck/configure.ac	2013-01-03 23:16:12.654897074 +0100
+@@ -4,7 +4,7 @@ AC_CONFIG_AUX_DIR(config)
+ AC_PREREQ(2.50)
+ 
+ AM_INIT_AUTOMAKE(syck, 0.60)
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS([config.h])
+ 
+ # Checks for programs.
+ AC_PROG_CC_STDC
