@@ -397,6 +397,14 @@ Patch173:	rpm-5.4.10-fix-a-couple-of-debugedit-memleaks.patch
 # make "canonicalization(...)shrank by one character" error message more useful
 # status: ready
 Patch174:	rpm-5.4.10-debugedit-saner-error-msg.patch
+# files added with %%doc gets copied to buildroot after %%install, preventing
+# ie. fix_eol to be run on these files (where it's usually most relevant),
+# so let's add support for specific scripts to be run after this and make sure
+# to execute fix_eol then..
+# status: kinda breaks use of (prolly' never used) $DONT_FIX_EOL variable,
+# while not feeling exactly perfectly implemented either, but works more than
+# satisfactory 'nuff for us, so should be discussed before merging upstream..
+Patch175:	rpm-5.4.10-run-fix_eol-after-doc-stage.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -772,6 +780,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch172 -p1 -b .debug_path~
 %patch173 -p1 -b .debugedit_memleaks~
 %patch174 -p1 -b .debugedit_errmsg~
+%patch175 -p1 -b .doc_post~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1216,6 +1225,8 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 
 %changelog
 * Sun Jan  6 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
+- make fix_eol script run after %%doc, so that wrong-file-end-of-line-encoding
+  gets fixed for files installed after %%install as well (P175)
 - convert some more foo-devel buildrequires to pkgconfig(foo) deps
 - print more meaningful error message for debugedit "shrank by one"
   (P174, from Thierry Vignaud)
