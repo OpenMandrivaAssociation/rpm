@@ -410,7 +410,7 @@ BuildRequires:	byacc
 BuildRequires:	pkgconfig(neon)
 BuildRequires:	rpm-%{_target_vendor}-setup-build
 BuildRequires:	readline-devel
-BuildRequires:	ncurses-devel
+BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	pkgconfig(libssl)
 BuildRequires:	pkgconfig(libcrypto)
 BuildRequires:	pkgconfig(liblzma)
@@ -419,11 +419,11 @@ BuildRequires:	pkgconfig(libpcreposix)
 BuildRequires:	acl-devel
 BuildRequires:	magic-devel
 BuildRequires:	pkgconfig(popt) >= 1.15
-BuildRequires:	libxml2-devel >= 2.7.8-9
+BuildRequires:	pkgconfig(libxml-2.0)
 # we're now building with internal..
 #BuildRequires:	pkgconfig(lua)
 # needed by internal lua
-BuildRequires:	expat-devel
+BuildRequires:	pkgconfig(expat)
 %ifarch %{ix86} x86_64 ppc ppc64 ia64
 BuildRequires:	pkgconfig(libcpuinfo) 
 %endif
@@ -447,16 +447,16 @@ BuildRequires:	%{bdb}-utils
 BuildRequires:	perl-devel
 %endif
 %if %{with python}
-BuildRequires:	python-devel
+BuildRequires:	pkgconfig(python)
 %endif
 %if %{with js}
 BuildRequires:	pkgconfig(mozjs185)
 %endif
 %if %{with ruby}
-BuildRequires:	ruby-devel
+BuildRequires:	pkgconfig(ruby-1.9)
 %endif
 %if %{with tcl}
-BuildRequires:	tcl-devel
+BuildRequires:	pkgconfig(tcl)
 %endif
 %if %{with squirrel}
 BuildRequires:	squirrel-devel
@@ -1215,7 +1215,8 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %changelog
-* Thu Jan  3 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
+* Sun Jan  6 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
+- convert some more foo-devel buildrequires to pkgconfig(foo) deps
 - print more meaningful error message for debugedit "shrank by one"
   (P174, from Thierry Vignaud)
 - fix a couple of memleaks in debugedit (P173)
