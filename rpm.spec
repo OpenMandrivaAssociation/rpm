@@ -902,7 +902,7 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 %endif
 
 %check
-#make check
+make check
 
 %install
 %makeinstall_std
@@ -1225,6 +1225,8 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 
 %changelog
 * Sun Jan  6 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
+- reenable regression tests again as network access is working just fine from
+  build environment on ABF
 - make fix_eol script run after %%doc, so that wrong-file-end-of-line-encoding
   gets fixed for files installed after %%install as well (P175)
 - convert some more foo-devel buildrequires to pkgconfig(foo) deps
