@@ -61,7 +61,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}18
+Release:	%{?prereldate:0.%{prereldate}.}17
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -397,7 +397,6 @@ Patch173:	rpm-5.4.10-fix-a-couple-of-debugedit-memleaks.patch
 # make "canonicalization(...)shrank by one character" error message more useful
 # status: ready
 Patch174:	rpm-5.4.10-debugedit-saner-error-msg.patch
-<<<<<<< HEAD
 # files added with %%doc gets copied to buildroot after %%install, preventing
 # ie. fix_eol to be run on these files (where it's usually most relevant),
 # so let's add support for specific scripts to be run after this and make sure
@@ -410,10 +409,8 @@ Patch175:	rpm-5.4.10-run-fix_eol-after-doc-stage.patch
 # status: as it reverts a previous upstream change, it prolly' shouldn't be
 # merged, but probably worthwhile a discussion at least...
 Patch176:	rpm-5.4.10-drop-rpath-from-perl-module.patch
-=======
-Patch175:	rpm-5.4.10-automake-1.13.patch
-Patch176:	rpm-5.4.10-crosscompile.patch
->>>>>>> 2e04995efe3c49a2755aa9d6f8925eb9caebb9af
+Patch177:	rpm-5.4.10-automake-1.13.patch
+Patch178:	rpm-5.4.10-crosscompile.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -789,13 +786,10 @@ This package contains the RPM API documentation generated in HTML format.
 %patch172 -p1 -b .debug_path~
 %patch173 -p1 -b .debugedit_memleaks~
 %patch174 -p1 -b .debugedit_errmsg~
-<<<<<<< HEAD
 %patch175 -p1 -b .doc_post~
 %patch176 -p1 -b .droprpath~
-=======
-%patch175 -p1 -b .automake13~
-%patch176 -p1 -b .cross~
->>>>>>> 2e04995efe3c49a2755aa9d6f8925eb9caebb9af
+%patch177 -p1 -b .automake13~
+%patch178 -p1 -b .cross~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1239,7 +1233,6 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %changelog
-<<<<<<< HEAD
 * Sun Jan  6 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
 - get rid of rpath from perl module (P176)
 - reenable regression tests again as network access is working just fine from
@@ -1247,10 +1240,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - make fix_eol script run after %%doc, so that wrong-file-end-of-line-encoding
   gets fixed for files installed after %%install as well (P175)
 - convert some more foo-devel buildrequires to pkgconfig(foo) deps
-=======
-* Sat Jan  5 2013 Bernhard Rosenkraenzer <bero@lindev.ch> 5.4.10-18
-- Add support for crosscompiling
-- Fix automake 1.13 warnings
+  + Bernhard Rosenkraenzer <bero@lindev.ch>
+    - Add support for crosscompiling (P177)
+    - Fix automake 1.13 warnings (P178)
 
 * Thu Jan  3 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
 >>>>>>> 2e04995efe3c49a2755aa9d6f8925eb9caebb9af
