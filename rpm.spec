@@ -1241,17 +1241,15 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - make fix_eol script run after %%doc, so that wrong-file-end-of-line-encoding
   gets fixed for files installed after %%install as well (P175)
 - convert some more foo-devel buildrequires to pkgconfig(foo) deps
-  + Bernhard Rosenkraenzer <bero@lindev.ch>
-    - Add support for crosscompiling (P177)
-    - Fix automake 1.13 warnings (P178)
-
-* Thu Jan  3 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
->>>>>>> 2e04995efe3c49a2755aa9d6f8925eb9caebb9af
 - print more meaningful error message for debugedit "shrank by one"
   (P174, from Thierry Vignaud)
 - fix a couple of memleaks in debugedit (P173)
 - replace debugedit patch, rather just resolve absolute path to %%_builddir
   when setting $RPM_BUILD_DIR so that debugedit doesn't burn and crash (P172)
+
+  + Bernhard Rosenkraenzer <bero@lindev.ch>
+    - Add support for crosscompiling (P177)
+    - Fix automake 1.13 warnings (P178)
 
 * Thu Dec 27 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-16
 - fix debugedit issues with certain paths, resulting in debuginfo packages
