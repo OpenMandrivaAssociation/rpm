@@ -290,7 +290,20 @@ Patch135:	rpm-5.4.7-no-seqid_init-on-rdonly-database.patch
 Patch136:	rpm-5.4.9-add-support-for-using-rpmdsMerge-with-filepath-tags.patch
 # status: probably ready for merging
 Patch137:	rpm-5.4.9-avoid-double-slash-in-path-for-dirname-filetrigger-matching.patch
-# status: unfinished
+# This patch adds %%triggerpretransin, %%triggerpretransun,
+# %%triggerposttransin, %%triggerposttransun # triggers, which behaves in
+# similar fashion as the legacy mandriva triggers, ie. it will fire only once
+# for all matches per transaction.
+# Caveat: Due to lack of available bits for dependency flags, the same bits as
+# for regular triggers are reused with only one additional bit used to identify
+# as pre/posttrans triggers, meaning that older rpm versions will identify
+# these triggers as regular triggers. One possible solution could be something
+# like setting an environment variable that the packager writing the trigger
+# can check for in the trigger script..
+# status: pretty much done, but implementation might not be satisfactory to
+# everyone, requiring some greater discussion to take place before even
+# considering merging it upstream.
+# status: ready for use, but keep locally for now...
 Patch138:	rpm-5.4.10-trigtrans.patch
 # status: probably ready to merge, discuss on rpm-devel first
 Patch139:	rpm-5.4.9-fix-verify-segfault.patch
@@ -768,7 +781,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch156 -p1 -b .php_deps~
 %patch157 -p1 -b .perl_deps~
 %patch158 -p1 -b .dl_error~
-#patch138 -p1 -b .trigtrans~
+%patch138 -p1 -b .trigtrans~
 %patch159 -p1 -b .ignore_arch~
 %patch160 -p1 -b .xz_level~
 %patch161 -p1 -b .uclibc_buildroot~
@@ -1233,7 +1246,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %changelog
-* Sun Jan  6 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
+* Mon Jan  7 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
+- "finish" implementation of %%triggerpretransin, %%triggerpretransun,
+  %%triggerposttransin, %%triggerposttransun triggers (P138)
 - convert explicit perl-IO-String dependency to canonical perl(IO::String)
 - get rid of rpath from perl module (P176)
 - reenable regression tests again as network access is working just fine from
