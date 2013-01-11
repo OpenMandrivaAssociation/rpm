@@ -483,7 +483,7 @@ BuildRequires:	pkgconfig(mozjs185)
 BuildRequires:	pkgconfig(ruby-1.9)
 %endif
 %if %{with tcl}
-BuildRequires:	pkgconfig(tcl)
+BuildRequires:	tcl-devel
 %endif
 %if %{with squirrel}
 BuildRequires:	squirrel-devel
