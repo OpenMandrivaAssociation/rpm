@@ -471,7 +471,8 @@ BuildRequires:	%{bdb}-devel >= 5.2.36-3
 # required by test suite
 BuildRequires:	%{bdb}-utils
 %if %{with perl}
-BuildRequires:	perl-devel perl(JSON::PP)
+BuildRequires:	perl-devel
+BuildRequires:	perl-JSON-PP
 %endif
 %if %{with python}
 BuildRequires:	pkgconfig(python)
