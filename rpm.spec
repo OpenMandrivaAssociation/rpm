@@ -428,6 +428,9 @@ Patch178:	rpm-5.4.10-crosscompile.patch
 # tool for automatically checking and fixing broken rpmdb
 # status: probably' worth merging upstream
 Patch179:	rpm-5.4.10-rpmdbchk.patch
+# adds casts for C++ compatibility
+# status: ready
+Patch180:	rpm-5.4.10-rpmdb-typecasts.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -816,6 +819,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch177 -p1 -b .automake13~
 %patch178 -p1 -b .cross~
 %patch179 -p1 -b .rpmdbchk~
+%patch180 -p1 -b .typecast~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1275,6 +1279,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %changelog
+* Wed Jan 16 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-19
+- add missing typecasts for C++ compatibility in rpmdb.h (P180)
+
 * Mon Jan  7 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
 - "finish" implementation of %%triggerpretransin, %%triggerpretransun,
   %%triggerposttransin, %%triggerposttransun triggers (P138)
