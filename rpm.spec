@@ -61,7 +61,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}17
+Release:	%{?prereldate:0.%{prereldate}.}18
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -77,6 +77,7 @@ Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}-%{srcver}.tar.gz
 Source2:	rpm.rpmlintrc
 Source3:	cpu-os-macros.tar
 Source4:	legacy_compat.macros
+Source5:	RPMBDB-0.1.tar.xz
 # already merged upstream
 Patch0:		rpm-5.3.8-set-default-bdb-log-dir.patch
 # TODO: should be disable for cooker, packaging needs to be fixed (enable for legacy compatibility)
@@ -626,6 +627,14 @@ Requires:	perl(IO::String)
 %description -n perl-%{perlmod}
 The RPM Perl module provides an object-oriented interface to querying both
 the installed RPM database as well as files on the filesystem.
+
+%package -n	perl-RPMBDB
+Summary:	Perl extension for accessing certain Berkeley DB functionality
+Group:		Development/Perl
+Requires:	%{librpmname} = %{EVRD}
+
+%description
+This perl extension provides certain Berkeley DB functionality used by urpmi.
 %endif
 
 %if %{with ruby}
@@ -669,7 +678,7 @@ This package contains the RPM API documentation generated in HTML format.
 %endif
 
 %prep
-%setup -q
+%setup -q -a5
 %patch111 -p1 -b .script_macros~
 # These patches has been commited hastily upstream for review,
 # keeping them around here for now untill finished...
@@ -923,11 +932,21 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 %make apidocs
 %endif
 
+%if %{with perl}
+pushd RPMBDB-*
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
+%make
+popd
+%endif
+
 %check
 make check
 
 %install
 %makeinstall_std
+%if %{with perl}
+%makeinstall_std -C RPMBDB-*
+%endif
 
 # XXX: why isn't this installed by 'make install'?
 install -m755 scripts/symclash.* %{buildroot}%{_rpmhome}
@@ -1210,6 +1229,11 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %dir %{perl_vendorarch}/%{perlmod}
 %{perl_vendorarch}/%{perlmod}/*.pm
 %{perl_vendorarch}/auto/%{perlmod}
+
+%files -n perl-RPMBDB
+%{perl_vendorarch}/RPMBDB.pm
+%dir %{perl_vendorarch}/auto/RPMBDB
+%{perl_vendorarch}/auto/RPMBDB/RPMBDB.so
 %endif
 
 %if %{with python}
