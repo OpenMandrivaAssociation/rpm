@@ -1282,6 +1282,12 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 * Wed Jan 16 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-19
 - add missing typecasts for C++ compatibility in rpmdb.h (P180)
 
+* Wed Jan 16 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-18
+- add rpmdbchk tool for automatically fixing broken rpmdb (P179)
+- add a RPMBDB perl module with necessary functions using berkeley db api
+  exported, ensured to be buitl against same as rpm, thus preventing breakage
+  during upgrade
+
 * Mon Jan  7 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-17
 - "finish" implementation of %%triggerpretransin, %%triggerpretransun,
   %%triggerposttransin, %%triggerposttransun triggers (P138)
