@@ -177,7 +177,7 @@
 +    const char * db = rpmGetPath(prefix && prefix[0] ? prefix : "", path, "/Packages", NULL);
 +    const char * lost = rpmGetPath(prefix && prefix[0] ? prefix : "", path, "/broken", NULL);
 +    int ret, t_ret;
-+    int i;
++    uint32_t i;
 +
 +
 +    if ((ret = db_create(&dbp, NULL, 0)) != 0) {
