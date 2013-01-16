@@ -425,6 +425,9 @@ Patch175:	rpm-5.4.10-run-fix_eol-after-doc-stage.patch
 Patch176:	rpm-5.4.10-drop-rpath-from-perl-module.patch
 Patch177:	rpm-5.4.10-automake-1.13.patch
 Patch178:	rpm-5.4.10-crosscompile.patch
+# tool for automatically checking and fixing broken rpmdb
+# status: probably' worth merging upstream
+Patch179:	rpm-5.4.10-rpmdbchk.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -812,6 +815,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch176 -p1 -b .droprpath~
 %patch177 -p1 -b .automake13~
 %patch178 -p1 -b .cross~
+%patch179 -p1 -b .rpmdbchk~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1044,6 +1048,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/bin/mtree
 %{_rpmhome}/bin/mgo
 #%%{_rpmhome}/bin/rc
+%{_rpmhome}/bin/rpmdbchk
 %{_rpmhome}/bin/rpmspecdump
 %{_rpmhome}/bin/wget
 %if %{with xar}
