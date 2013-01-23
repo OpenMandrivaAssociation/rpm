@@ -440,6 +440,11 @@ Patch181:	rpm-5.4.10-printspec.patch
 # be able to obsolete it
 # status: mandriva specific, ready to merge
 Patch182:	rpm-5.4.10-drop-legacy-scripts-from-rpm-setup.patch
+# as these flags are enabled in linker by default now there's no point in
+# passing them, while the disablers are also completely useless as well as
+# a result
+# status: mandriva specific, ready to merge
+Patch183:	rpm-5.4.10-drop-linker-flags-from-ldflags-macro-thats-now-implicitly-enabled-by-default.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -830,6 +835,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch180 -p1 -b .typecast~
 %patch181 -p1 -b .printspec~
 %patch182 -p1 -b .drop_rpmsetup~
+%patch183 -p1 -b .strip_ldflags~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
