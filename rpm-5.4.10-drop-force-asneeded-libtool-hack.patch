@@ -1,0 +1,10 @@
+--- rpm-5.4.10/macros/mandriva.in.drop_asneededhack~	2013-01-23 01:40:12.070347991 +0100
++++ rpm-5.4.10/macros/mandriva.in	2013-01-23 01:43:24.543236986 +0100
+@@ -373,7 +373,6 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
+ %before_configure \
+   %setup_compile_flags \
+   CONFIGURE_TOP="${CONFIGURE_TOP:-.}"; \
+-  %{?!_disable_ld_as_needed:@USRLIBRPM@/@RPMCANONVENDOR@/force-as-needed-for-shared-lib-in-libtool ;} \
+   %{?!_disable_ld_no_undefined:@USRLIBRPM@/@RPMCANONVENDOR@/drop-ld-no-undefined-for-shared-lib-modules-in-libtool ;} \
+   %{__fix_libtool_ltmain_from_overlinking} ; \
+   %{__fix_libtool_from_moving_options_after_libs} $CONFIGURE_TOP ; \
