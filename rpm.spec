@@ -1042,8 +1042,8 @@ mv %{buildroot}%{_bindir}/rpm %{buildroot}/bin/rpm
 
 cp -r cpu-os-macros %{buildroot}%{_usrlibrpm}/platform
 install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/legacy_compat.macros
-install -m755 git-repository--after-tarball -D %{buildroot}%{_rpmhome}/git-repository--after-tarball
-install -m755 git-repository--apply-patch -D %{buildroot}%{_rpmhome}/git-repository--apply-patch
+install -m755 %{SOURCE6} -D %{buildroot}%{_rpmhome}/git-repository--after-tarball
+install -m755 %{SOURCE7} -D %{buildroot}%{_rpmhome}/git-repository--apply-patch
 
 %if %{with docs}
 install -d %{buildroot}%{_docdir}/rpm
