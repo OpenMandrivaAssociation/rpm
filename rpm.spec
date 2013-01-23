@@ -61,7 +61,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}18
+Release:	%{?prereldate:0.%{prereldate}.}19
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -448,6 +448,12 @@ Patch183:	rpm-5.4.10-drop-linker-flags-from-ldflags-macro-thats-now-implicitly-e
 # clean out some old macros etc.
 # status: mandriva specific, ready to merge
 Patch184:	rpm-5.4.10-cleanup-mandriva-specific-macros.patch
+# elf(buildid) provides are currently not actually used for any purpose, yet
+# they're generated for each individual executable binary, so let's just
+# disable this for now and look at this again whenever in the future it
+# might have any possible relevance
+# status: keep locally
+Patch185:	rpm-5.4.10-disable-generation-of-buildid-provides.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -840,6 +846,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch182 -p1 -b .drop_rpmsetup~
 %patch183 -p1 -b .strip_ldflags~
 %patch184 -p1 -b .legacy_macros~
+%patch185 -p1 -b .buildid_deps~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
