@@ -78,6 +78,8 @@ Source2:	rpm.rpmlintrc
 Source3:	cpu-os-macros.tar
 Source4:	legacy_compat.macros
 Source5:	RPMBDB-0.1.tar.xz
+Source6:	git-repository--after-tarball
+Source7:	git-repository--apply-patch
 # already merged upstream
 Patch0:		rpm-5.3.8-set-default-bdb-log-dir.patch
 # TODO: should be disable for cooker, packaging needs to be fixed (enable for legacy compatibility)
@@ -434,11 +436,10 @@ Patch180:	rpm-5.4.10-rpmdb-typecasts.patch
 # adds ability for printing parsed version of spec file with 'rpm -q --specfile --printspec'
 # status: very simple, non-intrusive, while quite convenient, should be okay to merge
 Patch181:	rpm-5.4.10-printspec.patch
-# drops invokation of old force-as-needed-for-shared-lib-in-libtool &
-# fix-libtool-ltmain-from-overlinking scripts before running configure.
-# --as-needed is now enabled by default in binutils, making this irrelevant now
+# drop remaining legacy scripts from rpm-mandriva-setup-build package for us to
+# be able to obsolete it
 # status: mandriva specific, ready to merge
-Patch182:	rpm-5.4.10-drop-force-asneeded-libtool-hack.patch
+Patch182:	rpm-5.4.10-drop-legacy-scripts-from-rpm-setup.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -450,7 +451,6 @@ BuildRequires:	ed
 BuildRequires:	gettext-devel
 BuildRequires:	byacc
 BuildRequires:	pkgconfig(neon)
-BuildRequires:	rpm-%{_target_vendor}-setup-build
 BuildRequires:	readline-devel
 BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	pkgconfig(libssl)
@@ -596,7 +596,7 @@ Requires:	make
 Requires:	unzip
 Requires:	elfutils >= 0.152-4
 Requires:	rpm = %{EVRD}
-Requires:	rpm-%{_target_vendor}-setup-build
+%rename		rpm-%{_target_vendor}-setup-build
 Requires:	spec-helper >= 0.31.12
 Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
 Requires:	python-rpm = %{EVRD}
@@ -829,7 +829,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch179 -p1 -b .rpmdbchk~
 %patch180 -p1 -b .typecast~
 %patch181 -p1 -b .printspec~
-%patch182 -p1 -b .drop_asneededhack~
+%patch182 -p1 -b .drop_rpmsetup~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1025,6 +1025,8 @@ mv %{buildroot}%{_bindir}/rpm %{buildroot}/bin/rpm
 
 cp -r cpu-os-macros %{buildroot}%{_usrlibrpm}/platform
 install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/legacy_compat.macros
+install -m755 git-repository--after-tarball -D %{buildroot}%{_rpmhome}/git-repository--after-tarball
+install -m755 git-repository--apply-patch -D %{buildroot}%{_rpmhome}/git-repository--apply-patch
 
 %if %{with docs}
 install -d %{buildroot}%{_docdir}/rpm
@@ -1164,6 +1166,8 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/fontconfig.prov
 %{_rpmhome}/gem_helper.rb
 %{_rpmhome}/getpo.sh
+%{_rpmhome}/git-repository--after-tarball
+%{_rpmhome}/git-repository--apply-patch
 %{_rpmhome}/gstreamer.sh
 %{_rpmhome}/haskelldeps.sh
 %{_rpmhome}/http.req
