@@ -434,9 +434,9 @@ Patch180:	rpm-5.4.10-rpmdb-typecasts.patch
 # adds ability for printing parsed version of spec file with 'rpm -q --specfile --printspec'
 # status: very simple, non-intrusive, while quite convenient, should be okay to merge
 Patch181:	rpm-5.4.10-printspec.patch
-# drops invokation of old force-as-needed-for-shared-lib-in-libtool script
-# before running configure. --as-needed are now enabled by default in binutils,
-# so this is no longer relevant
+# drops invokation of old force-as-needed-for-shared-lib-in-libtool &
+# fix-libtool-ltmain-from-overlinking scripts before running configure.
+# --as-needed is now enabled by default in binutils, making this irrelevant now
 # status: mandriva specific, ready to merge
 Patch182:	rpm-5.4.10-drop-force-asneeded-libtool-hack.patch
 
