@@ -454,6 +454,8 @@ Patch184:	rpm-5.4.10-cleanup-mandriva-specific-macros.patch
 # might have any possible relevance
 # status: keep locally
 Patch185:	rpm-5.4.10-disable-generation-of-buildid-provides.patch
+# backport from upstream
+Patch186:	rpm-5.4.10-dont-repackage-if-justdb-is-specified.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -847,6 +849,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch183 -p1 -b .strip_ldflags~
 %patch184 -p1 -b .legacy_macros~
 %patch185 -p1 -b .buildid_deps~
+%patch186 -p1 -b .rpkg_justdb~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
