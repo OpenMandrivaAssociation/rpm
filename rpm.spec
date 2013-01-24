@@ -1325,6 +1325,22 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix regression in %%before_configure macro
 
 * Wed Jan 16 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-19
+- adjust trigger counts for delayed commit (P187)
+- fix: don't repackage if --justdb is specified (P186)
+- disable elf(buildid) provides as they're currently not used for anything,
+  yet as they get generated for every individual executable elf binary
+  they make up 1/4 of all provides generated for all packages on my local
+  system(!) (P185)
+- clean out some ancient legacy mandriva specific macros (P184)
+- drop linker flags from %ldflags thats now implicitly enabled by default (P183)
+
+- drop remaining legacy scripts from rpm-mandriva-setup-build package for us to
+  be able to obsolete it
+- drop invokation of fix-libtool-ltmain-from-overlinking for same reason also
+- drop invokation of old force-as-needed-for-shared-lib-in-libtool script
+  before running configure. --as-needed are now enabled by default in binutils,
+  so this is no longer relevant (P182)
+- implement 'rpm -q --specfile --printspec' to print parsed spec file (P181)
 - add missing typecasts for C++ compatibility in rpmdb.h (P180)
 
 * Wed Jan 16 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-18
