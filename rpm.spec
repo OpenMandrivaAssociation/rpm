@@ -1,5 +1,10 @@
 %define	_target_vendor mandriva
 
+# temporary workaround to ensure build
+%define before_configure \
+  %setup_compile_flags \
+  CONFIGURE_TOP="${CONFIGURE_TOP:-.}"
+
 %bcond_with	bootstrap
 %bcond_with	debug
 
@@ -61,7 +66,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}19
+Release:	%{?prereldate:0.%{prereldate}.}20
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -1316,6 +1321,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %changelog
+* Thu Jan 24 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-20
+- fix regression in %%before_configure macro
+
 * Wed Jan 16 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-19
 - add missing typecasts for C++ compatibility in rpmdb.h (P180)
 

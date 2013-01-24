@@ -42,7 +42,7 @@
 -  %{__fix_libtool_ltmain_from_overlinking} ; \
 -  %{__fix_libtool_from_moving_options_after_libs} $CONFIGURE_TOP ; \
 -  %{__fix_dlsearch_path_in_libtool_for_multilib} $CONFIGURE_TOP %{_lib}
-+  CONFIGURE_TOP="${CONFIGURE_TOP:-.}";
++  CONFIGURE_TOP="${CONFIGURE_TOP:-.}"
  
  # This is an improved version of %configure (from PLD team).
  %configure \
