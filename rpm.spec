@@ -473,6 +473,7 @@ BuildRequires:	beecrypt-devel >= 4.2.1-8
 BuildRequires:	ed
 BuildRequires:	gettext-devel
 BuildRequires:	byacc
+BuildRequires:	pkgconfig
 BuildRequires:	pkgconfig(neon)
 BuildRequires:	readline-devel
 BuildRequires:	pkgconfig(ncursesw)
