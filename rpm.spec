@@ -624,6 +624,7 @@ Requires:	rpm = %{EVRD}
 Requires:	spec-helper >= 0.31.12
 Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
 Requires:	python-rpm = %{EVRD}
+Requires:	pkgconfig
 # ditch to eliminate dependency on perl deps not part of standard perl library
 # also kinda wanna discourage heavy adoption of embedded perl interpreter
 #Requires:	perl-RPM = %{EVRD}
@@ -1322,7 +1323,8 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %changelog
-* Thu Jan 24 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-20
+* Fri Jan 25 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-20
+- add dependency on pkgconfig to rpm-build
 - fix regression in %%before_configure macro
 
 * Wed Jan 16 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-19
