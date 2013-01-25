@@ -9,7 +9,7 @@
 %bcond_with	debug
 
 %bcond_without	ossp_uuid
-%bcond_with	augeas
+%bcond_without	augeas
 
 #XXX: this macro is a bit awkward, better can be done!
 %if %{with bootstrap}
