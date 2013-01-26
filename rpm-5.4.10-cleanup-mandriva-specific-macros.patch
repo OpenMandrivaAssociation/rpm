@@ -14,7 +14,7 @@
  %Werror_cflags -Wformat -Werror=format-security
  
 -%_ssp_cflags -fstack-protector --param=ssp-buffer-size=4%{?_serverbuild_flags: %_serverbuild_flags}
-+%_ssp_cflags -fstack-protector --param=ssp-buffer-size=4%{?_serverbuild_flags}
++%_ssp_cflags -fstack-protector --param=ssp-buffer-size=4 %{?_serverbuild_flags}
  %__common_cflags -O2 %{debugcflags} -pipe %{Werror_cflags} %{?_fortify_cflags}
  %__common_cflags_with_ssp %{__common_cflags} %{?_ssp_cflags}
  
