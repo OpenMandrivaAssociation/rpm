@@ -66,7 +66,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}21
+Release:	%{?prereldate:0.%{prereldate}.}22
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -467,7 +467,7 @@ Patch187:	rpm-5.4.10-adjust-trigger-counts-for-delayed-commit.patch
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
-BuildRequires:	elfutils-devel
+BuildRequires:	elfutils-devel >= 0.154
 BuildRequires:	sed >= 4.0.3
 BuildRequires:	beecrypt-devel >= 4.2.1-8
 BuildRequires:	ed
@@ -543,7 +543,7 @@ BuildRequires:	pkgconfig(augeas)
 %endif
 BuildRequires:	spec-helper >= 0.31.12
 BuildRequires:	stdc++-static-devel >= 4.6.2-8
-BuildRequires:	elfutils >= 0.153
+BuildRequires:	elfutils >= 0.154
 BuildRequires:	libtool >= 2.4.2-3
 Requires:	cpio
 Requires:	gawk
@@ -573,7 +573,7 @@ Group:		System/Libraries
 # with older versions (#61658, comment #136)
 Conflicts:	librpm < 5.3
 Conflicts:	%{_lib}db5.1 < 5.1.25
-Conflicts:	%{_lib}elfutils1 < 0.152
+Conflicts:	%{_lib}elfutils1 < 0.154
 Conflicts:	%{_lib}beecrypt7 < 4.2.1
 
 %description -n	%{librpmname}
