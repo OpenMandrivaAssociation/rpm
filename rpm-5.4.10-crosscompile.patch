@@ -1,5 +1,5 @@
---- rpm-5.4.10/macros/cmake.in.bero	2013-01-04 00:03:04.152720010 +0100
-+++ rpm-5.4.10/macros/cmake.in	2013-01-04 00:09:27.177007581 +0100
+--- rpm-5.4.10/macros/cmake.in.cross~	2010-10-16 06:37:54.000000000 +0200
++++ rpm-5.4.10/macros/cmake.in	2013-02-01 08:48:00.860899379 +0100
 @@ -10,10 +10,14 @@
  %_cmake_version		%(%{__cmake} --version|sed -e 's#.* \(\S*\)$#\1#g')
  
@@ -18,8 +18,8 @@
  	%{_cmake_skip_rpath} \\\
          %{_cmake_verbose} \\\
          -DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \\\
---- rpm-5.4.10/macros/macros.in.bero	2013-01-03 23:32:12.352491298 +0100
-+++ rpm-5.4.10/macros/macros.in	2013-01-03 23:33:47.560321374 +0100
+--- rpm-5.4.10/macros/macros.in.cross~	2013-02-01 08:48:00.737897778 +0100
++++ rpm-5.4.10/macros/macros.in	2013-02-01 08:48:00.861899392 +0100
 @@ -898,9 +898,10 @@ $_arbitrary_tags_tests	Foo:Bar
  %_vendor		@RPMCANONVENDOR@
  %_os			@RPMCANONOS@
@@ -49,9 +49,9 @@
  %_host			@host@
  %_host_alias		@host_alias@%{nil}
  %_host_cpu		@host_cpu@
---- rpm-5.4.10/macros/macros.rpmbuild.in.bero	2013-01-03 23:33:54.304238587 +0100
-+++ rpm-5.4.10/macros/macros.rpmbuild.in	2013-01-03 23:48:29.256475289 +0100
-@@ -531,7 +531,19 @@ echo "Patch #%{__patch_number} (%{basena
+--- rpm-5.4.10/macros/macros.rpmbuild.in.cross~	2013-02-01 08:48:00.852899275 +0100
++++ rpm-5.4.10/macros/macros.rpmbuild.in	2013-02-01 08:49:18.040903783 +0100
+@@ -547,7 +547,19 @@ echo "Patch #%{__patch_number} (%{basena
    CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
    CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
    FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
@@ -72,9 +72,9 @@
  	--target=%{_target_platform} \\\
  	--program-prefix=%{?_program_prefix} \\\
   	--prefix=%{_prefix} \\\
-@@ -688,5 +700,27 @@ done \
- %__desktop_provides        %{_rpmhome}/mandriva/desktop-file.prov
- #%__desktop_requires        %{_rpmhome}/mandriva/desktop-file.prov
+@@ -704,5 +716,27 @@ done \
+ %__desktop_provides        %{_rpmhome}/desktop-file.prov
+ #%__desktop_requires        %{_rpmhome}/desktop-file.prov
  
 +#------------------------------------------------------------------------
 +# Some useful macros for cross-compiling
@@ -100,9 +100,9 @@
 +
  # \endverbatim
  #*/
---- rpm-5.4.10/macros/mandriva.in.bero	2013-01-03 23:32:00.835632362 +0100
-+++ rpm-5.4.10/macros/mandriva.in	2013-01-04 00:08:22.368802832 +0100
-@@ -351,6 +351,18 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
+--- rpm-5.4.10/macros/mandriva.in.cross~	2013-02-01 08:48:00.852899275 +0100
++++ rpm-5.4.10/macros/mandriva.in	2013-02-01 08:48:00.862899405 +0100
+@@ -356,6 +356,18 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
    CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
    FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
    %{?ldflags:LDFLAGS="${LDFLAGS:-%{ldflags}}"; export LDFLAGS ;} \
@@ -121,7 +121,7 @@
    %{nil}
  
  %before_configure \
-@@ -368,7 +380,7 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
+@@ -373,7 +385,7 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
    %{?!_disable_libtoolize:%{?__libtoolize_configure:%{__libtoolize_configure};}} \
    [ -f $CONFIGURE_TOP/configure.in -o -f $CONFIGURE_TOP/configure.ac ] && \
    CONFIGURE_XPATH="--x-includes=%{_prefix}/include --x-libraries=%{_prefix}/%{_lib}" \
@@ -130,7 +130,7 @@
    	--disable-silent-rules \\\
  	--program-prefix=%{?_program_prefix} \\\
   	--prefix=%{_prefix} \\\
-@@ -391,8 +403,9 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
+@@ -396,8 +408,9 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
    %{?_enable_libtoolize:%{?__libtoolize_configure:%{__libtoolize_configure};}} \
    [ -f $CONFIGURE_TOP/configure.in -o -f $CONFIGURE_TOP/configure.ac ] && \
    CONFIGURE_XPATH="--x-includes=%{_prefix}/include --x-libraries=%{_prefix}/%{_lib}" \
