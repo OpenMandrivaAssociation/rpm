@@ -66,7 +66,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}22
+Release:	%{?prereldate:0.%{prereldate}.}23
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -230,7 +230,7 @@ Patch101:	rpm-5.4.9-font-provides.patch
 # status: idem
 Patch102:	rpm-5.4.7-kmod-dependencies.patch
 # status: idem
-Patch103:	rpm-5.4.5-desktop-provides.patch
+Patch103:	rpm-5.4.10-desktop-provides.patch
 # status: probably okay to merge, discuss on rpm-devel first
 Patch104:	rpm-5.4.5-skip-dependencies-for-character-devices.patch
 # status: ready to merge
