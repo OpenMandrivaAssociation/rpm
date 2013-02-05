@@ -623,7 +623,11 @@ Requires:	rpm = %{EVRD}
 %rename		rpm-%{_target_vendor}-setup-build
 Requires:	spec-helper >= 0.31.12
 Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
+%if %{without bootstrap}
 Requires:	python-rpm = %{EVRD}
+Requires:	python-pkg-resources
+BuildRequires:	python-pkg-resources
+%endif
 Requires:	pkgconfig
 # ditch to eliminate dependency on perl deps not part of standard perl library
 # also kinda wanna discourage heavy adoption of embedded perl interpreter
@@ -1187,6 +1191,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/check-files
 %{_rpmhome}/check-multiarch-files
 #%%{_rpmhome}/cross-build
+%{_rpmhome}/desktop-file.prov
 %{_rpmhome}/find-debuginfo.sh
 %{_rpmhome}/find-lang.sh
 %{_rpmhome}/find-prov.pl
