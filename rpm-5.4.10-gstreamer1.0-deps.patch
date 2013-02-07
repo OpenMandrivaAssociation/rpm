@@ -1,0 +1,22 @@
+--- rpm-5.4.10/configure.ac.gstreamer1.0~	2013-02-07 01:49:53.364469509 +0100
++++ rpm-5.4.10/configure.ac	2013-02-07 01:49:53.480471055 +0100
+@@ -578,7 +578,7 @@ AC_PATH_PROG(__FILE, file, %{_bindir}/fi
+ AC_PATH_PROG(__GIT, git, %{_bindir}/git, $MYPATH)
+ AC_PATH_PROG(__GPG, gpg2, %{_bindir}/gpg2, $MYPATH)
+ AC_PATH_PROG(__GSR, gsr, %{_bindir}/gsr, $MYPATH)
+-AC_PATH_PROG(__GST_INSPECT, gst-inspect-0.10, %{_bindir}/gst-inspect-0.10, $MYPATH)
++AC_PATH_PROG(__GST_INSPECT, gst-inspect-1.0, %{_bindir}/gst-inspect-1.0, $MYPATH)
+ AC_PATH_PROG(__GZIP, gzip, /bin/gzip, $MYPATH)
+ AC_PATH_PROG(__HG, hg, %{_bindir}/hg, $MYPATH)
+ AC_PATH_PROG(__ID, id, /usr/bin/id, $MYPATH)
+--- rpm-5.4.10/macros/gstreamer.in.gstreamer1.0~	2013-02-07 00:09:32.783059302 +0100
++++ rpm-5.4.10/macros/gstreamer.in	2013-02-07 00:09:58.892399390 +0100
+@@ -2,7 +2,7 @@
+ # To make use of these macros insert the following line into your spec file:
+ # %{load:%{_usrlibrpm}/macros.d/gstreamer}
+ 
+-%__gst_inspect		@__GST_INSPECT
++%__gst_inspect		@__GST_INSPECT@
+ 
+ # Path to scripts to autogenerate gstreamer package dependencies,
+ #

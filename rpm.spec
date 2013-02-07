@@ -66,7 +66,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}23
+Release:	%{?prereldate:0.%{prereldate}.}24
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -463,7 +463,8 @@ Patch185:	rpm-5.4.10-disable-generation-of-buildid-provides.patch
 Patch186:	rpm-5.4.10-dont-repackage-if-justdb-is-specified.patch
 # backport from upstream
 Patch187:	rpm-5.4.10-adjust-trigger-counts-for-delayed-commit.patch
-
+# adjust to gstreamer 1.0
+Patch188:	rpm-5.4.10-gstreamer1.0-deps.patch
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -864,6 +865,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch185 -p1 -b .buildid_deps~
 %patch186 -p1 -b .rpkg_justdb~
 %patch187 -p1 -b .trig_cnt~
+%patch188 -p1 -b .gstreamer1.0~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1328,6 +1330,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %changelog
+* Fri Jan 25 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-25
+- fix gstreamer dependencies generator and update it for gstreamer1.0 (P188)
+
 * Fri Jan 25 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-20
 - add dependency on pkgconfig to rpm-build
 - fix regression in %%before_configure macro
