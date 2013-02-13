@@ -46,7 +46,7 @@
  
 +# $DONT_FIX_EOL prolly' won't be of any use as it won' be set in the same shell...
 +%__os_stringbuf_post    \
-+    %{?!dont_fix_eol:         [ -n "$DONT_FIX_EOL" ]        || %_spec_helper_dir/fix_eol} \
++    %{?!dont_fix_eol:         [ -n "$DONT_FIX_EOL" ]        || %{_spec_helper_dir}/fix_eol "$DOCDIR"} \
 +%{nil}
 +
  #==============================================================================
