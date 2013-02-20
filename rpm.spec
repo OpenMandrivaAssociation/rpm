@@ -66,7 +66,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}26
+Release:	%{?prereldate:0.%{prereldate}.}27
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -465,6 +465,11 @@ Patch186:	rpm-5.4.10-dont-repackage-if-justdb-is-specified.patch
 Patch187:	rpm-5.4.10-adjust-trigger-counts-for-delayed-commit.patch
 # adjust to gstreamer 1.0
 Patch188:	rpm-5.4.10-gstreamer1.0-deps.patch
+# $RPM_PACKAGE_NAME & $RPM_ARCH are used by aot-compile{,-rpm}, so let's just
+# add it back for now...
+# status: keep local
+Patch189:	rpm-5.4.10-add-back-RPM_PACKAGE_NAME_and_RPM_ARCH.patch
+
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
