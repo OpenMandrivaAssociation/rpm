@@ -257,7 +257,7 @@
 +	int bingo;
 +
 +	/* Skip triggers that are not in this context. */
-+	if (!(Flags & psm->sense))
++	if (!((Flags & psm->sense) & RPMSENSE_TRIGGERTRANS))
 +	    continue;
 +
 +	bingo = 0;		/* no trigger to fire. */
