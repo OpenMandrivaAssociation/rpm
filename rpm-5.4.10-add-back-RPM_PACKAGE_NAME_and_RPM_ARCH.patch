@@ -1,5 +1,5 @@
---- rpm-5.4.10/macros/macros.rpmbuild~	2013-02-20 20:21:08.362157691 +0100
-+++ rpm-5.4.10/macros/macros.rpmbuild	2013-02-20 20:22:02.214709906 +0100
+--- rpm-5.4.10/macros/macros.rpmbuild.in.envvars~	2013-02-20 21:03:39.127313757 +0100
++++ rpm-5.4.10/macros/macros.rpmbuild.in	2013-02-20 21:03:43.624359870 +0100
 @@ -328,7 +328,10 @@ echo "Patch #%{__patch_number} (%{basena
  %___build_pre	\
    RPM_BUILD_DIR=\"%{realpath:%{u2p:%{_builddir}}}\"\
@@ -12,4 +12,3 @@
    %{?buildroot:RPM_BUILD_ROOT=\"%{u2p:%{buildroot}}\"\
    export RPM_BUILD_ROOT}\
    %{?_javaclasspath:CLASSPATH=\"%{_javaclasspath}\"\
-	--bindir=%{_bindir} \\\
