@@ -469,6 +469,7 @@ Patch188:	rpm-5.4.10-gstreamer1.0-deps.patch
 # add it back for now...
 # status: keep local
 Patch189:	rpm-5.4.10-add-back-RPM_PACKAGE_NAME_and_RPM_ARCH.patch
+Patch190:	rpm-5.4.10-configure-disable-rpath-and-dependency-tracking.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -872,6 +873,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch187 -p1 -b .trig_cnt~
 %patch188 -p1 -b .gstreamer1.0~
 %patch189 -p1 -b .envvars~
+%patch190 -p1 -b .norpath~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
