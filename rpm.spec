@@ -470,6 +470,7 @@ Patch188:	rpm-5.4.10-gstreamer1.0-deps.patch
 # status: keep local
 Patch189:	rpm-5.4.10-add-back-RPM_PACKAGE_NAME_and_RPM_ARCH.patch
 Patch190:	rpm-5.4.10-configure-disable-rpath-and-dependency-tracking.patch
+Patch191:	rpm-5.4.10-enhance-rename-macro-to-accept-optional-second-version-arg.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -874,6 +875,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch188 -p1 -b .gstreamer1.0~
 %patch189 -p1 -b .envvars~
 %patch190 -p1 -b .norpath~
+%patch191 -p1 -b .rename~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1339,6 +1341,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 
 %changelog
 * Sun Feb 24 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-28
+- add optional second argument for specifying a specific version to %%rename
 - pass --disable-dependency-tracking & --disable-rpath to %configure by default
 
 * Thu Feb 21 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-27
