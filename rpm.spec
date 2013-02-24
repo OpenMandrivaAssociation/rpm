@@ -66,7 +66,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}27
+Release:	%{?prereldate:0.%{prereldate}.}28
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -1338,6 +1338,13 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %changelog
+* Sun Feb 24 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-28
+- pass --disable-dependency-tracking & --disable-rpath to %configure by default
+
+* Thu Feb 21 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-27
+- fix so that &%trigger{pre,post}trans{in,un,prein,preun) triggers doesn't
+  fire %trigger* triggers as well
+
 * Wed Feb 20 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-26
 - add back $RPM_ARCH & $RPM_PACKAGE_NAME (required by aot-compile)
 
