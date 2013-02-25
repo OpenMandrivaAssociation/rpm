@@ -425,7 +425,7 @@ Patch174:	rpm-5.4.10-debugedit-saner-error-msg.patch
 # status: kinda breaks use of (prolly' never used) $DONT_FIX_EOL variable,
 # while not feeling exactly perfectly implemented either, but works more than
 # satisfactory 'nuff for us, so should be discussed before merging upstream..
-Patch175:	rpm-5.4.10-run-fix_eol-after-doc-stage.patch
+Patch175:	rpm-5.4.10-run-spec-helper-at-end-of-doc-stage.patch
 # reverts change upstream that adds rpath to perl module
 # status: as it reverts a previous upstream change, it prolly' shouldn't be
 # merged, but probably worthwhile a discussion at least...
