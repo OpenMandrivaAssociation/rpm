@@ -66,7 +66,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}28
+Release:	%{?prereldate:0.%{prereldate}.}29
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -471,6 +471,7 @@ Patch188:	rpm-5.4.10-gstreamer1.0-deps.patch
 Patch189:	rpm-5.4.10-add-back-RPM_PACKAGE_NAME_and_RPM_ARCH.patch
 Patch190:	rpm-5.4.10-configure-disable-rpath-and-dependency-tracking.patch
 Patch191:	rpm-5.4.10-enhance-rename-macro-to-accept-optional-second-version-arg.patch
+Patch192:	rpm-5.4.10-do-assert-rather-than-just-exit-on-memalloc-filaure.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -876,6 +877,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch189 -p1 -b .envvars~
 %patch190 -p1 -b .norpath~
 %patch191 -p1 -b .rename~
+%patch192 -p1 -b .mem_assert~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
