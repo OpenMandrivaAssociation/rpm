@@ -472,6 +472,9 @@ Patch189:	rpm-5.4.10-add-back-RPM_PACKAGE_NAME_and_RPM_ARCH.patch
 Patch190:	rpm-5.4.10-configure-disable-rpath-and-dependency-tracking.patch
 Patch191:	rpm-5.4.10-enhance-rename-macro-to-accept-optional-second-version-arg.patch
 Patch192:	rpm-5.4.10-do-assert-rather-than-just-exit-on-memalloc-filaure.patch
+# fixes issue where querying a package with >= 3 '-' in the name with an extra '-' behind
+# status: ready
+Patch193:	rpm-5.4.10-fix-memalloc-realloc-to-0.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -878,6 +881,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch190 -p1 -b .norpath~
 %patch191 -p1 -b .rename~
 %patch192 -p1 -b .mem_assert~
+%patch193 -p1 -b .xrealloc~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh

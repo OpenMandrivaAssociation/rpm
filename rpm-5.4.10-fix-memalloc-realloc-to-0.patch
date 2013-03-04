@@ -1,0 +1,11 @@
+--- rpm-5.4.10/rpmdb/rpmdb.c~	2013-03-04 11:39:49.392548966 +0100
++++ rpm-5.4.10/rpmdb/rpmdb.c	2013-03-04 11:39:51.104560418 +0100
+@@ -2658,7 +2658,7 @@ assert(keylen == sizeof(hdrNum));
+ 
+ 		    h = headerFree(h);
+ 		}
+-		if(set && set->count != size) {
++		if(set && size && set->count != size) {
+ 		    set->count = size;
+ 		    set->recs = xrealloc(set->recs, size * sizeof(*set->recs));
+ 		}
