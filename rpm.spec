@@ -51,7 +51,7 @@
 #include %%{_sourcedir}/bootstrap.spec
 %endif
 
-%define	bdb		db52
+%define	bdb		db53
 
 %define libver		5.4
 %define	minorver	10
@@ -774,7 +774,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch71 -p1 -b .locale~
 %patch74 -p1 -b .builddir~
 %patch76 -p1 -b .twice_terminate~
-%patch77 -p1 -b .db52~
+#patch77 -p1 -b .db52~
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
 #patch81 -p1 -b .libsql~
@@ -1346,6 +1346,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %changelog
+* Sat Mar 16 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-29
+- update to using berkeley db 5.3
+
 * Sun Feb 24 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-28
 - add optional second argument for specifying a specific version to %%rename
 - pass --disable-dependency-tracking & --disable-rpath to %configure by default
