@@ -1348,6 +1348,10 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %changelog
 * Sat Mar 16 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-29
 - update to using berkeley db 5.3
+- fix "memory alloc (0 bytes) returned NULL." when trying to query an
+  existing package name with an extra '-' behind it
+- do assert rather than just exit on mem alloc failure so that we can get
+  backtrace for debugging (P192)
 
 * Sun Feb 24 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-28
 - add optional second argument for specifying a specific version to %%rename
