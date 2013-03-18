@@ -504,6 +504,7 @@ Patch195:	rpm-5.4.10-add-enum-for-RPMCALLBACK_INST_STOP-callback-event.patch
 # this fixes tagSwab to properly handle RPM_UINT64_TYPE, fixing headerPut with
 # status: ready
 Patch196:	rpm-5.4.10-fix-64bit-tagSwab.patch
+Patch197:	rpm-5.4.10-dont-require-group-and-summary-tag-during-build.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -914,6 +915,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch194 -p1 -b .cb~
 %patch195 -p1 -b .cb2~
 %patch196 -p1 -b .ui64p~
+%patch197 -p1 -b .permissive~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1379,6 +1381,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 
 %changelog
 * Sat Mar 18 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-29
+- allow to build packages without group or summary tag (P197)
 - fix tagSwab to properly handle RPM_UINT64_TYPE to work with headerPut (P196)
 - add enum for RPMCALLBACK_INST_STOP callback event (P195)
 - implement scriptlet start and stop callbacks (P194, rhbz#606239)
