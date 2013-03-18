@@ -494,6 +494,13 @@ Patch193:	rpm-5.4.10-fix-memalloc-realloc-to-0.patch
 #  implement stop and start. 
 # status: ready
 Patch194:	rpm-5.4.10-implement-start-and-stop-callbacks.patch
+#From ff0ece3f6be58c8c28a766bdee5ed36daf1727b1 Mon Sep 17 00:00:00 2001
+#From: Panu Matilainen <pmatilai@redhat.com>
+#Date: Thu, 5 Jan 2012 14:34:46 +0200
+#Subject: [PATCH] Add enum for RPMCALLBACK_INST_STOP callback event
+#
+#- Unused atm but we'll be adding this shortly
+Patch195:	rpm-5.4.10-add-enum-for-RPMCALLBACK_INST_STOP-callback-event.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -902,6 +909,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch192 -p1 -b .mem_assert~
 %patch193 -p1 -b .xrealloc~
 %patch194 -p1 -b .cb~
+%patch195 -p1 -b .cb2~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1367,6 +1375,8 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 
 %changelog
 * Sat Mar 16 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-29
+- add enum for RPMCALLBACK_INST_STOP callback event (P195)
+- implement scriptlet start and stop callbacks (P194, rhbz#606239)
 - update to using berkeley db 5.3
 - fix "memory alloc (0 bytes) returned NULL." when trying to query an
   existing package name with an extra '-' behind it
@@ -1378,8 +1388,8 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - pass --disable-dependency-tracking & --disable-rpath to %configure by default
 
 * Thu Feb 21 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-27
-- fix so that &%trigger{pre,post}trans{in,un,prein,preun) triggers doesn't
-  fire %trigger* triggers as well
+- fix so that %%trigger{pre,post}trans{in,un,prein,preun) triggers doesn't
+  fire %%trigger* triggers as well
 
 * Wed Feb 20 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-26
 - add back $RPM_ARCH & $RPM_PACKAGE_NAME (required by aot-compile)
