@@ -475,6 +475,25 @@ Patch192:	rpm-5.4.10-do-assert-rather-than-just-exit-on-memalloc-filaure.patch
 # fixes issue where querying a package with >= 3 '-' in the name with an extra '-' behind
 # status: ready
 Patch193:	rpm-5.4.10-fix-memalloc-realloc-to-0.patch
+#From ce2ce4c19724879b9ea469e7760c7922660b9698 Mon Sep 17 00:00:00 2001
+#From: Panu Matilainen <pmatilai@redhat.com>
+#Date: Tue, 3 Jan 2012 13:10:26 +0200
+#Subject: [PATCH] Implement scriptlet start and stop callbacks (RhBug:606239)
+#
+#- Adds two new transaction callbacks: RPMCALLBACK_SCRIPT_START and
+#  RPMCALLBACK_SCRIPT_STOP which get issued for every scriptlet we run.
+#- On script start, callback can optionally return an FD which will
+#  override transaction-wide script fd to make it easier to accurately
+#  collect per-scriptlet output (eg per-scriptlet temporary file).
+#  Callback is also responsible for closing the fd if it returns one.
+#- For both callbacks, "amount" holds the script tag number. On stop
+#  callback, "total" holds the scriptlet exit status mapped into
+#  OK/NOTFOUND/FAIL for success/non-fatal/fatal errors. Abusing "notfound"
+#  for warning result is ugly but differentiating it from the other
+#  cases allows callers to ignore SCRIPT_ERROR if they choose to
+#  implement stop and start. 
+# status: ready
+Patch194:	rpm-5.4.10-implement-start-and-stop-callbacks.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -882,6 +901,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch191 -p1 -b .rename~
 %patch192 -p1 -b .mem_assert~
 %patch193 -p1 -b .xrealloc~
+%patch194 -p1 -b .cb~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
