@@ -501,6 +501,9 @@ Patch194:	rpm-5.4.10-implement-start-and-stop-callbacks.patch
 #
 #- Unused atm but we'll be adding this shortly
 Patch195:	rpm-5.4.10-add-enum-for-RPMCALLBACK_INST_STOP-callback-event.patch
+# this fixes tagSwab to properly handle RPM_UINT64_TYPE, fixing headerPut with
+# status: ready
+Patch196:	rpm-5.4.10-fix-64bit-tagSwab.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -910,6 +913,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch193 -p1 -b .xrealloc~
 %patch194 -p1 -b .cb~
 %patch195 -p1 -b .cb2~
+%patch196 -p1 -b .ui64p~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1374,7 +1378,8 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %changelog
-* Sat Mar 16 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-29
+* Sat Mar 18 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.4.10-29
+- fix tagSwab to properly handle RPM_UINT64_TYPE to work with headerPut (P196)
 - add enum for RPMCALLBACK_INST_STOP callback event (P195)
 - implement scriptlet start and stop callbacks (P194, rhbz#606239)
 - update to using berkeley db 5.3
