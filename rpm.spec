@@ -51,7 +51,7 @@
 #include %%{_sourcedir}/bootstrap.spec
 %endif
 
-%define	bdb		db53
+%define	bdb		db52
 
 %define libver		5.4
 %define	minorver	10
@@ -804,7 +804,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch71 -p1 -b .locale~
 %patch74 -p1 -b .builddir~
 %patch76 -p1 -b .twice_terminate~
-#patch77 -p1 -b .db52~
+%patch77 -p1 -b .db52~
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
 #patch81 -p1 -b .libsql~
@@ -1385,7 +1385,6 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - fix tagSwab to properly handle RPM_UINT64_TYPE to work with headerPut (P196)
 - add enum for RPMCALLBACK_INST_STOP callback event (P195)
 - implement scriptlet start and stop callbacks (P194, rhbz#606239)
-- update to using berkeley db 5.3
 - fix "memory alloc (0 bytes) returned NULL." when trying to query an
   existing package name with an extra '-' behind it
 - do assert rather than just exit on mem alloc failure so that we can get
