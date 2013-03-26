@@ -26,7 +26,7 @@
 %bcond_without	tcl
 %bcond_without	squirrel
 %bcond_without	embed
-%bcond_without	docs
+%bcond_with	docs
 # use what's in berkeley db
 %bcond_with	sqlite
 %endif
