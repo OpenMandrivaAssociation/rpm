@@ -1,10 +1,5 @@
 %define	_target_vendor mandriva
 
-# temporary workaround to ensure build
-%define before_configure \
-  %setup_compile_flags \
-  CONFIGURE_TOP="${CONFIGURE_TOP:-.}"
-
 %bcond_with	bootstrap
 %bcond_with	debug
 
