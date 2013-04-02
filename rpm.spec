@@ -505,6 +505,7 @@ Patch195:	rpm-5.4.10-add-enum-for-RPMCALLBACK_INST_STOP-callback-event.patch
 # status: ready
 Patch196:	rpm-5.4.10-fix-64bit-tagSwab.patch
 Patch197:	rpm-5.4.10-dont-require-group-and-summary-tag-during-build.patch
+Patch198:	rpm-5.4.10-enable-nofsync-for-rpm-rebuilddb.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -915,6 +916,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch195 -p1 -b .cb2~
 %patch196 -p1 -b .ui64p~
 %patch197 -p1 -b .permissive~
+%patch198 -p1 -b .rpmdbnofsync~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
