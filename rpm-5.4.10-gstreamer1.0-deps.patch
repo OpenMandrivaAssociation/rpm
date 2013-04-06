@@ -1,22 +1,27 @@
---- rpm-5.4.10/configure.ac.gstreamer1.0~	2013-02-07 01:49:53.364469509 +0100
-+++ rpm-5.4.10/configure.ac	2013-02-07 01:49:53.480471055 +0100
-@@ -578,7 +578,7 @@ AC_PATH_PROG(__FILE, file, %{_bindir}/fi
- AC_PATH_PROG(__GIT, git, %{_bindir}/git, $MYPATH)
- AC_PATH_PROG(__GPG, gpg2, %{_bindir}/gpg2, $MYPATH)
- AC_PATH_PROG(__GSR, gsr, %{_bindir}/gsr, $MYPATH)
--AC_PATH_PROG(__GST_INSPECT, gst-inspect-0.10, %{_bindir}/gst-inspect-0.10, $MYPATH)
-+AC_PATH_PROG(__GST_INSPECT, gst-inspect-1.0, %{_bindir}/gst-inspect-1.0, $MYPATH)
- AC_PATH_PROG(__GZIP, gzip, /bin/gzip, $MYPATH)
- AC_PATH_PROG(__HG, hg, %{_bindir}/hg, $MYPATH)
- AC_PATH_PROG(__ID, id, /usr/bin/id, $MYPATH)
---- rpm-5.4.10/macros/gstreamer.in.gstreamer1.0~	2013-02-07 00:09:32.783059302 +0100
-+++ rpm-5.4.10/macros/gstreamer.in	2013-02-07 00:09:58.892399390 +0100
-@@ -2,7 +2,7 @@
- # To make use of these macros insert the following line into your spec file:
- # %{load:%{_usrlibrpm}/macros.d/gstreamer}
+--- rpm-5.4.10/scripts/gstreamer.sh.gsboth~	2011-10-12 18:51:52.000000000 +0200
++++ rpm-5.4.10/scripts/gstreamer.sh	2013-04-06 10:34:56.452965672 +0200
+@@ -52,15 +52,20 @@ while [ "$#" -ne 0 ]; do
+     shift
+ done
  
--%__gst_inspect		@__GST_INSPECT
-+%__gst_inspect		@__GST_INSPECT@
+-if [ -z "$gst_inspect" ]; then
+-    exit 1
+-fi
++#if [ -z "$gst_inspect" ]; then
++#    exit 1
++#fi
  
- # Path to scripts to autogenerate gstreamer package dependencies,
- #
+ if [ $provides -eq 1 ]; then
+     for so in $solist ; do
+ 	getmark $so
+ 	libdir $so
+-	LD_LIBRARY_PATH=$buildlibdir $gst_inspect --print-plugin-auto-install-info --rpm $so 2> /dev/null | while read line ; do
++	LD_LIBRARY_PATH=$buildlibdir gst-inspect-0.10 --print-plugin-auto-install-info --rpm $so 2> /dev/null | while read line ; do
++	    echo -n "$line";
++	    echo -n "$lib64"
++	    echo
++	done
++	LD_LIBRARY_PATH=$buildlibdir gst-inspect-1.0 --print-plugin-auto-install-info --rpm $so 2> /dev/null | while read line ; do
+ 	    echo -n "$line";
+ 	    echo -n "$lib64"
+ 	    echo
