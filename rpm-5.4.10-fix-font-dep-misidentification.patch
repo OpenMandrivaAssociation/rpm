@@ -1,0 +1,12 @@
+--- rpm-5.4.10/lib/rpmfc.c.fontdep_sure~	2013-04-07 03:08:07.733535287 +0200
++++ rpm-5.4.10/lib/rpmfc.c	2013-04-07 03:09:05.630202213 +0200
+@@ -971,7 +971,8 @@ static int rpmfcSCRIPT(rpmfc fc)
+ 	if (is_executable || (fc->fcolor->vals[fc->ix] & RPMFC_MODULE))
+ 	    xx = rpmfcHelper(fc, 'R', "ruby");
+     } else
+-    if (fc->fcolor->vals[fc->ix] & RPMFC_FONT) {
++    if ((fc->fcolor->vals[fc->ix] & (RPMFC_FONT|RPMFC_INCLUDE)) &&
++	    !(fc->fcolor->vals[fc->ix] & RPMFC_LIBRARY)) {
+        xx = rpmfcHelper(fc, 'P', "font");
+        /* XXX: currently of no use, but for the sake of consistency... */
+        xx = rpmfcHelper(fc, 'R', "font");
