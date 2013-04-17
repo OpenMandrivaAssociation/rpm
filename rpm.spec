@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}36
+Release:	%{?prereldate:0.%{prereldate}.}37
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -374,7 +374,8 @@ Patch160:	rpm-5.4.10-bump-up-to-default-xz-compression-level.patch
 Patch161:	rpm-5.4.10-search-through-buildroot-library-dirs-for-uclibc-deps.patch
 # status: same as for other dep gen patches
 Patch162:	rpm-5.4.10-fix-uninitialized-variable.patch
-Patch163:	rpm-5.4.10-new-moondrake-name.patch
+Patch163:	rpm-5.4.10-openmandriva-name.patch
+Patch1630:	rpm-5.4.10-new-moondrake-name.patch
 # pass --disable-silent-rules to configure so that we'll by default always get
 # consistent behaviour of verbose build output
 # status: ready
@@ -880,7 +881,11 @@ This package contains the RPM API documentation generated in HTML format.
 %patch160 -p1 -b .xz_level~
 %patch161 -p1 -b .uclibc_buildroot~
 %patch162 -p1 -b .uninitialized~
-%patch163 -p1 -b .mdk~
+%if ! %{with moondrake}
+%patch163 -p1 -b .ovm~
+%else
+%patch1630 -p1 -b .mdk~
+%endif
 %patch164 -p1 -b .verbosebuilds~
 %patch165 -p1 -b .helper_order~
 %patch166 -p1 -b .ldflags~
