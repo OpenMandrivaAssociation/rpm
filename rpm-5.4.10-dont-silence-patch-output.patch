@@ -1,0 +1,11 @@
+--- rpm-5.4.10/macros/mandriva.in.unsilent~	2013-04-25 02:08:51.729508771 +0200
++++ rpm-5.4.10/macros/mandriva.in	2013-04-25 02:08:57.938549111 +0200
+@@ -51,7 +51,7 @@ Obsoletes:	%{1} < %{?2}%{!?2:%{EVRD}} \
+ Provides:	%{1} = %{?2}%{!?2:%{EVRD}}
+ 
+ 
+-%_default_patch_flags	-s -U
++%_default_patch_flags	-U
+ %_default_patch_fuzz	0
+ 
+ %apply_patches %{lua:\
