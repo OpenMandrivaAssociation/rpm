@@ -1,0 +1,38 @@
+From 443a45bc37e6cb79498b23b13a2345077845d5f5 Mon Sep 17 00:00:00 2001
+From: Alexander Khryukin <alexander@mezon.ru>
+Date: Sun, 28 Apr 2013 14:00:08 +0000
+Subject: [PATCH] armv7hl rpm macros added, hardfloat we want too :3
+
+---
+ cpu-os-macros/armv7hl-linux/macros | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 cpu-os-macros/armv7hl-linux/macros
+
+diff --git a/cpu-os-macros/armv7hl-linux/macros b/cpu-os-macros/armv7hl-linux/macros
+new file mode 100644
+index 0000000..01297c1
+--- /dev/null
++++ b/cpu-os-macros/armv7hl-linux/macros
+@@ -0,0 +1,19 @@
++# Per-platform rpm configuration file.
++
++#==============================================================================
++# ---- per-platform macros.
++#
++%_arch			arm
++%_os			linux
++%_gnu			-gnueabi
++%optflags		-O2 -g -fpic -fPIC -fno-strict-volatile-bitfields -march=armv7-a -mfloat-abi=hard -mfpu=vfpv3-d16
++
++#==============================================================================
++# ---- configure macros.
++#
++%_lib			lib
++
++#---------------------------------------------------------------------
++#	Multilibs
++%_multilibno		1
++%_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
+-- 
+1.8.1.3
+

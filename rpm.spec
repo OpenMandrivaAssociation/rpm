@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}37
+Release:	%{?prereldate:0.%{prereldate}.}38
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -506,6 +506,7 @@ Patch196:	rpm-5.4.10-fix-64bit-tagSwab.patch
 Patch197:	rpm-5.4.10-dont-require-group-and-summary-tag-during-build.patch
 Patch198:	rpm-5.4.10-enable-nofsync-for-rpm-rebuilddb.patch
 Patch199:	rpm-5.4.10-fix-font-dep-misidentification.patch
+Patch200:	rpm-5.4.10-armv7hl-rpm-macros-hardfloat-abi.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -929,6 +930,7 @@ This package contains the RPM API documentation generated in HTML format.
 mkdir -p cpu-os-macros
 tar -xf %{SOURCE3} -C cpu-os-macros
 %patch145 -p1
+%patch200 -p1
 
 %build
 %configure2_5x	--enable-nls \
