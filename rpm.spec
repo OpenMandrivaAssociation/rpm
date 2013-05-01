@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}38
+Release:	%{?prereldate:0.%{prereldate}.}39
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -83,6 +83,8 @@ Source4:	legacy_compat.macros
 Source5:	RPMBDB-0.1.tar.xz
 Source6:	git-repository--after-tarball
 Source7:	git-repository--apply-patch
+# GPG key used for signing OpenMandriva Association packages
+Source100:	OMA-Cooker-PubKey.asc
 # already merged upstream
 Patch0:		rpm-5.3.8-set-default-bdb-log-dir.patch
 # TODO: should be disable for cooker, packaging needs to be fixed (enable for legacy compatibility)
@@ -924,6 +926,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch198 -p1 -b .rpmdbnofsync~
 %patch199 -p1 -b .fontdep_sure~
 
+# aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
+sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
@@ -1055,6 +1059,7 @@ popd
 make check
 
 %install
+cp %SOURCE100 .
 %makeinstall_std
 %if %{with perl}
 %makeinstall_std -C RPMBDB-*
@@ -1294,6 +1299,8 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/macros.rpmbuild
 %{_mandir}/man8/rpmbuild.8*
 %{_mandir}/man8/rpmdeps.8*
+
+%pubkey OMA-Cooker-PubKey.asc
 
 %files -n %{librpmname}
 %{_libdir}/librpm-%{libver}.so
