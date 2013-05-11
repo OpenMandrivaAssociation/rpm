@@ -2,10 +2,6 @@
 
 %bcond_with	bootstrap
 %bcond_with	debug
-# Use --with moondrake for Moondrake branding
-# anything else for OpenMandriva branding
-%bcond_with	moondrake
-
 %bcond_without	ossp_uuid
 %bcond_without	augeas
 
@@ -64,7 +60,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}38
+Release:	%{?prereldate:0.%{prereldate}.}40
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -83,6 +79,8 @@ Source4:	legacy_compat.macros
 Source5:	RPMBDB-0.1.tar.xz
 Source6:	git-repository--after-tarball
 Source7:	git-repository--apply-patch
+# GPG key used for signing OpenMandriva Association packages
+Source100:	OMA-Cooker-PubKey.asc
 # already merged upstream
 Patch0:		rpm-5.3.8-set-default-bdb-log-dir.patch
 # TODO: should be disable for cooker, packaging needs to be fixed (enable for legacy compatibility)
@@ -506,6 +504,7 @@ Patch197:	rpm-5.4.10-dont-require-group-and-summary-tag-during-build.patch
 Patch198:	rpm-5.4.10-enable-nofsync-for-rpm-rebuilddb.patch
 Patch199:	rpm-5.4.10-fix-font-dep-misidentification.patch
 Patch200:	rpm-5.4.10-dont-silence-patch-output.patch
+Patch201:	rpm-5.4.10-armv7hl-rpm-macros-hardfloat-abi.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -920,12 +919,15 @@ This package contains the RPM API documentation generated in HTML format.
 %patch199 -p1 -b .fontdep_sure~
 %patch200 -p1 -b .unsilent~
 
+# aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
+sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
 mkdir -p cpu-os-macros
 tar -xf %{SOURCE3} -C cpu-os-macros
 %patch145 -p1
+%patch201 -p1
 
 %build
 %configure2_5x	--enable-nls \
@@ -1050,6 +1052,7 @@ popd
 make check
 
 %install
+cp %SOURCE100 .
 %makeinstall_std
 %if %{with perl}
 %makeinstall_std -C RPMBDB-*
@@ -1289,6 +1292,8 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/macros.rpmbuild
 %{_mandir}/man8/rpmbuild.8*
 %{_mandir}/man8/rpmdeps.8*
+
+%pubkey OMA-Cooker-PubKey.asc
 
 %files -n %{librpmname}
 %{_libdir}/librpm-%{libver}.so
