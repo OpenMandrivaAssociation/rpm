@@ -9,8 +9,8 @@
 -  FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
 +  %setup_compile_flags \
 +  CROSSCOMPILE="" ; \
-+%if %cross_compiling \
-+  CROSSCOMPILE="-DCMAKE_TOOLCHAIN_FILE=\"%_prefix/%_target_platform/share/cmake/%_target_platform.toolchain\"" ; \
++%if %{cross_compiling} \
++  CROSSCOMPILE="-DCMAKE_TOOLCHAIN_FILE=\"%{_prefix}/%{_target_platform}/share/cmake/%{_target_platform}.toolchain\"" ; \
 +%endif \
 +  export CROSSCOMPILE ; \
    %{__cmake} \\\
@@ -57,12 +57,12 @@
    FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
 -  ./configure --host=%{_host} --build=%{_build} \\\
 +  LDFLAGS="${LDFLAGS:-%optflags}" ; export LDFLAGS ; \
-+  if [ "%cross_compiling" = "1" ]; then PKG_CONFIG_PATH=/usr/%_target_platform/sys-root%_libdir/pkgconfig:/usr/%_target_platform/sys-root%_datadir/pkgconfig:%_libdir/pkgconfig:%_datadir/pkgconfig:$PKG_CONFIG_PATH; export PKG_CONFIG_PATH; \
-+    CROSSCOMPILE="--target=%{_target_platform} --host=%{_target_platform} --build=%_build" ; \
++  if [ "%cross_compiling" = "1" ]; then PKG_CONFIG_PATH=/usr/%{_target_platform}/sys-root%{_libdir}/pkgconfig:/usr/%{_target_platform}/sys-root%{_datadir}/pkgconfig:%{_libdir}/pkgconfig:%{_datadir}/pkgconfig:$PKG_CONFIG_PATH; export PKG_CONFIG_PATH; \
++    CROSSCOMPILE="--target=%{_target_platform} --host=%{_target_platform} --build=%{_build}" ; \
 +  else \
-+    CROSSCOMPILE="--target=%{_target_platform} --host=%{_target_platform} --build=%{_target_platform}" ; \
++    CROSSCOMPILE="--target=%{_target_platform} --build=%{_target_platform}" ; \
 +  fi ; \
-+  if [ "%cross" != "%%cross" -a -n "%cross" ]; then CROSSCOMPILE="--target=%cross --host=%_target_platform --build=%_build"; fi ; \
++  if [ "%cross" != "%%cross" -a -n "%{cross}" ]; then CROSSCOMPILE="--target=%{cross} --host=%{_target_platform} --build=%{_build}"; fi ; \
 +  export CROSSCOMPILE ; \
 +%ifarch noarch \
 +  ./configure \\\
@@ -96,7 +96,7 @@
 +#
 +# 1 if cross-compiling, 0 if doing a regular build
 +#
-+%cross_compiling	%(if [ %{_base_arch %_host_cpu} != %{_base_arch %_target_cpu} -a %_target_cpu != noarch ]; then echo -n 1; else echo -n 0; fi)
++%cross_compiling	%(if [ %{_base_arch %{_host_cpu}} != %{_base_arch %{_target_cpu}} -a %{_target_cpu} != noarch ]; then echo -n 1; else echo -n 0; fi)
 +
  # \endverbatim
  #*/
@@ -106,17 +106,17 @@
    CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
    FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
    %{?ldflags:LDFLAGS="${LDFLAGS:-%{ldflags}}"; export LDFLAGS ;} \
-+%if %cross_compiling \
-+    PKG_CONFIG_PATH=/usr/%_target_platform/sys-root%_libdir/pkgconfig:/usr/%_target_platform/sys-root%_datadir/pkgconfig:%_libdir/pkgconfig:%_datadir/pkgconfig:$PKG_CONFIG_PATH; export PKG_CONFIG_PATH; \
++%if %{cross_compiling} \
++    PKG_CONFIG_PATH=/usr/%{_target_platform}/sys-root%{_libdir}/pkgconfig:/usr/%{_target_platform}/sys-root%{_datadir}/pkgconfig:%{_libdir}/pkgconfig:%{_datadir}/pkgconfig:$PKG_CONFIG_PATH; export PKG_CONFIG_PATH; \
 +%ifnarch noarch \
-+    CROSSCOMPILE="--target=%{_target_platform} --host=%{_target_platform} --build=%_build" ; \
++    CROSSCOMPILE="--target=%{_target_platform} --host=%{_target_platform} --build=%{_build}" ; \
 +%endif \
 +%else \
 +%ifnarch noarch \
-+    CROSSCOMPILE="--target=%{_target_platform} --host=%{_target_platform} --build=%{_target_platform}" ; \
++    CROSSCOMPILE="--target=%{_target_platform} --build=%{_target_platform}" ; \
 +%endif \
 +%endif \
-+  %{?cross:CROSSCOMPILE="--target=%cross --host=%_target_platform --build=%_build" ; } \
++  %{?cross:CROSSCOMPILE="--target=%{cross} --host=%{_target_platform} --build=%{_build}" ; } \
 +  export CROSSCOMPILE ; \
    %{nil}
  
