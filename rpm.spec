@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}40
+Release:	%{?prereldate:0.%{prereldate}.}41
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -510,10 +510,12 @@ Patch198:	rpm-5.4.10-enable-nofsync-for-rpm-rebuilddb.patch
 Patch199:	rpm-5.4.10-fix-font-dep-misidentification.patch
 Patch200:	rpm-5.4.10-armv7hl-rpm-macros-hardfloat-abi.patch
 
+Patch201:	rpm-5.4.10-postpone_subpackage_build_failures.patch
+
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
-BuildRequires:	elfutils-devel >= 0.154
+#BuildRequires:	elfutils-devel >= 0.154
 BuildRequires:	sed >= 4.0.3
 BuildRequires:	beecrypt-devel >= 4.2.1-8
 BuildRequires:	ed
@@ -589,7 +591,7 @@ BuildRequires:	pkgconfig(augeas)
 %endif
 BuildRequires:	spec-helper >= 0.31.12
 BuildRequires:	stdc++-static-devel >= 4.6.2-8
-BuildRequires:	elfutils >= 0.154
+#BuildRequires:	elfutils >= 0.154
 BuildRequires:	libtool >= 2.4.2-3
 Requires:	cpio
 Requires:	gawk
@@ -925,6 +927,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch197 -p1 -b .permissive~
 %patch198 -p1 -b .rpmdbnofsync~
 %patch199 -p1 -b .fontdep_sure~
+
+%patch201 -p1 -b .subpackage_errors~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
