@@ -502,10 +502,9 @@ Patch197:	rpm-5.4.10-dont-require-group-and-summary-tag-during-build.patch
 Patch198:	rpm-5.4.10-enable-nofsync-for-rpm-rebuilddb.patch
 Patch199:	rpm-5.4.10-fix-font-dep-misidentification.patch
 Patch200:	rpm-5.4.10-dont-silence-patch-output.patch
-Patch201:	rpm-5.4.10-armv7hl-rpm-macros-hardfloat-abi.patch
-Patch202:	rpm-5.4.10-fix-log-install-remove-to-syslog.patch
-Patch203:	rpm-5.4.10-armv7hl-rpm-macros-hardfloat-abi.patch
-Patch204:	rpm-5.4.10-postpone_subpackage_build_failures.patch
+Patch201:	rpm-5.4.10-fix-log-install-remove-to-syslog.patch
+Patch202:	rpm-5.4.10-armv7hl-rpm-macros-hardfloat-abi.patch
+Patch203:	rpm-5.4.10-postpone_subpackage_build_failures.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -930,7 +929,7 @@ sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
 mkdir -p cpu-os-macros
 tar -xf %{SOURCE3} -C cpu-os-macros
 %patch145 -p1
-%patch203 -p1
+%patch202 -p1
 
 %build
 %configure2_5x	--enable-nls \
