@@ -918,8 +918,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch198 -p1 -b .rpmdbnofsync~
 %patch199 -p1 -b .fontdep_sure~
 %patch200 -p1 -b .unsilent~
-%patch202 -p1 -b .syslog~
-%patch204 -p1 -b .subpackage_errors~
+%patch201 -p1 -b .syslog~
+%patch203 -p1 -b .subpackage_errors~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
