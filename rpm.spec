@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}41
+Release:	%{?prereldate:0.%{prereldate}.}42
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -511,6 +511,9 @@ Patch199:	rpm-5.4.10-fix-font-dep-misidentification.patch
 Patch200:	rpm-5.4.10-armv7hl-rpm-macros-hardfloat-abi.patch
 Patch201:       rpm-5.4.10-postpone_subpackage_build_failures.patch
 
+# Do not generate pythonegg provides for python3 until we find a better solution
+Patch202:       rpm-5.4.10-python3-egg-reqs.patch
+
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -927,6 +930,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch198 -p1 -b .rpmdbnofsync~
 %patch199 -p1 -b .fontdep_sure~
 %patch201 -p1 -b .subpackage_errors~
+%patch202 -p1 -b .python3~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
