@@ -1,0 +1,27 @@
+diff -Naur rpm-5.4.10.orig/scripts/pythoneggs.py rpm-5.4.10/scripts/pythoneggs.py
+--- rpm-5.4.10.orig/scripts/pythoneggs.py	2013-06-14 14:26:18.171626023 +0400
++++ rpm-5.4.10/scripts/pythoneggs.py	2013-06-14 14:28:45.434611910 +0400
+@@ -125,7 +125,10 @@
+                 if not name in py_deps:
+                     py_deps[name] = []
+                 py_deps[name].append(('==', dist.py_version))
+-            name = 'pythonegg(%s)' % dist.key
++            if f.find('python3') > 0:
++                name = 'python3egg(%s)' % dist.key
++            else:
++                name = 'pythonegg(%s)' % dist.key
+             if not name in py_deps:
+                 py_deps[name] = []
+             if dist.version:
+@@ -155,7 +158,10 @@
+                 deps = depsextras
+             # add requires/suggests based on egg metadata
+             for dep in deps:
+-                name = 'pythonegg(%s)' % dep.key
++                if f.find('python3') > 0:
++                    name = 'python3egg(%s)' % dep.key
++                else:
++                    name = 'pythonegg(%s)' % dep.key
+                 for spec in dep.specs:
+                     if spec[0] != '!=':
+                         if not name in py_deps:
