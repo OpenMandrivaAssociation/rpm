@@ -1,0 +1,11 @@
+--- rpm-5.4.12/lua/local/lposix.c.nodev~	2013-07-30 18:31:40.139443271 +0200
++++ rpm-5.4.12/lua/local/lposix.c	2013-07-30 18:31:42.653478422 +0200
+@@ -3933,7 +3933,7 @@ LUALIB_API int luaopen_posix_c (lua_Stat
+ 	MENTRY( NETUNREACH	);
+ 	MENTRY( NFILE		);
+ 	MENTRY( NOBUFS		);
+-#if !defined(__APPLE__)
++#if !defined(__APPLE__) && !defined(__linux__)
+ 	MENTRY( NODEV		);
+ #endif
+ 	MENTRY( NOENT		);

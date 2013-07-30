@@ -45,10 +45,10 @@
 #include %%{_sourcedir}/bootstrap.spec
 %endif
 
-%define	bdb		db52
+%define	bdb		db60
 
 %define libver		5.4
-%define	minorver	10
+%define	minorver	12
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -60,7 +60,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}43
+Release:	%{?prereldate:0.%{prereldate}.}1
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -170,7 +170,7 @@ Patch69:	rpm-5.4.4-drop-useless-auto-generated-pkgconfig-dependency.patch
 # status: should *NOT* be merged
 Patch70:	rpm-5.4.4-drop-base-dependencies.patch
 # status: ready for merge
-Patch71:	rpm-5.4.4-fix-rpmconstant-to-always-use-LC_CTYPE-C-for-case-conversion.patch
+Patch71:	rpm-5.4.12-fix-rpmconstant-to-always-use-LC_CTYPE-C-for-case-conversion.patch
 # $RPM_BUILD_DIR isn't necessarily the same as $PWD, it's %%{_builddir}, not
 # %%{_builddir}/%%{?buildsubdir}, messing up paths in debug packages created..
 # status: needs to be discussed and investigated a bit better..
@@ -228,7 +228,7 @@ Patch103:	rpm-5.4.10-desktop-provides.patch
 # status: probably okay to merge, discuss on rpm-devel first
 Patch104:	rpm-5.4.5-skip-dependencies-for-character-devices.patch
 # status: ready to merge
-Patch105:	rpm-5.4.5-rpmfc-use-strlen-not-sizeof.patch
+Patch105:	rpm-5.4.12-rpmfc-use-strlen-not-sizeof.patch
 # status: same as for other dep gen patches
 Patch106:	rpm-5.4.5-break-out-of-elf-link-loop.patch
 # status: probably okay to merge
@@ -245,10 +245,8 @@ Patch112:	rpm-5.4.7-use-gnu-hash-style-by-default-and-drop-rtld-dep.patch
 Patch113:	rpm-5.4.9-add-distepoch-rpmlib-feature.patch
 # status: probably okay to merge, but discuss on rpm-devel first
 Patch114:	rpm-5.4.9-dont-add-versioneddependency-rpmlib-feature-dependency.patch
-# status: ready to merge
-Patch115:	rpm-5.4.7-rpmfc-fix-invalid-free-if-not-_defaultdocdir-set.patch
 # status: probably okay to merge
-Patch116:	rpm-5.4.10-dont-try-generate-rpmfc-dependencies-from-doc-files.patch
+Patch116:	rpm-5.4.12-dont-try-generate-rpmfc-dependencies-from-doc-files.patch
 # status: ready to merge
 Patch117:	rpm-5.4.7-only-generate-ruby-and-python-deps-for-executables-and-modules.patch
 # status: same as for other dep gen patches
@@ -271,7 +269,7 @@ Patch125:	rpm-5.4.7-hdrfmt-fix-unitialized-argv-element.patch
 # status: probably okay to merge, discuss on rpm-devel first
 Patch126:	rpm-5.4.9-add-filetriggers-regex-matching-support.patch
 # status: idem
-Patch127:	rpm-5.4.9-add-matches-as-arguments-to-triggers.patch
+Patch127:	rpm-5.4.12-add-matches-as-arguments-to-triggers.patch
 # status: same as for other dep gen patches
 Patch128:	rpm-5.4.7-dont-consider-trigger-dependencies-as-overlapping.patch
 # status: ready
@@ -279,7 +277,7 @@ Patch129:	rpm-5.4.7-fix-minor-memleaks.patch
 # status: ready
 Patch130:	rpm-5.4.9-mire-fix-strings-lacking-null-terminator.patch
 # status: keep locally for now
-Patch131:	rpm-5.4.10-dlopen-embedded-interpreters.patch
+Patch131:	rpm-5.4.12-dlopen-embedded-interpreters.patch
 # status: ready
 Patch132:	rpm-5.4.9-rpmpython-fix-input.patch
 # status: same as for other dep gen patches
@@ -332,11 +330,6 @@ Patch151:	rpm-5.4.9-disable-support-for-i18nstring-type.patch
 # disable it to avoid errors from berkeley db..
 # status: keep locally
 Patch152:	rpm-5.4.9-disable-l10ndir.patch
-# drop this dead macro
-# status: ready
-Patch154:	rpm-5.4.9-drop-dead-cputoolize-macro.patch
-# idem
-Patch155:	rpm-5.4.9-ditch-install-info-macros.patch
 # the php dependency generator carried with rpm5 is based on a version from PLD
 # that they've backed out later on, reverting to their older version.
 # this patch replaces current upstream rpm5 version with mandriva one, which is
@@ -424,7 +417,6 @@ Patch175:	rpm-5.4.10-run-spec-helper-at-end-of-doc-stage.patch
 # status: as it reverts a previous upstream change, it prolly' shouldn't be
 # merged, but probably worthwhile a discussion at least...
 Patch176:	rpm-5.4.10-drop-rpath-from-perl-module.patch
-Patch177:	rpm-5.4.10-automake-1.13.patch
 Patch178:	rpm-5.4.10-crosscompile.patch
 # tool for automatically checking and fixing broken rpmdb
 # status: probably' worth merging upstream
@@ -453,10 +445,6 @@ Patch184:	rpm-5.4.10-cleanup-mandriva-specific-macros.patch
 # might have any possible relevance
 # status: keep locally
 Patch185:	rpm-5.4.10-disable-generation-of-buildid-provides.patch
-# backport from upstream
-Patch186:	rpm-5.4.10-dont-repackage-if-justdb-is-specified.patch
-# backport from upstream
-Patch187:	rpm-5.4.10-adjust-trigger-counts-for-delayed-commit.patch
 # adjust to gstreamer 1.0
 Patch188:	rpm-5.4.10-gstreamer1.0-deps.patch
 # $RPM_PACKAGE_NAME & $RPM_ARCH are used by aot-compile{,-rpm}, so let's just
@@ -508,6 +496,9 @@ Patch203:	rpm-5.4.10-postpone_subpackage_build_failures.patch
 
 # Do not generate pythonegg provides for python3 until we find a better solution
 Patch204:       rpm-5.4.10-python3-egg-reqs.patch
+
+Patch205:	rpm-5.4.12-fix-squirrel-version-check.patch
+Patch206:	rpm-5.4.12-drop-missing-NODEV-lua-constant-on-linux.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -807,7 +798,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch71 -p1 -b .locale~
 %patch74 -p1 -b .builddir~
 %patch76 -p1 -b .twice_terminate~
-%patch77 -p1 -b .db52~
+#patch77 -p1 -b .db52~
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
 #patch81 -p1 -b .libsql~
@@ -839,7 +830,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch112 -p1 -b .gnu_hash~
 %patch113 -p1 -b .depoch_rpmlib~
 %patch114 -p1 -b .no_verdepfeat~
-%patch115 -p1 -b .free~
 %patch116 -p1 -b .skip_doc~
 %patch117 -p1 -b .exec_modules~
 #patch118 -p1 -b .soname_only~
@@ -873,8 +863,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch150 -p1 -b .i18n_str~
 %patch151 -p1 -b .noi18n~
 %patch152 -p1 -b .l10ndir~
-%patch154 -p1 -b .cputoolize~
-%patch155 -p1 -b .install_info~
 %patch156 -p1 -b .php_deps~
 %patch157 -p1 -b .perl_deps~
 %patch158 -p1 -b .dl_error~
@@ -897,7 +885,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch174 -p1 -b .debugedit_errmsg~
 %patch175 -p1 -b .doc_post~
 %patch176 -p1 -b .droprpath~
-%patch177 -p1 -b .automake13~
 %patch178 -p1 -b .cross~
 %patch179 -p1 -b .rpmdbchk~
 %patch180 -p1 -b .typecast~
@@ -906,8 +893,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch183 -p1 -b .strip_ldflags~
 %patch184 -p1 -b .legacy_macros~
 %patch185 -p1 -b .buildid_deps~
-%patch186 -p1 -b .rpkg_justdb~
-%patch187 -p1 -b .trig_cnt~
 %patch188 -p1 -b .gstreamer1.0~
 %patch189 -p1 -b .envvars~
 %patch190 -p1 -b .norpath~
@@ -924,6 +909,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch201 -p1 -b .syslog~
 %patch203 -p1 -b .subpackage_errors~
 %patch204 -p1 -b .python3~
+%patch205 -p1 -b .squir_ver~
+%patch206 -p1 -b .nodev~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh

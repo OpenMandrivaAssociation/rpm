@@ -1,8 +1,8 @@
---- rpm-5.4.4/rpmconstant/rpmconstant.c.locale~	2008-08-18 12:57:58.000000000 +0200
-+++ rpm-5.4.4/rpmconstant/rpmconstant.c	2011-12-16 16:41:27.721549143 +0100
+--- rpm-5.4.12/rpmconstant/rpmconstant.c.locale~	2013-06-26 21:30:48.000000000 +0200
++++ rpm-5.4.12/rpmconstant/rpmconstant.c	2013-07-30 16:21:46.070730344 +0200
 @@ -89,7 +89,7 @@ int rpmconstInitToContext(rpmconst c, co
      int rc = 0;
-     if (!context) return 0; /* programmer error */
+     if (context)	/* XXX coverity #1035889 */
      for (ptr = lccontext; *ptr != 0; ptr++)
 -        *ptr = (char)tolower(*ptr);
 +        *ptr = (char)xtolower(*ptr);
