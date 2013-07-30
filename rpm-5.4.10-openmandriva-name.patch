@@ -6,7 +6,7 @@
 +%distribution		OpenMandriva LX
 +%vendor			OpenMandriva Association
 -%bugurl			http://qa.mandriva.com
-+%bugurl			http://bugs.openmandriva.org/
++%bugurl			https://issues.openmandriva.org/
 -%disturl		http://mandriva.org
 +%disturl		http://openmandriva.org/
  

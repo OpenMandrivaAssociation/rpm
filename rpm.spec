@@ -536,7 +536,7 @@ BuildRequires:	pkgconfig(libxml-2.0)
 # needed by internal lua
 BuildRequires:	pkgconfig(expat)
 %ifarch %{ix86} x86_64 ppc ppc64 ia64
-BuildRequires:	pkgconfig(libcpuinfo) 
+BuildRequires:	pkgconfig(libcpuinfo)
 %endif
 BuildRequires:	syck-devel
 BuildRequires:	keyutils-devel
@@ -592,7 +592,7 @@ BuildRequires:	elfutils >= 0.154
 BuildRequires:	libtool >= 2.4.2-3
 Requires:	cpio
 Requires:	gawk
-Requires:	mktemp
+Requires:	coreutils
 Requires:	update-alternatives
 Requires:	%{bdb}_recover
 Suggests:	%{bdb}-utils
@@ -1027,6 +1027,7 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 		--without-augeas \
 %endif
 %if 0
+# (tpg) this file name should be changed to something like distro.macros
 		--with-extra-path-macros=%{_usrlibrpm}/macros.d/mandriva \
 %else
 		--with-extra-path-macros=%{_usrlibrpm}/platform/%%{_target}/macros:%{_sysconfdir}/rpm/macros.d/*.macros:%{_usrlibrpm}/macros.d/mandriva \
@@ -1077,7 +1078,7 @@ mkdir -p %{buildroot}%{_sysconfdir}/%{name}/{{pre,}macros.d,sysinfo}
 # actual usefulness of this seems rather dubious with macros.d now...
 cat > %{buildroot}%{_sysconfdir}/%{name}/macros <<EOF
 # Put your own system macros here
-# usually contains 
+# usually contains
 
 # Set this one according your locales
 # %%_install_langs

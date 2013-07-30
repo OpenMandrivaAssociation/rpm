@@ -22,7 +22,7 @@ index 0000000..01297c1
 +%_arch			arm
 +%_os			linux
 +%_gnu			-gnueabi
-+%optflags		-O2 -g -fpic -fPIC -fno-strict-volatile-bitfields -march=armv7-a -mfloat-abi=hard -mfpu=vfpv3-d16
++%optflags		 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC -g -march=armv7-a -mfloat-abi=hard -mfpu=vfpv3-d16}%{!?__common_cflags_with_ssp:-O2}
 +
 +#==============================================================================
 +# ---- configure macros.
