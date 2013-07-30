@@ -45,7 +45,7 @@
 #include %%{_sourcedir}/bootstrap.spec
 %endif
 
-%define	bdb		db60
+%define	bdb		db52
 
 %define libver		5.4
 %define	minorver	12
@@ -178,7 +178,7 @@ Patch74:	rpm-5.4.4-pass-_builddir-properly-to-find-debuginfo.patch
 # status: probably okay to merge, but discuss on rpm-devel first
 Patch76:	rpm-5.4.10-files-listed-twice-terminates-build.patch
 # status: don't merge
-Patch77:	rpm-5.4.7-use-bdb-5.2.patch
+Patch77:	rpm-5.4.12-use-bdb-5.2.patch
 # status: probably okay to merge
 Patch78:	rpm-5.4.9-ruby1.9-fixes.patch
 # mdvbz#65269
@@ -798,7 +798,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch71 -p1 -b .locale~
 %patch74 -p1 -b .builddir~
 %patch76 -p1 -b .twice_terminate~
-#patch77 -p1 -b .db52~
+%patch77 -p1 -b .db52~
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
 #patch81 -p1 -b .libsql~
