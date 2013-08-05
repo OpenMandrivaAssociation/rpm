@@ -1,0 +1,32 @@
+--- rpm-5.4.12/build/expression.c.nofree~	2013-08-06 00:44:28.117059710 +0200
++++ rpm-5.4.12/build/expression.c	2013-08-06 00:45:18.210089850 +0200
+@@ -368,9 +368,10 @@ static Value doPrimary(ParseState state)
+ 	char *t = rpmExpand(name, NULL);
+ 
+ 	v = valueMakeString(t);
+-	t = _free(t);
+-	if (rdToken(state))
++	if (rdToken(state)) {
++	    if (v) valueFree(v);
+ 	    return NULL;
++	}
+ 	break;
+     }
+ 
+@@ -522,6 +523,7 @@ static Value doAddSubtract(ParseState st
+ 
+ 	    if (op == TOK_MINUS) {
+ 		rpmlog(RPMLOG_ERR, _("- not suported for strings\n"));
++		valueFree(v1);
+ 		return NULL;
+ 	    }
+ 
+@@ -564,7 +566,7 @@ static Value doRelational(ParseState sta
+ 
+ 	if (v2) valueFree(v2);
+ 
+-	v2 = xstrdup(doAddSubtract(state));
++	v2 = doAddSubtract(state);
+ 	if (v2 == NULL)
+ 	    goto errxit;
+ 
