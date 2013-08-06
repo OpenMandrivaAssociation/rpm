@@ -1,12 +1,10 @@
 --- rpm-5.4.12/rpmio/rpmlua.c.rpmluaext~	2013-08-06 15:31:19.850418373 +0200
-+++ rpm-5.4.12/rpmio/rpmlua.c	2013-08-06 15:30:44.986641858 +0200
-@@ -1234,8 +1234,8 @@ static int luaopen_rpm(lua_State *L)
- #else
++++ rpm-5.4.12/rpmio/rpmlua.c	2013-08-06 15:45:04.007587658 +0200
+@@ -1235,7 +1235,7 @@ static int luaopen_rpm(lua_State *L)
      lua_pushglobaltable(L);
  #endif
--    luaL_newlib(L, rpmlib);
+     luaL_newlib(L, rpmlib);
 -    return 0;
-+    luaL_setfuncs(L, rpmlib, 0);
 +    return 1;
  }
  #endif	/* WITH_LUA */
