@@ -15,7 +15,7 @@
  check-lua:
  	@echo "=== $@ ==="
  	@-${rpm} -E '%{lua:print("-->      lua: Hard Rocks!")}'
-+	@-${rpm} -E '%{lua:print(rpm.expand("-->      lua: rpm macro expansion works on rpm %{_rpmversion}!"))
++	@-${rpm} -E '%{lua:print(rpm.expand("-->      lua: rpm macro expansion works on rpm %{_rpmversion}!"))}'
  	@-${rpm} -e lua-test
  	@-${rpm} -U lua-test/lua-test-*.noarch.rpm
  	@-${rpm} -e lua-test
