@@ -21,12 +21,3 @@
  		return NULL;
  	    }
  
-@@ -564,7 +566,7 @@ static Value doRelational(ParseState sta
- 
- 	if (v2) valueFree(v2);
- 
--	v2 = xstrdup(doAddSubtract(state));
-+	v2 = doAddSubtract(state);
- 	if (v2 == NULL)
- 	    goto errxit;
- 
