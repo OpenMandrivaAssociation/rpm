@@ -60,7 +60,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}2
+Release:	%{?prereldate:0.%{prereldate}.}3
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -918,8 +918,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch208 -p1 -b .rpmluaext~
 %patch209 -p1 -b .rpmluaprint~
 
-# aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
-sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
