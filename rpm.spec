@@ -501,6 +501,7 @@ Patch205:	rpm-5.4.12-fix-squirrel-version-check.patch
 Patch206:	rpm-5.4.12-fix-NODEV-lua-constant-on-linux.patch
 Patch207:	rpm-5.4.12-fix-double-free.patch
 Patch208:	rpm-5.4.12-fix-rpm-lua-extension.patch
+Patch209:	rpm-5.4.12-fix-rpmlua-print.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -915,6 +916,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch206 -p1 -b .nodev~
 %patch207 -p1 -b .doublefree~
 %patch208 -p1 -b .rpmluaext~
+%patch209 -p1 -b .rpmluaprint~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
