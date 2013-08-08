@@ -527,6 +527,7 @@ Patch204:	rpm-5.4.10-libpackage-macro.patch
 Patch205:	0001-add-aarch64-macro.patch
 Patch206:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
 Patch207:	fix-config-sub-in-configure.patch
+Patch210:	rpm-5.4.12-fix-rpmpython-module-import-init.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -966,6 +967,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch205 -p1 -b .aarch64~
 %patch206 -p1 -b .aarch64_multiarch
 %patch207 -p1 -b .update_config.subguess
+%patch210 -p1 -b .rpmpythonmod~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
