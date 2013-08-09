@@ -503,6 +503,7 @@ Patch207:	rpm-5.4.12-fix-double-free.patch
 Patch208:	rpm-5.4.12-fix-rpm-lua-extension.patch
 Patch209:	rpm-5.4.12-fix-rpmlua-print.patch
 Patch210:	rpm-5.4.12-fix-rpmpython-module-import-init.patch
+Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -919,6 +920,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch208 -p1 -b .rpmluaext~
 %patch209 -p1 -b .rpmluaprint~
 %patch210 -p1 -b .rpmpythonmod~
+%patch211 -p1 -b .rpmpythontrunc~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
