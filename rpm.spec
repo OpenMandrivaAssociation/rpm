@@ -517,87 +517,87 @@ Patch202:       rpm-5.4.10-python3-egg-reqs.patch
 # (tpg) do not build static libs by default
 Patch203:	rpm-5.4.10-configure-disable-static.patch
 
-#BuildRequires:	autoconf >= 2.57
-#BuildRequires:	bzip2-devel
-#BuildRequires:	automake >= 1.8
-#BuildRequires:	elfutils-devel >= 0.154
-#BuildRequires:	sed >= 4.0.3
-#BuildRequires:	beecrypt-devel >= 4.2.1-8
-#BuildRequires:	ed
-#BuildRequires:	gettext-devel
-#BuildRequires:	byacc
-#BuildRequires:	pkgconfig
-#BuildRequires:	pkgconfig(neon)
-#BuildRequires:	readline-devel
-#BuildRequires:	pkgconfig(ncursesw)
-#BuildRequires:	pkgconfig(libssl)
-#BuildRequires:	pkgconfig(libcrypto)
-#BuildRequires:	pkgconfig(liblzma)
-#BuildRequires:	pkgconfig(libpcre)
-#BuildRequires:	pkgconfig(libpcreposix)
-#BuildRequires:	acl-devel
-#BuildRequires:	magic-devel
-#BuildRequires:	pkgconfig(popt) >= 1.15
-#BuildRequires:	pkgconfig(libxml-2.0)
+BuildRequires:	autoconf >= 2.57
+BuildRequires:	bzip2-devel
+BuildRequires:	automake >= 1.8
+BuildRequires:	elfutils-devel >= 0.154
+BuildRequires:	sed >= 4.0.3
+BuildRequires:	beecrypt-devel >= 4.2.1-8
+BuildRequires:	ed
+BuildRequires:	gettext-devel
+BuildRequires:	byacc
+BuildRequires:	pkgconfig
+BuildRequires:	pkgconfig(neon)
+BuildRequires:	readline-devel
+BuildRequires:	pkgconfig(ncursesw)
+BuildRequires:	pkgconfig(libssl)
+BuildRequires:	pkgconfig(libcrypto)
+BuildRequires:	pkgconfig(liblzma)
+BuildRequires:	pkgconfig(libpcre)
+BuildRequires:	pkgconfig(libpcreposix)
+BuildRequires:	acl-devel
+BuildRequires:	magic-devel
+BuildRequires:	pkgconfig(popt) >= 1.15
+BuildRequires:	pkgconfig(libxml-2.0)
 # we're now building with internal..
-##BuildRequires:	pkgconfig(lua)
+#BuildRequires:	pkgconfig(lua)
 # needed by internal lua
-#BuildRequires:	pkgconfig(expat)
+BuildRequires:	pkgconfig(expat)
 %ifarch %{ix86} x86_64 ppc ppc64 ia64
-#BuildRequires:	pkgconfig(libcpuinfo)
+BuildRequires:	pkgconfig(libcpuinfo)
 %endif
-#BuildRequires:	syck-devel
-#BuildRequires:	keyutils-devel
-#BuildRequires:	gomp-devel
-#BuildRequires:	pkgconfig(gnutls)
-#BuildRequires:	gnupg2
+BuildRequires:	syck-devel
+BuildRequires:	keyutils-devel
+BuildRequires:	gomp-devel
+BuildRequires:	pkgconfig(gnutls)
+BuildRequires:	gnupg2
 # required by parts of test suite...
-#BuildRequires:	wget
+BuildRequires:	wget
 # Should we prefer internal xar in stead? internal xar contains at least
 # lzma/xz patches, what's the state of these and upstream?
 # does internal xar contain any other rpm specific patches as well, or..?
 %if %{with xar}
-#BuildRequires:	xar-devel
+BuildRequires:	xar-devel
 %endif
-#BuildRequires:	%{bdb}-devel >= 5.2.36-3
+BuildRequires:	%{bdb}-devel >= 5.2.36-3
 # required by test suite
-#BuildRequires:	%{bdb}-utils
+BuildRequires:	%{bdb}-utils
 %if %{with perl}
-#BuildRequires:	perl-devel
+BuildRequires:	perl-devel
 %endif
 %if %{with python}
-#BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python)
 %endif
 %if %{with js}
-#BuildRequires:	pkgconfig(mozjs185)
+BuildRequires:	pkgconfig(mozjs185)
 %endif
 %if %{with ruby}
-#BuildRequires:	pkgconfig(ruby-1.9)
+BuildRequires:	pkgconfig(ruby-1.9)
 %endif
 %if %{with tcl}
-#BuildRequires:	tcl-devel
+BuildRequires:	tcl-devel
 %endif
 %if %{with squirrel}
-#BuildRequires:	squirrel-devel
+BuildRequires:	squirrel-devel
 %endif
 %if %{with docs}
-#BuildRequires:	doxygen
-#BuildRequires:	graphviz
-#BuildRequires:	texlive
+BuildRequires:	doxygen
+BuildRequires:	graphviz
+BuildRequires:	texlive
 %endif
 %if %{with sqlite}
-#BuildRequires:	pkgconfig(sqlite3)
+BuildRequires:	pkgconfig(sqlite3)
 %endif
 %if %{with ossp_uuid}
-#BuildRequires:	pkgconfig(ossp-uuid)
+BuildRequires:	pkgconfig(ossp-uuid)
 %endif
 %if %{with augeas}
-#BuildRequires:	pkgconfig(augeas)
+BuildRequires:	pkgconfig(augeas)
 %endif
-#BuildRequires:	spec-helper >= 0.31.12
-#BuildRequires:	stdc++-static-devel >= 4.6.2-8
-#BuildRequires:	elfutils >= 0.154
-#BuildRequires:	libtool >= 2.4.2-3
+BuildRequires:	spec-helper >= 0.31.12
+BuildRequires:	stdc++-static-devel >= 4.6.2-8
+BuildRequires:	elfutils >= 0.154
+BuildRequires:	libtool >= 2.4.2-3
 Requires:	cpio
 Requires:	gawk
 Requires:	coreutils
@@ -679,7 +679,7 @@ Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
 %if %{without bootstrap}
 Requires:	python-rpm = %{EVRD}
 Requires:	python-pkg-resources
-#BuildRequires:	python-pkg-resources
+BuildRequires:	python-pkg-resources
 %endif
 Requires:	pkgconfig
 # ditch to eliminate dependency on perl deps not part of standard perl library
@@ -941,7 +941,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch203 -p1 -b .static
 %endif
 
-exit 1
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
 #required by P55, P80, P81, P94..
@@ -3121,7 +3120,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - New subpackage perl-RPM, and patch 85 to install it in vendor dir
 - Use static libneon, libsqlite3 and libopenssl
 - Update condition for triggerun
-- Add conditional #BuildRequires on nptl-devel
+- Add conditional BuildRequires on nptl-devel
 - Disable popt tests
 - Remove selinux
 - Requires recent rpm-mandriva-setup for _rpmlock_path macro
@@ -3140,7 +3139,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 * Tue Aug 30 2005 Olivier Thauvin <nanardon@mandriva.org> 4.4.2-3mdk
 - patch 80: fix #17774
 - patch 81, 82: should fix ordering issue
-- #BuildRequires: bzip2-devel (thanks Christian)
+- BuildRequires: bzip2-devel (thanks Christian)
 
 * Sat Aug 20 2005 Frederic Lepied <flepied@mandriva.com> 4.4.2-2mdk
 - 79: fix deadlock from RedHat bug #146549.
@@ -3205,7 +3204,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 - Require libneon 0.25
 
 * Mon May 09 2005 Olivier Thauvin <nanardon@mandriva.org> 4.4.1-0.7mdk
-- #BuildRequires readline-devel (P.O. Karlsen)
+- BuildRequires readline-devel (P.O. Karlsen)
 - --disable-{posixmutexes,pthreadsmutexes} on sparc (P.O. Karlsen)
 - patch68: being able to read old rpms
 - update source url
