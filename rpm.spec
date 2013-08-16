@@ -60,7 +60,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}3
+Release:	%{?prereldate:0.%{prereldate}.}4
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -505,6 +505,9 @@ Patch209:	rpm-5.4.12-fix-rpmlua-print.patch
 Patch210:	rpm-5.4.12-fix-rpmpython-module-import-init.patch
 Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
 
+# (tpg) do not build static libs by default
+Patch212:	rpm-5.4.10-configure-disable-static.patch
+
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -921,6 +924,12 @@ This package contains the RPM API documentation generated in HTML format.
 %patch209 -p1 -b .rpmluaprint~
 %patch210 -p1 -b .rpmpythonmod~
 %patch211 -p1 -b .rpmpythontrunc~
+# (tpg) enable only for cooker
+# omv2013.0 branch is not a cooker anymore so it is safe
+# tp push this
+%if %distro_branch == "Cooker"
+%patch212 -p1 -b .static
+%endif
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
