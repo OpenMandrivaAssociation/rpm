@@ -937,7 +937,7 @@ This package contains the RPM API documentation generated in HTML format.
 # (tpg) enable only for cooker
 # omv2013.0 branch is not a cooker anymore so it is safe
 # to push this
-%if %distro_branch = "Cooker"
+%if %distro_branch == "Cooker"
 %patch203 -p1 -b .static
 %endif
 
