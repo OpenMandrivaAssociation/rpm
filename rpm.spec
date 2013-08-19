@@ -936,8 +936,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch202 -p1 -b .python3~
 # (tpg) enable only for cooker
 # omv2013.0 branch is not a cooker anymore so it is safe
-# tp push this
-%if %distro_branch == "Cooker"
+# to push this
+%if %distro_branch = "Cooker"
 %patch203 -p1 -b .static
 %endif
 
