@@ -924,12 +924,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch209 -p1 -b .rpmluaprint~
 %patch210 -p1 -b .rpmpythonmod~
 %patch211 -p1 -b .rpmpythontrunc~
-# (tpg) enable only for cooker
-# omv2013.0 branch is not a cooker anymore so it is safe
-# tp push this
-%if %distro_branch == "Cooker"
 %patch212 -p1 -b .static
-%endif
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
