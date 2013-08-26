@@ -1,0 +1,40 @@
+Index: rpm/CHANGES
+RCS File: /v/rpm/cvs/rpm/CHANGES,v
+rcsdiff -q -kk '-r1.3501.2.337' '-r1.3501.2.338' -u '/v/rpm/cvs/rpm/CHANGES,v' 2>/dev/null
+--- rpm/CHANGES	2013/08/08 15:53:35	1.3501.2.337
++++ rpm/CHANGES	2013/08/08 16:39:04	1.3501.2.338
+@@ -1,4 +1,9 @@
+ 5.4.12 -> 5.4.13:
++    - devzero2000: debugedit.c: fix #rhbz725378
++      Fixed in @rpm.org with commit id 1684b696.
++      Here we make something different: we give a warn if we meet
++      stabs but erroring out if we did't find any usable debuginfo
++      (DWARF ELF). I do not know if this it's the right strategy.
+     - devzero2000: debugedit.c: fix #rhbz974860
+       Patch from Kyle McMartin <kmcmarti@redhat.com>
+     - devzero2000: debugedit.c: fix #rhbz929365
+Index: rpm/tools/debugedit.c
+RCS File: /v/rpm/cvs/rpm/tools/debugedit.c,v
+rcsdiff -q -kk '-r2.23.2.10' '-r2.23.2.11' -u '/v/rpm/cvs/rpm/tools/debugedit.c,v' 2>/dev/null
+--- rpm/tools/debugedit.c	2013/08/08 15:53:36	2.23.2.10
++++ rpm/tools/debugedit.c	2013/08/08 16:39:05	2.23.2.11
+@@ -1632,11 +1632,17 @@
+ 	  /* TODO: Handle stabs */
+ 	  if (strcmp (name, ".stab") == 0)
+ 	    {
+-	      fprintf (stderr, "Stabs debuginfo not supported: %s\n", file);
+-	      exit (1);
++	      fprintf (stderr, "Warning: Stabs debuginfo currently not supported: %s\n", file);
++	      break;
+ 	    }
++		/* The core DWARF data  containing DIEs */
+ 	  if (strcmp (name, ".debug_info") == 0)
+ 	    edit_dwarf2 (dso);
++		else 
++			 {
++	      fprintf (stderr, "Failed to produce debuginfo: debug format not supported: %s\n", name);
++				exit(1);
++			 }
+ 
+ 	  break;
+ 	case SHT_NOTE:
