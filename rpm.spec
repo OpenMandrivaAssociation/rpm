@@ -306,6 +306,7 @@ Patch137:	rpm-5.4.9-avoid-double-slash-in-path-for-dirname-filetrigger-matching.
 # status: ready for use, but keep locally for now...
 Patch138:	rpm-5.4.10-trigtrans.patch
 # status: probably ready to merge, discuss on rpm-devel first
+# https://qa.mandriva.com/show_bug.cgi?id=64378
 Patch139:	rpm-5.4.9-fix-verify-segfault.patch
 # status: keep locally
 Patch140:	rpm-5.4.7-rpmv3-support.patch
