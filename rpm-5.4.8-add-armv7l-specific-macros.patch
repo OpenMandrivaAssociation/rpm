@@ -23,7 +23,6 @@ index 0000000..f12a8a2
 +%_arch			arm
 +%_os			linux
 +%_gnu			-gnueabi
-+%optflags		-O2 -g -fpic -fPIC -fno-strict-volatile-bitfields
 +%optflags		%{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC -g -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16}%{!?__common_cflags_with_ssp:-O2}
 +
 +#==============================================================================
