@@ -1,15 +1,15 @@
---- rpm-5.4.10/tools/Makefile.am.rpmdbchk~	2012-05-04 17:58:08.000000000 +0200
-+++ rpm-5.4.10/tools/Makefile.am	2013-04-02 09:11:56.264985289 +0200
-@@ -29,7 +29,7 @@ EXTRA_PROGRAMS = augtool cudftool dbconv
- 	nix-env nix-hash nix-install-package nix-instantiate \
- 	nix-log2xml nix-prefetch-url nix-pull nix-push nix-store nix-worker \
- 	xiu-echo xiu-hash xiu-instantiate xiu-store \
+--- rpm-5.4.13/tools/Makefile.am.rpmdbchk~	2013-08-16 22:25:27.000000000 +0200
++++ rpm-5.4.13/tools/Makefile.am	2013-08-26 21:34:09.499978132 +0200
+@@ -33,7 +33,7 @@ EXTRA_PROGRAMS += augtool cudftool dbcon
+ 	nix-build nix-channel nix-collect-garbage \
+ 	nix-log2xml nix-prefetch-url nix-pull nix-push \
+ 	xiu-echo xiu-hash \
 -	roto rpmkey sandbox semodule spooktool
 +	roto rpmdbchk rpmkey sandbox semodule spooktool
  
  RPMMISC_LDADD_COMMON = \
  	$(top_builddir)/misc/librpmmisc.la \
-@@ -60,7 +60,7 @@ pkgbin_PROGRAMS =	\
+@@ -64,7 +64,7 @@ pkgbin_PROGRAMS =	\
  	rpmcache rpmdigest rpmrepo rpmspecdump \
  	rpmcmp rpmdeps sqlite3 @WITH_KEYUTILS_RPMKEY@ @WITH_LIBELF_DEBUGEDIT@
  if WITH_DB
@@ -18,7 +18,7 @@
  endif
  dist_man_MANS =		rpmgrep.1
  
-@@ -230,6 +230,13 @@ rpm2cpio_LDFLAGS =	@LDFLAGS_STATIC@ $(LD
+@@ -234,6 +234,13 @@ rpm2cpio_LDFLAGS =	@LDFLAGS_STATIC@ $(LD
  rpm2cpio_LDADD =	$(LDFLAGS) $(RPM_LDADD_COMMON)
  
  ##
@@ -32,8 +32,8 @@
  ##  keyctl(1) clone
  ##
  rpmkey_SOURCES =        rpmkey.c
---- rpm-5.4.10/tools/rpmdbchk.c.rpmdbchk~	2013-04-02 09:11:56.264985289 +0200
-+++ rpm-5.4.10/tools/rpmdbchk.c	2013-04-06 01:03:20.082982283 +0200
+--- rpm-5.4.13/tools/rpmdbchk.c.rpmdbchk~	2013-08-26 21:33:38.684435581 +0200
++++ rpm-5.4.13/tools/rpmdbchk.c	2013-08-26 21:33:38.684435581 +0200
 @@ -0,0 +1,296 @@
 +#include <arpa/inet.h>
 +#include <stdint.h>

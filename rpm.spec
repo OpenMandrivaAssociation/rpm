@@ -48,7 +48,7 @@
 %define	bdb		db52
 
 %define libver		5.4
-%define	minorver	12
+%define	minorver	13
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -60,7 +60,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}4
+Release:	%{?prereldate:0.%{prereldate}.}1
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -421,7 +421,7 @@ Patch176:	rpm-5.4.10-drop-rpath-from-perl-module.patch
 Patch178:	rpm-5.4.10-crosscompile.patch
 # tool for automatically checking and fixing broken rpmdb
 # status: probably' worth merging upstream
-Patch179:	rpm-5.4.10-rpmdbchk.patch
+Patch179:	rpm-5.4.13-rpmdbchk.patch
 # adds casts for C++ compatibility
 # status: ready
 Patch180:	rpm-5.4.10-rpmdb-typecasts.patch
@@ -499,15 +499,14 @@ Patch203:	rpm-5.4.10-postpone_subpackage_build_failures.patch
 Patch204:       rpm-5.4.10-python3-egg-reqs.patch
 
 Patch205:	rpm-5.4.12-fix-squirrel-version-check.patch
-Patch206:	rpm-5.4.12-fix-NODEV-lua-constant-on-linux.patch
-Patch207:	rpm-5.4.12-fix-double-free.patch
-Patch208:	rpm-5.4.12-fix-rpm-lua-extension.patch
 Patch209:	rpm-5.4.12-fix-rpmlua-print.patch
 Patch210:	rpm-5.4.12-fix-rpmpython-module-import-init.patch
 Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
 
 # (tpg) do not build static libs by default
 Patch212:	rpm-5.4.10-configure-disable-static.patch
+
+Patch213:	rpm-5.4.13-dont-override-existing-variables-with-etc-os-release.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -919,13 +918,11 @@ This package contains the RPM API documentation generated in HTML format.
 %patch203 -p1 -b .subpackage_errors~
 %patch204 -p1 -b .python3~
 %patch205 -p1 -b .squir_ver~
-%patch206 -p1 -b .nodev~
-%patch207 -p1 -b .doublefree~
-%patch208 -p1 -b .rpmluaext~
 %patch209 -p1 -b .rpmluaprint~
 %patch210 -p1 -b .rpmpythonmod~
 %patch211 -p1 -b .rpmpythontrunc~
-%patch212 -p1 -b .static
+%patch212 -p1 -b .static~
+%patch213 -p1 -b .os_release~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh

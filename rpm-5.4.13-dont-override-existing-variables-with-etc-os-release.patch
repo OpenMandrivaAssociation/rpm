@@ -1,0 +1,11 @@
+--- rpm-5.4.13/configure.ac~	2013-08-26 21:59:50.601111413 +0200
++++ rpm-5.4.13/configure.ac	2013-08-26 21:59:51.917134583 +0200
+@@ -2255,7 +2255,7 @@ unknown|pc|ibm|redhat|pld|mandriva|conec
+ 	test -f /usr/bin/crux &&		RPMCANONVENDOR=crux
+ 	test -f /etc/ark-release &&		RPMCANONVENDOR=ark
+ 	test -f /etc/openmamba-release &&	RPMCANONVENDOR=openmamba
+-	test -r /etc/os-release &&. /etc/os-release && [ -n "$ID" ] && RPMCANONVENDOR="$ID"
++	test -r /etc/os-release && ID=$(. /etc/os-release && [ -n "$ID" ] && echo "$ID") && RPMCANONVENDOR="$ID"
+ 	;;
+ esac
+ RPMCANONOS="$target_os_noversion"
