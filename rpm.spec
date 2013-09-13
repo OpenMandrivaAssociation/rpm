@@ -510,6 +510,7 @@ Patch213:	rpm-5.4.13-dont-override-existing-variables-with-etc-os-release.patch
 # Revert this one that breaks debugedit
 Patch214:	rpm_patchset_17180.diff
 Patch215:	rpm-5.4.13-fix-free-of-memory-still-in-use.patch
+Patch216:	rpm-5.4.13-perl-bindings-do-not-use-xmalloc.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -928,6 +929,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch213 -p1 -b .os_release~
 %patch214 -p1 -R -b .unbreak~
 %patch215 -p1 -b .tok_free~
+%patch216 -p1 -b .xmalloc~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
