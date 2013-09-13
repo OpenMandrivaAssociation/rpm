@@ -500,7 +500,7 @@ Patch204:       rpm-5.4.10-python3-egg-reqs.patch
 
 Patch205:	rpm-5.4.12-fix-squirrel-version-check.patch
 Patch209:	rpm-5.4.12-fix-rpmlua-print.patch
-Patch210:	rpm-5.4.12-fix-rpmpython-module-import-init.patch
+Patch210:	rpm-5.4.13-fix-rpmpython-module-import-init.patch
 Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
 
 # (tpg) do not build static libs by default
