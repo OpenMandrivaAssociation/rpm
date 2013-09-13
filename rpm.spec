@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}45
+Release:	%{?prereldate:0.%{prereldate}.}46
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -954,6 +954,7 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 %build
 %configure2_5x	--enable-nls \
 		--with-pic \
+        --enable-static \
 %if %{with debug}
 		--enable-debug \
 		--with-valgrind \
