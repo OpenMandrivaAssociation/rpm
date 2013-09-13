@@ -8,6 +8,7 @@
 
 %bcond_without	ossp_uuid
 %bcond_without	augeas
+%bcond_with	docs
 
 #XXX: this macro is a bit awkward, better can be done!
 %if %{with bootstrap}
@@ -16,7 +17,6 @@
 %bcond_with	tcl
 %bcond_with	squirrel
 %bcond_with	embed
-%bcond_with	docs
 %bcond_with	sqlite
 %else
 %bcond_without	perl
