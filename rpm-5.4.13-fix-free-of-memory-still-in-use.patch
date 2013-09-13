@@ -1,5 +1,5 @@
---- rpm-5.4.13/build/expression.c.tok_free~	2013-09-13 04:31:41.788770077 +0200
-+++ rpm-5.4.13/build/expression.c	2013-09-13 04:31:43.779802059 +0200
+--- rpm-5.4.13/build/expression.c.tok_free~	2013-07-26 10:28:27.000000000 +0200
++++ rpm-5.4.13/build/expression.c	2013-09-13 08:46:04.281649118 +0200
 @@ -365,10 +365,8 @@ static Value doPrimary(ParseState state)
  
      case TOK_IDENTIFIER: {
