@@ -8,6 +8,7 @@
 
 %bcond_without	ossp_uuid
 %bcond_without	augeas
+%bcond_with	docs
 
 #XXX: this macro is a bit awkward, better can be done!
 %if %{with bootstrap}
@@ -16,7 +17,6 @@
 %bcond_with	tcl
 %bcond_with	squirrel
 %bcond_with	embed
-%bcond_with	docs
 %bcond_with	sqlite
 %else
 %bcond_without	perl
@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}45
+Release:	%{?prereldate:0.%{prereldate}.}46
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -954,6 +954,7 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 %build
 %configure2_5x	--enable-nls \
 		--with-pic \
+        --enable-static \
 %if %{with debug}
 		--enable-debug \
 		--with-valgrind \
