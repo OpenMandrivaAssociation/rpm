@@ -866,7 +866,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch137 -p1 -b .slash~
 #patch138 -p1 -b .trigtrans~
 %patch139 -p1 -b .fix_verify~
-#patch140 -p1 -b .rpmv3~
+%patch140 -p1 -b .rpmv3~
 %patch143 -p1 -b .mono_newline~
 %patch144 -p1 -b .urpm~
 %patch146 -p1 -b .nosig~
