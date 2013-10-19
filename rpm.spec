@@ -52,7 +52,7 @@
 %define	bdb		db52
 
 %define libver		5.4
-%define	minorver	11
+%define	minorver	10
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}46
+Release:	%{?prereldate:0.%{prereldate}.}47
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
