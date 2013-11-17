@@ -605,7 +605,7 @@ Requires(pre):	coreutils
 %rename		rpmconstant
 %rename		multiarch-utils
 %rename		rpm-manbo-setup
-%rename		rpm-%{_target_vendor}-setup
+%rename		rpm-mandriva-setup
 Obsoletes:	haskell-macros < 6.4-5
 
 %description
