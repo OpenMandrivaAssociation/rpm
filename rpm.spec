@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}49
+Release:	%{?prereldate:0.%{prereldate}.}50
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -517,6 +517,9 @@ Patch202:       rpm-5.4.10-python3-egg-reqs.patch
 # (tpg) do not build static libs by default
 Patch203:	rpm-5.4.10-configure-disable-static.patch
 
+# (bero) Add libpackage macro -- these lines are replicated into way too many spec files
+Patch204:	rpm-5.4.10-libpackage-macro.patch
+
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -949,6 +952,7 @@ This package contains the RPM API documentation generated in HTML format.
 %if %distro_branch == "Cooker"
 %patch203 -p1 -b .static
 %endif
+%patch204 -p1 -b .libpackage~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
