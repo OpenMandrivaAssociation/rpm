@@ -48,7 +48,7 @@
 %define	bdb		db52
 
 %define libver		5.4
-%define	minorver	13
+%define	minorver	14
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -60,7 +60,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}3
+Release:	%{?prereldate:0.%{prereldate}.}1
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -227,8 +227,6 @@ Patch102:	rpm-5.4.7-kmod-dependencies.patch
 Patch103:	rpm-5.4.10-desktop-provides.patch
 # status: probably okay to merge, discuss on rpm-devel first
 Patch104:	rpm-5.4.5-skip-dependencies-for-character-devices.patch
-# status: ready to merge
-Patch105:	rpm-5.4.12-rpmfc-use-strlen-not-sizeof.patch
 # status: same as for other dep gen patches
 Patch106:	rpm-5.4.5-break-out-of-elf-link-loop.patch
 # status: probably okay to merge
@@ -320,8 +318,6 @@ Patch145:	rpm-5.4.8-add-armv7l-specific-macros.patch
 Patch146:	rpm-5.4.9-support-signatures-and-digest-disablers.patch
 # status: undefined
 Patch147:	rpm-5.4.9-add-x32-macros.patch
-# status: ready and should be merged
-Patch149:	rpm-5.4.9-fix-typo-in-rpmtag-header.patch
 # status: can be merged, but doesn't really matter as it's to be removed and
 # we now anyways disable the support in question..
 Patch150:	rpm-5.4.9-dont-remap-i18n-strings-if-enabled.patch
@@ -484,9 +480,6 @@ Patch194:	rpm-5.4.10-implement-start-and-stop-callbacks.patch
 #
 #- Unused atm but we'll be adding this shortly
 Patch195:	rpm-5.4.10-add-enum-for-RPMCALLBACK_INST_STOP-callback-event.patch
-# this fixes tagSwab to properly handle RPM_UINT64_TYPE, fixing headerPut with
-# status: ready
-Patch196:	rpm-5.4.10-fix-64bit-tagSwab.patch
 Patch197:	rpm-5.4.10-dont-require-group-and-summary-tag-during-build.patch
 Patch198:	rpm-5.4.10-enable-nofsync-for-rpm-rebuilddb.patch
 Patch199:	rpm-5.4.10-fix-font-dep-misidentification.patch
@@ -505,10 +498,6 @@ Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
 
 # (tpg) do not build static libs by default
 Patch212:	rpm-5.4.10-configure-disable-static.patch
-
-Patch213:	rpm-5.4.13-dont-override-existing-variables-with-etc-os-release.patch
-# Revert this one that breaks debugedit
-Patch214:	rpm_patchset_17180.diff
 Patch215:	rpm-5.4.13-fix-free-of-memory-still-in-use.patch
 Patch216:	rpm-5.4.13-perl-bindings-do-not-use-xmalloc.patch
 
@@ -834,7 +823,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch102 -p1 -b .kmod~
 %patch103 -p1 -b .desktop~
 %patch104 -p1 -b .skip_chrdev~
-%patch105 -p1 -b .sizeof~
 %patch106 -p1 -b .link_loop~
 %patch107 -p1 -b .python_color~
 %patch109 -p1 -b .uclibc_nolib64~
@@ -871,7 +859,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch144 -p1 -b .urpm~
 %patch146 -p1 -b .nosig~
 %patch147 -p1
-%patch149 -p1 -b .typo~
 %patch150 -p1 -b .i18n_str~
 %patch151 -p1 -b .noi18n~
 %patch152 -p1 -b .l10ndir~
@@ -879,7 +866,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch157 -p1 -b .perl_deps~
 %patch158 -p1 -b .dl_error~
 %patch138 -p1 -b .trigtrans~
-%patch159 -p1 -b .ignore_arch~
 %patch160 -p1 -b .xz_level~
 %patch161 -p1 -b .uclibc_buildroot~
 %patch162 -p1 -b .uninitialized~
@@ -913,7 +899,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch193 -p1 -b .xrealloc~
 %patch194 -p1 -b .cb~
 %patch195 -p1 -b .cb2~
-%patch196 -p1 -b .ui64p~
 %patch197 -p1 -b .permissive~
 %patch198 -p1 -b .rpmdbnofsync~
 %patch199 -p1 -b .fontdep_sure~
@@ -926,8 +911,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch210 -p1 -b .rpmpythonmod~
 %patch211 -p1 -b .rpmpythontrunc~
 %patch212 -p1 -b .static~
-%patch213 -p1 -b .os_release~
-%patch214 -p1 -R -b .unbreak~
 %patch215 -p1 -b .tok_free~
 %patch216 -p1 -b .xmalloc~
 
