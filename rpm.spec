@@ -503,6 +503,8 @@ Patch216:	rpm-5.4.13-perl-bindings-do-not-use-xmalloc.patch
 
 # (bero) Add libpackage macro -- these lines are replicated into way too many spec files
 Patch217:	rpm-5.4.10-libpackage-macro.patch
+# backport from cvs, do not clobber errno
+Patch218:	rpm_patchset_17344.dif
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -917,6 +919,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch215 -p1 -b .tok_free~
 %patch216 -p1 -b .xmalloc~
 %patch217 -p1 -b .libpackage~
+%patch218 -p0 -b .errno~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
