@@ -20,7 +20,9 @@
 %bcond_without	tcl
 %bcond_without	squirrel
 %bcond_without	embed
-%bcond_without	docs
+# disabled due to issues with texlive packages ~always being out of sync with
+# synthesis..
+%bcond_with	docs
 # use what's in berkeley db
 %bcond_with	sqlite
 %endif
