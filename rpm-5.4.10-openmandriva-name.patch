@@ -3,7 +3,7 @@
 @@ -1,7 +1,7 @@
 -%distribution		Mandriva Linux
 -%vendor			Mandriva
-+%distribution		OpenMandriva LX
++%distribution		OpenMandriva Lx
 +%vendor			OpenMandriva Association
 -%bugurl			http://qa.mandriva.com
 +%bugurl			https://issues.openmandriva.org/

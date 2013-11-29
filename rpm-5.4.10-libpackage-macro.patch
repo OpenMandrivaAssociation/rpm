@@ -1,0 +1,17 @@
+--- rpm-5.4.10/macros/mandriva.libpackage~	2013-11-21 21:27:22.780323257 +0100
++++ rpm-5.4.10/macros/mandriva	2013-11-21 21:28:01.494839258 +0100
+@@ -496,4 +496,14 @@ Internationalization and locale data for
+ [ %{_with check} -eq 1 ] || exit 0 \
+ %{nil}
+ 
++%libpackage()\
++%%package -n %{expand:%%mklibname %{1} %{2}}\
++Summary: The %{1} library, a part of %{name}\
++Group: System/Libraries\
++%%description -n %{expand:%%mklibname %{1} %{2}}\
++The %{1} library, a part of %{name}\
++%%files -n %{expand:%%mklibname %{1} %{2}}\
++%{_libdir}/lib%{1}.so.%{2}*\
++%{nil}
++
+ %{load:/etc/rpm/macros.d/*.macros}
