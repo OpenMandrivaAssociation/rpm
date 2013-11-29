@@ -504,7 +504,7 @@ Patch216:	rpm-5.4.13-perl-bindings-do-not-use-xmalloc.patch
 # (bero) Add libpackage macro -- these lines are replicated into way too many spec files
 Patch217:	rpm-5.4.10-libpackage-macro.patch
 # backport from cvs, do not clobber errno
-Patch218:	rpm_patchset_17344.dif
+Patch218:	rpm_patchset_17344.diff
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
