@@ -51,9 +51,9 @@
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
-%define librpmname %mklibname rpm %{libver}
-%define librpmnamedevel %mklibname -d rpm
-%define librpmstatic %mklibname -d -s rpm
+%define	libname	%mklibname rpm %{libver}
+%define	devname	%mklibname -d rpm
+%define	static	%mklibname -d -s rpm
 
 Summary:	The RPM package management system
 Name:		rpm
@@ -590,7 +590,7 @@ Requires:	coreutils
 Requires:	update-alternatives
 Requires:	%{bdb}_recover
 Suggests:	%{bdb}-utils
-Requires:	%{librpmname} = %{EVRD}
+Requires:	%{libname} = %{EVRD}
 Conflicts:	rpm-build < 1:5.3.10-0.20110422.3
 Requires(pre):	coreutils
 %rename		rpmconstant
@@ -605,7 +605,7 @@ installing, uninstalling, verifying, querying, and updating software packages.
 Each software package consists of an archive of files along with information
 about the package like its version, a description, etc.
 
-%package -n	%{librpmname}
+%package -n	%{libname}
 Summary:	Libraries used by rpm
 Group:		System/Libraries
 # Forcing upgrades of anything else linked against it as rpmdb is incompatible
@@ -615,20 +615,20 @@ Conflicts:	%{_lib}db5.1 < 5.1.25
 Conflicts:	%{_lib}elfutils1 < 0.154
 Conflicts:	%{_lib}beecrypt7 < 4.2.1
 
-%description -n	%{librpmname}
+%description -n	%{libname}
 RPM is a powerful command line driven package management system capable of
 installing, uninstalling, verifying, querying, and updating software packages.
 This package contains common files to all applications based on rpm.
 
-%package -n	%{librpmnamedevel}
+%package -n	%{devname}
 Summary:	Development files for applications which will manipulate RPM packages
 Group:		Development/C
-Requires:	%{librpmname} = %{EVRD}
+Requires:	%{libname} = %{EVRD}
 Provides:	rpm-devel = %{EVRD}
 %rename		%{_lib}rpmconstant-devel
 Obsoletes:	%{_lib}rpm4.4-devel
 
-%description -n %{librpmnamedevel}
+%description -n %{devname}
 This package contains the RPM C library and header files. These
 development files will simplify the process of writing programs
 which manipulate RPM packages and databases and are intended to make
@@ -638,12 +638,12 @@ that need an intimate knowledge of RPM packages in order to function.
 This package should be installed if you want to develop programs that
 will manipulate RPM packages and databases.
 
-%package -n	%{librpmstatic}
+%package -n	%{static}
 Summary:	Static libraries for rpm development
 Group:		Development/C
-Requires:	%{librpmnamedevel} = %{EVRD}
+Requires:	%{devname} = %{EVRD}
 
-%description -n %{librpmstatic}
+%description -n %{static}
 Static libraries for rpm development.
 
 %package	build
@@ -713,7 +713,7 @@ the installed RPM database as well as files on the filesystem.
 %package -n	perl-RPMBDB
 Summary:	Perl extension for accessing certain Berkeley DB functionality
 Group:		Development/Perl
-Requires:	%{librpmname} = %{EVRD}
+Requires:	%{libname} = %{EVRD}
 
 %description
 This perl extension provides certain Berkeley DB functionality used by urpmi.
@@ -1292,7 +1292,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_mandir}/man8/rpmbuild.8*
 %{_mandir}/man8/rpmdeps.8*
 
-%files -n %{librpmname}
+%files -n %{libname}
 %{_libdir}/librpm-%{libver}.so
 %{_libdir}/librpmconstant-%{libver}.so
 %{_libdir}/librpmdb-%{libver}.so
@@ -1307,7 +1307,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 #%%{_rpmhome}/libsql*.so.*
 #%%endif
 
-%files -n %{librpmnamedevel}
+%files -n %{devname}
 #%%doc apidocs/html
 %{_includedir}/rpm
 %{_libdir}/librpm.so
@@ -1325,7 +1325,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 #%%{_rpmhome}/libsql*.so
 #%%endif
 
-%files -n %{librpmstatic}
+%files -n %{static}
 %{_libdir}/librpm.a
 %{_libdir}/librpmconstant.a
 %{_libdir}/librpmdb.a
