@@ -12,6 +12,7 @@
 %bcond_with	tcl
 %bcond_with	squirrel
 %bcond_with	embed
+%bcond_with	docs
 %bcond_with	sqlite
 %else
 %bcond_without	perl
@@ -19,7 +20,7 @@
 %bcond_without	tcl
 %bcond_without	squirrel
 %bcond_without	embed
-%bcond_with	docs
+%bcond_without	docs
 # use what's in berkeley db
 %bcond_with	sqlite
 %endif
