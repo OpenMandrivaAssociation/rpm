@@ -934,7 +934,6 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 		--enable-shared \
 		--enable-static \
 		--with-pic \
-        --enable-static \
 %if %{with debug}
 		--enable-debug \
 		--with-valgrind \
