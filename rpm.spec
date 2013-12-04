@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}2
+Release:	%{?prereldate:0.%{prereldate}.}3
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -507,6 +507,7 @@ Patch216:	rpm-5.4.13-perl-bindings-do-not-use-xmalloc.patch
 Patch217:	rpm-5.4.10-libpackage-macro.patch
 # backport from cvs, do not clobber errno
 Patch218:	rpm_patchset_17344.diff
+Patch219:	rpm-5.4.14-allow-overriding-etcrpm-etc-during-runtime.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -922,6 +923,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch216 -p1 -b .xmalloc~
 %patch217 -p1 -b .libpackage~
 %patch218 -p0 -b .errno~
+%patch219 -p1 -b .etcrpm~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
