@@ -1,4 +1,2 @@
-from Config import *
-from os import environ
-
 addFilter('rpm\..*: standard-dir-owned-by-package (\(.*\) |)/var/lib/rpm')
+addFilter('rpm\..*: devel-file-in-non-devel-package (\(.*\) |)/usr/include/multiarch-dispatch.h')
