@@ -50,7 +50,7 @@
 %define	bdb		db52
 
 %define	libver		5.4
-%define	minorver	14
+%define	minorver	15
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -508,6 +508,9 @@ Patch217:	rpm-5.4.10-libpackage-macro.patch
 # backport from cvs, do not clobber errno
 Patch218:	rpm_patchset_17344.diff
 Patch219:	rpm-5.4.14-allow-overriding-etcrpm-etc-during-runtime.patch
+# there's some funky businiss going on with ABF where omv macros gets used,
+# so let's make our variables read only for now...
+Patch220:	rpm-5.4.14-moondrake-ro-variables.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -924,6 +927,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch217 -p1 -b .libpackage~
 %patch218 -p0 -b .errno~
 %patch219 -p1 -b .etcrpm~
+%patch220 -p1 -b .ro~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
