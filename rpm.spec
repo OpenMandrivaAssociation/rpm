@@ -519,6 +519,8 @@ Patch203:	rpm-5.4.10-configure-disable-static.patch
 
 # (bero) Add libpackage macro -- these lines are replicated into way too many spec files
 Patch204:	rpm-5.4.10-libpackage-macro.patch
+# fedya add aarch64 macro
+Patch205:	0001-add-aarch64-macro.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -953,6 +955,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch203 -p1 -b .static
 %endif
 %patch204 -p1 -b .libpackage~
+%patch205 -p1 -b .aarch64~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
