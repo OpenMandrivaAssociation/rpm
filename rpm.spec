@@ -76,6 +76,7 @@ Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}-%{srcver}.tar.gz
 # stripping away the rest (along with os specificity) and create a resulting
 # cpu-macros.tar.gz to push upstream would seem like a sane improvement.
 Source2:	rpm.rpmlintrc
+# please just extract this archive and make your modifications to it, then retar
 Source3:	cpu-os-macros.tar
 Source4:	legacy_compat.macros
 Source5:	RPMBDB-0.1.tar.xz
@@ -314,8 +315,6 @@ Patch140:	rpm-5.4.7-rpmv3-support.patch
 Patch143:	rpm-5.4.7-mono-find-requires-strip-newlines.patch
 # status: ready
 Patch144:	rpm-5.4.8-URPM-build-fix.patch
-# status: undefined
-Patch145:	rpm-5.4.8-add-armv7l-specific-macros.patch
 # status: keep locally, might drop this one later..
 Patch146:	rpm-5.4.9-support-signatures-and-digest-disablers.patch
 # status: undefined
@@ -487,7 +486,6 @@ Patch198:	rpm-5.4.10-enable-nofsync-for-rpm-rebuilddb.patch
 Patch199:	rpm-5.4.10-fix-font-dep-misidentification.patch
 Patch200:	rpm-5.4.10-dont-silence-patch-output.patch
 Patch201:	rpm-5.4.10-fix-log-install-remove-to-syslog.patch
-Patch202:	rpm-5.4.10-armv7hl-rpm-macros-hardfloat-abi.patch
 Patch203:	rpm-5.4.10-postpone_subpackage_build_failures.patch
 
 # Do not generate pythonegg provides for python3 until we find a better solution
@@ -769,7 +767,7 @@ This package contains the RPM API documentation generated in HTML format.
 %endif
 
 %prep
-%setup -q -a5
+%setup -q -a3 -a5
 %patch111 -p1 -b .script_macros~
 # These patches has been commited hastily upstream for review,
 # keeping them around here for now untill finished...
@@ -931,11 +929,6 @@ This package contains the RPM API documentation generated in HTML format.
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
-
-mkdir -p cpu-os-macros
-tar -xf %{SOURCE3} -C cpu-os-macros
-%patch145 -p1
-%patch202 -p1
 
 %build
 %configure2_5x	--enable-nls \
