@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}4
+Release:	%{?prereldate:0.%{prereldate}.}5
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -317,8 +317,6 @@ Patch143:	rpm-5.4.7-mono-find-requires-strip-newlines.patch
 Patch144:	rpm-5.4.8-URPM-build-fix.patch
 # status: keep locally, might drop this one later..
 Patch146:	rpm-5.4.9-support-signatures-and-digest-disablers.patch
-# status: undefined
-Patch147:	rpm-5.4.9-add-x32-macros.patch
 # status: can be merged, but doesn't really matter as it's to be removed and
 # we now anyways disable the support in question..
 Patch150:	rpm-5.4.9-dont-remap-i18n-strings-if-enabled.patch
@@ -509,6 +507,7 @@ Patch219:	rpm-5.4.14-allow-overriding-etcrpm-etc-during-runtime.patch
 # there's some funky businiss going on with ABF where omv macros gets used,
 # so let's make our variables read only for now...
 Patch220:	rpm-5.4.14-moondrake-ro-variables.patch
+Patch221:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -867,7 +866,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch143 -p1 -b .mono_newline~
 %patch144 -p1 -b .urpm~
 %patch146 -p1 -b .nosig~
-%patch147 -p1
 %patch150 -p1 -b .i18n_str~
 %patch151 -p1 -b .noi18n~
 %patch152 -p1 -b .l10ndir~
@@ -926,6 +924,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch218 -p0 -b .errno~
 %patch219 -p1 -b .etcrpm~
 %patch220 -p1 -b .ro~
+%patch221 -p1 -b .aarch64_multiarch
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
