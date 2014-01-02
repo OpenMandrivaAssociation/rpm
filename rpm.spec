@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}53
+Release:	%{?prereldate:0.%{prereldate}.}54
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -104,6 +104,8 @@ Patch4:		rpm-5.3.8-disttag-distsuffix-fallback.patch
 Patch5:		rpm-5.3.8-distepoch-pattern-hack.patch
 # Don't disable keyserver queries
 Patch6:		rpm-5.4.10-use-keyserver.patch
+# Don't override libexecdir, that's bogus
+Patch7:		rpm-5.4.10-no-libexecdir-override.patch
 # fixes a typo in russian translation (#62333)
 # status: needs to be pushed back to the Russian i18n project
 Patch11:	rpm-5.4.9-fix-russian-typo.patch
@@ -809,6 +811,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch15 -p1 -b .trigger_once~
 %endif
 %patch6 -p1 -b .keyserver~
+%patch7 -p1 -b .libexec~
 #%%patch21 -p1 -b .loop_warnings~
 #%%patch22 -p1 -b .55810~
 #patch27 -p1 -b .mdv~
