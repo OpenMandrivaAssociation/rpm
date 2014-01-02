@@ -1100,7 +1100,12 @@ popd
 make check
 
 %install
+
+# (tpg) THIS IS VERY IMPORTANT !!!
 cp %SOURCE100 .
+mkdir -p %{buildroot}%{_sysconfdir}/RPM-GPG-KEYS
+install -m644 %{SOURCE100} %{buildroot}%{_sysconfdir}/RPM-GPG-KEYS/OMA-Cooker-PubKey.asc
+
 %makeinstall_std
 %if %{with perl}
 %makeinstall_std -C RPMBDB-*
@@ -1227,6 +1232,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/rpmpopt
 %{_rpmhome}/platform/*/macros
 %config(noreplace) %{_localstatedir}/lib/rpm/DB_CONFIG
+%{_sysconfdir}/RPM-GPG-KEYS/OMA-Cooker-PubKey.asc
 
 %dir %{_localstatedir}/spool/repackage
 %dir %{_rpmhome}
