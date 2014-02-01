@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}55
+Release:	%{?prereldate:0.%{prereldate}.}56
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -529,6 +529,7 @@ Patch206:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
 Patch207:	fix-config-sub-in-configure.patch
 Patch210:	rpm-5.4.12-fix-rpmpython-module-import-init.patch
 Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
+Patch212:	rpm-5.4.10-cmake-dependency-generator.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -970,6 +971,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch207 -p1 -b .update_config.subguess
 %patch210 -p1 -b .rpmpythonmod~
 %patch211 -p1 -b .rpmpythontrunc~
+%patch212 -p1 -b .cmakedeps~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
@@ -1338,6 +1340,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/perl.req
 %{_rpmhome}/php.prov
 %{_rpmhome}/php.req
+%{_rpmhome}/cmakedeps.sh
 %{_rpmhome}/pkgconfigdeps.sh
 %{_rpmhome}/pythondeps.sh
 %{_rpmhome}/pythoneggs.py
