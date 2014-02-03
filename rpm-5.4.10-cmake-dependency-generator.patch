@@ -145,7 +145,7 @@
 +	;;
 +-R|--requires)
 +	(while read filename ; do
-+		echo ${filename}
++		case "${filename}" in
 +		*.cmake)
 +			if grep -qiE '^\s*find_package\s*\([^)]*required' "${filename}"; then
 +				grep -iE '^\s*find_package\s*\([^)]*required' ${filename} |sed -e 's,.*(,,;s,^\s*,,;s,\s.*,,' |while read N; do
