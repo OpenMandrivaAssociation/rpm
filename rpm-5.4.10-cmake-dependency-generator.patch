@@ -121,12 +121,12 @@
  	rpm2cpio rpmdb_loadcvt \
 --- rpm-5.4.10/scripts/cmakedeps.sh.cmakedeps~	2014-02-02 23:13:18.921971657 +0100
 +++ rpm-5.4.10/scripts/cmakedeps.sh	2014-02-02 23:13:12.635304907 +0100
-@@ -0,0 +1,42 @@
+@@ -0,0 +1,41 @@
 +#!/bin/bash
 +
 +case $1 in
 +-P|--provides)
-+	while read filename ; do
++	(while read filename ; do
 +		case "${filename}" in
 +		*-config.cmake)
 +			N="`basename \"${filename}\" -config.cmake`"
@@ -141,12 +141,11 @@
 +			echo "cmake($N)"
 +			;;
 +		esac
-+	done
++	done) | sort | uniq
 +	;;
 +-R|--requires)
-+	while read filename ; do
++	(while read filename ; do
 +		echo ${filename}
-+		case "${filename}" in
 +		*.cmake)
 +			if grep -qiE '^\s*find_package\s*\([^)]*required' "${filename}"; then
 +				grep -iE '^\s*find_package\s*\([^)]*required' ${filename} |sed -e 's,.*(,,;s,^\s*,,;s,\s.*,,' |while read N; do
@@ -160,7 +159,7 @@
 +			fi
 +			;;
 +		esac
-+	done
++	done) | sort | uniq
 +	;;
 +esac
 +exit 0
