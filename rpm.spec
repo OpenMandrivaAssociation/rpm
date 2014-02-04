@@ -49,22 +49,22 @@
 #include %%{_sourcedir}/bootstrap.spec
 %endif
 
-%define	bdb		db52
+%define bdb db52
 
-%define libver		5.4
-%define	minorver	10
-%define	srcver		%{libver}.%{minorver}
+%define libver 5.4
+%define minorver 10
+%define srcver %{libver}.%{minorver}
 #define	prereldate	20110712
 
-%define librpmname	%mklibname rpm %{libver}
-%define librpmnamedevel	%mklibname -d rpm
-%define	librpmstatic	%mklibname -d -s rpm
+%define librpmname %mklibname rpm %{libver}
+%define librpmnamedevel %mklibname -d rpm
+%define librpmstatic %mklibname -d -s rpm
 
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}50
+Release:	%{?prereldate:0.%{prereldate}.}58
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -102,6 +102,10 @@ Patch4:		rpm-5.3.8-disttag-distsuffix-fallback.patch
 # time to come up with better pattern fix..
 # status: needs to be fixed properly, but can be merged upstream
 Patch5:		rpm-5.3.8-distepoch-pattern-hack.patch
+# Don't disable keyserver queries
+Patch6:		rpm-5.4.10-use-keyserver.patch
+# Don't override libexecdir, that's bogus
+Patch7:		rpm-5.4.10-no-libexecdir-override.patch
 # fixes a typo in russian translation (#62333)
 # status: needs to be pushed back to the Russian i18n project
 Patch11:	rpm-5.4.9-fix-russian-typo.patch
@@ -517,6 +521,16 @@ Patch202:       rpm-5.4.10-python3-egg-reqs.patch
 # (tpg) do not build static libs by default
 Patch203:	rpm-5.4.10-configure-disable-static.patch
 
+# (bero) Add libpackage macro -- these lines are replicated into way too many spec files
+Patch204:	rpm-5.4.10-libpackage-macro.patch
+# fedya add aarch64 macro
+Patch205:	0001-add-aarch64-macro.patch
+Patch206:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
+Patch207:	fix-config-sub-in-configure.patch
+Patch210:	rpm-5.4.12-fix-rpmpython-module-import-init.patch
+Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
+Patch212:	rpm-5.4.10-cmake-dependency-generator.patch
+
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -609,8 +623,12 @@ Conflicts:	rpm-build < 1:5.3.10-0.20110422.3
 Requires(pre):	coreutils
 %rename		rpmconstant
 %rename		multiarch-utils
+Obsoletes:	rpm-manbo-setup < 2-6
+Provides:	rpm-manbo-setup = 2-6
+Obsoletes:	rpm-mandriva-setup < 1.140-6
+Provides:	rpm-mandriva-setup = 1.140-6
+%rename		rpm-mandriva-setup
 %rename		rpm-manbo-setup
-%rename		rpm-%{_target_vendor}-setup
 Obsoletes:	haskell-macros < 6.4-5
 
 %description
@@ -689,7 +707,12 @@ Conflicts:	rpmlint < 1.4-4
 Conflicts:	multiarch-utils < 1:5.3.10
 Conflicts:	rpm < 1:5.4.4-32
 Obsoletes:	rpm5-manbo-setup
+Obsoletes:	rpm-manbo-setup-build < 2-6
+Provides:	rpm-manbo-setup-build = 2-6
+Obsoletes:	rpm-mandriva-setup-build < 1.140-6
+Provides:	rpm-mandriva-setup-build = 1.140-6
 %rename		rpm-manbo-setup-build
+%rename		rpm-mandriva-setup-build
 # avoid depnendencies outside of standard perl library, rather make optional
 %define __noautoreqfiles %{_rpmhome}/bin/pom2spec
 Suggests:	perl(LWP::UserAgent) perl(XML::LibXML)
@@ -790,6 +813,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch5 -p1 -b .distpatt~
 %patch15 -p1 -b .trigger_once~
 %endif
+%patch6 -p1 -b .keyserver~
+%patch7 -p1 -b .libexec~
 #%%patch21 -p1 -b .loop_warnings~
 #%%patch22 -p1 -b .55810~
 #patch27 -p1 -b .mdv~
@@ -937,9 +962,16 @@ This package contains the RPM API documentation generated in HTML format.
 # (tpg) enable only for cooker
 # omv2013.0 branch is not a cooker anymore so it is safe
 # to push this
-%if %distro_branch == "Cooker"
-%patch203 -p1 -b .static
+%if "%{distro_branch}" == "Cooker"
+%patch203 -p1 -b .static~
 %endif
+%patch204 -p1 -b .libpackage~
+%patch205 -p1 -b .aarch64~
+%patch206 -p1 -b .aarch64_multiarch
+%patch207 -p1 -b .update_config.subguess
+%patch210 -p1 -b .rpmpythonmod~
+%patch211 -p1 -b .rpmpythontrunc~
+%patch212 -p1 -b .cmakedeps~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
@@ -1067,7 +1099,8 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 
 %if %{with perl}
 pushd RPMBDB-*
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}" CCCDLFLAGS="-fno-PIE -fPIC"
+sed -i -e 's,-fPIC -fno-PIE,-fno-PIE -fPIC,g' ../perl/Makefile.perl
 %make
 popd
 %endif
@@ -1306,6 +1339,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/perl.req
 %{_rpmhome}/php.prov
 %{_rpmhome}/php.req
+%{_rpmhome}/cmakedeps.sh
 %{_rpmhome}/pkgconfigdeps.sh
 %{_rpmhome}/pythondeps.sh
 %{_rpmhome}/pythoneggs.py

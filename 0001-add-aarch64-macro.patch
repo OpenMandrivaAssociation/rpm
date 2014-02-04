@@ -1,0 +1,38 @@
+From 176c418b1a08ba9a5f9a5497270d0b2aab1128a7 Mon Sep 17 00:00:00 2001
+From: Alexander Khryukin <alexander@mezon.ru>
+Date: Fri, 13 Dec 2013 16:53:18 +0000
+Subject: [PATCH] add aarch64 macro
+
+---
+ cpu-os-macros/aarch64-linux/macros | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 cpu-os-macros/aarch64-linux/macros
+
+diff --git a/cpu-os-macros/aarch64-linux/macros b/cpu-os-macros/aarch64-linux/macros
+new file mode 100644
+index 0000000..f9db664
+--- /dev/null
++++ b/cpu-os-macros/aarch64-linux/macros
+@@ -0,0 +1,19 @@
++# Per-platform rpm configuration file.
++
++#==============================================================================
++# ---- per-platform macros.
++#
++%_arch                  aarch64
++%_os                    linux
++%_gnu                   -gnu
++%optflags               -O2 -fPIC -fomit-frame-pointer -fweb -frename-registers -Wl,-O2,-z,combreloc,-z,relro,--enable-new-dtags,--hash-style=gnu -g
++
++#==============================================================================
++# ---- configure macros.
++#
++%_lib                   lib64
++
++#---------------------------------------------------------------------
++#       Multilibs
++%_multilibno            2
++%_multilibpatt          (/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
+-- 
+1.8.3.2
+
