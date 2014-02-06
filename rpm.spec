@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}3
+Release:	%{?prereldate:0.%{prereldate}.}5
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -507,15 +507,19 @@ Patch212:	rpm-5.4.10-configure-disable-static.patch
 Patch215:	rpm-5.4.13-fix-free-of-memory-still-in-use.patch
 Patch216:	rpm-5.4.13-perl-bindings-do-not-use-xmalloc.patch
 
-# (bero) Add libpackage macro -- these lines are replicated into way too many spec files
+# (bero): Add libpackage macro -- these lines are replicated into way too many spec files
 Patch217:	rpm-5.4.10-libpackage-macro.patch
 # backport from cvs, do not clobber errno
 Patch218:	rpm_patchset_17344.diff
-# fedya add aarch64 macro
-Patch219:	0001-add-aarch64-macro.patch
-Patch220:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
-Patch221:	fix-config-sub-in-configure.patch
-Patch222:	rpm-5.4.10-cmake-dependency-generator.patch
+Patch219:	rpm-5.4.14-allow-overriding-etcrpm-etc-during-runtime.patch
+# (fedya): add aarch64 macro
+Patch220:	0001-add-aarch64-macro.patch
+Patch221:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
+Patch222:	fix-config-sub-in-configure.patch
+Patch223:	rpm-5.4.10-cmake-dependency-generator.patch
+# there's some funky businiss going on with ABF where omv macros gets used,
+# so let's make our variables read only for now...
+Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -933,10 +937,12 @@ This package contains the RPM API documentation generated in HTML format.
 %patch216 -p1 -b .xmalloc~
 %patch217 -p1 -b .libpackage~
 %patch218 -p0 -b .errno~
-%patch219 -p1 -b .aarch64~
-%patch220 -p1 -b .aarch64_multiarch
-%patch221 -p1 -b .update_config.subguess
-%patch222 -p1 -b .cmakedeps~
+%patch219 -p1 -b .etcrpm~
+%patch220 -p1 -b .aarch64~
+%patch221 -p1 -b .aarch64_multiarch
+%patch222 -p1 -b .update_config.subguess
+%patch223 -p1 -b .cmakedeps~
+%patch224 -p1 -b .ro~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
