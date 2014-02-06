@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}2
+Release:	%{?prereldate:0.%{prereldate}.}3
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -98,6 +98,10 @@ Patch4:		rpm-5.3.8-disttag-distsuffix-fallback.patch
 # time to come up with better pattern fix..
 # status: needs to be fixed properly, but can be merged upstream
 Patch5:		rpm-5.3.8-distepoch-pattern-hack.patch
+# Don't disable keyserver queries
+Patch6:		rpm-5.4.10-use-keyserver.patch
+# Don't override libexecdir, that's bogus
+Patch7:		rpm-5.4.10-no-libexecdir-override.patch
 # fixes a typo in russian translation (#62333)
 # status: needs to be pushed back to the Russian i18n project
 Patch11:	rpm-5.4.9-fix-russian-typo.patch
@@ -507,6 +511,11 @@ Patch216:	rpm-5.4.13-perl-bindings-do-not-use-xmalloc.patch
 Patch217:	rpm-5.4.10-libpackage-macro.patch
 # backport from cvs, do not clobber errno
 Patch218:	rpm_patchset_17344.diff
+# fedya add aarch64 macro
+Patch219:	0001-add-aarch64-macro.patch
+Patch220:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
+Patch221:	fix-config-sub-in-configure.patch
+Patch222:	rpm-5.4.10-cmake-dependency-generator.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -781,6 +790,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch5 -p1 -b .distpatt~
 %patch15 -p1 -b .trigger_once~
 %endif
+%patch6 -p1 -b .keyserver~
+%patch7 -p1 -b .libexec~
 #%%patch21 -p1 -b .loop_warnings~
 #%%patch22 -p1 -b .55810~
 #patch27 -p1 -b .mdv~
@@ -922,6 +933,10 @@ This package contains the RPM API documentation generated in HTML format.
 %patch216 -p1 -b .xmalloc~
 %patch217 -p1 -b .libpackage~
 %patch218 -p0 -b .errno~
+%patch219 -p1 -b .aarch64~
+%patch220 -p1 -b .aarch64_multiarch
+%patch221 -p1 -b .update_config.subguess
+%patch222 -p1 -b .cmakedeps~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1048,7 +1063,8 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 
 %if %{with perl}
 pushd RPMBDB-*
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}" CCCDLFLAGS="-fno-PIE -fPIC"
+sed -i -e 's,-fPIC -fno-PIE,-fno-PIE -fPIC,g' ../perl/Makefile.perl
 %make
 popd
 %endif
@@ -1057,6 +1073,9 @@ popd
 make check
 
 %install
+# (tpg) THIS IS VERY IMPORTANT !!!
+install -m644 %{SOURCE100} -D %{buildroot}%{_sysconfdir}/RPM-GPG-KEYS/OMA-Cooker-PubKey.asc
+
 %makeinstall_std
 %if %{with perl}
 %makeinstall_std -C RPMBDB-*
@@ -1183,6 +1202,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/rpmpopt
 %{_rpmhome}/platform/*/macros
 %config(noreplace) %{_localstatedir}/lib/rpm/DB_CONFIG
+%{_sysconfdir}/RPM-GPG-KEYS/OMA-Cooker-PubKey.asc
 
 %dir %{_localstatedir}/spool/repackage
 %dir %{_rpmhome}
@@ -1281,6 +1301,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/perl.req
 %{_rpmhome}/php.prov
 %{_rpmhome}/php.req
+%{_rpmhome}/cmakedeps.sh
 %{_rpmhome}/pkgconfigdeps.sh
 %{_rpmhome}/pythondeps.sh
 %{_rpmhome}/pythoneggs.py
