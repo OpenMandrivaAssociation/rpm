@@ -530,6 +530,7 @@ Patch207:	fix-config-sub-in-configure.patch
 Patch210:	rpm-5.4.12-fix-rpmpython-module-import-init.patch
 Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
 Patch212:	rpm-5.4.10-cmake-dependency-generator.patch
+Patch213:	0001-Add-support-of-armv6j-hardfloat-for-RaspberryPi-port.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -972,6 +973,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch210 -p1 -b .rpmpythonmod~
 %patch211 -p1 -b .rpmpythontrunc~
 %patch212 -p1 -b .cmakedeps~
+%patch213 -p1 -b .rpi-arm
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
