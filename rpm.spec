@@ -1130,8 +1130,13 @@ cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 install -d %{buildroot}%{multiarch_bindir}
 install -d %{buildroot}%{multiarch_includedir}
 %if "%{_lib}" == "lib64"
+%ifnarch aarch64
 install -d %{buildroot}%(linux32 rpm -E %%{multiarch_bindir})
 install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
+%else
+install -d %{buildroot}
+install -d %{buildroot}%{multiarch_includedir}
+
 %endif
 
 # should really be handled by make script..
