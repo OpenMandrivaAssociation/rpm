@@ -493,20 +493,16 @@ Patch200:	rpm-5.4.10-dont-silence-patch-output.patch
 Patch201:	rpm-5.4.10-fix-log-install-remove-to-syslog.patch
 Patch202:	rpm-5.4.10-armv7hl-rpm-macros-hardfloat-abi.patch
 Patch203:	rpm-5.4.10-postpone_subpackage_build_failures.patch
-
 # Do not generate pythonegg provides for python3 until we find a better solution
 Patch204:       rpm-5.4.10-python3-egg-reqs.patch
-
 Patch205:	rpm-5.4.12-fix-squirrel-version-check.patch
 Patch209:	rpm-5.4.12-fix-rpmlua-print.patch
 Patch210:	rpm-5.4.13-fix-rpmpython-module-import-init.patch
 Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
-
 # (tpg) do not build static libs by default
 Patch212:	rpm-5.4.10-configure-disable-static.patch
 Patch215:	rpm-5.4.13-fix-free-of-memory-still-in-use.patch
 Patch216:	rpm-5.4.13-perl-bindings-do-not-use-xmalloc.patch
-
 # (bero): Add libpackage macro -- these lines are replicated into way too many spec files
 Patch217:	rpm-5.4.10-libpackage-macro.patch
 # backport from cvs, do not clobber errno
@@ -520,6 +516,7 @@ Patch223:	rpm-5.4.10-cmake-dependency-generator.patch
 # there's some funky businiss going on with ABF where omv macros gets used,
 # so let's make our variables read only for now...
 Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
+Patch215:	0001-Add-support-of-armv6j-hardfloat-for-RaspberryPi-port.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -952,6 +949,7 @@ mkdir -p cpu-os-macros
 tar -xf %{SOURCE3} -C cpu-os-macros
 %patch145 -p1
 %patch202 -p1
+%patch225 -p1 -b .rpi-arm
 
 %build
 %configure2_5x	--enable-nls \
