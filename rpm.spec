@@ -1150,7 +1150,7 @@ install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
 %else
 install -d %{buildroot}
 install -d %{buildroot}%{multiarch_includedir}
-
+%endif
 %endif
 
 # should really be handled by make script..
