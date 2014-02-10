@@ -318,12 +318,8 @@ Patch140:	rpm-5.4.7-rpmv3-support.patch
 Patch143:	rpm-5.4.7-mono-find-requires-strip-newlines.patch
 # status: ready
 Patch144:	rpm-5.4.8-URPM-build-fix.patch
-# status: undefined
-Patch145:	rpm-5.4.8-add-armv7l-specific-macros.patch
 # status: keep locally, might drop this one later..
 Patch146:	rpm-5.4.9-support-signatures-and-digest-disablers.patch
-# status: undefined
-Patch147:	rpm-5.4.9-add-x32-macros.patch
 # status: can be merged, but doesn't really matter as it's to be removed and
 # we now anyways disable the support in question..
 Patch150:	rpm-5.4.9-dont-remap-i18n-strings-if-enabled.patch
@@ -491,7 +487,6 @@ Patch198:	rpm-5.4.10-enable-nofsync-for-rpm-rebuilddb.patch
 Patch199:	rpm-5.4.10-fix-font-dep-misidentification.patch
 Patch200:	rpm-5.4.10-dont-silence-patch-output.patch
 Patch201:	rpm-5.4.10-fix-log-install-remove-to-syslog.patch
-Patch202:	rpm-5.4.10-armv7hl-rpm-macros-hardfloat-abi.patch
 Patch203:	rpm-5.4.10-postpone_subpackage_build_failures.patch
 # Do not generate pythonegg provides for python3 until we find a better solution
 Patch204:       rpm-5.4.10-python3-egg-reqs.patch
@@ -509,14 +504,12 @@ Patch217:	rpm-5.4.10-libpackage-macro.patch
 Patch218:	rpm_patchset_17344.diff
 Patch219:	rpm-5.4.14-allow-overriding-etcrpm-etc-during-runtime.patch
 # (fedya): add aarch64 macro
-Patch220:	0001-add-aarch64-macro.patch
 Patch221:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
 Patch222:	fix-config-sub-in-configure.patch
 Patch223:	rpm-5.4.10-cmake-dependency-generator.patch
 # there's some funky businiss going on with ABF where omv macros gets used,
 # so let's make our variables read only for now...
 Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
-Patch215:	0001-Add-support-of-armv6j-hardfloat-for-RaspberryPi-port.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -775,7 +768,7 @@ This package contains the RPM API documentation generated in HTML format.
 %endif
 
 %prep
-%setup -q -a5
+%setup -q -a3 -a5
 %patch111 -p1 -b .script_macros~
 # These patches has been commited hastily upstream for review,
 # keeping them around here for now untill finished...
@@ -877,7 +870,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch143 -p1 -b .mono_newline~
 %patch144 -p1 -b .urpm~
 %patch146 -p1 -b .nosig~
-%patch147 -p1
 %patch150 -p1 -b .i18n_str~
 %patch151 -p1 -b .noi18n~
 %patch152 -p1 -b .l10ndir~
@@ -936,7 +928,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch217 -p1 -b .libpackage~
 %patch218 -p0 -b .errno~
 %patch219 -p1 -b .etcrpm~
-%patch220 -p1 -b .aarch64~
 %patch221 -p1 -b .aarch64_multiarch
 %patch222 -p1 -b .update_config.subguess
 %patch223 -p1 -b .cmakedeps~
@@ -944,12 +935,6 @@ This package contains the RPM API documentation generated in HTML format.
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
-
-mkdir -p cpu-os-macros
-tar -xf %{SOURCE3} -C cpu-os-macros
-%patch145 -p1
-%patch202 -p1
-%patch225 -p1 -b .rpi-arm
 
 %build
 %configure2_5x	--enable-nls \
