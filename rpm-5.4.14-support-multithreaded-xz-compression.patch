@@ -1,0 +1,77 @@
+--- rpm-5.4.14/macros/mandriva.in.multithread~	2014-02-10 19:39:35.290104716 +0100
++++ rpm-5.4.14/macros/mandriva.in	2014-02-10 19:39:40.203643128 +0100
+@@ -124,6 +124,7 @@ end\
+ 
+ # use XZ to compress binary packages:
+ %_binary_payload			w.xzdio
++%_xz_threads				-1
+ 
+ %_duplicate_files_terminate_build	1
+ %_unpackaged_subdirs_terminate_build	0
+--- rpm-5.4.14/rpmio/xzdio.c.multithread~	2014-02-10 19:39:19.242773941 +0100
++++ rpm-5.4.14/rpmio/xzdio.c	2014-02-10 19:39:24.576326998 +0100
+@@ -10,6 +10,8 @@
+ 
+ #if defined(WITH_XZ)
+ 
++#define LZMA_UNSTABLE
++
+ /* provide necessary defines for inclusion of <lzma.h>
+    similar to LZMAUtils's internal <common.h> and as
+    explicitly stated in the top-level comment of <lzma.h> */
+@@ -68,6 +70,13 @@ static XZFILE *xzopen_internal(const cha
+     XZFILE *xzfile;
+     lzma_stream tmp;
+     lzma_ret ret;
++    int threads = rpmExpandNumeric("%{_xz_threads}");
++    /* We set the memlimit for decompression to 100MiB which should be
++     * more than enough to be sufficient for level 9 which requires 65 MiB.
++     */
++    uint64_t memory_limit = rpmExpandNumeric("%{_xz_memlimit}");
++    if (!memory_limit)
++	memory_limit = 100<<20;
+ 
+     for (; *mode != '\0'; mode++) {
+ 	if (*mode == 'w')
+@@ -93,19 +102,36 @@ static XZFILE *xzopen_internal(const cha
+     xzfile->eof = 0;
+     tmp = (lzma_stream)LZMA_STREAM_INIT;
+     xzfile->strm = tmp;
++
+     if (encoding) {
+ 	if (xz) {
+-	    ret = lzma_easy_encoder(&xzfile->strm, level, LZMA_CHECK_CRC32);
++	    if (!threads) {
++		ret = lzma_easy_encoder(&xzfile->strm, level, LZMA_CHECK_CRC32);
++	    } else {
++		lzma_options_lzma opt_lzma;
++		lzma_mt mt_options;
++
++		if (threads == -1)
++		    threads = sysconf(_SC_NPROCESSORS_ONLN);
++
++	        mt_options.threads = threads;
++		mt_options.timeout = 300;
++		mt_options.check = LZMA_CHECK_CRC32;
++		assert(!lzma_lzma_preset(&opt_lzma, level));
++		lzma_filter filters[LZMA_FILTERS_MAX + 1];
++		filters[0].id = LZMA_FILTER_LZMA2;
++		filters[0].options = &opt_lzma;
++		filters[1].id = LZMA_VLI_UNKNOWN;
++		mt_options.filters = filters;
++		ret = lzma_stream_encoder_mt(&xzfile->strm, &mt_options);
++	    }
+ 	} else {
+ 	    lzma_options_lzma options;
+ 	    (void) lzma_lzma_preset(&options, level);
+ 	    ret = lzma_alone_encoder(&xzfile->strm, &options);
+ 	}
+     } else {
+-	/* We set the memlimit for decompression to 100MiB which should be
+-	 * more than enough to be sufficient for level 9 which requires 65 MiB.
+-	 */
+-	ret = lzma_auto_decoder(&xzfile->strm, 100<<20, 0);
++	ret = lzma_auto_decoder(&xzfile->strm, memory_limit, 0);
+     }
+     if (ret != LZMA_OK) {
+ 	(void) fclose(fp);
