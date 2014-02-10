@@ -26,15 +26,6 @@
  %{nil}
  
  # Hardened Servers opt flags.
-@@ -179,7 +177,7 @@ export CFLAGS="%optflags -fPIE"; export
- #
- 
- # We disable the gpg key automatic querying 
--%_hkp_keyserver_query   %nil
-+%_hkp_keyserver_query   %{nil}
- 
- 
- #	Verify digest/signature flags for various rpm modes:
 @@ -207,10 +205,10 @@ export CFLAGS="%optflags -fPIE"; export
  
  # when %_with_git_repository is set, these macros modify the behaviour of "%prep" step:

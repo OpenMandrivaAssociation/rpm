@@ -99,6 +99,10 @@ Patch4:		rpm-5.3.8-disttag-distsuffix-fallback.patch
 # time to come up with better pattern fix..
 # status: needs to be fixed properly, but can be merged upstream
 Patch5:		rpm-5.3.8-distepoch-pattern-hack.patch
+# Don't disable keyserver queries
+Patch6:		rpm-5.4.10-use-keyserver.patch
+# Don't override libexecdir, that's bogus
+Patch7:		rpm-5.4.10-no-libexecdir-override.patch
 # fixes a typo in russian translation (#62333)
 # status: needs to be pushed back to the Russian i18n project
 Patch11:	rpm-5.4.9-fix-russian-typo.patch
@@ -485,29 +489,29 @@ Patch199:	rpm-5.4.10-fix-font-dep-misidentification.patch
 Patch200:	rpm-5.4.10-dont-silence-patch-output.patch
 Patch201:	rpm-5.4.10-fix-log-install-remove-to-syslog.patch
 Patch203:	rpm-5.4.10-postpone_subpackage_build_failures.patch
-
 # Do not generate pythonegg provides for python3 until we find a better solution
 Patch204:       rpm-5.4.10-python3-egg-reqs.patch
-
 Patch205:	rpm-5.4.12-fix-squirrel-version-check.patch
 Patch209:	rpm-5.4.12-fix-rpmlua-print.patch
 Patch210:	rpm-5.4.13-fix-rpmpython-module-import-init.patch
 Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
-
 # (tpg) do not build static libs by default
 Patch212:	rpm-5.4.10-configure-disable-static.patch
 Patch215:	rpm-5.4.13-fix-free-of-memory-still-in-use.patch
 Patch216:	rpm-5.4.13-perl-bindings-do-not-use-xmalloc.patch
-
-# (bero) Add libpackage macro -- these lines are replicated into way too many spec files
+# (bero): Add libpackage macro -- these lines are replicated into way too many spec files
 Patch217:	rpm-5.4.10-libpackage-macro.patch
 # backport from cvs, do not clobber errno
 Patch218:	rpm_patchset_17344.diff
 Patch219:	rpm-5.4.14-allow-overriding-etcrpm-etc-during-runtime.patch
+# (fedya): add aarch64 macro
+Patch221:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
+Patch222:	fix-config-sub-in-configure.patch
+Patch223:	rpm-5.4.10-cmake-dependency-generator.patch
 # there's some funky businiss going on with ABF where omv macros gets used,
 # so let's make our variables read only for now...
-Patch220:	rpm-5.4.14-moondrake-ro-variables.patch
-Patch221:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
+Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
+Patch225:	rpm-5.4.14-add-more-archs-to-arm-macro.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -782,6 +786,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch5 -p1 -b .distpatt~
 %patch15 -p1 -b .trigger_once~
 %endif
+%patch6 -p1 -b .keyserver~
+%patch7 -p1 -b .libexec~
 #%%patch21 -p1 -b .loop_warnings~
 #%%patch22 -p1 -b .55810~
 #patch27 -p1 -b .mdv~
@@ -872,6 +878,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch156 -p1 -b .php_deps~
 %patch157 -p1 -b .perl_deps~
 %patch158 -p1 -b .dl_error~
+%patch159 -p1 -b .ignorearch~
 %patch138 -p1 -b .trigtrans~
 %patch160 -p1 -b .xz_level~
 %patch161 -p1 -b .uclibc_buildroot~
@@ -923,8 +930,11 @@ This package contains the RPM API documentation generated in HTML format.
 %patch217 -p1 -b .libpackage~
 %patch218 -p0 -b .errno~
 %patch219 -p1 -b .etcrpm~
-%patch220 -p1 -b .ro~
-%patch221 -p1 -b .aarch64_multiarch
+%patch221 -p1 -b .aarch64_multiarch~
+%patch222 -p1 -b .update_config.subguess~
+%patch223 -p1 -b .cmakedeps~
+%patch224 -p1 -b .ro~
+%patch225 -p1 -b .armx~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1046,7 +1056,8 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 
 %if %{with perl}
 pushd RPMBDB-*
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}" CCCDLFLAGS="-fno-PIE -fPIC"
+sed -i -e 's,-fPIC -fno-PIE,-fno-PIE -fPIC,g' ../perl/Makefile.perl
 %make
 popd
 %endif
@@ -1055,6 +1066,9 @@ popd
 make check
 
 %install
+# (tpg) THIS IS VERY IMPORTANT !!!
+install -m644 %{SOURCE100} -D %{buildroot}%{_sysconfdir}/RPM-GPG-KEYS/OMA-Cooker-PubKey.asc
+
 %makeinstall_std
 %if %{with perl}
 %makeinstall_std -C RPMBDB-*
@@ -1186,6 +1200,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/rpmpopt
 %{_rpmhome}/platform/*/macros
 %config(noreplace) %{_localstatedir}/lib/rpm/DB_CONFIG
+%{_sysconfdir}/RPM-GPG-KEYS/OMA-Cooker-PubKey.asc
 
 %dir %{_localstatedir}/spool/repackage
 %dir %{_rpmhome}
@@ -1284,6 +1299,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/perl.req
 %{_rpmhome}/php.prov
 %{_rpmhome}/php.req
+%{_rpmhome}/cmakedeps.sh
 %{_rpmhome}/pkgconfigdeps.sh
 %{_rpmhome}/pythondeps.sh
 %{_rpmhome}/pythoneggs.py

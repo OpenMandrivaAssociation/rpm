@@ -7,7 +7,7 @@
 -# Default extension to use (for info files)
 +# Default extension to use (for man & info files)
  %_extension .xz
-+%_compress xz -0f --text
++%_compress xz -0f --text -T0
  
  
  # Macro: %{mklibname <name> [<major> [<minor>]] [-s] [-d]}
