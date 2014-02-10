@@ -510,6 +510,7 @@ Patch223:	rpm-5.4.10-cmake-dependency-generator.patch
 # there's some funky businiss going on with ABF where omv macros gets used,
 # so let's make our variables read only for now...
 Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
+Patch225:	rpm-5.4.14-add-more-archs-to-arm-macro.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
