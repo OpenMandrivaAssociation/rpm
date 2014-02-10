@@ -1,5 +1,5 @@
---- rpm-5.4.14/macros/mandriva.in.multithread~	2014-02-10 19:39:35.290104716 +0100
-+++ rpm-5.4.14/macros/mandriva.in	2014-02-10 19:39:40.203643128 +0100
+--- rpm-5.4.14/macros/mandriva.in.multithread~	2014-02-10 20:43:48.537823537 +0100
++++ rpm-5.4.14/macros/mandriva.in	2014-02-10 20:43:48.537823537 +0100
 @@ -124,6 +124,7 @@ end\
  
  # use XZ to compress binary packages:
@@ -8,8 +8,8 @@
  
  %_duplicate_files_terminate_build	1
  %_unpackaged_subdirs_terminate_build	0
---- rpm-5.4.14/rpmio/xzdio.c.multithread~	2014-02-10 19:39:19.242773941 +0100
-+++ rpm-5.4.14/rpmio/xzdio.c	2014-02-10 19:39:24.576326998 +0100
+--- rpm-5.4.14/rpmio/xzdio.c.multithread~	2012-04-15 23:20:53.000000000 +0200
++++ rpm-5.4.14/rpmio/xzdio.c	2014-02-10 22:58:01.987856584 +0100
 @@ -10,6 +10,8 @@
  
  #if defined(WITH_XZ)
@@ -33,7 +33,7 @@
  
      for (; *mode != '\0'; mode++) {
  	if (*mode == 'w')
-@@ -93,19 +102,36 @@ static XZFILE *xzopen_internal(const cha
+@@ -93,19 +102,37 @@ static XZFILE *xzopen_internal(const cha
      xzfile->eof = 0;
      tmp = (lzma_stream)LZMA_STREAM_INIT;
      xzfile->strm = tmp;
@@ -41,11 +41,12 @@
      if (encoding) {
  	if (xz) {
 -	    ret = lzma_easy_encoder(&xzfile->strm, level, LZMA_CHECK_CRC32);
-+	    if (!threads) {
++	    if (!threads || threads == 1) {
 +		ret = lzma_easy_encoder(&xzfile->strm, level, LZMA_CHECK_CRC32);
 +	    } else {
 +		lzma_options_lzma opt_lzma;
 +		lzma_mt mt_options;
++		memset(&mt_options, 0, sizeof(mt_options));
 +
 +		if (threads == -1)
 +		    threads = sysconf(_SC_NPROCESSORS_ONLN);
