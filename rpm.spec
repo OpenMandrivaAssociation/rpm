@@ -967,13 +967,11 @@ This package contains the RPM API documentation generated in HTML format.
 %patch203 -p1 -b .static~
 %endif
 %patch204 -p1 -b .libpackage~
-%patch205 -p1 -b .aarch64~
 %patch206 -p1 -b .aarch64_multiarch
 %patch207 -p1 -b .update_config.subguess
 %patch210 -p1 -b .rpmpythonmod~
 %patch211 -p1 -b .rpmpythontrunc~
 %patch212 -p1 -b .cmakedeps~
-%patch213 -p1 -b .rpi-arm
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
@@ -984,6 +982,8 @@ mkdir -p cpu-os-macros
 tar -xf %{SOURCE3} -C cpu-os-macros
 %patch145 -p1
 %patch200 -p1
+%patch205 -p1
+%patch213 -p1
 
 %build
 %configure2_5x	--enable-nls \
