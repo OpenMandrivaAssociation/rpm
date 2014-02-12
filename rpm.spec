@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}5
+Release:	%{?prereldate:0.%{prereldate}.}6
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -940,6 +940,10 @@ This package contains the RPM API documentation generated in HTML format.
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
+
+# (proyvind): hack around to force static linking against liblzma because of
+# it's unstable multithreading API & ABI
+sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 
 %build
 %configure2_5x	--enable-nls \
