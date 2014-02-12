@@ -288,7 +288,7 @@ Patch132:	rpm-5.4.9-rpmpython-fix-input.patch
 # status: same as for other dep gen patches
 Patch133:	rpm-5.4.7-generate-devel-provides-outside-of-libdirs.patch
 # status: ready
-Patch134:	rpm-5.4.7-actually-perform-linking-against-internal-lua.patch
+Patch134:	rpm-5.4.14-actually-perform-linking-against-internal-lua.patch
 # status: ready
 Patch135:	rpm-5.4.7-no-seqid_init-on-rdonly-database.patch
 # status: same as for other dep gen patches
@@ -863,7 +863,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch131 -p1 -b .dlopen~
 %patch132 -p1 -b .py_input~
 %patch133 -p1 -b .devel_prov~
-#patch134 -p1 -b .lua~
+%patch134 -p1 -b .lua~
 %patch135 -p1 -b .db_rdonly~
 %patch136 -p1 -b .ds_merge~
 %patch137 -p1 -b .slash~
