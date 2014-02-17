@@ -420,7 +420,7 @@ Patch176:	rpm-5.4.10-drop-rpath-from-perl-module.patch
 Patch178:	rpm-5.4.10-crosscompile.patch
 # tool for automatically checking and fixing broken rpmdb
 # status: probably' worth merging upstream
-Patch179:	rpm-5.4.13-rpmdbchk.patch
+Patch179:	rpm-5.4.14-rpmdbchk.patch
 # adds casts for C++ compatibility
 # status: ready
 Patch180:	rpm-5.4.10-rpmdb-typecasts.patch

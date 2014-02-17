@@ -1,5 +1,5 @@
---- rpm-5.4.13/tools/Makefile.am.rpmdbchk~	2013-08-16 22:25:27.000000000 +0200
-+++ rpm-5.4.13/tools/Makefile.am	2013-08-26 21:34:09.499978132 +0200
+--- rpm-5.4.14/tools/Makefile.am.rpmdbchk~	2013-08-18 21:40:58.000000000 +0200
++++ rpm-5.4.14/tools/Makefile.am	2014-02-17 17:52:10.032157038 +0100
 @@ -33,7 +33,7 @@ EXTRA_PROGRAMS += augtool cudftool dbcon
  	nix-build nix-channel nix-collect-garbage \
  	nix-log2xml nix-prefetch-url nix-pull nix-push \
@@ -32,9 +32,9 @@
  ##  keyctl(1) clone
  ##
  rpmkey_SOURCES =        rpmkey.c
---- rpm-5.4.13/tools/rpmdbchk.c.rpmdbchk~	2013-08-26 21:33:38.684435581 +0200
-+++ rpm-5.4.13/tools/rpmdbchk.c	2013-08-26 21:33:38.684435581 +0200
-@@ -0,0 +1,296 @@
+--- rpm-5.4.14/tools/rpmdbchk.c.rpmdbchk~	2014-02-17 17:52:10.032157038 +0100
++++ rpm-5.4.14/tools/rpmdbchk.c	2014-02-17 17:52:28.846342856 +0100
+@@ -0,0 +1,297 @@
 +#include <arpa/inet.h>
 +#include <stdint.h>
 +#include <sys/types.h>
@@ -70,12 +70,9 @@
 +};
 +
 +static int
-+rpmdb_check(const char *prefix, const char *path, uint32_t **state, uint32_t *nkeys, struct node **broken)
++rpmdb_check(uint32_t **state, uint32_t *nkeys, struct node **broken)
 +{
 +    rpmts ts = NULL;
-+
-+    const char * dbpath = path ? path : rpmExpand("%{?_dbpath}%{?!_dbpath:/var/lib/rpm}", NULL);
-+
 +    DBC *dbcp = NULL;
 +    dbiIndex dbi = NULL;
 +    DBT key;
@@ -92,8 +89,7 @@
 +
 +    ts = rpmtsCreate();
 +
-+    addMacro(NULL, "_dbpath", NULL, dbpath, -1);
-+    rpmtsSetRootDir(ts, prefix && prefix[0] ? prefix : NULL);
++    rpmtsSetRootDir(ts, rootPath && rootPath[0] ? rootPath : NULL);
 +    if(rpmtsOpenDB(ts, O_RDONLY))
 +	goto exit;
 +
@@ -150,8 +146,8 @@
 +	/* TODO: callbacks for status output? */
 +	if (tmp < (int) (pct + 0.5)) {
 +	    fprintf(stderr, "\rchecking %s%s/Packages: %u/%u %d%%",
-+			prefix && prefix[0] ? prefix : "",
-+			dbpath, hdrNum, *nkeys, (int) pct);
++			rootPath && rootPath[0] ? rootPath : "",
++			rpmdbPath, hdrNum, *nkeys, (int) pct);
 +	}
 +	const char *msg = NULL;
 +	int lvl = headerCheck(rpmtsDig(ts), data.data, data.size, &msg);
@@ -230,13 +226,13 @@
 +}
 +
 +static int
-+rpmdb_fix(const char *prefix, const char *path, uint32_t *state, uint32_t nkeys, struct node *broken)
++rpmdb_fix(uint32_t *state, uint32_t nkeys, struct node *broken)
 +{
 +    DB * dbp;
 +    DBT key;
 +    struct stat sb;
-+    const char * db = rpmGetPath(prefix && prefix[0] ? prefix : "", path, "/Packages", NULL);
-+    const char * lost = rpmGetPath(prefix && prefix[0] ? prefix : "", path, "/broken", NULL);
++    const char * db = rpmGetPath(rootPath && rootPath[0] ? rootPath : "", rpmdbPath, "/Packages", NULL);
++    const char * lost = rpmGetPath(rootPath && rootPath[0] ? rootPath : "", rpmdbPath, "/broken", NULL);
 +    int ret, t_ret;
 +    uint32_t i;
 +
@@ -317,13 +313,18 @@
 +
 +    rc = rpmReadConfigFiles(NULL, NULL);
 +
++    if(!rpmdbPath)
++	rpmdbPath = rpmExpand("%{?_dbpath}%{?!_dbpath:/var/lib/rpm}", NULL);
++    else
++	addMacro(NULL, "_dbpath", NULL, rpmdbPath, -1);
 +
-+    rc = rpmdb_check(rootPath, rpmdbPath, &state, &nkeys, &broken);
++
++    rc = rpmdb_check(&state, &nkeys, &broken);
 +    printf("%d/%d (%f%%) headers damaged", rc, nkeys, (float)rc/nkeys);
 +    printf("\n");
 +    if (!checkOnly && rc) {
 +	printf("fixing...\n");
-+	rc = rpmdb_fix(rootPath, rpmdbPath, state, nkeys, broken);
++	rc = rpmdb_fix(state, nkeys, broken);
 +    }
 +
 +exit:
