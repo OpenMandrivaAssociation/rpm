@@ -74,7 +74,7 @@
 +{
 +    rpmts ts = NULL;
 +
-+    const char * dbpath = path ? path : rpmExpand("%{?_dbpath}", NULL);
++    const char * dbpath = path ? path : rpmExpand("%{?_dbpath}%{?!_dbpath:/var/lib/rpm}", NULL);
 +
 +    DBC *dbcp = NULL;
 +    dbiIndex dbi = NULL;
