@@ -1,5 +1,5 @@
---- rpm-5.4.14/macros/mandriva.in.multithread~	2014-02-12 14:10:10.238096454 +0100
-+++ rpm-5.4.14/macros/mandriva.in	2014-02-12 14:10:10.244763416 +0100
+--- rpm-5.4.14/macros/mandriva.in.multithread~	2014-02-12 18:38:16.514439100 +0100
++++ rpm-5.4.14/macros/mandriva.in	2014-02-12 18:38:16.514439100 +0100
 @@ -124,6 +124,7 @@ end\
  
  # use XZ to compress binary packages:
@@ -9,7 +9,7 @@
  %_duplicate_files_terminate_build	1
  %_unpackaged_subdirs_terminate_build	0
 --- rpm-5.4.14/rpmio/xzdio.c.multithread~	2012-04-15 23:20:53.000000000 +0200
-+++ rpm-5.4.14/rpmio/xzdio.c	2014-02-12 15:13:43.784029762 +0100
++++ rpm-5.4.14/rpmio/xzdio.c	2014-02-12 20:03:33.424406283 +0100
 @@ -10,6 +10,8 @@
  
  #if defined(WITH_XZ)
@@ -28,7 +28,7 @@
  
      for (; *mode != '\0'; mode++) {
  	if (*mode == 'w')
-@@ -93,9 +97,23 @@ static XZFILE *xzopen_internal(const cha
+@@ -93,9 +97,25 @@ static XZFILE *xzopen_internal(const cha
      xzfile->eof = 0;
      tmp = (lzma_stream)LZMA_STREAM_INIT;
      xzfile->strm = tmp;
@@ -38,6 +38,8 @@
 +	    if (!threads) {
  	    ret = lzma_easy_encoder(&xzfile->strm, level, LZMA_CHECK_CRC32);
 +	    } else {
++		if (threads == -1)
++		    threads = sysconf(_SC_NPROCESSORS_ONLN);
 +		lzma_mt mt_options = {
 +		    .flags = 0,
 +		    .threads = threads,
@@ -52,7 +54,7 @@
  	} else {
  	    lzma_options_lzma options;
  	    (void) lzma_lzma_preset(&options, level);
-@@ -105,9 +123,22 @@ static XZFILE *xzopen_internal(const cha
+@@ -105,9 +125,22 @@ static XZFILE *xzopen_internal(const cha
  	/* We set the memlimit for decompression to 100MiB which should be
  	 * more than enough to be sufficient for level 9 which requires 65 MiB.
  	 */
