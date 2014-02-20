@@ -513,6 +513,7 @@ Patch223:	rpm-5.4.10-cmake-dependency-generator.patch
 Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
 Patch225:	rpm-5.4.14-add-more-archs-to-arm-macro.patch
 Patch226:	rpm-5.4.14-support-multithreaded-xz-compression.patch
+Patch227:	rpm-5.4.14-add-output-sync-to-make-macro.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
