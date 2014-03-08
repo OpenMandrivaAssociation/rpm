@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}6
+Release:	%{?prereldate:0.%{prereldate}.}7
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -76,8 +76,18 @@ Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}-%{srcver}.tar.gz
 # stripping away the rest (along with os specificity) and create a resulting
 # cpu-macros.tar.gz to push upstream would seem like a sane improvement.
 Source2:	rpm.rpmlintrc
-# please just extract this archive and make your modifications to it, then retar
-Source3:	cpu-os-macros.tar
+# In order to more easily cope with merges and avoid issues with binary formats,
+# we're now using the ar format which will give us a pure ascii archive that'll
+# make it possible to track & merge individual changes like with other text files.
+# Unfortunately the format doesn't support paths..
+# recommended way of making changes and updating archive:
+# rm -rf foo
+# pushd foo
+# ar x ../cpu-os-macros.a
+# <perform your changes>
+# popd
+# ar cDr cpu-os-macros.a foo/*macros
+Source3:	cpu-os-macros.a
 Source4:	legacy_compat.macros
 Source5:	RPMBDB-0.1.tar.xz
 Source6:	git-repository--after-tarball
@@ -775,7 +785,11 @@ This package contains the RPM API documentation generated in HTML format.
 %endif
 
 %prep
-%setup -q -a3 -a5
+%setup -q -a5
+mkdir platform
+pushd platform
+ar x %{SOURCE3}
+popd
 %patch111 -p1 -b .script_macros~
 # These patches has been commited hastily upstream for review,
 # keeping them around here for now untill finished...
@@ -1142,7 +1156,10 @@ install -d %{buildroot}/bin
 # if anyone expresses actual interest in this...
 mv %{buildroot}%{_bindir}/rpm %{buildroot}/bin/rpm
 
-cp -r cpu-os-macros %{buildroot}%{_usrlibrpm}/platform
+for i in platform/*macros; do
+    install -m644 $i -D %{buildroot}%{_usrlibrpm}/platform/$(echo `basename $i`|sed -e 's#\.#/#g')
+done
+ 
 install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/legacy_compat.macros
 install -m755 %{SOURCE6} -D %{buildroot}%{_rpmhome}/git-repository--after-tarball
 install -m755 %{SOURCE7} -D %{buildroot}%{_rpmhome}/git-repository--apply-patch
