@@ -514,6 +514,7 @@ Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
 Patch225:	rpm-5.4.14-add-more-archs-to-arm-macro.patch
 Patch226:	rpm-5.4.14-support-multithreaded-xz-compression.patch
 Patch227:	rpm-5.4.14-allocate-large-enough-buffer-to-fit-terminator.patch
+Patch228:	rpm-5.4.14-fix-overlapping-strcpy.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -939,6 +940,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch225 -p1 -b .armx~
 %patch226 -p1 -b .multithread~
 %patch227 -p1 -b .str_term~
+%patch228 -p1 -b .str_overlap~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
