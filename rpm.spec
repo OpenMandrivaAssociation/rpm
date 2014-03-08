@@ -513,6 +513,7 @@ Patch223:	rpm-5.4.10-cmake-dependency-generator.patch
 Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
 Patch225:	rpm-5.4.14-add-more-archs-to-arm-macro.patch
 Patch226:	rpm-5.4.14-support-multithreaded-xz-compression.patch
+Patch227:	rpm-5.4.14-allocate-large-enough-buffer-to-fit-terminator.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -937,6 +938,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch224 -p1 -b .ro~
 %patch225 -p1 -b .armx~
 %patch226 -p1 -b .multithread~
+%patch227 -p1 -b .str_term~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
