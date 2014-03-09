@@ -527,6 +527,7 @@ Patch227:	rpm-5.4.14-add-output-sync-to-make-macro.patch
 Patch228:	rpm-5.4.14-makeinstall_std-preserve-timestamps.patch
 Patch229:	rpm-5.4.14-allocate-large-enough-buffer-to-fit-terminator.patch
 Patch230:	rpm-5.4.14-fix-overlapping-strcpy.patch
+Patch231:	rpm-5.4.14-dont-hide-errors-from-pkgconfig.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -959,6 +960,7 @@ popd
 %patch228 -p1 -b .timestamps~
 %patch229 -p1 -b .str_term~
 %patch230 -p1 -b .str_overlap~
+%patch231 -p1 -b .pcnomuteerr~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
