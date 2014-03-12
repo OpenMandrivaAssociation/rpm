@@ -528,6 +528,7 @@ Patch228:	rpm-5.4.14-makeinstall_std-preserve-timestamps.patch
 Patch229:	rpm-5.4.14-allocate-large-enough-buffer-to-fit-terminator.patch
 Patch230:	rpm-5.4.14-fix-overlapping-strcpy.patch
 Patch231:	rpm-5.4.14-dont-hide-errors-from-pkgconfig.patch
+Patch232:	rpm-5.4.14-find-debuginfo-exit-early-if-none-found.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -961,6 +962,7 @@ popd
 %patch229 -p1 -b .str_term~
 %patch230 -p1 -b .str_overlap~
 %patch231 -p1 -b .pcnomuteerr~
+%patch232 -p1 -b .exitifnone~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
