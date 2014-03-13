@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}59
+Release:	%{?prereldate:0.%{prereldate}.}60
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -531,6 +531,7 @@ Patch210:	rpm-5.4.12-fix-rpmpython-module-import-init.patch
 Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
 Patch212:	rpm-5.4.10-cmake-dependency-generator.patch
 Patch213:	0001-Add-support-of-armv6j-hardfloat-for-RaspberryPi-port.patch
+Patch214:	rpm-5.4.10-only-print-python-debug-output-if-requested.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -972,6 +973,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch210 -p1 -b .rpmpythonmod~
 %patch211 -p1 -b .rpmpythontrunc~
 %patch212 -p1 -b .cmakedeps~
+%patch213 -p1 -b .py_debugout~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
