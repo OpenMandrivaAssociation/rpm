@@ -536,6 +536,7 @@ Patch215:	rpm-5.4.14-add-more-archs-to-arm-macro.patch
 Patch216:	rpm-5.4.14-ruby-archdirs.patch
 Patch217:	rpm-5.4.14-ruby-abi-versioned.patch
 Patch218:	rpm-5.4.14-gem_helper-spec-arg.patch
+Patch219:	rpm-5.4.14-rubygems2-support.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -982,6 +983,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch216 -p1 -b .rubyarchdirs~
 %patch217 -p1 -b .rubyabiver~
 %patch218 -p1 -b .gem_spec~
+%patch219 -p1 -b .rubygems2~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
