@@ -1,0 +1,22 @@
+--- rpm-5.4.14/rpmio/Makefile.am.openmp~	2014-03-15 05:27:50.015295420 +0100
++++ rpm-5.4.14/rpmio/Makefile.am	2014-03-16 04:59:00.875475839 +0100
+@@ -202,7 +202,7 @@ librpmio_la_SOURCES = \
+ 	xzdio.c \
+ 	yarn.c
+ 
+-librpmio_la_LDFLAGS = -release $(LT_CURRENT).$(LT_REVISION)
++librpmio_la_LDFLAGS = -release $(LT_CURRENT).$(LT_REVISION) $(OPENMP_CFLAGS)
+ if HAVE_LD_VERSION_SCRIPT
+ librpmio_la_LDFLAGS += -Wl,@LD_VERSION_SCRIPT_FLAG@,@top_srcdir@/rpmio/librpmio.vers
+ endif
+--- rpm-5.4.14/tools/Makefile.am.openmp~	2014-03-15 05:27:49.455320018 +0100
++++ rpm-5.4.14/tools/Makefile.am	2014-03-16 04:59:00.955472640 +0100
+@@ -306,7 +306,7 @@ endif
+ if WITH_DBSQL
+ pkgbin_PROGRAMS +=	dbsql
+ dbsql_SOURCES	= dbsql.c
+-dbsql_LDFLAGS	= @LDFLAGS_STATIC@ $(LDFLAGS)
++dbsql_LDFLAGS	= @LDFLAGS_STATIC@ $(LDFLAGS) $(OPENMP_CFLAGS)
+ dbsql_LDADD = \
+ 	$(RPMIO_LDADD_COMMON)
+ endif

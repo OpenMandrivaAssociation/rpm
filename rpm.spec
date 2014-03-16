@@ -536,6 +536,7 @@ Patch236:	rpm-5.4.14-null-term-ascii-digest.patch
 Patch237:	rpm-5.4.14-verify-ghosts-broken-logic.patch
 Patch238:	rpm-5.4.14-lua-enable-extra-libs.patch
 Patch239:	rpm-5.4.14-gst-inspect-typo.patch
+Patch240:	rpm-5.4.14-add-missing-openmp-flags.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -977,6 +978,7 @@ popd
 %patch237 -p1 -b .broken_verify~
 %patch238 -p1 -b .lua_posix~
 %patch239 -p1 -b .gst_typo~
+%patch240 -p1 -b .openmp~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
