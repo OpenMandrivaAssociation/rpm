@@ -533,6 +533,7 @@ Patch233:	rpm-5.4.14-avoid-false-positives-checking-for-arbitrary-tags.patch
 Patch234:	rpm-5.4.14-query-always-noisy.patch
 Patch235:	rpm-5.4.14-fix-filedigests-verify.patch
 Patch236:	rpm-5.4.14-null-term-ascii-digest.patch
+Patch237:	rpm-5.4.14-verify-ghosts-broken-logic.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -971,6 +972,7 @@ popd
 %patch234 -p1 -b .querynoise~
 %patch235 -p1 -b .fixfdigests~
 %patch236 -p1 -b .asciinullterm~
+%patch237 -p1 -b .broken_verify~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
