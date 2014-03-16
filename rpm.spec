@@ -534,6 +534,7 @@ Patch234:	rpm-5.4.14-query-always-noisy.patch
 Patch235:	rpm-5.4.14-fix-filedigests-verify.patch
 Patch236:	rpm-5.4.14-null-term-ascii-digest.patch
 Patch237:	rpm-5.4.14-verify-ghosts-broken-logic.patch
+Patch238:	rpm-5.4.14-lua-enable-extra-libs.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -973,6 +974,7 @@ popd
 %patch235 -p1 -b .fixfdigests~
 %patch236 -p1 -b .asciinullterm~
 %patch237 -p1 -b .broken_verify~
+%patch238 -p1 -b .lua_posix~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh

@@ -1,0 +1,21 @@
+--- rpm-5.4.14/lua/linit.c.posix~	2013-06-29 23:03:22.000000000 +0200
++++ rpm-5.4.14/lua/linit.c	2014-03-16 04:44:44.739712330 +0100
+@@ -12,6 +12,8 @@
+ ** it to suit your needs.
+ */
+ 
++#include "lposix.h"
++#include "lrexlib.h"
+ 
+ #define linit_c
+ #define LUA_LIB
+@@ -37,6 +39,9 @@ static const luaL_Reg loadedlibs[] = {
+   {LUA_BITLIBNAME, luaopen_bit32},
+   {LUA_MATHLIBNAME, luaopen_math},
+   {LUA_DBLIBNAME, luaopen_debug},
++  {"rex_posix", luaopen_rex_posix},
++  {"rex_pcre", luaopen_rex_pcre},
++  {"posix", luaopen_posix},
+   {NULL, NULL}
+ };
+ 
