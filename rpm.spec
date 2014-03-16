@@ -436,7 +436,7 @@ Patch179:	rpm-5.4.14-rpmdbchk.patch
 Patch180:	rpm-5.4.10-rpmdb-typecasts.patch
 # adds ability for printing parsed version of spec file with 'rpm -q --specfile --printspec'
 # status: very simple, non-intrusive, while quite convenient, should be okay to merge
-Patch181:	rpm-5.4.10-printspec.patch
+Patch181:	rpm-5.4.14-printspec.patch
 # drop remaining legacy scripts from rpm-mandriva-setup-build package for us to
 # be able to obsolete it
 # status: mandriva specific, ready to merge
