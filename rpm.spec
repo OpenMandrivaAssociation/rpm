@@ -531,6 +531,7 @@ Patch231:	rpm-5.4.14-dont-hide-errors-from-pkgconfig.patch
 Patch232:	rpm-5.4.14-find-debuginfo-exit-early-if-none-found.patch
 Patch233:	rpm-5.4.14-avoid-false-positives-checking-for-arbitrary-tags.patch
 Patch234:	rpm-5.4.14-query-always-noisy.patch
+Patch235:	rpm-5.4.14-fix-filedigests-verify.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -967,6 +968,7 @@ popd
 %patch232 -p1 -b .exitifnone~
 %patch233 -p1 -b .noarb~
 %patch234 -p1 -b .querynoise~
+%patch235 -p1 -b .fixfdigests~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
