@@ -540,6 +540,7 @@ Patch240:	rpm-5.4.14-add-missing-openmp-flags.patch
 Patch241:	rpm-5.4.14-scripts-closefds.patch
 Patch242:	rpm-5.4.14-fix-internal-lua-build.patch
 Patch243:	rpm-5.4.14-ruby-archdirs.patch
+Patch244:	rpm-5.4.14-ruby-abi-versioned.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -985,6 +986,7 @@ popd
 %patch241 -p1 -b .closefds~
 %patch242 -p1 -b .fixintlua~
 %patch243 -p1 -b .rubyarchdirs~
+%patch244 -p1 -b .rubyabiver~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
