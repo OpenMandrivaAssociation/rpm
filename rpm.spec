@@ -542,6 +542,7 @@ Patch242:	rpm-5.4.14-fix-internal-lua-build.patch
 Patch243:	rpm-5.4.14-ruby-archdirs.patch
 Patch244:	rpm-5.4.14-ruby-abi-versioned.patch
 Patch245:	rpm-5.4.14-gem_helper-spec-arg.patch
+Patch246:	rpm-5.4.14-rubygems2-support.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -989,6 +990,7 @@ popd
 %patch243 -p1 -b .rubyarchdirs~
 %patch244 -p1 -b .rubyabiver~
 %patch245 -p1 -b .gem_spec~
+%patch246 -p1 -b .rubygems2~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
