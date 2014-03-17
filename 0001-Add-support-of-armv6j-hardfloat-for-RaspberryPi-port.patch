@@ -62,32 +62,3 @@ index 0000000..10ffbbe
 +#	Multilibs
 +%_multilibno		1
 +%_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-diff --git a/macros/macros.rpmbuild b/macros/macros.rpmbuild
-index b772c52..b6b7835 100644
---- a/macros/macros.rpmbuild
-+++ b/macros/macros.rpmbuild
-@@ -647,7 +647,7 @@ done \
- %efi %{ix86} x86_64 ia64
- 
- # same thing for arm
--%arm    arm armv3 armv3l armv3b armv4 armv4l armv4b armv5 armv5l armv5b armv5te armv5tel armv5teb xscale armv6 armv6l armv7l armv7hl armv7lh armv7hln armv7hnl armv7lhn armv7lnh armv7nhl armv7nlh
-+%arm    arm armv3 armv3l armv3b armv4 armv4l armv4b armv5 armv5l armv5b armv5te armv5tel armv5teb xscale armv6 armv6l armv6j armv7l armv7hl armv7lh armv7hln armv7hnl armv7lhn armv7lnh armv7nhl armv7nlh
- 
- # same thing for leg
- %leg    leg legv3 legv3l legv3b legv4 legv4l legv4b legv5 legv5l legv5b legv5te legv5tel legv5teb xscale legv6 legv6l legv7l legv7hl legv7lh legv7hln legv7hnl legv7lhn legv7lnh legv7nhl legv7nlh
-diff --git a/macros/macros.rpmbuild.in b/macros/macros.rpmbuild.in
-index ebfedb8..f87548e 100644
---- a/macros/macros.rpmbuild.in
-+++ b/macros/macros.rpmbuild.in
-@@ -680,7 +680,7 @@ done \
- %efi %{ix86} x86_64 ia64
- 
- # same thing for arm
--%arm    arm armv3 armv3l armv3b armv4 armv4l armv4b armv5 armv5l armv5b armv5te armv5tel armv5teb xscale armv6 armv6l armv7l armv7hl armv7lh armv7hln armv7hnl armv7lhn armv7lnh armv7nhl armv7nlh
-+%arm    arm armv3 armv3l armv3b armv4 armv4l armv4b armv5 armv5l armv5b armv5te armv5tel armv5teb xscale armv6 armv6l armv6j armv7l armv7hl armv7lh armv7hln armv7hnl armv7lhn armv7lnh armv7nhl armv7nlh
- 
- # same thing for leg
- %leg    leg legv3 legv3l legv3b legv4 legv4l legv4b legv5 legv5l legv5b legv5te legv5tel legv5teb xscale legv6 legv6l legv7l legv7hl legv7lh legv7hln legv7hnl legv7lhn legv7lnh legv7nhl legv7nlh
--- 
-1.8.5.3
-
