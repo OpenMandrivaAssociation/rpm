@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}62
+Release:	%{?prereldate:0.%{prereldate}.}63
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -540,6 +540,7 @@ Patch219:	rpm-5.4.14-rubygems2-support.patch
 Patch220:	rpm-5.4.14-update-ruby_gemdir-and-ruby_ridir-macros.patch
 Patch221:	rpm-5.4.14-fix-dependency-generation-when-ruby_version-is-empty.patch
 Patch222:	rpm-5.4.14-gst-inspect-typo.patch
+Patch223:	rpm-5.4.14-fix-filedigests-verify.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -990,6 +991,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch220 -p1 -b .ruby_macros~
 %patch221 -p1 -b .no_ruby_version~
 %patch222 -p1 -b .gst_typo~
+%patch223 -p1 -b .fixverify~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
