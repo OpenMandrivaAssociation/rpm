@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}8
+Release:	%{?prereldate:0.%{prereldate}.}9
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -319,7 +319,7 @@ Patch137:	rpm-5.4.9-avoid-double-slash-in-path-for-dirname-filetrigger-matching.
 # everyone, requiring some greater discussion to take place before even
 # considering merging it upstream.
 # status: ready for use, but keep locally for now...
-Patch138:	rpm-5.4.10-trigtrans.patch
+Patch138:	rpm-5.4.14-trigtrans.patch
 # status: probably ready to merge, discuss on rpm-devel first
 # https://qa.mandriva.com/show_bug.cgi?id=64378
 Patch139:	rpm-5.4.9-fix-verify-segfault.patch

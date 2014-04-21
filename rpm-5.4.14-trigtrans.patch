@@ -1,5 +1,5 @@
---- rpm-5.4.10/build/parseReqs.c.trigtrans~	2013-01-07 02:59:01.512080713 +0100
-+++ rpm-5.4.10/build/parseReqs.c	2013-01-07 07:49:52.870600098 +0100
+--- rpm-5.4.14/build/parseReqs.c.trigtrans~	2014-04-21 04:41:14.973712858 +0200
++++ rpm-5.4.14/build/parseReqs.c	2014-04-21 04:41:15.198723175 +0200
 @@ -66,6 +66,22 @@ rpmRC parseRCPOT(Spec spec, Package pkg,
  	tagflags |= RPMSENSE_TRIGGERUN;
  	h = pkg->header;
@@ -23,8 +23,8 @@
      case RPMTAG_BUILDSUGGESTS:
      case RPMTAG_BUILDENHANCES:
  	tagflags |= RPMSENSE_MISSINGOK;
---- rpm-5.4.10/build/parseScript.c.trigtrans~	2013-01-07 02:59:01.646083225 +0100
-+++ rpm-5.4.10/build/parseScript.c	2013-01-07 04:52:54.973145392 +0100
+--- rpm-5.4.14/build/parseScript.c.trigtrans~	2014-04-21 04:41:14.998714004 +0200
++++ rpm-5.4.14/build/parseScript.c	2014-04-21 04:41:15.198723175 +0200
 @@ -181,6 +181,34 @@ int parseScript(Spec spec, int parsePart
  	progtag = RPMTAG_TRIGGERSCRIPTPROG;
  	partname = "%triggerpostun";
@@ -60,8 +60,8 @@
        /* support "%sanitycheck" script/section */
        case PART_SANITYCHECK:
  	tag = RPMTAG_SANITYCHECK;
---- rpm-5.4.10/build/parseSpec.c.trigtrans~	2013-01-07 02:59:00.819067748 +0100
-+++ rpm-5.4.10/build/parseSpec.c	2013-01-07 04:52:34.677862505 +0100
+--- rpm-5.4.14/build/parseSpec.c.trigtrans~	2014-04-21 04:41:14.271680667 +0200
++++ rpm-5.4.14/build/parseSpec.c	2014-04-21 04:41:15.199723221 +0200
 @@ -47,6 +47,10 @@ static struct PartRec {
      { PART_TRIGGERUN,     0, "%triggerun"},
      { PART_TRIGGERIN,     0, "%triggerin"},
@@ -84,8 +84,8 @@
  	    parsePart = parseScript(spec, parsePart);
  	    /*@switchbreak@*/ break;
  
---- rpm-5.4.10/build/rpmbuild.h.trigtrans~	2010-02-10 19:36:17.000000000 +0100
-+++ rpm-5.4.10/build/rpmbuild.h	2013-01-07 04:51:33.888016904 +0100
+--- rpm-5.4.14/build/rpmbuild.h.trigtrans~	2010-02-10 19:36:17.000000000 +0100
++++ rpm-5.4.14/build/rpmbuild.h	2014-04-21 04:41:15.201723312 +0200
 @@ -76,10 +76,14 @@ typedef enum rpmParseState_e {
      PART_BUILDARCHITECTURES= 29+PART_BASE,/*!< */
      PART_TRIGGERPOSTUN	= 30+PART_BASE,	/*!< */
@@ -104,8 +104,8 @@
  } rpmParseState;
  
  /** \ingroup rpmbuild
---- rpm-5.4.10/lib/psm.c.trigtrans~	2013-01-07 02:59:02.334095999 +0100
-+++ rpm-5.4.10/lib/psm.c	2013-01-07 07:34:26.115236562 +0100
+--- rpm-5.4.14/lib/psm.c.trigtrans~	2014-04-21 04:41:15.074717489 +0200
++++ rpm-5.4.14/lib/psm.c	2014-04-21 04:45:12.958624176 +0200
 @@ -53,6 +53,7 @@
  	(*((unsigned *)&(_psm)->flags) &= ~(RPMPSM_FLAGS_##_FLAG))
  
@@ -136,7 +136,7 @@
      case RPMTAG_VERIFYSCRIPT:	return RPMSCRIPT_VERIFY;
      case RPMTAG_SANITYCHECK:	return RPMSCRIPT_SANITYCHECK;
      case RPMTAG_BUILDPREP:	return RPMSCRIPT_PREP;
-@@ -1249,7 +1258,6 @@ static rpmRC handleOneTrigger(const rpmp
+@@ -1255,7 +1264,6 @@ static rpmRC handleOneTrigger(const rpmp
      rpmds Fds = NULL;
      rpmds Dds = NULL;
      rpmds Pds = NULL;
@@ -144,7 +144,7 @@
      const char * triggerName;
      rpmRC rc = RPMRC_OK;
      int arg1;
-@@ -1257,10 +1265,6 @@ static rpmRC handleOneTrigger(const rpmp
+@@ -1263,10 +1271,6 @@ static rpmRC handleOneTrigger(const rpmp
      int i;
  
      he->tag = RPMTAG_NAME;
@@ -155,7 +155,7 @@
      xx = headerGet(triggeredH, he, 0);
      triggerName = he->p.str;
  
-@@ -1398,7 +1402,6 @@ exit:
+@@ -1404,7 +1408,6 @@ exit:
      She->p.ptr = _free(She->p.ptr);
      Phe->p.ptr = _free(Phe->p.ptr);
      triggerName = _free(triggerName);
@@ -163,7 +163,7 @@
  
      return rc;
  }
-@@ -1719,6 +1722,351 @@ exit:
+@@ -1725,6 +1728,347 @@ exit:
      return rc;
  }
  
@@ -271,17 +271,13 @@
 +		    rpmdsIx(sourceDs) < rpmdsCount(sourceDs);
 +		    rpmdsSetIx(sourceDs, rpmdsIx(sourceDs)+1)) {
 +		char * N = (char *) sourceDs->N[sourceDs->i];
-+		if (rpmdsTagN(sourceDs) == RPMTAG_DIRNAMES) {
-+		    size_t nName = strlen(N);
-+		    N = xmalloc(nName + 1 + 1);
-+		    stpcpy(N, sourceDs->N[sourceDs->i]);
-+		    N[nName] = '/';
-+		    N[nName+1] = '\0';			
-+		}
 +		xx = mireRegexec(mire, N, 0);
 +		if (xx < 0)
 +		    /*@innercontinue@*/ continue;
 +		bingo = 1;
++		if (_psm_debug)
++		    rpmlog(RPMLOG_DEBUG, "--> %s:%d bingo! N: %s\n", __FUNCTION__, __LINE__, N);
++
 +		argvAdd(&matches, N);
 +	    }
 +	    xx = mireClean(mire);
@@ -309,6 +305,8 @@
 +
 +	    rc |= runScript(psm, triggeredH, "%trigger", he,
 +			She->p.argv[index], arg1, arg2, matches);
++	    if (_psm_debug)
++		rpmlog(RPMLOG_DEBUG, "--> %s:%d runScript: %s arg1: %d arg2: %d matches: %d rc: %d\n", __FUNCTION__, __LINE__, She->p.argv[index], arg1, arg2, matches, rc);
 +
 +	    he->p.ptr = _free(he->p.ptr);
 +	}
@@ -344,8 +342,9 @@
 +    static int scareMem = 0;
 +    const rpmts ts = psm->ts;
 +    rpmfi fi = NULL;
-+    rpmds sourceDs = NULL;
++    rpmds sourceDs = memset(alloca(sizeof(*sourceDs)), 0, sizeof(*sourceDs));
 +    char * depName = NULL;
++    char evr[BUFSIZ];
 +    ARGI_t instances = NULL;
 +    rpmmi mi;
 +    Header triggeredH;
@@ -353,66 +352,62 @@
 +    int xx;
 +    rpmtsi pi;
 +    rpmte p = NULL;
++    int n;
 +
++    if (tagno == RPMTAG_BASENAMES || tagno == RPMTAG_DIRNAMES)
++	n = (psm->goal == PSM_PKGINSTALL) ? ts->numAddedFiles : ts->numErasedFiles;
++    else
++	n = ts->orderCount;
++
++    sourceDs->tagN = tagno;
++    sourceDs->Type = tagName(tagno);
++    sourceDs->Count = n;
++    sourceDs->i = -1;
++    sourceDs->N = memset(alloca(n * sizeof(*sourceDs->N)), 0, n * sizeof(*sourceDs->N));
++    sourceDs->EVR = memset(alloca(n * sizeof(*sourceDs->EVR)), 0, n * sizeof(*sourceDs->EVR));
++    sourceDs->Flags = (evrFlags *) memset(alloca(n * sizeof(*sourceDs->Flags)), 0, n * sizeof(*sourceDs->Flags));
 +
 +    pi = rpmtsiInit(ts);
 +    while ((p = rpmtsiNext(pi, psm->goal == PSM_PKGINSTALL ? TR_ADDED : TR_REMOVED)) != NULL) {
-+	rpmds ds;
 +	if (p->isSource) continue;
 +	if ((fi = rpmtsiFi(pi)) == NULL)
 +	    continue;
-+	if (psm->goal == PSM_PKGERASE) {
-+	    if (tagno == RPMTAG_BASENAMES || tagno == RPMTAG_DIRNAMES) {
-+		fi = rpmfiInit(fi, 0);
-+		if (fi != NULL) {
-+		    while (rpmfiNext(fi) >= 0) {
-+			ds = rpmdsSingle(tagno, (tagno == RPMTAG_DIRNAMES ? rpmfiDN(fi) : rpmfiFN(fi)), NULL, RPMSENSE_ANY);
-+			rpmdsMerge(&sourceDs, ds);
-+			(void) rpmdsFree(ds);
-+		    }
++	if (tagno == RPMTAG_BASENAMES || tagno == RPMTAG_DIRNAMES) {
++	    fi = rpmfiInit(fi, 0);
++	    if (fi != NULL) {
++		while (rpmfiNext(fi) >= 0) {
++		    sourceDs->N[++sourceDs->i] = (tagno == RPMTAG_DIRNAMES ? rpmfiDN(fi) : rpmfiFN(fi));
 +		}
-+	    } else {
-+		char evr[BUFSIZ];
-+		char *ptr = evr;
-+		if (rpmteE(p)) ptr = stpcpy(stpcpy(ptr, rpmteE(p)), ":");
-+		ptr = stpcpy(stpcpy(stpcpy(ptr, rpmteV(p)), "-"), rpmteR(p));
-+		if (rpmteD(p)) ptr = stpcpy(stpcpy(ptr, ":"), rpmteD(p));
-+		ds = rpmdsSingle(tagno, rpmteN(p), evr, RPMSENSE_EQUAL);
-+		rpmdsMerge(&sourceDs, ds);
-+		(void) rpmdsFree(ds);
 +	    }
 +	} else {
-+	    ds = rpmdsNew(fi->h, tagno, scareMem);
-+	    if (ds == NULL) continue;
-+	    rpmdsMerge(&sourceDs, ds);
-+	    (void) rpmdsFree(ds);
++	    char *ptr = evr;
++	    if (rpmteE(p)) ptr = stpcpy(stpcpy(ptr, rpmteE(p)), ":");
++	    ptr = stpcpy(stpcpy(stpcpy(ptr, rpmteV(p)), "-"), rpmteR(p));
++	    if (rpmteD(p)) ptr = stpcpy(stpcpy(ptr, ":"), rpmteD(p));
++	    sourceDs->N[++sourceDs->i] = rpmteN(p);
++	    sourceDs->EVR[sourceDs->i] = xstrdup(evr);
++	    sourceDs->Flags[sourceDs->i] = RPMSENSE_EQUAL;
 +	}
 +    }
++
 +    xx = rpmteClose(p, ts, 0);
 +    pi = rpmtsiFree(pi);
 +
++    if (sourceDs->i == -1)
++	return rc;
++
 +    /* Fire elements against rpmdb trigger strings. */
-+    if (sourceDs != NULL)
-+    for(rpmdsSetIx(sourceDs, 0);
-+	    rpmdsIx(sourceDs) < rpmdsCount(sourceDs);
-+	    rpmdsSetIx(sourceDs, rpmdsIx(sourceDs)+1)) {
-+	const char * Name = sourceDs->N[sourceDs->i];
-+	size_t nName = strlen(Name);
++    for(sourceDs->i = 0; sourceDs->i < (int)sourceDs->Count; sourceDs->i++) {
++	const char * depName = sourceDs->N[sourceDs->i];
 +	unsigned prev, instance;
 +	unsigned nvals;
 +	ARGint_t vals;
 +
-+	if (!nName) continue;
 +
-+	depName = _free(depName);
-+	if (strcmp(Name, "/") && tagno == RPMTAG_DIRNAMES) {
-+	    depName = xmalloc(nName + 1 + 1);
-+	    (void) stpcpy(depName, Name);
-+	    /* XXX re-add the pesky trailing '/' to dirnames. */
-+	    depName[nName] = '/';
-+	    depName[nName+1] = '\0';
-+	} else
-+	    depName = xstrdup(Name);
++	if (!depName || !*depName) goto next;
++
++	if (_psm_debug)
++	    rpmlog(RPMLOG_DEBUG, "--> %s:%d depName: %s tagno: %d ix: %d\n", __FUNCTION__, __LINE__, depName, tagno, sourceDs->i);
 +
 +	if (depName[0] == '/' && psm->Tmires != NULL) {
 +	    miRE mire;
@@ -428,8 +423,7 @@
 +		    /*@innercontinue@*/ continue;
 +
 +		/* Reset the primary retrieval key to the pattern. */
-+		depName = _free(depName);
-+		depName = xstrdup(pattern);
++		depName = pattern;
 +		/*@innerbreak@*/ break;
 +	    }
 +	}
@@ -452,14 +446,16 @@
 +	    xx = argiSort(instances, NULL);
 +	}
 +	mi = rpmmiFree(mi);
++next:
++    if (tagno != RPMTAG_BASENAMES && tagno != RPMTAG_DIRNAMES)
++	_free(sourceDs->EVR[sourceDs->i]);
 +    }
 +
 +    instances = argiFree(instances);
-+    depName = _free(depName);
-+    (void)rpmdsFree(sourceDs);
-+    sourceDs = NULL;
++
 +    return rc;
 +}
++
 +/**
 + * Run trigger scripts in the database that are fired by this header.
 + * @param psm		package state machine data
@@ -515,7 +511,7 @@
  /*@observer@*/
  static const char * pkgStageString(pkgStage a)
  	/*@*/
-@@ -1746,6 +2094,8 @@ static const char * pkgStageString(pkgSt
+@@ -1752,6 +2096,8 @@ static const char * pkgStageString(pkgSt
      case PSM_CHROOT_IN:		return "chrootin";
      case PSM_CHROOT_OUT:	return "chrootout";
      case PSM_SCRIPT:		return "script";
@@ -524,7 +520,7 @@
      case PSM_TRIGGERS:		return "triggers";
      case PSM_IMMED_TRIGGERS:	return "immedtriggers";
  
-@@ -1785,8 +2135,20 @@ assert(psm != NULL);
+@@ -1791,8 +2137,20 @@ assert(psm != NULL);
      case RPMTAG_VERIFYSCRIPT:	psm->stepName = "verify";	break;
      case RPMTAG_PRETRANS:	psm->stepName = "pretrans";	break;
      case RPMTAG_POSTTRANS:	psm->stepName = "posttrans";	break;
@@ -546,7 +542,7 @@
  }
  
  /*@-mustmod@*/
-@@ -2223,7 +2585,7 @@ rpmRC rpmpsmStage(rpmpsm psm, pkgStage s
+@@ -2229,7 +2587,7 @@ rpmRC rpmpsmStage(rpmpsm psm, pkgStage s
  
  /* XXX hackery to assert(!scareMem) in rpmfiNew. */
  /*@-castexpose@*/
@@ -555,7 +551,7 @@
  /*@=castexpose@*/
  
      switch (stage) {
-@@ -3007,6 +3369,34 @@ assert(psm->te != NULL);
+@@ -3016,6 +3374,34 @@ assert(psm->te != NULL);
  	if (rc)
  	     xx = rpmtxnAbort(rpmtsGetRdb(ts)->db_txn);
  	else
@@ -590,8 +586,8 @@
  	     xx = rpmtxnCommit(rpmtsGetRdb(ts)->db_txn);
  	rpmtsGetRdb(ts)->db_txn = NULL;
      }	break;
---- rpm-5.4.10/lib/psm.h.trigtrans~	2010-03-06 16:31:29.000000000 +0100
-+++ rpm-5.4.10/lib/psm.h	2013-01-07 02:59:02.525099560 +0100
+--- rpm-5.4.14/lib/psm.h.trigtrans~	2010-03-06 16:31:29.000000000 +0100
++++ rpm-5.4.14/lib/psm.h	2014-04-21 04:41:15.206723542 +0200
 @@ -52,9 +52,11 @@ typedef enum pkgStage_e {
      PSM_CHROOT_IN	= 51,
      PSM_CHROOT_OUT	= 52,
@@ -607,8 +603,8 @@
  
      PSM_RPMDB_LOAD	= 97,
      PSM_RPMDB_ADD	= 98,
---- rpm-5.4.10/lib/transaction.c.trigtrans~	2013-01-07 02:59:00.872068746 +0100
-+++ rpm-5.4.10/lib/transaction.c	2013-01-07 07:48:52.289324980 +0100
+--- rpm-5.4.14/lib/transaction.c.trigtrans~	2014-04-21 04:41:14.381685712 +0200
++++ rpm-5.4.14/lib/transaction.c	2014-04-21 04:41:15.207723588 +0200
 @@ -1349,6 +1349,41 @@ assert(0);
      return 0;
  }
@@ -665,7 +661,7 @@
      }
  
      /* ===============================================
-@@ -2319,6 +2361,10 @@ fprintf(stderr, "--> %s(%p,%p,0x%x) tsfl
+@@ -2321,6 +2363,10 @@ fprintf(stderr, "--> %s(%p,%p,0x%x) tsfl
  
  	rpmlog(RPMLOG_DEBUG, D_("running post-transaction scripts\n"));
  	xx = rpmtsRunScript(ts, RPMTAG_POSTTRANS);
@@ -676,9 +672,9 @@
      }
  
  exit:
---- rpm-5.4.10/rpmconstant/rpmconstanttbl.c.trigtrans~	2012-07-06 19:12:41.000000000 +0200
-+++ rpm-5.4.10/rpmconstant/rpmconstanttbl.c	2013-01-07 06:50:31.964918366 +0100
-@@ -664,6 +664,8 @@ static const struct rpmconstant_s rpmPar
+--- rpm-5.4.14/rpmconstant/rpmconstanttbl.c.trigtrans~	2013-10-24 16:42:05.000000000 +0200
++++ rpm-5.4.14/rpmconstant/rpmconstanttbl.c	2014-04-21 04:41:15.208723633 +0200
+@@ -663,6 +663,8 @@ static const struct rpmconstant_s rpmPar
  	{ "PART_BUILDARCHITECTURES", PART_BUILDARCHITECTURES }, /*!< */
  	{ "PART_TRIGGERPOSTUN", PART_TRIGGERPOSTUN }, /*!< */
  	{ "PART_TRIGGERPREIN", PART_TRIGGERPREIN }, /*!< */
@@ -687,7 +683,7 @@
  	{ "PART_SANITYCHECK", PART_SANITYCHECK }, /*!< */
  	{ "PART_ARBITRARY", PART_ARBITRARY }, /*!< */
  	{ "PART_LAST", PART_LAST }, /*!< */
-@@ -680,7 +682,7 @@ const struct rpmconstant_s * rpmParseSta
+@@ -679,7 +681,7 @@ const struct rpmconstant_s * rpmParseSta
  static const struct rpmconstant_s rpmsenseflagsctbl[] = {
  #ifdef H_RPMEVR
  	{ "RPMSENSE_ANY", RPMSENSE_ANY }, 
@@ -696,7 +692,7 @@
  	{ "RPMSENSE_LESS", RPMSENSE_LESS }, 
  	{ "RPMSENSE_GREATER", RPMSENSE_GREATER }, 
  	{ "RPMSENSE_EQUAL", RPMSENSE_EQUAL }, 
-@@ -1085,6 +1087,10 @@ static const struct rpmconstant_s rpmTag
+@@ -1084,6 +1086,10 @@ static const struct rpmconstant_s rpmTag
  	{ "RPMTAG_OBSOLETEYAMLENTRY", RPMTAG_OBSOLETEYAMLENTRY }, /* s[] */
  	{ "RPMTAG_PROVIDEYAMLENTRY", RPMTAG_PROVIDEYAMLENTRY }, /* s[] */
  	{ "RPMTAG_REQUIREYAMLENTRY", RPMTAG_REQUIREYAMLENTRY }, /* s[] */
@@ -707,7 +703,7 @@
  	{ "RPMTAG_FILEDIGESTALGO", RPMTAG_FILEDIGESTALGO }, /* i file checksum algorithm */
  	{ "RPMTAG_BUGURL", RPMTAG_BUGURL }, /* s */
  	{ "RPMTAG_FIRSTFREE_TAG", RPMTAG_FIRSTFREE_TAG }, /*!< internal */
-@@ -1165,6 +1171,10 @@ static const struct rpmconstant_s rpmScr
+@@ -1164,6 +1170,10 @@ static const struct rpmconstant_s rpmScr
  	{ "RPMSCRIPT_PREUN", RPMSCRIPT_PREUN }, /*!< %preun scriptlet */
  	{ "RPMSCRIPT_POSTUN", RPMSCRIPT_POSTUN }, /*!< %postun scriptlet */
  	{ "RPMSCRIPT_POSTTRANS", RPMSCRIPT_POSTTRANS }, /*!< %posttrans scriptlet */
@@ -718,8 +714,8 @@
  	{ "RPMSCRIPT_VERIFY", RPMSCRIPT_VERIFY }, /*!< %verify scriptlet */
  	{ "RPMSCRIPT_PREP", RPMSCRIPT_PREP }, /*!< %prep build scriptlet */
  	{ "RPMSCRIPT_BUILD", RPMSCRIPT_BUILD }, /*!< %build build scriptlet */
---- rpm-5.4.10/rpmdb/hdrfmt.c.trigtrans~	2013-01-07 02:59:01.499080468 +0100
-+++ rpm-5.4.10/rpmdb/hdrfmt.c	2013-01-07 06:59:08.841536496 +0100
+--- rpm-5.4.14/rpmdb/hdrfmt.c.trigtrans~	2014-04-21 04:41:14.937711207 +0200
++++ rpm-5.4.14/rpmdb/hdrfmt.c	2014-04-21 04:41:15.213723863 +0200
 @@ -663,16 +663,29 @@ assert(ix == 0);
  	val = xstrdup(_("(invalid type)"));
      else {
@@ -760,7 +756,7 @@
      }
      return val;
  }
-@@ -2114,16 +2127,29 @@ static int triggertypeTag(Header h, HE_t
+@@ -2120,16 +2133,29 @@ static int triggertypeTag(Header h, HE_t
  	    }
  
  	    /* XXX FIXME: there's memory leaks here. */
@@ -800,8 +796,8 @@
  	    /*@innerbreak@*/ break;
  	}
      }
---- rpm-5.4.10/rpmdb/rpmevr.h.trigtrans~	2012-06-01 15:20:21.000000000 +0200
-+++ rpm-5.4.10/rpmdb/rpmevr.h	2013-01-07 07:09:39.568886836 +0100
+--- rpm-5.4.14/rpmdb/rpmevr.h.trigtrans~	2012-05-29 19:42:29.000000000 +0200
++++ rpm-5.4.14/rpmdb/rpmevr.h	2014-04-21 04:41:15.214723909 +0200
 @@ -27,7 +27,7 @@ typedef enum evrFlags_e {
  #if defined(_RPMEVR_INTERNAL)
      RPMSENSE_ANY	= 0,
@@ -820,8 +816,8 @@
  
  #define	_ALL_REQUIRES_MASK	(\
      RPMSENSE_INTERP | \
---- rpm-5.4.10/rpmdb/rpmtag.h.trigtrans~	2013-01-07 02:59:02.379096848 +0100
-+++ rpm-5.4.10/rpmdb/rpmtag.h	2013-01-07 02:59:02.533099710 +0100
+--- rpm-5.4.14/rpmdb/rpmtag.h.trigtrans~	2013-08-26 23:12:21.000000000 +0200
++++ rpm-5.4.14/rpmdb/rpmtag.h	2014-04-21 04:41:15.215723954 +0200
 @@ -415,6 +415,10 @@ enum rpmTag_e {
      RPMTAG_OBSOLETEYAMLENTRY	= 1220, /* s[] */
      RPMTAG_PROVIDEYAMLENTRY	= 1221, /* s[] */
@@ -833,8 +829,8 @@
  
      RPMTAG_FILEDIGESTALGO	= 5011, /* i file checksum algorithm */
      RPMTAG_BUGURL		= 5012, /* s */
---- rpm-5.4.10/rpmdb/rpmtypes.h.trigtrans~	2011-05-03 17:58:19.000000000 +0200
-+++ rpm-5.4.10/rpmdb/rpmtypes.h	2013-01-07 02:59:02.533099710 +0100
+--- rpm-5.4.14/rpmdb/rpmtypes.h.trigtrans~	2011-05-03 17:58:19.000000000 +0200
++++ rpm-5.4.14/rpmdb/rpmtypes.h	2014-04-21 04:41:15.216724000 +0200
 @@ -70,7 +70,11 @@ typedef enum rpmScriptID_e {
      RPMSCRIPT_POSTUN		=  7,	/*!< %postun scriptlet */
      RPMSCRIPT_TRIGGERPOSTUN	=  8,	/*!< %triggerpostun scriptlet */
