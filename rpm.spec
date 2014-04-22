@@ -546,6 +546,7 @@ Patch246:	rpm-5.4.14-rubygems2-support.patch
 Patch247:	rpm-5.4.14-update-ruby_gemdir-and-ruby_ridir-macros.patch
 Patch248:	rpm-5.4.14-fix-dependency-generation-when-ruby_version-is-empty.patch
 Patch249:	rpm-5.4.14-fix-undef-with_embedded-typo.patch
+Patch250:	rpm-5.4.14-add-missing-_RPMLUA_INTERNAL-define.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -997,6 +998,7 @@ popd
 %patch247 -p1 -b .ruby_macros~
 %patch248 -p1 -b .no_ruby_version~
 %patch249 -p1 -b .fixembtypo~
+%patch250 -p1 -b .rpmlua_internal~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
