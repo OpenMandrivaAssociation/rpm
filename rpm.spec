@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}64
+Release:	%{?prereldate:0.%{prereldate}.}65
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -1006,6 +1006,11 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 %patch213 -p1
 
 %build
+%ifarch %arm
+mkdir -p BFD
+ln -sf /usr/bin/ld.bfd BFD/ld
+export PATH=$PWD/BFD:$PATH
+%endif
 %configure2_5x	--enable-nls \
 		--with-pic \
         --enable-static \
