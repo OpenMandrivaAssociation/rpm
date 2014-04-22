@@ -1006,11 +1006,6 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 %patch213 -p1
 
 %build
-%ifarch %arm
-mkdir -p BFD
-ln -sf /usr/bin/ld.bfd BFD/ld
-export PATH=$PWD/BFD:$PATH
-%endif
 %configure2_5x	--enable-nls \
 		--with-pic \
         --enable-static \
