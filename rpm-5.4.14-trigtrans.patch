@@ -1,5 +1,5 @@
---- rpm-5.4.14/build/parseReqs.c.trigtrans~	2014-04-21 04:41:14.973712858 +0200
-+++ rpm-5.4.14/build/parseReqs.c	2014-04-21 04:41:15.198723175 +0200
+--- rpm-5.4.14/build/parseReqs.c.trigtrans~	2014-04-22 06:36:31.160378021 +0200
++++ rpm-5.4.14/build/parseReqs.c	2014-04-22 06:36:31.226374979 +0200
 @@ -66,6 +66,22 @@ rpmRC parseRCPOT(Spec spec, Package pkg,
  	tagflags |= RPMSENSE_TRIGGERUN;
  	h = pkg->header;
@@ -23,8 +23,8 @@
      case RPMTAG_BUILDSUGGESTS:
      case RPMTAG_BUILDENHANCES:
  	tagflags |= RPMSENSE_MISSINGOK;
---- rpm-5.4.14/build/parseScript.c.trigtrans~	2014-04-21 04:41:14.998714004 +0200
-+++ rpm-5.4.14/build/parseScript.c	2014-04-21 04:41:15.198723175 +0200
+--- rpm-5.4.14/build/parseScript.c.trigtrans~	2014-04-22 06:36:31.171377514 +0200
++++ rpm-5.4.14/build/parseScript.c	2014-04-22 06:36:31.226374979 +0200
 @@ -181,6 +181,34 @@ int parseScript(Spec spec, int parsePart
  	progtag = RPMTAG_TRIGGERSCRIPTPROG;
  	partname = "%triggerpostun";
@@ -60,8 +60,8 @@
        /* support "%sanitycheck" script/section */
        case PART_SANITYCHECK:
  	tag = RPMTAG_SANITYCHECK;
---- rpm-5.4.14/build/parseSpec.c.trigtrans~	2014-04-21 04:41:14.271680667 +0200
-+++ rpm-5.4.14/build/parseSpec.c	2014-04-21 04:41:15.199723221 +0200
+--- rpm-5.4.14/build/parseSpec.c.trigtrans~	2014-04-22 06:36:31.001385349 +0200
++++ rpm-5.4.14/build/parseSpec.c	2014-04-22 06:36:31.227374933 +0200
 @@ -47,6 +47,10 @@ static struct PartRec {
      { PART_TRIGGERUN,     0, "%triggerun"},
      { PART_TRIGGERIN,     0, "%triggerin"},
@@ -85,7 +85,7 @@
  	    /*@switchbreak@*/ break;
  
 --- rpm-5.4.14/build/rpmbuild.h.trigtrans~	2010-02-10 19:36:17.000000000 +0100
-+++ rpm-5.4.14/build/rpmbuild.h	2014-04-21 04:41:15.201723312 +0200
++++ rpm-5.4.14/build/rpmbuild.h	2014-04-22 06:36:31.227374933 +0200
 @@ -76,10 +76,14 @@ typedef enum rpmParseState_e {
      PART_BUILDARCHITECTURES= 29+PART_BASE,/*!< */
      PART_TRIGGERPOSTUN	= 30+PART_BASE,	/*!< */
@@ -104,8 +104,8 @@
  } rpmParseState;
  
  /** \ingroup rpmbuild
---- rpm-5.4.14/lib/psm.c.trigtrans~	2014-04-21 04:41:15.074717489 +0200
-+++ rpm-5.4.14/lib/psm.c	2014-04-21 04:45:12.958624176 +0200
+--- rpm-5.4.14/lib/psm.c.trigtrans~	2014-04-22 06:36:31.189376684 +0200
++++ rpm-5.4.14/lib/psm.c	2014-04-22 06:37:24.191923825 +0200
 @@ -53,6 +53,7 @@
  	(*((unsigned *)&(_psm)->flags) &= ~(RPMPSM_FLAGS_##_FLAG))
  
@@ -163,7 +163,7 @@
  
      return rc;
  }
-@@ -1725,6 +1728,347 @@ exit:
+@@ -1725,6 +1728,348 @@ exit:
      return rc;
  }
  
@@ -344,7 +344,8 @@
 +    rpmfi fi = NULL;
 +    rpmds sourceDs = memset(alloca(sizeof(*sourceDs)), 0, sizeof(*sourceDs));
 +    char * depName = NULL;
-+    char evr[BUFSIZ];
++    char * evr;
++    char * ptr = NULL;
 +    ARGI_t instances = NULL;
 +    rpmmi mi;
 +    Header triggeredH;
@@ -359,6 +360,8 @@
 +    else
 +	n = ts->orderCount;
 +
++    evr = memset(alloca(n * 64 * sizeof(*evr)), 0, n * 64 * sizeof(*evr));
++    ptr = evr;
 +    sourceDs->tagN = tagno;
 +    sourceDs->Type = tagName(tagno);
 +    sourceDs->Count = n;
@@ -385,7 +388,7 @@
 +	    ptr = stpcpy(stpcpy(stpcpy(ptr, rpmteV(p)), "-"), rpmteR(p));
 +	    if (rpmteD(p)) ptr = stpcpy(stpcpy(ptr, ":"), rpmteD(p));
 +	    sourceDs->N[++sourceDs->i] = rpmteN(p);
-+	    sourceDs->EVR[sourceDs->i] = xstrdup(evr);
++	    sourceDs->EVR[sourceDs->i] = evr++;
 +	    sourceDs->Flags[sourceDs->i] = RPMSENSE_EQUAL;
 +	}
 +    }
@@ -404,7 +407,8 @@
 +	ARGint_t vals;
 +
 +
-+	if (!depName || !*depName) goto next;
++	if (!depName || !*depName)
++	    return rc;
 +
 +	if (_psm_debug)
 +	    rpmlog(RPMLOG_DEBUG, "--> %s:%d depName: %s tagno: %d ix: %d\n", __FUNCTION__, __LINE__, depName, tagno, sourceDs->i);
@@ -446,9 +450,6 @@
 +	    xx = argiSort(instances, NULL);
 +	}
 +	mi = rpmmiFree(mi);
-+next:
-+    if (tagno != RPMTAG_BASENAMES && tagno != RPMTAG_DIRNAMES)
-+	_free(sourceDs->EVR[sourceDs->i]);
 +    }
 +
 +    instances = argiFree(instances);
@@ -511,7 +512,7 @@
  /*@observer@*/
  static const char * pkgStageString(pkgStage a)
  	/*@*/
-@@ -1752,6 +2096,8 @@ static const char * pkgStageString(pkgSt
+@@ -1752,6 +2097,8 @@ static const char * pkgStageString(pkgSt
      case PSM_CHROOT_IN:		return "chrootin";
      case PSM_CHROOT_OUT:	return "chrootout";
      case PSM_SCRIPT:		return "script";
@@ -520,7 +521,7 @@
      case PSM_TRIGGERS:		return "triggers";
      case PSM_IMMED_TRIGGERS:	return "immedtriggers";
  
-@@ -1791,8 +2137,20 @@ assert(psm != NULL);
+@@ -1791,8 +2138,20 @@ assert(psm != NULL);
      case RPMTAG_VERIFYSCRIPT:	psm->stepName = "verify";	break;
      case RPMTAG_PRETRANS:	psm->stepName = "pretrans";	break;
      case RPMTAG_POSTTRANS:	psm->stepName = "posttrans";	break;
@@ -542,7 +543,7 @@
  }
  
  /*@-mustmod@*/
-@@ -2229,7 +2587,7 @@ rpmRC rpmpsmStage(rpmpsm psm, pkgStage s
+@@ -2229,7 +2588,7 @@ rpmRC rpmpsmStage(rpmpsm psm, pkgStage s
  
  /* XXX hackery to assert(!scareMem) in rpmfiNew. */
  /*@-castexpose@*/
@@ -551,7 +552,7 @@
  /*@=castexpose@*/
  
      switch (stage) {
-@@ -3016,6 +3374,34 @@ assert(psm->te != NULL);
+@@ -3016,6 +3375,34 @@ assert(psm->te != NULL);
  	if (rc)
  	     xx = rpmtxnAbort(rpmtsGetRdb(ts)->db_txn);
  	else
@@ -587,7 +588,7 @@
  	rpmtsGetRdb(ts)->db_txn = NULL;
      }	break;
 --- rpm-5.4.14/lib/psm.h.trigtrans~	2010-03-06 16:31:29.000000000 +0100
-+++ rpm-5.4.14/lib/psm.h	2014-04-21 04:41:15.206723542 +0200
++++ rpm-5.4.14/lib/psm.h	2014-04-22 06:36:31.229374841 +0200
 @@ -52,9 +52,11 @@ typedef enum pkgStage_e {
      PSM_CHROOT_IN	= 51,
      PSM_CHROOT_OUT	= 52,
@@ -603,8 +604,8 @@
  
      PSM_RPMDB_LOAD	= 97,
      PSM_RPMDB_ADD	= 98,
---- rpm-5.4.14/lib/transaction.c.trigtrans~	2014-04-21 04:41:14.381685712 +0200
-+++ rpm-5.4.14/lib/transaction.c	2014-04-21 04:41:15.207723588 +0200
+--- rpm-5.4.14/lib/transaction.c.trigtrans~	2014-04-22 06:36:31.026384197 +0200
++++ rpm-5.4.14/lib/transaction.c	2014-04-22 06:36:31.229374841 +0200
 @@ -1349,6 +1349,41 @@ assert(0);
      return 0;
  }
@@ -673,7 +674,7 @@
  
  exit:
 --- rpm-5.4.14/rpmconstant/rpmconstanttbl.c.trigtrans~	2013-10-24 16:42:05.000000000 +0200
-+++ rpm-5.4.14/rpmconstant/rpmconstanttbl.c	2014-04-21 04:41:15.208723633 +0200
++++ rpm-5.4.14/rpmconstant/rpmconstanttbl.c	2014-04-22 06:36:31.230374794 +0200
 @@ -663,6 +663,8 @@ static const struct rpmconstant_s rpmPar
  	{ "PART_BUILDARCHITECTURES", PART_BUILDARCHITECTURES }, /*!< */
  	{ "PART_TRIGGERPOSTUN", PART_TRIGGERPOSTUN }, /*!< */
@@ -714,8 +715,8 @@
  	{ "RPMSCRIPT_VERIFY", RPMSCRIPT_VERIFY }, /*!< %verify scriptlet */
  	{ "RPMSCRIPT_PREP", RPMSCRIPT_PREP }, /*!< %prep build scriptlet */
  	{ "RPMSCRIPT_BUILD", RPMSCRIPT_BUILD }, /*!< %build build scriptlet */
---- rpm-5.4.14/rpmdb/hdrfmt.c.trigtrans~	2014-04-21 04:41:14.937711207 +0200
-+++ rpm-5.4.14/rpmdb/hdrfmt.c	2014-04-21 04:41:15.213723863 +0200
+--- rpm-5.4.14/rpmdb/hdrfmt.c.trigtrans~	2014-04-22 06:36:31.150378482 +0200
++++ rpm-5.4.14/rpmdb/hdrfmt.c	2014-04-22 06:36:31.231374748 +0200
 @@ -663,16 +663,29 @@ assert(ix == 0);
  	val = xstrdup(_("(invalid type)"));
      else {
@@ -797,7 +798,7 @@
  	}
      }
 --- rpm-5.4.14/rpmdb/rpmevr.h.trigtrans~	2012-05-29 19:42:29.000000000 +0200
-+++ rpm-5.4.14/rpmdb/rpmevr.h	2014-04-21 04:41:15.214723909 +0200
++++ rpm-5.4.14/rpmdb/rpmevr.h	2014-04-22 06:36:31.231374748 +0200
 @@ -27,7 +27,7 @@ typedef enum evrFlags_e {
  #if defined(_RPMEVR_INTERNAL)
      RPMSENSE_ANY	= 0,
@@ -817,7 +818,7 @@
  #define	_ALL_REQUIRES_MASK	(\
      RPMSENSE_INTERP | \
 --- rpm-5.4.14/rpmdb/rpmtag.h.trigtrans~	2013-08-26 23:12:21.000000000 +0200
-+++ rpm-5.4.14/rpmdb/rpmtag.h	2014-04-21 04:41:15.215723954 +0200
++++ rpm-5.4.14/rpmdb/rpmtag.h	2014-04-22 06:36:31.232374702 +0200
 @@ -415,6 +415,10 @@ enum rpmTag_e {
      RPMTAG_OBSOLETEYAMLENTRY	= 1220, /* s[] */
      RPMTAG_PROVIDEYAMLENTRY	= 1221, /* s[] */
@@ -830,7 +831,7 @@
      RPMTAG_FILEDIGESTALGO	= 5011, /* i file checksum algorithm */
      RPMTAG_BUGURL		= 5012, /* s */
 --- rpm-5.4.14/rpmdb/rpmtypes.h.trigtrans~	2011-05-03 17:58:19.000000000 +0200
-+++ rpm-5.4.14/rpmdb/rpmtypes.h	2014-04-21 04:41:15.216724000 +0200
++++ rpm-5.4.14/rpmdb/rpmtypes.h	2014-04-22 06:36:31.232374702 +0200
 @@ -70,7 +70,11 @@ typedef enum rpmScriptID_e {
      RPMSCRIPT_POSTUN		=  7,	/*!< %postun scriptlet */
      RPMSCRIPT_TRIGGERPOSTUN	=  8,	/*!< %triggerpostun scriptlet */
