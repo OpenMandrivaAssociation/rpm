@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}66
+Release:	%{?prereldate:0.%{prereldate}.}65
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -1072,7 +1072,7 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 		--with-keyutils=external \
 		--with-neon=external \
 		--with-acl \
-		--disable-openmp \
+		--enable-openmp \
 %if %{with xar}
 		--with-xar=%{_includedir}/xar \
 %endif
