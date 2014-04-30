@@ -561,7 +561,8 @@ BuildRequires:	readline-devel
 BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	pkgconfig(libssl)
 BuildRequires:	pkgconfig(libcrypto)
-BuildRequires:	pkgconfig(liblzma) >= 5.1.3alpha
+BuildRequires:	pkgconfig(liblzma)
+# >= 5.1.3alpha
 BuildRequires:	pkgconfig(libpcre)
 BuildRequires:	pkgconfig(libpcreposix)
 BuildRequires:	acl-devel
@@ -972,7 +973,7 @@ popd
 %patch223 -p1 -b .cmakedeps~
 %patch224 -p1 -b .ro~
 %patch225 -p1 -b .armx~
-%patch226 -p1 -b .multithread~
+#patch226 -p1 -b .multithread~
 %patch227 -p1 -b .outputsync~
 %patch228 -p1 -b .timestamps~
 %patch229 -p1 -b .str_term~
