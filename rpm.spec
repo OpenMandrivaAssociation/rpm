@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}12
+Release:	%{?prereldate:0.%{prereldate}.}13
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -561,8 +561,7 @@ BuildRequires:	readline-devel
 BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	pkgconfig(libssl)
 BuildRequires:	pkgconfig(libcrypto)
-BuildRequires:	pkgconfig(liblzma)
-# >= 5.1.3alpha
+BuildRequires:	pkgconfig(liblzma) >= 5.1.3alpha
 BuildRequires:	pkgconfig(libpcre)
 BuildRequires:	pkgconfig(libpcreposix)
 BuildRequires:	acl-devel
@@ -973,7 +972,7 @@ popd
 %patch223 -p1 -b .cmakedeps~
 %patch224 -p1 -b .ro~
 %patch225 -p1 -b .armx~
-#patch226 -p1 -b .multithread~
+%patch226 -p1 -b .multithread~
 %patch227 -p1 -b .outputsync~
 %patch228 -p1 -b .timestamps~
 %patch229 -p1 -b .str_term~
