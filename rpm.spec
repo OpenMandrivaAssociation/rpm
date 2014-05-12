@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}65
+Release:	%{?prereldate:0.%{prereldate}.}66
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -542,6 +542,9 @@ Patch221:	rpm-5.4.14-fix-dependency-generation-when-ruby_version-is-empty.patch
 Patch222:	rpm-5.4.14-gst-inspect-typo.patch
 Patch223:	rpm-5.4.14-fix-filedigests-verify.patch
 
+# Turn back old implementation of __urlgetfile handling
+Patch505:       rpm-5.4.10-turn-back-urlgetfile.patch
+
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -1004,6 +1007,8 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 %patch200 -p1
 %patch205 -p1
 %patch213 -p1
+
+%patch505 -p1 -b .urlgetfile~
 
 %build
 %configure2_5x	--enable-nls \
