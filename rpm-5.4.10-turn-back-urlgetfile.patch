@@ -1,6 +1,6 @@
 diff -Naur rpm-5.4.10.orig/macros/mandriva rpm-5.4.10/macros/mandriva
---- rpm-5.4.10.orig/macros/mandriva	2013-09-17 17:34:34.805808860 +0400
-+++ rpm-5.4.10/macros/mandriva	2013-10-03 17:06:36.947155301 +0400
+--- rpm-5.4.10.orig/macros/mandriva	2014-05-12 14:09:11.234103724 +0400
++++ rpm-5.4.10/macros/mandriva	2014-05-12 14:09:11.617103705 +0400
 @@ -32,6 +32,8 @@
  # mdvbz#64914
  %_rpmgio		.ufdio
@@ -11,8 +11,8 @@ diff -Naur rpm-5.4.10.orig/macros/mandriva rpm-5.4.10/macros/mandriva
  %mkrel(c:)		%{-c: 0.%{-c*}.}%{1}%{?subrel:.%subrel}
  %manbo_mkrel()		%mkrel
 diff -Naur rpm-5.4.10.orig/macros/mandriva.in rpm-5.4.10/macros/mandriva.in
---- rpm-5.4.10.orig/macros/mandriva.in	2013-09-17 17:34:34.805808860 +0400
-+++ rpm-5.4.10/macros/mandriva.in	2013-10-03 17:33:15.669303875 +0400
+--- rpm-5.4.10.orig/macros/mandriva.in	2014-05-12 14:09:11.233103724 +0400
++++ rpm-5.4.10/macros/mandriva.in	2014-05-12 14:09:11.618103705 +0400
 @@ -32,6 +32,8 @@
  # mdvbz#64914
  %_rpmgio		.ufdio
@@ -21,11 +21,11 @@ diff -Naur rpm-5.4.10.orig/macros/mandriva.in rpm-5.4.10/macros/mandriva.in
 +
  # This will die as soon as remaining usage has been phased out...
  %mkrel(c:)		%{-c: 0.%{-c*}.}%{1}%{?subrel:.%subrel}
- %manbo_mkrel()		%mkrel
+ 
 diff -Naur rpm-5.4.10.orig/rpmio/url.c rpm-5.4.10/rpmio/url.c
---- rpm-5.4.10.orig/rpmio/url.c	2013-09-17 17:34:34.827808860 +0400
-+++ rpm-5.4.10/rpmio/url.c	2013-10-03 17:49:34.590394849 +0400
-@@ -446,6 +447,7 @@
+--- rpm-5.4.10.orig/rpmio/url.c	2014-05-12 14:09:11.264103722 +0400
++++ rpm-5.4.10/rpmio/url.c	2014-05-12 14:09:11.816103695 +0400
+@@ -446,6 +446,7 @@
  /*@-observertrans@*/
      if (pathp)
  	*pathp = path;
@@ -33,7 +33,7 @@ diff -Naur rpm-5.4.10.orig/rpmio/url.c rpm-5.4.10/rpmio/url.c
  /*@=observertrans@*/
      return ut;
  }
-@@ -602,6 +604,7 @@
+@@ -602,6 +603,7 @@
      const char * sfuPath = NULL;
      int urlType = urlPath(url, &sfuPath);
      char *result;
@@ -41,7 +41,7 @@ diff -Naur rpm-5.4.10.orig/rpmio/url.c rpm-5.4.10/rpmio/url.c
  
      if (*sfuPath == '\0')
  	return FTPERR_UNKNOWN;
-@@ -616,17 +619,17 @@
+@@ -616,17 +618,17 @@
  	return FTPERR_UNKNOWN;
  
  /*@-globs -mods@*/	/* Avoid including <rpmmacro.h> everywhere for now */
