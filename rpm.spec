@@ -541,7 +541,8 @@ Patch220:	rpm-5.4.14-update-ruby_gemdir-and-ruby_ridir-macros.patch
 Patch221:	rpm-5.4.14-fix-dependency-generation-when-ruby_version-is-empty.patch
 Patch222:	rpm-5.4.14-gst-inspect-typo.patch
 Patch223:	rpm-5.4.14-fix-filedigests-verify.patch
-
+# need more testing, do not enable quite yet..
+Patch224:	rpm-5.4.14-add-support-for-deprecating-epoch.patch
 # Turn back old implementation of __urlgetfile handling
 Patch505:       rpm-5.4.10-turn-back-urlgetfile.patch
 
@@ -995,7 +996,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch221 -p1 -b .no_ruby_version~
 %patch222 -p1 -b .gst_typo~
 %patch223 -p1 -b .fixverify~
-
+# not yet..
+#patch224 -p1 -b .deprecate_epoch~
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
 #required by P55, P80, P81, P94..
