@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}13
+Release:	%{?prereldate:0.%{prereldate}.}14
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -547,6 +547,8 @@ Patch247:	rpm-5.4.14-update-ruby_gemdir-and-ruby_ridir-macros.patch
 Patch248:	rpm-5.4.14-fix-dependency-generation-when-ruby_version-is-empty.patch
 Patch249:	rpm-5.4.14-fix-undef-with_embedded-typo.patch
 Patch250:	rpm-5.4.14-add-missing-_RPMLUA_INTERNAL-define.patch
+Patch251:	rpm-5.4.14-workaround-scriptlet-dependency-ordering-issue.patch
+Patch252:	rpm-5.4.14-add-support-for-deprecating-epoch.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -999,7 +1001,8 @@ popd
 %patch248 -p1 -b .no_ruby_version~
 %patch249 -p1 -b .fixembtypo~
 %patch250 -p1 -b .rpmlua_internal~
-
+%patch251 -p1 -b .order~
+%patch252 -p1 -b .deprecate_epoch~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
