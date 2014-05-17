@@ -550,6 +550,7 @@ Patch250:	rpm-5.4.14-add-missing-_RPMLUA_INTERNAL-define.patch
 Patch251:	rpm-5.4.14-workaround-scriptlet-dependency-ordering-issue.patch
 Patch252:	rpm-5.4.14-add-support-for-deprecating-epoch.patch
 Patch253:	rpm-5.4.14-enable-twiddle-in-evr-tupple.patch
+Patch254:	rpm-5.4.14-rpmdav-handle-301-302-redirects.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1005,6 +1006,7 @@ popd
 %patch251 -p1 -b .order~
 %patch252 -p1 -b .deprecate_epoch~
 %patch253 -p1 -b .twiddle~
+%patch254 -p1 -b .ne_redirect~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
