@@ -1,5 +1,5 @@
---- rpm-5.4.14/rpmio/rpmdav.c.ne_redirect~	2014-05-17 21:24:08.547223302 +0200
-+++ rpm-5.4.14/rpmio/rpmdav.c	2014-05-17 21:29:36.877646356 +0200
+--- rpm-5.4.14/rpmio/rpmdav.c.ne_redirect~	2014-05-17 21:32:42.568368452 +0200
++++ rpm-5.4.14/rpmio/rpmdav.c	2014-05-17 21:49:53.697481845 +0200
 @@ -12,6 +12,7 @@
  #include "ne_basic.h"
  #include "ne_dates.h"
@@ -33,7 +33,7 @@
  	/*@modifies *uret, internalState @*/
  {
      urlinfo u = NULL;
-+    const ne_uri *newui = NULL;;
++    const ne_uri *newuri = NULL;
 +    char *newurl = NULL;
      int rc = 0;
  
@@ -53,8 +53,8 @@
 +
 +	if (rc == NE_REDIRECT) {
 +	    if (!strncmp("301 ", ne_get_error((ne_session *)u->sess), sizeof("301 ")-1)) {
-+		loc = ne_redirect_location(u->sess);
-+		newurl = ne_uri_unparse(loc);
++		newuri = ne_redirect_location(u->sess);
++		newurl = ne_uri_unparse(newuri);
 +	    }
 +	    if (!strncmp("302 ", ne_get_error((ne_session *)u->sess), sizeof("302 ")-1))
 +		rc = NE_OK;
@@ -69,7 +69,7 @@
 +    if (rc == NE_REDIRECT) {
 +	rc = davInit(newurl, uret);
 +	_free(newurl);
-+	ne_uri_free(newuri);
++	ne_uri_free((ne_uri*)newuri);
 +    }
  
      return rc;
