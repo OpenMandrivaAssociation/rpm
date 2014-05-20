@@ -557,6 +557,7 @@ Patch257:	rpm-5.4.10-namespace-compare.patch
 Patch258:	rpm-5.4.12-revert-gpg-argv-parsing.patch
 Patch259:	rpm-5.4.10-fix--p-interpreter-and-empty-script.patch
 Patch260:	rpm-5.4.10-fix-missing-types-in-headers.patch
+Patch261:	rpm-4.5-unglobal.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1019,6 +1020,7 @@ popd
 %patch258 -p1 -b .gpg_parsing~
 %patch259 -p1 -b .interpreter_script~
 %patch260 -p1 -b .missing_types~
+%patch261 -p1 -b .unglobal~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
