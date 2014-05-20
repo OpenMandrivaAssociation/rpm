@@ -552,6 +552,7 @@ Patch252:	rpm-5.4.14-add-support-for-deprecating-epoch.patch
 Patch253:	rpm-5.4.14-enable-twiddle-in-evr-tupple.patch
 Patch254:	rpm-5.4.14-rpmdav-handle-301-302-redirects.patch
 Patch255:	rpm-5.4.10-silence-RPM_CHAR_TYPE.patch
+Patch256:	rpm-5.4.14-preserve-tag-type.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1009,6 +1010,7 @@ popd
 %patch253 -p1 -b .twiddle~
 %patch254 -p1 -b .ne_redirect~
 %patch255 -p1 -b .silence_char_type~
+%patch256 -p1 -b .preserve_tag_type~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
