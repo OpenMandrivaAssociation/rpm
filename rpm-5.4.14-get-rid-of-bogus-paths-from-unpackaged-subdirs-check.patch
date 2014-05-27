@@ -1,0 +1,29 @@
+--- rpm-5.4.14/build/files.c.unpkg_dirdups~	2014-05-27 20:39:43.140213982 +0200
++++ rpm-5.4.14/build/files.c	2014-05-27 20:40:31.670648742 +0200
+@@ -3085,7 +3085,7 @@ static int pkgUnpackagedSubdirs(Package
+ 	if (p != NULL)
+ 	while ((p = strchr(p + 1, '/'))) {
+ 	    *p = '\0';
+-	    if (packagedDir(pkg, fn)) {
++	    if (packagedDir(pkg, fn) || (strlen(fn) <= buildrootL)) {
+ 		*p = '/';
+ 		/*@innercontinue@*/ continue;
+ 	    }
+@@ -3101,7 +3101,7 @@ static int pkgUnpackagedSubdirs(Package
+ 		/*@innercontinue@*/ continue;
+ 	    }
+ 	    unpackaged = xrealloc(unpackaged, sizeof(*unpackaged) * (n + 1));
+-	    unpackaged[n++] = xstrdup(fn);
++	    unpackaged[n++] = xstrdup(buildrootL + fn);
+ 	    *p = '/';
+ 	}
+     }
+@@ -3117,7 +3117,7 @@ static int pkgUnpackagedSubdirs(Package
+ 
+ 	for (i = 0; i < n; i++) {
+ 	    list = rpmiobAppend(list, "\t", 0);
+-	    list = rpmiobAppend(list, unpackaged[i]+buildrootL, 1);
++	    list = rpmiobAppend(list, unpackaged[i], 1);
+ 	    unpackaged[i] = _free(unpackaged[i]);
+ 	}
+ 	unpackaged = _free(unpackaged);

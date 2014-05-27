@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}15
+Release:	%{?prereldate:0.%{prereldate}.}16
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -558,6 +558,7 @@ Patch258:	rpm-5.4.12-revert-gpg-argv-parsing.patch
 Patch259:	rpm-5.4.10-fix--p-interpreter-and-empty-script.patch
 Patch260:	rpm-5.4.10-fix-missing-types-in-headers.patch
 Patch261:	rpm-4.5-unglobal.patch
+Patch262:	rpm-5.4.14-get-rid-of-bogus-paths-from-unpackaged-subdirs-check.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1021,6 +1022,7 @@ popd
 %patch259 -p1 -b .interpreter_script~
 %patch260 -p1 -b .missing_types~
 %patch261 -p1 -b .unglobal~
+%patch262 -p1 -b .unpkg_dirdups~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
