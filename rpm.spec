@@ -558,7 +558,7 @@ Patch258:	rpm-5.4.12-revert-gpg-argv-parsing.patch
 Patch259:	rpm-5.4.10-fix--p-interpreter-and-empty-script.patch
 Patch260:	rpm-5.4.10-fix-missing-types-in-headers.patch
 Patch261:	rpm-4.5-unglobal.patch
-Patch262:	rpm-5.4.14-get-rid-of-bogus-paths-from-unpackaged-subdirs-check.patch
+Patch262:	rpm-5.4.13-double-check-unpackaged-dirs.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
