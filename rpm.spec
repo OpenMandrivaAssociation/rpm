@@ -64,7 +64,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}67
+Release:	%{?prereldate:0.%{prereldate}.}68
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -546,6 +546,10 @@ Patch224:	rpm-5.4.10-add-support-for-deprecating-epoch.patch
 Patch225:	rpm-5.4.14-workaround-scriptlet-dependency-ordering-issue.patch
 Patch226:	rpm-5.4.10-enable-twiddle-in-evr-tupple.patch
 Patch227:	rpm-5.4.13-double-check-unpackaged-dirs.patch
+# %%configure2_5x deprecation, %%configure handling
+Patch228:      rpm-5.4.10-deprecate-configure2_5x.patch
+# Default to clang/clang++ for __cc and __cxx
+Patch229:      rpm-5.4.10-default-to-clang.patch
 
 # Turn back old implementation of __urlgetfile handling
 Patch505:       rpm-5.4.10-turn-back-urlgetfile.patch
@@ -631,6 +635,8 @@ BuildRequires:	spec-helper >= 0.31.12
 BuildRequires:	stdc++-static-devel >= 4.6.2-8
 BuildRequires:	elfutils >= 0.154
 BuildRequires:	libtool >= 2.4.2-3
+# rpm can't be built with clang currently (nested functions)
+BuildRequires:	gcc
 Requires:	cpio
 Requires:	gawk
 Requires:	coreutils
@@ -1004,6 +1010,8 @@ This package contains the RPM API documentation generated in HTML format.
 %patch225 -p1 -b .order~
 %patch226 -p1 -b .twiddle~
 %patch227 -p1 -b .unpkg_dirdups~
+%patch228 -p1 -b .configure2_5x~
+%patch229 -p1 -b .clangdefault~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
@@ -1020,9 +1028,13 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 %patch505 -p1 -b .urlgetfile~
 
 %build
-%configure2_5x	--enable-nls \
+# rpm can't be built with clang currently (nested functions)
+export CC=gcc
+export CXX=g++
+
+%configure	--enable-nls \
 		--with-pic \
-        --enable-static \
+		--enable-static \
 %if %{with debug}
 		--enable-debug \
 		--with-valgrind \
