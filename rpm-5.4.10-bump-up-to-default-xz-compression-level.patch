@@ -8,4 +8,4 @@
 +%_binary_payload			w.xzdio
  
  %_duplicate_files_terminate_build	1
- %_unpackaged_subdirs_terminate_build	0
+ %_unpackaged_subdirs_terminate_build	1

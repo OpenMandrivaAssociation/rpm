@@ -1,6 +1,6 @@
---- rpm-5.4.14/macros/mandriva.in.twiddle~	2014-05-15 18:26:56.366953442 +0200
-+++ rpm-5.4.14/macros/mandriva.in	2014-05-15 18:26:58.046032332 +0200
-@@ -39,8 +39,8 @@
+--- rpm-5.4.10/macros/mandriva.in.twiddle~	2014-05-28 15:55:04.793120064 +0200
++++ rpm-5.4.10/macros/mandriva.in	2014-05-28 15:56:16.120682305 +0200
+@@ -37,8 +37,8 @@
  
  # This will enable the use of distepoch and disttag in stead of polluting
  # %release with such.
@@ -8,6 +8,6 @@
 -%evr_tuple_order	EVRD
 +%evr_tuple_select	12345
 +%evr_tuple_order	EVTRD
- %.disttag		mdk
+ %disttag		%{!?distsuffix:omv}%{?distsuffix}
  %distepoch		%(sed -e 's#.*release\\ \\(\\S*\\).*#\\1#' /etc/release)
  

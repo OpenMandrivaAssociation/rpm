@@ -1,5 +1,5 @@
---- rpm-5.4.14/build/misc.c.deprecate_epoch~	2014-05-13 02:14:20.434334876 +0200
-+++ rpm-5.4.14/build/misc.c	2014-05-14 01:13:57.786385713 +0200
+--- rpm-5.4.10/build/misc.c.deprecate_epoch~	2008-07-31 04:40:05.000000000 +0200
++++ rpm-5.4.10/build/misc.c	2014-05-28 15:51:30.473701942 +0200
 @@ -18,3 +18,14 @@ int parseNum(const char * line, rpmuint3
      if (res) *res = rc;
      return (((*s1) || (s1 == line) || (rc == ULONG_MAX)) ? 1 : 0);
@@ -15,8 +15,8 @@
 +    if (res) *res = rc;
 +    return (((*s1) || (s1 == line) || (rc == LONG_MAX)) ? 1 : 0);
 +}
---- rpm-5.4.14/build/parsePreamble.c.deprecate_epoch~	2014-05-13 02:17:45.045815083 +0200
-+++ rpm-5.4.14/build/parsePreamble.c	2014-05-13 02:21:05.299148329 +0200
+--- rpm-5.4.10/build/parsePreamble.c.deprecate_epoch~	2014-05-28 15:51:30.440368323 +0200
++++ rpm-5.4.10/build/parsePreamble.c	2014-05-28 15:51:30.473701942 +0200
 @@ -613,7 +613,7 @@ static rpmRC handlePreambleTag(Spec spec
      int multiToken = 0;
      rpmsenseFlags tagflags;
@@ -44,7 +44,7 @@
  	he->c = 1;
  	xx = headerPut(pkg->header, he, 0);
  	break;
-@@ -1215,11 +1215,11 @@ assert(lastpkg != NULL);
+@@ -1212,11 +1212,11 @@ assert(lastpkg != NULL);
      /* Add Epoch: 0 to package header if it was not set by spec */
      he->tag = RPMTAG_NAME;
      if (headerGet(spec->packages->header, he, 0) == 0) {
@@ -58,8 +58,8 @@
  	he->c = 1;
  	xx = headerPut(pkg->header, he, 0);
  
---- rpm-5.4.14/build/rpmbuild.h.deprecate_epoch~	2014-05-13 02:22:06.945029491 +0200
-+++ rpm-5.4.14/build/rpmbuild.h	2014-05-13 02:22:10.155179611 +0200
+--- rpm-5.4.10/build/rpmbuild.h.deprecate_epoch~	2014-05-28 15:51:30.347034190 +0200
++++ rpm-5.4.10/build/rpmbuild.h	2014-05-28 15:51:30.473701942 +0200
 @@ -233,6 +233,15 @@ int parseNum(/*@null@*/ const char * lin
  	/*@modifies *res @*/;
  
@@ -76,8 +76,8 @@
   * Add changelog entry to header.
   * @todo addChangelogEntry should be static.
   * @param h		header
---- rpm-5.4.14/macros/macros.in.deprecate_epoch~	2014-05-13 02:29:13.019009994 +0200
-+++ rpm-5.4.14/macros/macros.in	2014-05-15 13:16:45.075949264 +0200
+--- rpm-5.4.10/macros/macros.in.deprecate_epoch~	2014-05-28 15:51:30.453701771 +0200
++++ rpm-5.4.10/macros/macros.in	2014-05-28 15:51:30.473701942 +0200
 @@ -740,7 +740,7 @@ $_arbitrary_tags_tests	Foo:Bar
  # STEP 1: Match the string and capture regex parts
  #                      1          2           3             4
@@ -105,8 +105,8 @@
  %pattern_Version	^[A-Za-z0-9+._~]+$
  %pattern_Release	^[A-Za-z0-9+._]+$
  %pattern_Disttag	^[A-Za-z0-9]+$
---- rpm-5.4.14/perl/RPM_Header.xs.deprecate_epoch~	2014-05-14 02:13:58.633419651 +0200
-+++ rpm-5.4.14/perl/RPM_Header.xs	2014-05-14 02:14:15.981241484 +0200
+--- rpm-5.4.10/perl/RPM_Header.xs.deprecate_epoch~	2012-04-25 22:34:49.000000000 +0200
++++ rpm-5.4.10/perl/RPM_Header.xs	2014-05-28 15:51:30.473701942 +0200
 @@ -404,9 +404,16 @@ tag(h, sv_tag)
  
                          EXTEND(SP, he->c);
@@ -127,18 +127,18 @@
                      }
                  break;
                  case RPM_BIN_TYPE:
---- rpm-5.4.14/rpmdb/rpmevr.c.deprecate_epoch~	2014-05-13 02:10:04.834389449 +0200
-+++ rpm-5.4.14/rpmdb/rpmevr.c	2014-05-15 15:53:13.622846021 +0200
+--- rpm-5.4.10/rpmdb/rpmevr.c.deprecate_epoch~	2012-07-06 17:39:18.000000000 +0200
++++ rpm-5.4.10/rpmdb/rpmevr.c	2014-05-28 15:54:01.628530565 +0200
 @@ -148,7 +148,7 @@ assert(b != NULL);
  
  /*@unchecked@*/ /*@observer@*/ /*@null@*/
- static const char _evr_tuple_match[] =
+ static const char * _evr_tuple_match =
 -	"^(?:([^:-]+):)?([^:-]+)(?:-([^:-]+))?(?::([^:-]+))?$";
 +	"^(?:(-?[^:-]+):)?([^:-]+)(?:-([^:-]+))?(?::([^:-]+))?$";
  /*@unchecked@*/ /*@only@*/ /*@observer@*/ /*@null@*/
  const char * evr_tuple_match = NULL;
  /*@unchecked@*/ /*@refcounted@*/ /*@null@*/
-@@ -295,6 +295,7 @@ assert(b->F[RPMEVR_D] != NULL);
+@@ -289,6 +289,7 @@ assert(b->F[RPMEVR_D] != NULL);
  
      for (s = rpmEVRorder(); *s != '\0'; s++) {
  	int ix = 0;
@@ -146,7 +146,7 @@
  
  	switch ((int)*s) {
  	default:	continue;	/*@notreached@*/ /*@switchbreak@*/break;
-@@ -311,6 +312,20 @@ assert(b->F[RPMEVR_D] != NULL);
+@@ -305,6 +306,20 @@ assert(b->F[RPMEVR_D] != NULL);
  		break;
  #endif
  
@@ -167,7 +167,7 @@
  	/* XXX ALT version-set comparison */
  	if (ix == RPMEVR_V
  	 && !strncmp(a->F[ix], "set:", sizeof("set:")-1)
-@@ -329,7 +344,13 @@ assert(b->F[RPMEVR_D] != NULL);
+@@ -323,7 +338,13 @@ assert(b->F[RPMEVR_D] != NULL);
  	if (ix == RPMEVR_T)	/* XXX twiddle-in-version "negative" compare */
  	    rc = -compare_values(a->F[ix], b->F[ix]);
  	else
@@ -182,7 +182,7 @@
  	if (rc)
  	    break;
      }
-@@ -427,7 +448,7 @@ int rpmVersionCompare(Header A, Header B
+@@ -421,7 +442,7 @@ int rpmVersionCompare(Header A, Header B
      HE_t Ahe = (HE_t) memset(alloca(sizeof(*Ahe)), 0, sizeof(*Ahe));
      HE_t Bhe = (HE_t) memset(alloca(sizeof(*Bhe)), 0, sizeof(*Bhe));
      const char * one, * two;
@@ -191,7 +191,7 @@
      const char * s;
      int rc = 0;
      int xx;
-@@ -442,10 +463,12 @@ int rpmVersionCompare(Header A, Header B
+@@ -436,10 +457,12 @@ int rpmVersionCompare(Header A, Header B
  	    Bhe->tag = RPMTAG_EPOCH;
  	    xx = headerGet(B, Bhe, 0);
  	    Etwo = (xx && Bhe->p.ui32p ? Bhe->p.ui32p[0] : 0);

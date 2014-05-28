@@ -542,9 +542,9 @@ Patch221:	rpm-5.4.14-fix-dependency-generation-when-ruby_version-is-empty.patch
 Patch222:	rpm-5.4.14-gst-inspect-typo.patch
 Patch223:	rpm-5.4.14-fix-filedigests-verify.patch
 # need more testing, enable for now to test, disable if causing any troubles..
-Patch224:	rpm-5.4.14-add-support-for-deprecating-epoch.patch
+Patch224:	rpm-5.4.10-add-support-for-deprecating-epoch.patch
 Patch225:	rpm-5.4.14-workaround-scriptlet-dependency-ordering-issue.patch
-Patch226:	rpm-5.4.14-enable-twiddle-in-evr-tupple.patch
+Patch226:	rpm-5.4.10-enable-twiddle-in-evr-tupple.patch
 Patch227:	rpm-5.4.13-double-check-unpackaged-dirs.patch
 
 # Turn back old implementation of __urlgetfile handling
