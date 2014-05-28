@@ -544,6 +544,7 @@ Patch223:	rpm-5.4.14-fix-filedigests-verify.patch
 # need more testing, do not enable quite yet..
 Patch224:	rpm-5.4.14-add-support-for-deprecating-epoch.patch
 Patch225:	rpm-5.4.14-workaround-scriptlet-dependency-ordering-issue.patch
+Patch226:	rpm-5.4.14-enable-twiddle-in-evr-tupple.patch
 
 # Turn back old implementation of __urlgetfile handling
 Patch505:       rpm-5.4.10-turn-back-urlgetfile.patch
@@ -1001,6 +1002,7 @@ This package contains the RPM API documentation generated in HTML format.
 # not yet..
 %patch224 -p1 -b .deprecate_epoch~
 %patch225 -p1 -b .order~
+%patch226 -p1 -b .twiddle~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
