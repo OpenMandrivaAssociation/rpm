@@ -997,7 +997,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch222 -p1 -b .gst_typo~
 %patch223 -p1 -b .fixverify~
 # not yet..
-#patch224 -p1 -b .deprecate_epoch~
+%patch224 -p1 -b .deprecate_epoch~
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
 #required by P55, P80, P81, P94..
