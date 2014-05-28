@@ -67,7 +67,7 @@
 @@ -128,6 +128,7 @@ end\
  
  %_duplicate_files_terminate_build	1
- %_unpackaged_subdirs_terminate_build	0
+ %_unpackaged_subdirs_terminate_build	1
 +%_files_listed_twice_terminate_build	1
  
  %_build_pkgcheck_set /usr/bin/rpmlint -T -f %{_sourcedir}/%{name}.rpmlintrc
