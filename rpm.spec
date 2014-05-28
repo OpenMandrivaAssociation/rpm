@@ -984,12 +984,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch199 -p1 -b .fontdep_sure~
 %patch201 -p1 -b .subpackage_errors~
 %patch202 -p1 -b .python3~
-# (tpg) enable only for cooker
-# omv2013.0 branch is not a cooker anymore so it is safe
-# to push this
-%if "%{distro_branch}" == "Cooker"
 %patch203 -p1 -b .static~
-%endif
 %patch204 -p1 -b .libpackage~
 %patch206 -p1 -b .aarch64_multiarch
 %patch207 -p1 -b .update_config.subguess
