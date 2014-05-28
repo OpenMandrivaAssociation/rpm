@@ -7,7 +7,7 @@
 +%_xz_threads				-1
  
  %_duplicate_files_terminate_build	1
- %_unpackaged_subdirs_terminate_build	0
+ %_unpackaged_subdirs_terminate_build	1
 --- rpm-5.4.14/rpmio/xzdio.c.multithread~	2012-04-15 23:20:53.000000000 +0200
 +++ rpm-5.4.14/rpmio/xzdio.c	2014-02-12 20:03:33.424406283 +0100
 @@ -10,6 +10,8 @@
