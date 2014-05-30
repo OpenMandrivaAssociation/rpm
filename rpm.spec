@@ -560,6 +560,8 @@ Patch260:	rpm-5.4.10-fix-missing-types-in-headers.patch
 Patch261:	rpm-4.5-unglobal.patch
 Patch262:	rpm-5.4.13-double-check-unpackaged-dirs.patch
 Patch263:	rpm-5.4.9-debugedit-segv.patch
+Patch264:	rpm-debugedit-valid-file-to-fix-segment-fault.patch
+Patch265:	0001-Ensure-clean-paths-are-used-for-matching-in-debugedi.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1025,6 +1027,8 @@ popd
 %patch261 -p1 -b .unglobal~
 %patch262 -p1 -b .unpkg_dirdups~
 %patch263 -p1 -b .debugedit_segv~
+%patch264 -p1 -b .large_bss~
+%patch265 -p1 -b .clean_paths~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
