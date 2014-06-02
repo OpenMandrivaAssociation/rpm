@@ -60,6 +60,12 @@
 %define librpmnamedevel %mklibname -d rpm
 %define librpmstatic %mklibname -d -s rpm
 
+%ifarch aarch64
+# "linux32 rpm -E %{_arch}" returns aarch64 on aarch64...
+# Force it to do the right thing for now
+%define multiarch_platform multiarch-arm-%{_target_os}
+%endif
+
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
