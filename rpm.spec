@@ -1016,7 +1016,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch227 -p1 -b .unpkg_dirdups~
 %patch228 -p1 -b .configure2_5x~
 %patch229 -p1 -b .clangdefault~
-%patch230 -p1 -b .gnueabihf~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
@@ -1029,6 +1028,7 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 %patch200 -p1
 %patch205 -p1
 %patch213 -p1
+%patch230 -p1 -b .gnueabihf~
 
 %patch505 -p1 -b .urlgetfile~
 
