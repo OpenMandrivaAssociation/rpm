@@ -559,6 +559,7 @@ Patch229:      rpm-5.4.10-default-to-clang.patch
 # Use -gnueabihf rather than -gnueabi as suffix for arm hardfloat
 # targets
 Patch230:	rpm-5.4.10-arm-gnueabihf.patch
+Patch231:	rpm-5.4.14-overridable-src-rpm-filename.patch
 
 # Turn back old implementation of __urlgetfile handling
 Patch505:       rpm-5.4.10-turn-back-urlgetfile.patch
@@ -1029,6 +1030,7 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 %patch205 -p1
 %patch213 -p1
 %patch230 -p1 -b .gnueabihf~
+%patch231 -p1 -b .srcfilename~
 
 %patch505 -p1 -b .urlgetfile~
 
