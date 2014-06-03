@@ -70,7 +70,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}68
+Release:	%{?prereldate:0.%{prereldate}.}69
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -556,6 +556,9 @@ Patch227:	rpm-5.4.13-double-check-unpackaged-dirs.patch
 Patch228:      rpm-5.4.10-deprecate-configure2_5x.patch
 # Default to clang/clang++ for __cc and __cxx
 Patch229:      rpm-5.4.10-default-to-clang.patch
+# Use -gnueabihf rather than -gnueabi as suffix for arm hardfloat
+# targets
+Patch230:	rpm-5.4.10-arm-gnueabihf.patch
 
 # Turn back old implementation of __urlgetfile handling
 Patch505:       rpm-5.4.10-turn-back-urlgetfile.patch
@@ -1013,6 +1016,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch227 -p1 -b .unpkg_dirdups~
 %patch228 -p1 -b .configure2_5x~
 %patch229 -p1 -b .clangdefault~
+%patch230 -p1 -b .gnueabihf~
 
 # aclocal's AC_DEFUN fixing messes up a strange construct in iconv.m4
 sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
