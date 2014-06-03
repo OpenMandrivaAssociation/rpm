@@ -562,6 +562,7 @@ Patch262:	rpm-5.4.13-double-check-unpackaged-dirs.patch
 Patch263:	rpm-5.4.9-debugedit-segv.patch
 Patch264:	rpm-debugedit-valid-file-to-fix-segment-fault.patch
 Patch265:	0001-Ensure-clean-paths-are-used-for-matching-in-debugedi.patch
+Patch266:	rpm-5.4.14-overridable-src-rpm-filename.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1029,6 +1030,7 @@ popd
 %patch263 -p1 -b .debugedit_segv~
 %patch264 -p1 -b .large_bss~
 %patch265 -p1 -b .clean_paths~
+%patch266 -p1 -b .srcfilename~
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
