@@ -563,6 +563,8 @@ Patch263:	rpm-5.4.9-debugedit-segv.patch
 Patch264:	rpm-debugedit-valid-file-to-fix-segment-fault.patch
 Patch265:	0001-Ensure-clean-paths-are-used-for-matching-in-debugedi.patch
 Patch266:	rpm-5.4.14-overridable-src-rpm-filename.patch
+# %%configure2_5x deprecation, %%configure handling
+Patch267:	rpm-5.4.10-deprecate-configure2_5x.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1031,6 +1033,8 @@ popd
 %patch264 -p1 -b .large_bss~
 %patch265 -p1 -b .clean_paths~
 %patch266 -p1 -b .srcfilename~
+%patch267 -p1 -b .configure2_5x~
+
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
