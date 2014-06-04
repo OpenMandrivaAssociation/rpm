@@ -70,7 +70,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}70
+Release:	%{?prereldate:0.%{prereldate}.}71
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -647,7 +647,7 @@ BuildRequires:	elfutils >= 0.154
 BuildRequires:	libtool >= 2.4.2-3
 # rpm can't be built with clang currently (nested functions)
 BuildRequires:	gcc
-Requires:	cpio
+Requires:	bsdcpio
 Requires:	gawk
 Requires:	coreutils
 Requires:	update-alternatives
