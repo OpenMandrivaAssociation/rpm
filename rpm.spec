@@ -70,7 +70,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}71
+Release:	%{?prereldate:0.%{prereldate}.}72
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -560,6 +560,9 @@ Patch229:      rpm-5.4.10-default-to-clang.patch
 # targets
 Patch230:	rpm-5.4.10-arm-gnueabihf.patch
 Patch231:	rpm-5.4.14-overridable-src-rpm-filename.patch
+# file 5.18+ reports xz files as "XZ compressed data" while older
+# versions say "xz compressed data" -- make the check case insensitive.
+Patch232:	rpm-5.4.10-rpm2cpio-file-5.18.patch
 
 # Turn back old implementation of __urlgetfile handling
 Patch505:       rpm-5.4.10-turn-back-urlgetfile.patch
@@ -1031,6 +1034,7 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 %patch213 -p1
 %patch230 -p1 -b .gnueabihf~
 %patch231 -p1 -b .srcfilename~
+%patch232 -p1 -b .file~
 
 %patch505 -p1 -b .urlgetfile~
 
