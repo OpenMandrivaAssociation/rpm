@@ -1,0 +1,14 @@
+--- rpm-5.4.14/macros/mandriva.in.dlopen_req~	2014-06-06 20:52:02.212667806 +0200
++++ rpm-5.4.14/macros/mandriva.in	2014-06-06 20:52:05.486030666 +0200
+@@ -489,4 +489,11 @@ The %{1} library, a part of %{name}\
+ %{_libdir}/lib%{1}.so.%{2}*\
+ %{nil}
+ 
++# get dependencies from library that foo.so points to, very convenient if one wanna
++# ie. generate requires/suggests against libraries that are dlopen()'ed
++# first argument specifies library name without .so extension, while the optional second
++# argument can be used to specify different library path than %%{_libdir}
++%dlopen_req() \
++%(readlink -f %{?!2:%{_libdir}}%{?2}/%{1}.so | %{_usrlibrpmbin}/rpmdeps --provides | tr '\\n' ' ')
++
+ %{load:/etc/rpm/macros.d/*.macros}

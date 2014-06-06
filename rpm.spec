@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}18
+Release:	%{?prereldate:0.%{prereldate}.}19
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -565,6 +565,7 @@ Patch265:	0001-Ensure-clean-paths-are-used-for-matching-in-debugedi.patch
 Patch266:	rpm-5.4.14-overridable-src-rpm-filename.patch
 # %%configure2_5x deprecation, %%configure handling
 Patch267:	rpm-5.4.10-deprecate-configure2_5x.patch
+Patch268:	rpm-5.4.14-add-dlopen_req-macro.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1034,6 +1035,7 @@ popd
 %patch265 -p1 -b .clean_paths~
 %patch266 -p1 -b .srcfilename~
 %patch267 -p1 -b .configure2_5x~
+%patch268 -p1 -b .dlopen_req~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
