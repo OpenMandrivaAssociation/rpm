@@ -70,7 +70,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}73
+Release:	%{?prereldate:0.%{prereldate}.}74
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -563,7 +563,8 @@ Patch231:	rpm-5.4.14-overridable-src-rpm-filename.patch
 # file 5.18+ reports xz files as "XZ compressed data" while older
 # versions say "xz compressed data" -- make the check case insensitive.
 Patch232:	rpm-5.4.10-rpm2cpio-file-5.18.patch
-
+# Make sure macros work with python 3.x
+Patch233:	rpm-5.4.10-macros-python3.patch
 # Turn back old implementation of __urlgetfile handling
 Patch505:       rpm-5.4.10-turn-back-urlgetfile.patch
 
@@ -1035,6 +1036,7 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 %patch230 -p1 -b .gnueabihf~
 %patch231 -p1 -b .srcfilename~
 %patch232 -p1 -b .file~
+%patch233 -p1 -b .python3~
 
 %patch505 -p1 -b .urlgetfile~
 
