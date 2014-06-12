@@ -565,6 +565,8 @@ Patch231:	rpm-5.4.14-overridable-src-rpm-filename.patch
 Patch232:	rpm-5.4.10-rpm2cpio-file-5.18.patch
 # Make sure macros work with python 3.x
 Patch233:	rpm-5.4.10-macros-python3.patch
+# Make the perl module use the same toolchain as everything else
+Patch234:	rpm-5.4.10-perl-use-same-toolchain.patch
 # Turn back old implementation of __urlgetfile handling
 Patch505:       rpm-5.4.10-turn-back-urlgetfile.patch
 
@@ -1037,6 +1039,7 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 %patch231 -p1 -b .srcfilename~
 %patch232 -p1 -b .file~
 %patch233 -p1 -b .python3~
+%patch234 -p1 -b .sameToolchain~
 
 %patch505 -p1 -b .urlgetfile~
 
@@ -1145,11 +1148,6 @@ export CXX=g++
 		--with-vendor=mandriva \
 		--enable-build-warnings
 
-if echo %{__cc} |grep -q clang; then
-	# Trouble with hardcoded compiler flags here (-fno-delete-null-pointer-checks)
-	sed -i -e 's|-fno-delete-null-pointer-checks||g' perl/Make*
-fi
-
 # XXX: Making ie. a --with-pre-macros option might be more aestethic and easier
 # of use to others if pushed back upstream?
 # For our case, this is only used to define _prefer_target_cpu before any other
@@ -1167,10 +1165,6 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 %if %{with perl}
 pushd RPMBDB-*
 perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}" CCCDLFLAGS="-fno-PIE -fPIC"
-if echo %{__cc} |grep -q clang; then
-	# Trouble with hardcoded compiler flags here (-fno-delete-null-pointer-checks)
-	sed -i -e 's|-fno-delete-null-pointer-checks||g' Make* ../perl/Make*
-fi
 sed -i -e 's,-fPIC -fno-PIE,-fno-PIE -fPIC,g' ../perl/Makefile.perl
 %make
 popd
