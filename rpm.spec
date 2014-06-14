@@ -566,6 +566,7 @@ Patch266:	rpm-5.4.14-overridable-src-rpm-filename.patch
 # %%configure2_5x deprecation, %%configure handling
 Patch267:	rpm-5.4.10-deprecate-configure2_5x.patch
 Patch268:	rpm-5.4.14-add-dlopen_req-macro.patch
+Patch269:	rpm-5.4.14-add-_rundir-macro.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1036,6 +1037,7 @@ popd
 %patch266 -p1 -b .srcfilename~
 %patch267 -p1 -b .configure2_5x~
 %patch268 -p1 -b .dlopen_req~
+%patch269 -p1 -b .rundir~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1143,6 +1145,7 @@ sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 %else
 		--with-extra-path-macros=%{_usrlibrpm}/platform/%%{_target}/macros:%{_sysconfdir}/rpm/macros.d/*.macros:%{_usrlibrpm}/macros.d/mandriva \
 %endif
+		--with-rundir=/run \
 		--with-vendor=mandriva \
 		--enable-build-warnings
 # XXX: Making ie. a --with-pre-macros option might be more aestethic and easier
