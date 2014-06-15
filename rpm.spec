@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}20
+Release:	%{?prereldate:0.%{prereldate}.}21
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -567,6 +567,11 @@ Patch266:	rpm-5.4.14-overridable-src-rpm-filename.patch
 Patch267:	rpm-5.4.10-deprecate-configure2_5x.patch
 Patch268:	rpm-5.4.14-add-dlopen_req-macro.patch
 Patch269:	rpm-5.4.14-add-_rundir-macro.patch
+# this patch will disable automatic %%doc files for files in specific
+# directories by setting the _no_default_doc_files variable.
+# as this will drop all %%docdirs for where %%doc files would be copied
+# to, you'll need to add ie. a %%docdir %%{_defaultdocdir} line to %%files
+Patch270:	rpm-5.4.14-add-support-for-disabling-default-doc-files.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1038,6 +1043,7 @@ popd
 %patch267 -p1 -b .configure2_5x~
 %patch268 -p1 -b .dlopen_req~
 %patch269 -p1 -b .rundir~
+%patch270 -p1 -b .nodefaultdocdir~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
