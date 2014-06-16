@@ -1,5 +1,5 @@
---- rpm-5.4.14/build/misc.c.deprecate_epoch~	2014-05-13 02:14:20.434334876 +0200
-+++ rpm-5.4.14/build/misc.c	2014-05-14 01:13:57.786385713 +0200
+--- rpm-5.4.14/build/misc.c.deprecate_epoch~	2008-07-31 04:40:05.000000000 +0200
++++ rpm-5.4.14/build/misc.c	2014-06-16 13:11:04.292180772 +0200
 @@ -18,3 +18,14 @@ int parseNum(const char * line, rpmuint3
      if (res) *res = rc;
      return (((*s1) || (s1 == line) || (rc == ULONG_MAX)) ? 1 : 0);
@@ -15,8 +15,8 @@
 +    if (res) *res = rc;
 +    return (((*s1) || (s1 == line) || (rc == LONG_MAX)) ? 1 : 0);
 +}
---- rpm-5.4.14/build/parsePreamble.c.deprecate_epoch~	2014-05-13 02:17:45.045815083 +0200
-+++ rpm-5.4.14/build/parsePreamble.c	2014-05-13 02:21:05.299148329 +0200
+--- rpm-5.4.14/build/parsePreamble.c.deprecate_epoch~	2014-06-16 13:11:04.152179430 +0200
++++ rpm-5.4.14/build/parsePreamble.c	2014-06-16 13:11:04.292180772 +0200
 @@ -613,7 +613,7 @@ static rpmRC handlePreambleTag(Spec spec
      int multiToken = 0;
      rpmsenseFlags tagflags;
@@ -58,8 +58,48 @@
  	he->c = 1;
  	xx = headerPut(pkg->header, he, 0);
  
---- rpm-5.4.14/build/rpmbuild.h.deprecate_epoch~	2014-05-13 02:22:06.945029491 +0200
-+++ rpm-5.4.14/build/rpmbuild.h	2014-05-13 02:22:10.155179611 +0200
+--- rpm-5.4.14/build/parseReqs.c.deprecate_epoch~	2014-06-16 13:11:29.762424870 +0200
++++ rpm-5.4.14/build/parseReqs.c	2014-06-16 13:12:09.879475851 +0200
+@@ -28,6 +28,7 @@ rpmRC parseRCPOT(Spec spec, Package pkg,
+     Header h;
+     rpmRC rc = RPMRC_FAIL;	/* assume failure */
+     int ix;
++    int negativeEpoch = 0;
+ 
+     switch (tagN) {
+     case RPMTAG_PROVIDEFLAGS:
+@@ -182,10 +183,17 @@ rpmRC parseRCPOT(Spec spec, Package pkg,
+ 			spec->lineNum, "EVR", spec->line);
+ 		goto exit;
+ 	    }
++	    /* accept a '-' at beginning of EVR as we now accept negative
++	     * integers as epoch values in order to be able to deprecate them
++	     */
+ 	    if (nr > 1) {
+-		rpmlog(RPMLOG_ERR, _("line %d: Illegal char '-' in %s: %s\n"),
+-			spec->lineNum, "EVR", spec->line);
+-		goto exit;
++	       if (EVR[0] == '-' && strchr(EVR, ':') != NULL)
++		   negativeEpoch = 1;
++	       else {
++		   rpmlog(RPMLOG_ERR, _("line %d: Illegal char '-' in %s: %s\n"),
++			   spec->lineNum, "EVR", spec->line);
++		   goto exit;
++	       }
+             }
+ 	    /* EVR must be parseable (or a macro). */
+ 	    ix = 0;
+@@ -194,6 +202,8 @@ rpmRC parseRCPOT(Spec spec, Package pkg,
+ 	    {
+ 		memset(evr, 0, sizeof(*evr));
+ 		ix = rpmEVRparse(EVR, evr);
++		if (negativeEpoch)
++		    assert(evr->F[RPMEVR_E][0] == '-');
+ 		evr->str = _free(evr->str);
+ 	    }
+ 	    if (ix != 0) {
+--- rpm-5.4.14/build/rpmbuild.h.deprecate_epoch~	2014-06-16 13:11:04.052178471 +0200
++++ rpm-5.4.14/build/rpmbuild.h	2014-06-16 13:11:04.292180772 +0200
 @@ -233,6 +233,15 @@ int parseNum(/*@null@*/ const char * lin
  	/*@modifies *res @*/;
  
@@ -76,8 +116,8 @@
   * Add changelog entry to header.
   * @todo addChangelogEntry should be static.
   * @param h		header
---- rpm-5.4.14/macros/macros.in.deprecate_epoch~	2014-05-13 02:29:13.019009994 +0200
-+++ rpm-5.4.14/macros/macros.in	2014-05-15 13:16:45.075949264 +0200
+--- rpm-5.4.14/macros/macros.in.deprecate_epoch~	2014-06-16 13:11:04.208846640 +0200
++++ rpm-5.4.14/macros/macros.in	2014-06-16 13:11:04.292180772 +0200
 @@ -740,7 +740,7 @@ $_arbitrary_tags_tests	Foo:Bar
  # STEP 1: Match the string and capture regex parts
  #                      1          2           3             4
@@ -105,8 +145,8 @@
  %pattern_Version	^[A-Za-z0-9+._~]+$
  %pattern_Release	^[A-Za-z0-9+._]+$
  %pattern_Disttag	^[A-Za-z0-9]+$
---- rpm-5.4.14/perl/RPM_Header.xs.deprecate_epoch~	2014-05-14 02:13:58.633419651 +0200
-+++ rpm-5.4.14/perl/RPM_Header.xs	2014-05-14 02:14:15.981241484 +0200
+--- rpm-5.4.14/perl/RPM_Header.xs.deprecate_epoch~	2012-04-25 22:34:49.000000000 +0200
++++ rpm-5.4.14/perl/RPM_Header.xs	2014-06-16 13:11:04.292180772 +0200
 @@ -404,9 +404,16 @@ tag(h, sv_tag)
  
                          EXTEND(SP, he->c);
@@ -127,8 +167,8 @@
                      }
                  break;
                  case RPM_BIN_TYPE:
---- rpm-5.4.14/rpmdb/rpmevr.c.deprecate_epoch~	2014-05-13 02:10:04.834389449 +0200
-+++ rpm-5.4.14/rpmdb/rpmevr.c	2014-05-15 15:53:13.622846021 +0200
+--- rpm-5.4.14/rpmdb/rpmevr.c.deprecate_epoch~	2013-06-26 21:43:15.000000000 +0200
++++ rpm-5.4.14/rpmdb/rpmevr.c	2014-06-16 13:11:04.292180772 +0200
 @@ -148,7 +148,7 @@ assert(b != NULL);
  
  /*@unchecked@*/ /*@observer@*/ /*@null@*/
