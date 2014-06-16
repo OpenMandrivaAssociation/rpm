@@ -70,7 +70,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}74
+Release:	%{?prereldate:0.%{prereldate}.}75
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -547,7 +547,6 @@ Patch220:	rpm-5.4.14-update-ruby_gemdir-and-ruby_ridir-macros.patch
 Patch221:	rpm-5.4.14-fix-dependency-generation-when-ruby_version-is-empty.patch
 Patch222:	rpm-5.4.14-gst-inspect-typo.patch
 Patch223:	rpm-5.4.14-fix-filedigests-verify.patch
-# need more testing, enable for now to test, disable if causing any troubles..
 Patch224:	rpm-5.4.10-add-support-for-deprecating-epoch.patch
 Patch225:	rpm-5.4.14-workaround-scriptlet-dependency-ordering-issue.patch
 Patch226:	rpm-5.4.10-enable-twiddle-in-evr-tupple.patch
