@@ -620,9 +620,9 @@ BuildRequires:	%{bdb}-utils
 BuildRequires:	perl-devel
 %endif
 %if %{with python}
-BuildRequires:	pkgconfig(python) = 2.7 python2 = 2.7.7 
+BuildRequires:	pkgconfig(python) = 2.7 
 # no python 3 support yet..
-BuildConflicts:	pkgconfig(python3) python >= 3.0.0 python(abi) = 3.4 %{mklibname python 3.4m 3.4}
+BuildConflicts:	pkgconfig(python3) pkgconfig(python-3.3) pkgconfig(python-3.3m) python3-devel %{_lib}python-devel
 %endif
 %if %{with js}
 BuildRequires:	pkgconfig(mozjs185)
