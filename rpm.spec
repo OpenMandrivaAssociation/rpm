@@ -620,7 +620,7 @@ BuildRequires:	%{bdb}-utils
 BuildRequires:	perl-devel
 %endif
 %if %{with python}
-BuildRequires:	pkgconfig(python27) python2 = 2.7.7 
+BuildRequires:	pkgconfig(python) = 2.7 python2 = 2.7.7 
 # no python 3 support yet..
 BuildConflicts:	pkgconfig(python3) python >= 3.0.0 python(abi) = 3.4 %{mklibname python 3.4m 3.4}
 %endif
