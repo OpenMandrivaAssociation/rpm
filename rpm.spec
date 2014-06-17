@@ -1,4 +1,6 @@
-%define	_target_vendor mandriva
+%define	_target_vendor	mandriva
+%define	py_platsitedir	%{_libdir}/python2.7/site-packages
+%define	python_version	2.7
 
 %bcond_with	bootstrap
 %bcond_with	debug
