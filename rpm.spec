@@ -618,7 +618,9 @@ BuildRequires:	%{bdb}-utils
 BuildRequires:	perl-devel
 %endif
 %if %{with python}
-BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python2)
+# no python 3 support yet..
+BuildConflicts:	pkgconfig(python3)
 %endif
 %if %{with js}
 BuildRequires:	pkgconfig(mozjs185)
