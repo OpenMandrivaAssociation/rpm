@@ -1,6 +1,5 @@
+%define python_version 2.7
 %define	_target_vendor	mandriva
-%define	py_platsitedir	%{_libdir}/python2.7/site-packages
-%define	python_version	2.7
 
 %bcond_with	bootstrap
 %bcond_with	debug
@@ -621,8 +620,6 @@ BuildRequires:	perl-devel
 %endif
 %if %{with python}
 BuildRequires:	pkgconfig(python) = 2.7 
-# no python 3 support yet..
-BuildConflicts:	pkgconfig(python3) pkgconfig(python-3.3) pkgconfig(python-3.3m) python3-devel %{_lib}python-devel
 %endif
 %if %{with js}
 BuildRequires:	pkgconfig(mozjs185)
@@ -740,8 +737,8 @@ Requires:	spec-helper >= 0.31.12
 Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
 %if %{without bootstrap}
 Requires:	python-rpm = %{EVRD}
-Requires:	python-pkg-resources
-BuildRequires:	python-pkg-resources
+Requires:	python2-pkg-resources
+BuildRequires:	python2-pkg-resources
 %endif
 Requires:	pkgconfig
 # ditch to eliminate dependency on perl deps not part of standard perl library
@@ -1050,7 +1047,7 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 # rpm can't be built with clang currently (nested functions)
 export CC=gcc
 export CXX=g++
-
+export __PYTHON=%{_bindir}/python2
 %configure	--enable-nls \
 		--with-pic \
 		--enable-static \
@@ -1218,8 +1215,8 @@ EOF
 
 # Get rid of unpackaged files
 # XXX: is there any of these we might want to keep?
-for f in %{py_platsitedir}/poptmodule.a %{py_platsitedir}/rpmmodule.a \
-	%{py_platsitedir}/rpm/*.a %{_rpmhome}/*.a %{_rpmhome}/lib/*.a\
+for f in %{py2_platsitedir}/poptmodule.a %{py2_platsitedir}/rpmmodule.a \
+	%{py2_platsitedir}/rpm/*.a %{_rpmhome}/*.a %{_rpmhome}/lib/*.a\
 	%{_rpmhome}/{Specfile.pm,cpanflute2,cpanflute,sql.prov,sql.req,tcl.req} \
 	%{_rpmhome}/{config.site,cross-build,rpmdiff.cgi} \
 	%{_rpmhome}/trpm %{_bindir}/rpmdiff; do
@@ -1491,9 +1488,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %if %{with embed}
 %{_rpmhome}/lib/rpmpython.so
 %endif
-%dir %{py_platsitedir}/rpm
-%{py_platsitedir}/rpm/*.py
-%{py_platsitedir}/rpm/*.so
+%dir %{py2_platsitedir}/rpm
+%{py2_platsitedir}/rpm/*.py
+%{py2_platsitedir}/rpm/*.so
 %endif
 
 %if %{with ruby}
