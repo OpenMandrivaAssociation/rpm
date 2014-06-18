@@ -71,7 +71,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}75
+Release:	%{?prereldate:0.%{prereldate}.}76
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -567,6 +567,9 @@ Patch232:	rpm-5.4.10-rpm2cpio-file-5.18.patch
 Patch233:	rpm-5.4.10-macros-python3.patch
 # Make the perl module use the same toolchain as everything else
 Patch234:	rpm-5.4.10-perl-use-same-toolchain.patch
+# Fix the %%config_update macro for config.* files in subdirectories
+# whose names contain spaces (seen in resIL)
+Patch235:	rpm-5.4.10-config_update-spaces-in-filenames.patch
 # Turn back old implementation of __urlgetfile handling
 Patch505:       rpm-5.4.10-turn-back-urlgetfile.patch
 
@@ -1040,6 +1043,7 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 %patch232 -p1 -b .file~
 %patch233 -p1 -b .python3~
 %patch234 -p1 -b .sameToolchain~
+%patch235 -p1 -b .configUpdate~
 
 %patch505 -p1 -b .urlgetfile~
 
