@@ -6,7 +6,7 @@
      } else {
 +#if defined(RPM_VENDOR_MANDRIVA)
 +	if (!strcmp(N, "/bin/sh") || !strcmp(N, "/sbin/ldconfig")) {
-+	    rpmlog(RPMLOG_DEBUG, "%s will be satisfied by glibc or it's dependencies, won't add dependency to package\n");
++	    rpmlog(RPMLOG_DEBUG, "%s will be satisfied by glibc or it's dependencies, won't add dependency to package\n", N);
 +	    return 0;
 +	}
 +#endif
