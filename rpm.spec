@@ -572,6 +572,7 @@ Patch269:	rpm-5.4.14-add-_rundir-macro.patch
 # as this will drop all %%docdirs for where %%doc files would be copied
 # to, you'll need to add ie. a %%docdir %%{_defaultdocdir} line to %%files
 Patch270:	rpm-5.4.14-add-support-for-disabling-default-doc-files.patch
+Patch271:	rpm-5.4.14-add-missing-strfmt-arg.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1044,6 +1045,7 @@ popd
 %patch268 -p1 -b .dlopen_req~
 %patch269 -p1 -b .rundir~
 %patch270 -p1 -b .nodefaultdocdir~
+%patch271 -p| -b .strfmt_arg~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
