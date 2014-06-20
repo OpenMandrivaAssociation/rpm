@@ -1051,7 +1051,6 @@ tar -xf %{SOURCE3} -C cpu-os-macros
 # rpm can't be built with clang currently (nested functions)
 export CC=gcc
 export CXX=g++
-export __PYTHON=%{_bindir}/python2
 %configure	--enable-nls \
 		--with-pic \
 		--enable-static \
@@ -1492,9 +1491,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %if %{with embed}
 %{_rpmhome}/lib/rpmpython.so
 %endif
-%dir %{py2_platsitedir}/rpm
-%{py2_platsitedir}/rpm/*.py
-%{py2_platsitedir}/rpm/*.so
+%dir %{py_platsitedir}/rpm
+%{py_platsitedir}/rpm/*.py
+%{py_platsitedir}/rpm/*.so
 %endif
 
 %if %{with ruby}

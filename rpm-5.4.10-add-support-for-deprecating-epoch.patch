@@ -1,5 +1,5 @@
 --- rpm-5.4.10/build/misc.c.deprecate_epoch~	2008-07-31 04:40:05.000000000 +0200
-+++ rpm-5.4.10/build/misc.c	2014-06-16 13:34:10.338758240 +0200
++++ rpm-5.4.10/build/misc.c	2014-06-20 04:10:21.563560336 +0200
 @@ -18,3 +18,14 @@ int parseNum(const char * line, rpmuint3
      if (res) *res = rc;
      return (((*s1) || (s1 == line) || (rc == ULONG_MAX)) ? 1 : 0);
@@ -15,8 +15,8 @@
 +    if (res) *res = rc;
 +    return (((*s1) || (s1 == line) || (rc == LONG_MAX)) ? 1 : 0);
 +}
---- rpm-5.4.10/build/parsePreamble.c.deprecate_epoch~	2014-06-16 13:34:10.292091115 +0200
-+++ rpm-5.4.10/build/parsePreamble.c	2014-06-16 13:34:10.342091606 +0200
+--- rpm-5.4.10/build/parsePreamble.c.deprecate_epoch~	2014-06-20 04:10:21.500226427 +0200
++++ rpm-5.4.10/build/parsePreamble.c	2014-06-20 04:10:21.563560336 +0200
 @@ -613,7 +613,7 @@ static rpmRC handlePreambleTag(Spec spec
      int multiToken = 0;
      rpmsenseFlags tagflags;
@@ -58,8 +58,8 @@
  	he->c = 1;
  	xx = headerPut(pkg->header, he, 0);
  
---- rpm-5.4.10/build/parseReqs.c.deprecate_epoch~	2014-06-16 13:34:10.202090231 +0200
-+++ rpm-5.4.10/build/parseReqs.c	2014-06-16 13:34:10.342091606 +0200
+--- rpm-5.4.10/build/parseReqs.c.deprecate_epoch~	2014-06-20 04:10:21.360225153 +0200
++++ rpm-5.4.10/build/parseReqs.c	2014-06-20 04:10:21.563560336 +0200
 @@ -28,6 +28,7 @@ rpmRC parseRCPOT(Spec spec, Package pkg,
      Header h;
      rpmRC rc = RPMRC_FAIL;	/* assume failure */
@@ -89,17 +89,21 @@
              }
  	    /* EVR must be parseable (or a macro). */
  	    ix = 0;
-@@ -194,6 +202,8 @@ rpmRC parseRCPOT(Spec spec, Package pkg,
+@@ -194,6 +202,12 @@ rpmRC parseRCPOT(Spec spec, Package pkg,
  	    {
  		memset(evr, 0, sizeof(*evr));
  		ix = rpmEVRparse(EVR, evr);
-+		if (negativeEpoch)
-+		    assert(evr->F[RPMEVR_E][0] == '-');
++		if (negativeEpoch) {
++		    if (!evr->F[RPMEVR_E] || evr->F[RPMEVR_E][0] != '-'){
++			rpmlog(RPMLOG_ERR, _("line %d: epoch %s of %s doesn't correspond with EVR: %s not parse: %s\n"),
++				spec->lineNum, evr->F[RPMEVR_E], evr->str, EVR, spec->line);
++		    }
++		}
  		evr->str = _free(evr->str);
  	    }
  	    if (ix != 0) {
---- rpm-5.4.10/build/rpmbuild.h.deprecate_epoch~	2014-06-16 13:34:10.202090231 +0200
-+++ rpm-5.4.10/build/rpmbuild.h	2014-06-16 13:34:10.342091606 +0200
+--- rpm-5.4.10/build/rpmbuild.h.deprecate_epoch~	2014-06-20 04:10:21.360225153 +0200
++++ rpm-5.4.10/build/rpmbuild.h	2014-06-20 04:10:21.563560336 +0200
 @@ -233,6 +233,15 @@ int parseNum(/*@null@*/ const char * lin
  	/*@modifies *res @*/;
  
@@ -116,8 +120,8 @@
   * Add changelog entry to header.
   * @todo addChangelogEntry should be static.
   * @param h		header
---- rpm-5.4.10/macros/macros.in.deprecate_epoch~	2014-06-16 13:34:10.315424677 +0200
-+++ rpm-5.4.10/macros/macros.in	2014-06-16 13:34:10.342091606 +0200
+--- rpm-5.4.10/macros/macros.in.deprecate_epoch~	2014-06-20 04:10:21.533560063 +0200
++++ rpm-5.4.10/macros/macros.in	2014-06-20 04:10:21.566893700 +0200
 @@ -740,7 +740,7 @@ $_arbitrary_tags_tests	Foo:Bar
  # STEP 1: Match the string and capture regex parts
  #                      1          2           3             4
@@ -146,7 +150,7 @@
  %pattern_Release	^[A-Za-z0-9+._]+$
  %pattern_Disttag	^[A-Za-z0-9]+$
 --- rpm-5.4.10/perl/RPM_Header.xs.deprecate_epoch~	2012-04-25 22:34:49.000000000 +0200
-+++ rpm-5.4.10/perl/RPM_Header.xs	2014-06-16 13:34:10.342091606 +0200
++++ rpm-5.4.10/perl/RPM_Header.xs	2014-06-20 04:10:21.566893700 +0200
 @@ -404,9 +404,16 @@ tag(h, sv_tag)
  
                          EXTEND(SP, he->c);
@@ -167,8 +171,22 @@
                      }
                  break;
                  case RPM_BIN_TYPE:
+--- rpm-5.4.10/python/header-py.c.deprecate_epoch~	2012-03-31 20:23:51.000000000 +0200
++++ rpm-5.4.10/python/header-py.c	2014-06-20 04:10:21.566893700 +0200
+@@ -541,7 +541,10 @@ static PyObject * hdr_subscript(hdrObjec
+ 	    }
+ 	    o = metao;
+ 	} else {
+-	    o = PyInt_FromLong(he->p.ui32p[0]);
++		if (tag == RPMTAG_EPOCH)
++		    o = PyInt_FromLong((int32_t) he->p.ui32p[0]);
++		else
++		    o = PyInt_FromLong(he->p.ui32p[0]);
+ 	}
+ 	break;
+ 
 --- rpm-5.4.10/rpmdb/rpmevr.c.deprecate_epoch~	2012-07-06 17:39:18.000000000 +0200
-+++ rpm-5.4.10/rpmdb/rpmevr.c	2014-06-16 13:35:15.882734585 +0200
++++ rpm-5.4.10/rpmdb/rpmevr.c	2014-06-20 04:11:27.590827758 +0200
 @@ -148,7 +148,7 @@ assert(b != NULL);
  
  /*@unchecked@*/ /*@observer@*/ /*@null@*/
