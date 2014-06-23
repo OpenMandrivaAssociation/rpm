@@ -71,7 +71,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}77
+Release:	%{?prereldate:0.%{prereldate}.}78
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -1002,7 +1002,7 @@ This package contains the RPM API documentation generated in HTML format.
 %patch198 -p1 -b .rpmdbnofsync~
 %patch199 -p1 -b .fontdep_sure~
 %patch201 -p1 -b .subpackage_errors~
-%patch202 -p1 -b .python3~
+%patch202 -p1 -b .python3egg~
 %patch203 -p1 -b .static~
 %patch204 -p1 -b .libpackage~
 %patch206 -p1 -b .aarch64_multiarch

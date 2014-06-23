@@ -1,5 +1,14 @@
---- rpm-5.4.10/macros/python.in.omv~	2014-06-12 18:06:00.488718726 +0200
-+++ rpm-5.4.10/macros/python.in	2014-06-12 18:08:00.469218764 +0200
+--- rpm-5.4.10/macros/python.in.python3~	2011-07-17 00:31:22.000000000 +0200
++++ rpm-5.4.10/macros/python.in	2014-06-23 14:52:43.376236223 +0200
+@@ -2,7 +2,7 @@
+ # To make use of these macros insert the following line into your spec file:
+ # %{load:%{_usrlibrpm}/macros.d/python}
+ 
+-%__python	@__PYTHON@
++%__python	%{_bindir}/python
+ 
+ # Path to scripts to autogenerate python package dependencies,
+ #
 @@ -11,25 +11,25 @@
  %__python_provides	%{_rpmhome}/pythoneggs.py --provides
  %__python_requires	%{_rpmhome}/pythoneggs.py --requires
@@ -35,8 +44,8 @@
  
  %py_compile(O)  \
  find %1 -name '*.pyc' -exec rm -f {} \\; \
---- rpm-5.4.10/scripts/pythoneggs.py.omv~	2014-06-12 18:08:10.656091410 +0200
-+++ rpm-5.4.10/scripts/pythoneggs.py	2014-06-12 18:08:19.322983059 +0200
+--- rpm-5.4.10/scripts/pythoneggs.py.python3~	2014-06-23 14:51:49.397236050 +0200
++++ rpm-5.4.10/scripts/pythoneggs.py	2014-06-23 14:52:12.770236125 +0200
 @@ -31,14 +31,14 @@ buildroot = None
  
  for o, a in opts:
@@ -111,9 +120,9 @@
          # Print out unversioned provides, requires, suggests, conflicts
 -        print name
 +        print(name)
---- rpm/scripts/symclash.py	(original)
-+++ rpm/scripts/symclash.py	(refactored)
-@@ -75,8 +75,8 @@
+--- rpm-5.4.10/scripts/symclash.py.python3~	2007-05-25 20:34:16.000000000 +0200
++++ rpm-5.4.10/scripts/symclash.py	2014-06-23 14:52:12.770236125 +0200
+@@ -75,8 +75,8 @@ def filter(symbol, libraries):
                      if l != l2 and w[1].match(l2):
                          libraries.remove(l2)
  
@@ -124,7 +133,7 @@
      if len(syms[s]) > 1:
          libs = " ".join(syms[s])
          if libs in clashes:
-@@ -109,9 +109,9 @@
+@@ -109,9 +109,9 @@ def list_clashes(syms):
  #    print "Symbol clashes between libraries %s:\n  => %s\n" % (c, list_clashes(clashes[c]))
  #
  
