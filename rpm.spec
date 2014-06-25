@@ -572,6 +572,11 @@ Patch269:	rpm-5.4.14-add-_rundir-macro.patch
 # as this will drop all %%docdirs for where %%doc files would be copied
 # to, you'll need to add ie. a %%docdir %%{_defaultdocdir} line to %%files
 Patch270:	rpm-5.4.14-add-support-for-disabling-default-doc-files.patch
+# There's not really much good brought by assertion abort on broken headers,
+# and there's anyways sanity checks of the headers following.
+# By allowing rpm to not die on broken headers, ie. rpmdbchk will be able to
+# fix these rpmdbs.
+Patch271:	rpm-5.4.14-no-assert-abort-with-broken-headers.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1044,6 +1049,7 @@ popd
 %patch268 -p1 -b .dlopen_req~
 %patch269 -p1 -b .rundir~
 %patch270 -p1 -b .nodefaultdocdir~
+%patch271 -p1 -b .noassert̃~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
