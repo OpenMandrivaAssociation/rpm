@@ -1049,7 +1049,7 @@ popd
 %patch268 -p1 -b .dlopen_req~
 %patch269 -p1 -b .rundir~
 %patch270 -p1 -b .nodefaultdocdir~
-%patch271 -p1 -b .noassert̃~
+%patch271 -p1 -b .noassert~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
