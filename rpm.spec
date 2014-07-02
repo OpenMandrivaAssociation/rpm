@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}23
+Release:	%{?prereldate:0.%{prereldate}.}24
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -577,6 +577,7 @@ Patch270:	rpm-5.4.14-add-support-for-disabling-default-doc-files.patch
 # By allowing rpm to not die on broken headers, ie. rpmdbchk will be able to
 # fix these rpmdbs.
 Patch271:	rpm-5.4.14-no-assert-abort-with-broken-headers.patch
+Patch272:	rpm-5.4.14-delete-require-tags-if-all-dependencies-are-removed.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1050,6 +1051,7 @@ popd
 %patch269 -p1 -b .rundir~
 %patch270 -p1 -b .nodefaultdocdir~
 %patch271 -p1 -b .noassert~
+%patch272 -p1 -b .remove_all_deptags~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
