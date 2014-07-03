@@ -578,6 +578,7 @@ Patch270:	rpm-5.4.14-add-support-for-disabling-default-doc-files.patch
 # fix these rpmdbs.
 Patch271:	rpm-5.4.14-no-assert-abort-with-broken-headers.patch
 Patch272:	rpm-5.4.14-delete-require-tags-if-all-dependencies-are-removed.patch
+Patch273:	rpm-5.4.14-add-missing-delMacroAll-prototype.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1052,6 +1053,7 @@ popd
 %patch270 -p1 -b .nodefaultdocdir~
 %patch271 -p1 -b .noassert~
 %patch272 -p1 -b .remove_all_deptags~
+%patch273 -p1 -b .missing_prototype~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
