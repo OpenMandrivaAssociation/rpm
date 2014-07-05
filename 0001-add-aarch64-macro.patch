@@ -22,7 +22,7 @@ index 0000000..f9db664
 +%_arch                  aarch64
 +%_os                    linux
 +%_gnu                   -gnu
-+%optflags              %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC -fomit-frame-pointer -Wl,-O2,-z,combreloc,-z,relro,--enable-new-dtags,--hash-style=gnu}%{!?__common_cflags_with_ssp:-O2}
++%optflags              %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC -fomit-frame-pointer -Wl,-O2,-z,combreloc,-z,relro,--enable-new-dtags,--hash-style=gnu}%{!?__common_cflags_with_ssp:-Oz}
 +
 +#==============================================================================
 +# ---- configure macros.

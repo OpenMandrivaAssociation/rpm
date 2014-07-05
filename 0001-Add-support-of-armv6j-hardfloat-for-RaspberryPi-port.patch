@@ -26,7 +26,7 @@ index 0000000..fdf5d5e
 +%_arch			arm
 +%_os			linux
 +%_gnu			-gnueabi
-+%optflags		 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC -g -march=armv6j -mfpu=vfp -mfloat-abi=hard}%{!?__common_cflags_with_ssp:-O2}
++%optflags		 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC -g -march=armv6j -mfpu=vfp -mfloat-abi=hard}%{!?__common_cflags_with_ssp:-Oz}
 +
 +#==============================================================================
 +# ---- configure macros.
@@ -51,7 +51,7 @@ index 0000000..10ffbbe
 +%_arch			arm
 +%_os			linux
 +%_gnu			-gnueabi
-+%optflags		 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC -g -march=armv7-a -mfloat-abi=hard -mfpu=vfpv3-d16}%{!?__common_cflags_with_ssp:-O2}
++%optflags		 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC -g -march=armv7-a -mfloat-abi=hard -mfpu=vfpv3-d16}%{!?__common_cflags_with_ssp:-Oz}
 +
 +#==============================================================================
 +# ---- configure macros.
