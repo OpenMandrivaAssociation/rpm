@@ -1,5 +1,5 @@
---- rpm-5.4.10/macros/mandriva.in.twiddle~	2014-05-28 15:55:04.793120064 +0200
-+++ rpm-5.4.10/macros/mandriva.in	2014-05-28 15:56:16.120682305 +0200
+--- rpm-5.4.14/macros/mandriva.in.twiddle~	2014-07-27 17:56:00.904730114 +0200
++++ rpm-5.4.14/macros/mandriva.in	2014-07-27 17:57:17.588611155 +0200
 @@ -37,8 +37,8 @@
  
  # This will enable the use of distepoch and disttag in stead of polluting

@@ -1,8 +1,10 @@
---- rpm-5.4.9/lib/psm.c.trigger_args~	2012-05-15 03:08:19.198093824 +0200
-+++ rpm-5.4.9/lib/psm.c	2012-05-15 03:14:25.545079818 +0200
-@@ -610,28 +610,37 @@ static int exitChroot(rpmpsm psm, int in
+--- rpm-5.4.12/lib/psm.c.trigger_args~	2013-07-30 16:33:33.871744315 +0200
++++ rpm-5.4.12/lib/psm.c	2013-07-30 16:38:33.114983689 +0200
+@@ -609,34 +609,44 @@ static int exitChroot(rpmpsm psm, int in
+  * @param arg2		ditto, but for the target package
   * @return		RPMRC_OK on success
   */
++
  static rpmRC runEmbeddedScript(rpmpsm psm, const char * sln, HE_t Phe,
 -		   const char *script, int arg1, int arg2)
 +		   const char *script, int arg1, int arg2, ARGV_t matches)
@@ -26,12 +28,17 @@
  
 -    av[0] = (char *) Phe->p.argv[0];
 +    av = alloca(len * sizeof(*av));
-     if (arg1 >= 0)
- 	(void) sprintf((av[1] = (char *) alloca(32)), "%d", arg1);
+     /* XXX coverity #1035772 */
+     if (arg1 >= 0) {
+ 	av[1] = (char *) alloca(32);
+ 	(void) sprintf(av[1], "%d", arg1);
+     }
 +    else
 +	av[1] = NULL;
-     if (arg2 >= 0)
- 	(void) sprintf((av[2] = (char *) alloca(32)), "%d", arg2);
+     if (arg2 >= 0) {
+ 	av[2] = (char *) alloca(32);
+ 	(void) sprintf(av[2], "%d", arg2);
+      }
 +    else
 +	av[2] = NULL;
 +    if (matches)
@@ -41,7 +48,7 @@
  
  #if defined(WITH_LUA)
      if (!strcmp(Phe->p.argv[0], "<lua>")) {
-@@ -776,7 +785,7 @@ static const char * ldconfig_path = "/sb
+@@ -781,7 +791,7 @@ static const char * ldconfig_path = "/sb
   * @return		RPMRC_OK on success
   */
  static rpmRC runScript(rpmpsm psm, Header h, const char * sln, HE_t Phe,
@@ -50,7 +57,7 @@
  	/*@globals ldconfig_done, rpmGlobalMacroContext, h_errno,
  		fileSystem, internalState@*/
  	/*@modifies psm, ldconfig_done, rpmGlobalMacroContext,
-@@ -843,7 +852,7 @@ assert(he->p.str != NULL);
+@@ -848,7 +858,7 @@ assert(he->p.str != NULL);
  	rpmlog(RPMLOG_DEBUG,
  		D_("%s: %s(%s) running %s scriptlet.\n"),
  		psm->stepName, tag2sln(psm->scriptTag), NVRA, Phe->p.argv[0]);
@@ -59,7 +66,7 @@
  #endif
  	goto exit;
      }
-@@ -870,12 +879,12 @@ assert(he->p.str != NULL);
+@@ -875,12 +885,12 @@ assert(he->p.str != NULL);
  		(F_ISSET(psm, UNORDERED) ? "a" : ""));
  
      if (Phe->p.argv == NULL) {
@@ -74,7 +81,7 @@
  	memcpy(argv, Phe->p.argv, Phe->c * sizeof(*argv));
  	argc = Phe->c;
  	ldconfig_done = (ldconfig_path && !strcmp(argv[0], ldconfig_path)
-@@ -959,6 +968,10 @@ assert(he->p.str != NULL);
+@@ -964,6 +974,10 @@ assert(he->p.str != NULL);
  	    sprintf(av, "%d", arg2);
  	    argv[argc++] = av;
  	}
@@ -85,7 +92,7 @@
      }
  
      argv[argc] = NULL;
-@@ -1199,7 +1212,7 @@ assert(fi->h != NULL);
+@@ -1204,7 +1218,7 @@ assert(fi->h != NULL);
  	Phe->p.argv[0] = argv0 = rpmExpand(Phe->p.argv[0], NULL);
  
      rc = runScript(psm, fi->h, tag2sln(psm->scriptTag), Phe,
@@ -94,7 +101,7 @@
  
  exit:
      argv0 = _free(argv0);
-@@ -1280,6 +1293,7 @@ static rpmRC handleOneTrigger(const rpmp
+@@ -1285,6 +1299,7 @@ static rpmRC handleOneTrigger(const rpmp
      while ((i = rpmdsNext(Tds)) >= 0) {
  	rpmuint32_t Flags = rpmdsFlags(Tds);
  	char * depName;
@@ -102,7 +109,7 @@
  	int bingo;
  
  	/* Skip triggers that are not in this context. */
-@@ -1313,7 +1327,7 @@ static rpmRC handleOneTrigger(const rpmp
+@@ -1318,7 +1333,7 @@ static rpmRC handleOneTrigger(const rpmp
  		    if (xx < 0)
  			/*@innercontinue@*/ continue;
  		    bingo = 1;
@@ -111,7 +118,7 @@
  		}
  		(void)rpmdsFree(ds);
  		ds = NULL;
-@@ -1347,7 +1361,6 @@ static rpmRC handleOneTrigger(const rpmp
+@@ -1352,7 +1367,6 @@ static rpmRC handleOneTrigger(const rpmp
  	    continue;
  
  	/* Coerce strings into header argv return. */
@@ -119,7 +126,7 @@
  	{   int index = Ihe->p.ui32p[i];
  	    const char * s = Phe->p.argv[index];
  	    char * t;
-@@ -1362,11 +1375,12 @@ static rpmRC handleOneTrigger(const rpmp
+@@ -1367,11 +1381,12 @@ static rpmRC handleOneTrigger(const rpmp
  	    *t = '\0';
  
  	    if (runScript(psm, triggeredH, "%trigger", he,

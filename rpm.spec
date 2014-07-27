@@ -53,7 +53,7 @@
 %define bdb db52
 
 %define libver 5.4
-%define minorver 10
+%define minorver 14
 %define srcver %{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -71,7 +71,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}81
+Release:	%{?prereldate:0.%{prereldate}.}1
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -187,7 +187,7 @@ Patch69:	rpm-5.4.4-drop-useless-auto-generated-pkgconfig-dependency.patch
 # status: should *NOT* be merged
 Patch70:	rpm-5.4.4-drop-base-dependencies.patch
 # status: ready for merge
-Patch71:	rpm-5.4.4-fix-rpmconstant-to-always-use-LC_CTYPE-C-for-case-conversion.patch
+Patch71:	rpm-5.4.12-fix-rpmconstant-to-always-use-LC_CTYPE-C-for-case-conversion.patch
 # $RPM_BUILD_DIR isn't necessarily the same as $PWD, it's %%{_builddir}, not
 # %%{_builddir}/%%{?buildsubdir}, messing up paths in debug packages created..
 # status: needs to be discussed and investigated a bit better..
@@ -195,7 +195,7 @@ Patch74:	rpm-5.4.4-pass-_builddir-properly-to-find-debuginfo.patch
 # status: probably okay to merge, but discuss on rpm-devel first
 Patch76:	rpm-5.4.10-files-listed-twice-terminates-build.patch
 # status: don't merge
-Patch77:	rpm-5.4.7-use-bdb-5.2.patch
+Patch77:	rpm-5.4.12-use-bdb-5.2.patch
 # status: probably okay to merge
 Patch78:	rpm-5.4.9-ruby1.9-fixes.patch
 # mdvbz#65269
@@ -244,8 +244,6 @@ Patch102:	rpm-5.4.7-kmod-dependencies.patch
 Patch103:	rpm-5.4.10-desktop-provides.patch
 # status: probably okay to merge, discuss on rpm-devel first
 Patch104:	rpm-5.4.5-skip-dependencies-for-character-devices.patch
-# status: ready to merge
-Patch105:	rpm-5.4.5-rpmfc-use-strlen-not-sizeof.patch
 # status: same as for other dep gen patches
 Patch106:	rpm-5.4.5-break-out-of-elf-link-loop.patch
 # status: probably okay to merge
@@ -262,10 +260,8 @@ Patch112:	rpm-5.4.7-use-gnu-hash-style-by-default-and-drop-rtld-dep.patch
 Patch113:	rpm-5.4.9-add-distepoch-rpmlib-feature.patch
 # status: probably okay to merge, but discuss on rpm-devel first
 Patch114:	rpm-5.4.9-dont-add-versioneddependency-rpmlib-feature-dependency.patch
-# status: ready to merge
-Patch115:	rpm-5.4.7-rpmfc-fix-invalid-free-if-not-_defaultdocdir-set.patch
 # status: probably okay to merge
-Patch116:	rpm-5.4.10-dont-try-generate-rpmfc-dependencies-from-doc-files.patch
+Patch116:	rpm-5.4.12-dont-try-generate-rpmfc-dependencies-from-doc-files.patch
 # status: ready to merge
 Patch117:	rpm-5.4.7-only-generate-ruby-and-python-deps-for-executables-and-modules.patch
 # status: same as for other dep gen patches
@@ -288,7 +284,7 @@ Patch125:	rpm-5.4.7-hdrfmt-fix-unitialized-argv-element.patch
 # status: probably okay to merge, discuss on rpm-devel first
 Patch126:	rpm-5.4.9-add-filetriggers-regex-matching-support.patch
 # status: idem
-Patch127:	rpm-5.4.9-add-matches-as-arguments-to-triggers.patch
+Patch127:	rpm-5.4.12-add-matches-as-arguments-to-triggers.patch
 # status: same as for other dep gen patches
 Patch128:	rpm-5.4.7-dont-consider-trigger-dependencies-as-overlapping.patch
 # status: ready
@@ -296,13 +292,13 @@ Patch129:	rpm-5.4.7-fix-minor-memleaks.patch
 # status: ready
 Patch130:	rpm-5.4.9-mire-fix-strings-lacking-null-terminator.patch
 # status: keep locally for now
-Patch131:	rpm-5.4.10-dlopen-embedded-interpreters.patch
+Patch131:	rpm-5.4.12-dlopen-embedded-interpreters.patch
 # status: ready
 Patch132:	rpm-5.4.9-rpmpython-fix-input.patch
 # status: same as for other dep gen patches
 Patch133:	rpm-5.4.7-generate-devel-provides-outside-of-libdirs.patch
 # status: ready
-Patch134:	rpm-5.4.7-actually-perform-linking-against-internal-lua.patch
+Patch134:	rpm-5.4.14-actually-perform-linking-against-internal-lua.patch
 # status: ready
 Patch135:	rpm-5.4.7-no-seqid_init-on-rdonly-database.patch
 # status: same as for other dep gen patches
@@ -338,8 +334,6 @@ Patch145:	rpm-5.4.8-add-armv7l-specific-macros.patch
 Patch146:	rpm-5.4.9-support-signatures-and-digest-disablers.patch
 # status: undefined
 Patch147:	rpm-5.4.9-add-x32-macros.patch
-# status: ready and should be merged
-Patch149:	rpm-5.4.9-fix-typo-in-rpmtag-header.patch
 # status: can be merged, but doesn't really matter as it's to be removed and
 # we now anyways disable the support in question..
 Patch150:	rpm-5.4.9-dont-remap-i18n-strings-if-enabled.patch
@@ -349,11 +343,6 @@ Patch151:	rpm-5.4.9-disable-support-for-i18nstring-type.patch
 # disable it to avoid errors from berkeley db..
 # status: keep locally
 Patch152:	rpm-5.4.9-disable-l10ndir.patch
-# drop this dead macro
-# status: ready
-Patch154:	rpm-5.4.9-drop-dead-cputoolize-macro.patch
-# idem
-Patch155:	rpm-5.4.9-ditch-install-info-macros.patch
 # the php dependency generator carried with rpm5 is based on a version from PLD
 # that they've backed out later on, reverting to their older version.
 # this patch replaces current upstream rpm5 version with mandriva one, which is
@@ -446,13 +435,13 @@ Patch177:	rpm-5.4.10-automake-1.13.patch
 Patch178:	rpm-5.4.10-crosscompile.patch
 # tool for automatically checking and fixing broken rpmdb
 # status: probably' worth merging upstream
-Patch179:	rpm-5.4.10-rpmdbchk.patch
+Patch179:	rpm-5.4.14-rpmdbchk.patch
 # adds casts for C++ compatibility
 # status: ready
 Patch180:	rpm-5.4.10-rpmdb-typecasts.patch
 # adds ability for printing parsed version of spec file with 'rpm -q --specfile --printspec'
 # status: very simple, non-intrusive, while quite convenient, should be okay to merge
-Patch181:	rpm-5.4.10-printspec.patch
+Patch181:	rpm-5.4.14-printspec.patch
 # drop remaining legacy scripts from rpm-mandriva-setup-build package for us to
 # be able to obsolete it
 # status: mandriva specific, ready to merge
@@ -471,10 +460,6 @@ Patch184:	rpm-5.4.10-cleanup-mandriva-specific-macros.patch
 # might have any possible relevance
 # status: keep locally
 Patch185:	rpm-5.4.10-disable-generation-of-buildid-provides.patch
-# backport from upstream
-Patch186:	rpm-5.4.10-dont-repackage-if-justdb-is-specified.patch
-# backport from upstream
-Patch187:	rpm-5.4.10-adjust-trigger-counts-for-delayed-commit.patch
 # adjust to gstreamer 1.0
 Patch188:	rpm-5.4.10-gstreamer1.0-deps.patch
 # $RPM_PACKAGE_NAME & $RPM_ARCH are used by aot-compile{,-rpm}, so let's just
@@ -513,9 +498,6 @@ Patch194:	rpm-5.4.10-implement-start-and-stop-callbacks.patch
 #
 #- Unused atm but we'll be adding this shortly
 Patch195:	rpm-5.4.10-add-enum-for-RPMCALLBACK_INST_STOP-callback-event.patch
-# this fixes tagSwab to properly handle RPM_UINT64_TYPE, fixing headerPut with
-# status: ready
-Patch196:	rpm-5.4.10-fix-64bit-tagSwab.patch
 Patch197:	rpm-5.4.10-dont-require-group-and-summary-tag-during-build.patch
 Patch198:	rpm-5.4.10-enable-nofsync-for-rpm-rebuilddb.patch
 Patch199:	rpm-5.4.10-fix-font-dep-misidentification.patch
@@ -534,11 +516,12 @@ Patch204:	rpm-5.4.10-libpackage-macro.patch
 Patch205:	0001-add-aarch64-macro.patch
 Patch206:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
 Patch207:	fix-config-sub-in-configure.patch
-Patch210:	rpm-5.4.12-fix-rpmpython-module-import-init.patch
+Patch209:	rpm-5.4.12-fix-rpmlua-print.patch
+Patch210:	rpm-5.4.13-fix-rpmpython-module-import-init.patch
 Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
 Patch212:	rpm-5.4.10-cmake-dependency-generator.patch
 Patch213:	0001-Add-support-of-armv6j-hardfloat-for-RaspberryPi-port.patch
-Patch214:	rpm-5.4.10-only-print-python-debug-output-if-requested.patch
+Patch214:	rpm-5.4.14-squirrel-buildfix.patch
 Patch215:	rpm-5.4.14-add-more-archs-to-arm-macro.patch
 Patch216:	rpm-5.4.14-ruby-archdirs.patch
 Patch217:	rpm-5.4.14-ruby-abi-versioned.patch
@@ -548,9 +531,9 @@ Patch220:	rpm-5.4.14-update-ruby_gemdir-and-ruby_ridir-macros.patch
 Patch221:	rpm-5.4.14-fix-dependency-generation-when-ruby_version-is-empty.patch
 Patch222:	rpm-5.4.14-gst-inspect-typo.patch
 Patch223:	rpm-5.4.14-fix-filedigests-verify.patch
-Patch224:	rpm-5.4.10-add-support-for-deprecating-epoch.patch
+Patch224:	rpm-5.4.14-add-support-for-deprecating-epoch.patch
 Patch225:	rpm-5.4.14-workaround-scriptlet-dependency-ordering-issue.patch
-Patch226:	rpm-5.4.10-enable-twiddle-in-evr-tupple.patch
+Patch226:	rpm-5.4.14-enable-twiddle-in-evr-tupple.patch
 Patch227:	rpm-5.4.13-double-check-unpackaged-dirs.patch
 # %%configure2_5x deprecation, %%configure handling
 Patch228:      rpm-5.4.10-deprecate-configure2_5x.patch
@@ -913,7 +896,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch102 -p1 -b .kmod~
 %patch103 -p1 -b .desktop~
 %patch104 -p1 -b .skip_chrdev~
-%patch105 -p1 -b .sizeof~
 %patch106 -p1 -b .link_loop~
 %patch107 -p1 -b .python_color~
 %patch109 -p1 -b .uclibc_nolib64~
@@ -921,7 +903,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch112 -p1 -b .gnu_hash~
 %patch113 -p1 -b .depoch_rpmlib~
 %patch114 -p1 -b .no_verdepfeat~
-%patch115 -p1 -b .free~
 %patch116 -p1 -b .skip_doc~
 %patch117 -p1 -b .exec_modules~
 #patch118 -p1 -b .soname_only~
@@ -951,12 +932,9 @@ This package contains the RPM API documentation generated in HTML format.
 %patch144 -p1 -b .urpm~
 %patch146 -p1 -b .nosig~
 %patch147 -p1
-%patch149 -p1 -b .typo~
 %patch150 -p1 -b .i18n_str~
 %patch151 -p1 -b .noi18n~
 %patch152 -p1 -b .l10ndir~
-%patch154 -p1 -b .cputoolize~
-%patch155 -p1 -b .install_info~
 %patch156 -p1 -b .php_deps~
 %patch157 -p1 -b .perl_deps~
 %patch158 -p1 -b .dl_error~
@@ -992,8 +970,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch183 -p1 -b .strip_ldflags~
 %patch184 -p1 -b .legacy_macros~
 %patch185 -p1 -b .buildid_deps~
-%patch186 -p1 -b .rpkg_justdb~
-%patch187 -p1 -b .trig_cnt~
 %patch188 -p1 -b .gstreamer1.0~
 %patch189 -p1 -b .envvars~
 %patch190 -p1 -b .norpath~
@@ -1002,7 +978,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch193 -p1 -b .xrealloc~
 %patch194 -p1 -b .cb~
 %patch195 -p1 -b .cb2~
-%patch196 -p1 -b .ui64p~
 %patch197 -p1 -b .permissive~
 %patch198 -p1 -b .rpmdbnofsync~
 %patch199 -p1 -b .fontdep_sure~
@@ -1012,10 +987,10 @@ This package contains the RPM API documentation generated in HTML format.
 %patch204 -p1 -b .libpackage~
 %patch206 -p1 -b .aarch64_multiarch
 %patch207 -p1 -b .update_config.subguess
+%patch209 -p1 -b .luaprint~
 %patch210 -p1 -b .rpmpythonmod~
 %patch211 -p1 -b .rpmpythontrunc~
 %patch212 -p1 -b .cmakedeps~
-%patch214 -p1 -b .py_debugout~
 %patch215 -p1 -b .armx~
 %patch216 -p1 -b .rubyarchdirs~
 %patch217 -p1 -b .rubyabiver~
@@ -1044,6 +1019,7 @@ cp %{SOURCE100} .
 %patch200 -p1
 %patch205 -p1
 %patch213 -p1
+%patch214 -p1 -b .sq2~
 %patch230 -p1 -b .gnueabihf~
 %patch231 -p1 -b .srcfilename~
 %patch232 -p1 -b .file~

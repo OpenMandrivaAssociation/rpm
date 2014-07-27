@@ -1,5 +1,5 @@
---- rpm-5.4.10/build/misc.c.deprecate_epoch~	2008-07-31 04:40:05.000000000 +0200
-+++ rpm-5.4.10/build/misc.c	2014-06-20 04:10:21.563560336 +0200
+--- rpm-5.4.14/build/misc.c.deprecate_epoch~	2008-07-31 04:40:05.000000000 +0200
++++ rpm-5.4.14/build/misc.c	2014-06-20 03:46:14.613488919 +0200
 @@ -18,3 +18,14 @@ int parseNum(const char * line, rpmuint3
      if (res) *res = rc;
      return (((*s1) || (s1 == line) || (rc == ULONG_MAX)) ? 1 : 0);
@@ -15,8 +15,8 @@
 +    if (res) *res = rc;
 +    return (((*s1) || (s1 == line) || (rc == LONG_MAX)) ? 1 : 0);
 +}
---- rpm-5.4.10/build/parsePreamble.c.deprecate_epoch~	2014-06-20 04:10:21.500226427 +0200
-+++ rpm-5.4.10/build/parsePreamble.c	2014-06-20 04:10:21.563560336 +0200
+--- rpm-5.4.14/build/parsePreamble.c.deprecate_epoch~	2014-06-20 03:46:14.470154271 +0200
++++ rpm-5.4.14/build/parsePreamble.c	2014-06-20 03:46:14.613488919 +0200
 @@ -613,7 +613,7 @@ static rpmRC handlePreambleTag(Spec spec
      int multiToken = 0;
      rpmsenseFlags tagflags;
@@ -44,7 +44,7 @@
  	he->c = 1;
  	xx = headerPut(pkg->header, he, 0);
  	break;
-@@ -1212,11 +1212,11 @@ assert(lastpkg != NULL);
+@@ -1215,11 +1215,11 @@ assert(lastpkg != NULL);
      /* Add Epoch: 0 to package header if it was not set by spec */
      he->tag = RPMTAG_NAME;
      if (headerGet(spec->packages->header, he, 0) == 0) {
@@ -58,8 +58,8 @@
  	he->c = 1;
  	xx = headerPut(pkg->header, he, 0);
  
---- rpm-5.4.10/build/parseReqs.c.deprecate_epoch~	2014-06-20 04:10:21.360225153 +0200
-+++ rpm-5.4.10/build/parseReqs.c	2014-06-20 04:10:21.563560336 +0200
+--- rpm-5.4.14/build/parseReqs.c.deprecate_epoch~	2014-06-20 03:46:14.350153170 +0200
++++ rpm-5.4.14/build/parseReqs.c	2014-06-20 03:46:14.613488919 +0200
 @@ -28,6 +28,7 @@ rpmRC parseRCPOT(Spec spec, Package pkg,
      Header h;
      rpmRC rc = RPMRC_FAIL;	/* assume failure */
@@ -102,8 +102,8 @@
  		evr->str = _free(evr->str);
  	    }
  	    if (ix != 0) {
---- rpm-5.4.10/build/rpmbuild.h.deprecate_epoch~	2014-06-20 04:10:21.360225153 +0200
-+++ rpm-5.4.10/build/rpmbuild.h	2014-06-20 04:10:21.563560336 +0200
+--- rpm-5.4.14/build/rpmbuild.h.deprecate_epoch~	2014-06-20 03:46:14.350153170 +0200
++++ rpm-5.4.14/build/rpmbuild.h	2014-06-20 03:46:14.613488919 +0200
 @@ -233,6 +233,15 @@ int parseNum(/*@null@*/ const char * lin
  	/*@modifies *res @*/;
  
@@ -120,8 +120,8 @@
   * Add changelog entry to header.
   * @todo addChangelogEntry should be static.
   * @param h		header
---- rpm-5.4.10/macros/macros.in.deprecate_epoch~	2014-06-20 04:10:21.533560063 +0200
-+++ rpm-5.4.10/macros/macros.in	2014-06-20 04:10:21.566893700 +0200
+--- rpm-5.4.14/macros/macros.in.deprecate_epoch~	2014-06-20 03:46:14.523488093 +0200
++++ rpm-5.4.14/macros/macros.in	2014-06-20 03:46:14.613488919 +0200
 @@ -740,7 +740,7 @@ $_arbitrary_tags_tests	Foo:Bar
  # STEP 1: Match the string and capture regex parts
  #                      1          2           3             4
@@ -149,8 +149,8 @@
  %pattern_Version	^[A-Za-z0-9+._~]+$
  %pattern_Release	^[A-Za-z0-9+._]+$
  %pattern_Disttag	^[A-Za-z0-9]+$
---- rpm-5.4.10/perl/RPM_Header.xs.deprecate_epoch~	2012-04-25 22:34:49.000000000 +0200
-+++ rpm-5.4.10/perl/RPM_Header.xs	2014-06-20 04:10:21.566893700 +0200
+--- rpm-5.4.14/perl/RPM_Header.xs.deprecate_epoch~	2012-04-25 22:34:49.000000000 +0200
++++ rpm-5.4.14/perl/RPM_Header.xs	2014-06-20 03:46:14.613488919 +0200
 @@ -404,9 +404,16 @@ tag(h, sv_tag)
  
                          EXTEND(SP, he->c);
@@ -171,8 +171,8 @@
                      }
                  break;
                  case RPM_BIN_TYPE:
---- rpm-5.4.10/python/header-py.c.deprecate_epoch~	2012-03-31 20:23:51.000000000 +0200
-+++ rpm-5.4.10/python/header-py.c	2014-06-20 04:10:21.566893700 +0200
+--- rpm-5.4.14/python/header-py.c.deprecate_epoch~	2013-07-26 08:09:05.000000000 +0200
++++ rpm-5.4.14/python/header-py.c	2014-06-20 03:46:25.636923365 +0200
 @@ -541,7 +541,10 @@ static PyObject * hdr_subscript(hdrObjec
  	    }
  	    o = metao;
@@ -185,18 +185,18 @@
  	}
  	break;
  
---- rpm-5.4.10/rpmdb/rpmevr.c.deprecate_epoch~	2012-07-06 17:39:18.000000000 +0200
-+++ rpm-5.4.10/rpmdb/rpmevr.c	2014-06-20 04:11:27.590827758 +0200
+--- rpm-5.4.14/rpmdb/rpmevr.c.deprecate_epoch~	2013-06-26 21:43:15.000000000 +0200
++++ rpm-5.4.14/rpmdb/rpmevr.c	2014-06-20 03:46:14.613488919 +0200
 @@ -148,7 +148,7 @@ assert(b != NULL);
  
  /*@unchecked@*/ /*@observer@*/ /*@null@*/
- static const char * _evr_tuple_match =
+ static const char _evr_tuple_match[] =
 -	"^(?:([^:-]+):)?([^:-]+)(?:-([^:-]+))?(?::([^:-]+))?$";
 +	"^(?:(-?[^:-]+):)?([^:-]+)(?:-([^:-]+))?(?::([^:-]+))?$";
  /*@unchecked@*/ /*@only@*/ /*@observer@*/ /*@null@*/
  const char * evr_tuple_match = NULL;
  /*@unchecked@*/ /*@refcounted@*/ /*@null@*/
-@@ -289,6 +289,7 @@ assert(b->F[RPMEVR_D] != NULL);
+@@ -295,6 +295,7 @@ assert(b->F[RPMEVR_D] != NULL);
  
      for (s = rpmEVRorder(); *s != '\0'; s++) {
  	int ix = 0;
@@ -204,7 +204,7 @@
  
  	switch ((int)*s) {
  	default:	continue;	/*@notreached@*/ /*@switchbreak@*/break;
-@@ -305,6 +306,20 @@ assert(b->F[RPMEVR_D] != NULL);
+@@ -311,6 +312,20 @@ assert(b->F[RPMEVR_D] != NULL);
  		break;
  #endif
  
@@ -225,7 +225,7 @@
  	/* XXX ALT version-set comparison */
  	if (ix == RPMEVR_V
  	 && !strncmp(a->F[ix], "set:", sizeof("set:")-1)
-@@ -323,7 +338,13 @@ assert(b->F[RPMEVR_D] != NULL);
+@@ -329,7 +344,13 @@ assert(b->F[RPMEVR_D] != NULL);
  	if (ix == RPMEVR_T)	/* XXX twiddle-in-version "negative" compare */
  	    rc = -compare_values(a->F[ix], b->F[ix]);
  	else
@@ -240,7 +240,7 @@
  	if (rc)
  	    break;
      }
-@@ -421,7 +442,7 @@ int rpmVersionCompare(Header A, Header B
+@@ -427,7 +448,7 @@ int rpmVersionCompare(Header A, Header B
      HE_t Ahe = (HE_t) memset(alloca(sizeof(*Ahe)), 0, sizeof(*Ahe));
      HE_t Bhe = (HE_t) memset(alloca(sizeof(*Bhe)), 0, sizeof(*Bhe));
      const char * one, * two;
@@ -249,7 +249,7 @@
      const char * s;
      int rc = 0;
      int xx;
-@@ -436,10 +457,12 @@ int rpmVersionCompare(Header A, Header B
+@@ -442,10 +463,12 @@ int rpmVersionCompare(Header A, Header B
  	    Bhe->tag = RPMTAG_EPOCH;
  	    xx = headerGet(B, Bhe, 0);
  	    Etwo = (xx && Bhe->p.ui32p ? Bhe->p.ui32p[0] : 0);

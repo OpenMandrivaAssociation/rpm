@@ -1,5 +1,5 @@
---- rpm-5.4.10/lib/rpmfc.c.skip_doc~	2012-07-28 17:19:43.136069278 +0200
-+++ rpm-5.4.10/lib/rpmfc.c	2012-07-28 17:25:16.778898168 +0200
+--- rpm-5.4.12/lib/rpmfc.c.skip_doc~	2013-07-30 16:31:03.820617616 +0200
++++ rpm-5.4.12/lib/rpmfc.c	2013-07-30 16:32:44.224040722 +0200
 @@ -818,7 +818,17 @@ static int rpmfcSCRIPT(rpmfc fc)
      int i;
      int is_executable;
@@ -19,13 +19,17 @@
  
      /* Extract dependencies only from files with executable bit set. */
      {	struct stat sb, * st = &sb;
-@@ -904,16 +914,10 @@ static int rpmfcSCRIPT(rpmfc fc)
+@@ -904,20 +914,10 @@ static int rpmfcSCRIPT(rpmfc fc)
      (void) fclose(fp);
  
      if (fc->fcolor->vals[fc->ix] & RPMFC_PERL) {
 -    	defaultdocdir = rpmExpand("%{?_defaultdocdir}", NULL);
--    	if (defaultdocdir == NULL || *defaultdocdir == '\0') 
--            defaultdocdir = strdup("/usr/share/doc");
+-	/* XXX coverity #1035723 */
+-	/* XXX coverity #1035883 */
+-    	if (defaultdocdir == NULL || *defaultdocdir == '\0')  {
+-            defaultdocdir = _free(defaultdocdir);
+-            defaultdocdir = xstrdup("/usr/share/doc");
+-	}
 -
 -	if (strncmp(fn, defaultdocdir, strlen(defaultdocdir))) {
 -	    if (fc->fcolor->vals[fc->ix] & RPMFC_MODULE)
@@ -40,7 +44,7 @@
      } else
      if (fc->fcolor->vals[fc->ix] & RPMFC_PYTHON) {
  	xx = rpmfcHelper(fc, 'P', "python");
-@@ -1009,8 +1013,6 @@ static int rpmfcSCRIPT(rpmfc fc)
+@@ -1013,8 +1013,6 @@ static int rpmfcSCRIPT(rpmfc fc)
  #endif
      }
  
