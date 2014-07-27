@@ -1039,6 +1039,7 @@ sed -i -e 's,aclocal -I,aclocal --dont-fix -I,g' autogen.sh
 
 mkdir -p cpu-os-macros
 tar -xf %{SOURCE3} -C cpu-os-macros
+cp %{SOURCE100} .
 %patch145 -p1
 %patch200 -p1
 %patch205 -p1
