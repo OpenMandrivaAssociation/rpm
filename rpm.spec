@@ -50,7 +50,7 @@
 %define	bdb		db52
 
 %define	libver		5.4
-%define	minorver	14
+%define	minorver	15
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -62,7 +62,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}24
+Release:	%{?prereldate:0.%{prereldate}.}1
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -195,7 +195,7 @@ Patch74:	rpm-5.4.4-pass-_builddir-properly-to-find-debuginfo.patch
 # status: probably okay to merge, but discuss on rpm-devel first
 Patch76:	rpm-5.4.10-files-listed-twice-terminates-build.patch
 # status: don't merge
-Patch77:	rpm-5.4.12-use-bdb-5.2.patch
+Patch77:	rpm-5.4.15-use-bdb-5.2.patch
 # status: probably okay to merge
 Patch78:	rpm-5.4.9-ruby1.9-fixes.patch
 # mdvbz#65269
@@ -224,7 +224,7 @@ Patch92:	rpm-5.4.9-rpmfc-extract-dependencies-for-all-files.patch
 # status: ready for merge
 Patch93:	rpm-5.4.5-rubygems-add-missing-newline.patch
 # status: ugly, keep locally for now
-Patch94:	rpm-5.4.9-generate-haskell-dependencies.patch
+Patch94:	rpm-5.4.15-generate-haskell-dependencies.patch
 # status: same as for other dep gen patches
 Patch95:	rpm-5.4.5-drop-some-interpreter-deps.patch
 # status: probably okay to merge..
@@ -237,11 +237,11 @@ Patch99:	rpm-5.4.5-python-export-spec-macros.patch
 # status: same as for other dep gen patches
 Patch100:	rpm-5.4.5-do-not-merge-script-dependencies-with-non-script-dependencies.patch
 # status: idem
-Patch101:	rpm-5.4.9-font-provides.patch
+Patch101:	rpm-5.4.15-font-provides.patch
 # status: idem
 Patch102:	rpm-5.4.7-kmod-dependencies.patch
 # status: idem
-Patch103:	rpm-5.4.10-desktop-provides.patch
+Patch103:	rpm-5.4.15-desktop-provides.patch
 # status: probably okay to merge, discuss on rpm-devel first
 Patch104:	rpm-5.4.5-skip-dependencies-for-character-devices.patch
 # status: same as for other dep gen patches
@@ -292,7 +292,7 @@ Patch129:	rpm-5.4.7-fix-minor-memleaks.patch
 # status: ready
 Patch130:	rpm-5.4.9-mire-fix-strings-lacking-null-terminator.patch
 # status: keep locally for now
-Patch131:	rpm-5.4.12-dlopen-embedded-interpreters.patch
+Patch131:	rpm-5.4.15-dlopen-embedded-interpreters.patch
 # status: ready
 Patch132:	rpm-5.4.9-rpmpython-fix-input.patch
 # status: same as for other dep gen patches
