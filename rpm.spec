@@ -71,7 +71,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}4
+Release:	%{?prereldate:0.%{prereldate}.}5
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -562,6 +562,7 @@ Patch238:	rpm-5.4.14-add-dlopen_req-macro.patch
 # (rather than lib64qtxdg50) for "%%mklibname qtxdg5 0"
 Patch239:	rpm-5.4.14-mklibname-fix-lib-names-ending-with-digits.patch
 Patch240:	rpm-5.4.14-rubygems2.2-support.patch
+Patch241:	rpm-5.4.14-rubygems2_more_fixes.patch
 # Turn back old implementation of __urlgetfile handling
 Patch505:       rpm-5.4.10-turn-back-urlgetfile.patch
 
@@ -1035,6 +1036,7 @@ cp %{SOURCE100} .
 %patch238 -p1 -b .dlopen_req~
 %patch239 -p1 -b .mklibname_fix~
 %patch240 -p1 -b .rubygems2.2
+%patch241 -p1 -b .morerubygems2
 %patch505 -p1 -b .urlgetfile~
 
 %build
