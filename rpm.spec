@@ -734,6 +734,8 @@ Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
 %if %{without bootstrap}
 Requires:	python-rpm = %{EVRD}
 Requires:	python2-pkg-resources
+Requires:	python-pkg-resources
+BuildRequires:	python-pkg-resources
 BuildRequires:	python2-pkg-resources
 %endif
 Requires:	pkgconfig
