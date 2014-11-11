@@ -6,7 +6,7 @@ diff -Naur rpm-5.4.14/build/parsePrep.c rpm-5.4.14.tpg/build/parsePrep.c
      }
  
 -#if defined(RPM_VENDOR_ARK) /* use-gnu-tar-compression-detection */
-+#if defined(RPM_VENDOR_ARK) || definied(RPM_VENDOR_MANDRIVA) /* use-gnu-tar-compression-detection */
++#if defined(RPM_VENDOR_ARK) || defined(RPM_VENDOR_MANDRIVA) /* use-gnu-tar-compression-detection */
  /* We leave compression handling for all tar based files up to GNU tar */
      if (compressed == COMPRESSED_ZIP)
  #else
