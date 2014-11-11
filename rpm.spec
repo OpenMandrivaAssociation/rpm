@@ -71,7 +71,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}7
+Release:	%{?prereldate:0.%{prereldate}.}8
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -565,6 +565,7 @@ Patch240:	rpm-5.4.14-rubygems2.2-support.patch
 Patch241:	rpm-5.4.14-rubygems2_more_fixes.patch
 # Turn back old implementation of __urlgetfile handling
 Patch505:       rpm-5.4.10-turn-back-urlgetfile.patch
+Patch506:	rpm-5.4.14-MDV-use-gnu-tar-compression-detection-for-parsePrep.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1040,6 +1041,7 @@ cp %{SOURCE100} .
 %patch240 -p1 -b .rubygems2.2
 %patch241 -p1 -b .morerubygems2
 %patch505 -p1 -b .urlgetfile~
+%patch506 -p1 -b .tar
 
 %build
 # rpm can't be built with clang currently (nested functions)
