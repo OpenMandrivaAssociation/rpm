@@ -71,7 +71,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}8
+Release:	%{?prereldate:0.%{prereldate}.}9
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -92,23 +92,11 @@ Source6:	git-repository--after-tarball
 Source7:	git-repository--apply-patch
 # GPG key used for signing OpenMandriva Association packages
 Source100:	OMA-Cooker-PubKey.asc
-# already merged upstream
-Patch0:		rpm-5.3.8-set-default-bdb-log-dir.patch
-# TODO: should be disable for cooker, packaging needs to be fixed (enable for legacy compatibility)
-# status: to be removed later..
-Patch1:		rpm-5.3.8-dependency-whiteout.patch
 # TODO: make conditional & disabled through macro by default (enable for legacy compatibility)
 # status: to be removed later
 Patch2:		rpm-5.4.9-non-pre-scripts-dont-fail.patch
 # status: to be removed later
 Patch3:		rpm-5.4.9-no-doc-conflicts.patch
-# if distsuffix is defined, use it for disttag (from Anssi)
-# status: merged upstream IIRC, could probably be dropped
-Patch4:		rpm-5.3.8-disttag-distsuffix-fallback.patch
-# ugly hack to workaround disttag/distepoch pattern matching issue to buy some
-# time to come up with better pattern fix..
-# status: needs to be fixed properly, but can be merged upstream
-Patch5:		rpm-5.3.8-distepoch-pattern-hack.patch
 # Don't disable keyserver queries
 Patch6:		rpm-5.4.10-use-keyserver.patch
 # Don't override libexecdir, that's bogus
@@ -120,11 +108,6 @@ Patch11:	rpm-5.4.9-fix-russian-typo.patch
 # a huge memleak...
 # DIE
 Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
-# status: keep as mandriva specific for now
-Patch21:	rpm-5.3.12-change-dep-loop-errors-to-warnings.patch
-# status: need to be revisited and made sure that we get the correct behaviour,
-# regression tests certainly required
-Patch22:	rpm-5.3.12-55810-rpmevrcmp-again-grf.patch
 # status: ready to merge, it's already been merged on HEAD, so commiting it to rpm-5_4
 # would basically just mean backporting it..
 Patch29:	rpm-5.4.4-add-_specfile-macro.patch
@@ -201,8 +184,6 @@ Patch78:	rpm-5.4.9-ruby1.9-fixes.patch
 # mdvbz#65269
 # status: same as for other dependency generation patches
 Patch79:	rpm-5.4.4-dont-consider-ranged-dependencies-as-overlapping-for-removal.patch
-# status: ignoree for now
-Patch81:	rpm-5.4.5-libsql-conditional.patch
 # status: same as for other dependency generation patches
 Patch85:	rpm-5.4.5-fix-removal-of-overlapping-dependencies-for-internal-dependency-generator.patch
 # this updates to using the dependency generator shipped with mono, it has some
@@ -264,8 +245,6 @@ Patch114:	rpm-5.4.9-dont-add-versioneddependency-rpmlib-feature-dependency.patch
 Patch116:	rpm-5.4.12-dont-try-generate-rpmfc-dependencies-from-doc-files.patch
 # status: ready to merge
 Patch117:	rpm-5.4.7-only-generate-ruby-and-python-deps-for-executables-and-modules.patch
-# status: same as for other dep gen patches
-Patch118:	rpm-5.4.7-dont-generate-soname-provides-for-dsos-with-no-soname.patch
 # status: ready
 Patch119:	rpm-5.4.7-fix-generation-of-ruby-abi-provides.patch
 # status: same as for other dep gen patches
@@ -841,23 +820,14 @@ This package contains the RPM API documentation generated in HTML format.
 %patch111 -p1 -b .script_macros~
 # These patches has been commited hastily upstream for review,
 # keeping them around here for now untill finished...
-%if 0
-%patch0 -p1 -b .set_lg_dir~
-%patch1 -p1 -b .dep_whiteout~
-%endif
 %patch2 -p1 -b .scriptlet~
 %patch3 -p1 -b .doc_conflicts~
 %patch11 -p1 -b .ru~
 %if 0
-%patch4 -p1 -b .distsuffix~
-%patch5 -p1 -b .distpatt~
 %patch15 -p1 -b .trigger_once~
 %endif
 %patch6 -p1 -b .keyserver~
 %patch7 -p1 -b .libexec~
-#%%patch21 -p1 -b .loop_warnings~
-#%%patch22 -p1 -b .55810~
-#patch27 -p1 -b .mdv~
 %patch29 -p1 -b .specfile~
 %patch31 -p1 -b .rpm_qa~
 #%%patch32 -p1 -b .clean~
@@ -883,7 +853,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch77 -p1 -b .db52~
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
-#patch81 -p1 -b .libsql~
 %patch85 -p1 -b .int_gen_overlap~
 %patch86 -p1 -b .mono_deps_new~
 %patch87 -p1 -b .php_dep_gen~
@@ -913,7 +882,6 @@ This package contains the RPM API documentation generated in HTML format.
 %patch114 -p1 -b .no_verdepfeat~
 %patch116 -p1 -b .skip_doc~
 %patch117 -p1 -b .exec_modules~
-#patch118 -p1 -b .soname_only~
 %patch119 -p1 -b .rubyabi_prov~
 %patch120 -p1 -b .filedep_origins~
 %patch121 -p1 -b .equal_overlaps~
