@@ -1,5 +1,5 @@
---- rpm-5.4.7/rpmdb/package.c.rpmv3~	2012-04-12 13:08:29.214493302 +0200
-+++ rpm-5.4.7/rpmdb/package.c	2012-04-12 16:33:05.021039135 +0200
+--- rpm-5.4.15/rpmdb/package.c.rpmv3~	2014-07-20 01:15:05.000000000 +0200
++++ rpm-5.4.15/rpmdb/package.c	2014-09-05 06:43:12.709766815 +0200
 @@ -19,6 +19,8 @@
  
  #include "rpmts.h"
@@ -9,9 +9,9 @@
  #include "debug.h"
  
  #define	alloca_strdup(_s)	strcpy(alloca(strlen(_s)+1), (_s))
-@@ -79,6 +81,349 @@ static int pgpStashKeyid(pgpDig dig)
+@@ -110,6 +112,349 @@ exit:
+     return xx;
  }
- #endif
  
 +/*@-boundsread@*/
 +static int dncmp(const void * a, const void * b)
@@ -359,7 +359,7 @@
  /*@-mods@*/
  rpmRC rpmReadPackageFile(rpmts ts, FD_t fd, const char * fn, Header * hdrp)
  {
-@@ -383,6 +728,8 @@ exit:
+@@ -381,6 +726,8 @@ exit:
  	/* Append (and remap) signature tags to the metadata. */
  	headerMergeLegacySigs(h, sigh);
  

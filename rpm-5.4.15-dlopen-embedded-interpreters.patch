@@ -1,6 +1,6 @@
---- rpm-5.4.12/build/parseScript.c.dlopen~	2012-04-15 17:04:14.000000000 +0200
-+++ rpm-5.4.12/build/parseScript.c	2013-07-30 16:39:13.169550969 +0200
-@@ -305,6 +305,12 @@ int parseScript(Spec spec, int parsePart
+--- rpm-5.4.15/build/parseScript.c.dlopen~	2014-08-06 22:26:13.000000000 +0200
++++ rpm-5.4.15/build/parseScript.c	2014-12-05 21:08:13.960048232 +0100
+@@ -306,6 +306,12 @@ int parseScript(Spec spec, int parsePart
      iob = rpmiobRTrim(iob);
      p = rpmiobStr(iob);
  
@@ -13,7 +13,7 @@
  #ifdef WITH_LUA
      if (!strcmp(progArgv[0], "<lua>")) {
  	rpmlua lua = NULL; /* Global state. */
-@@ -338,18 +344,21 @@ int parseScript(Spec spec, int parsePart
+@@ -351,18 +357,21 @@ int parseScript(Spec spec, int parsePart
      if (!strcmp(progArgv[0], "<perl>")) {
  	(void) rpmlibNeedsFeature(pkg->header,
  				  "BuiltinPerlScripts", "5.2-1");
@@ -35,7 +35,7 @@
      } else
  #endif
  #ifdef WITH_SEMANAGE
-@@ -368,12 +377,14 @@ int parseScript(Spec spec, int parsePart
+@@ -381,12 +390,14 @@ int parseScript(Spec spec, int parsePart
      if (!strcmp(progArgv[0], "<squirrel>")) {
  	(void) rpmlibNeedsFeature(pkg->header,
  				  "BuiltinSquirrelScripts", "5.2-1");
@@ -50,9 +50,9 @@
      } else
  #endif
      if (progArgv[0][0] == '<') {
---- rpm-5.4.12/configure.ac.dlopen~	2013-07-30 16:39:13.040549142 +0200
-+++ rpm-5.4.12/configure.ac	2013-07-30 16:46:16.951537639 +0200
-@@ -1753,49 +1753,95 @@ RPM_CHECK_LIB(
+--- rpm-5.4.15/configure.ac.dlopen~	2014-12-05 21:08:13.833381730 +0100
++++ rpm-5.4.15/configure.ac	2014-12-05 21:08:13.960048232 +0100
+@@ -1763,6 +1763,13 @@ RPM_CHECK_LIB(
  AC_SUBST(WITH_CUDF_CUDFTOOL)
  
  dnl # Perl ExtUtils::Embed
@@ -66,10 +66,11 @@
  RPM_CHECK_LIB(
      [Perl ExtUtils::Embed], [perlembed],
      [perl], [perl_alloc], [EXTERN.h],
-     [no,external:none], [],
--    [
+@@ -1770,30 +1777,65 @@ RPM_CHECK_LIB(
+     [ if test ".$RPM_CHECK_LIB_LOCATION" != .internal; then
+          LDFLAGS="$LDFLAGS -Wl,-rpath,$RPM_CHECK_LIB_LOCATION"
+       fi
 -    ], [])
--
 +    [ AM_CONDITIONAL(
 +      [WITH_PERLEMBED],
 +      [true])
@@ -84,7 +85,7 @@
 +unset LD_RUN_PATH
 +unset LIBRARY_PATH
 +unset C_INCLUDE_PATH
-+ 
+ 
 +export C_INCLUDE_PATH=$WITH_PYTHON_INCDIR
  dnl # Python embedding
  RPM_CHECK_LIB(
@@ -106,7 +107,8 @@
  
  dnl # Ruby
  WITH_RUBY_SUBDIR=""
--WITH_RUBY_CPPFLAGS=""
+ WITH_RUBY_CPPFLAGS=""
++
 +WITH_RUBY_CPPFLAGS="`pkg-config --cflags ruby-1.9`"
 +WITH_RUBY_LDFLAGS="`pkg-config --libs ruby-1.9`"
  WITH_RUBY_VENDORARCHDIR=""
@@ -133,6 +135,10 @@
  AC_SUBST(WITH_RUBY_VENDORARCHDIR)
 +unset C_INCLUDE_PATH
  
+ dnl # Java prerequisites (swiped from db-6.1.19/dist/aclocal_java et al)
+ 
+@@ -1859,17 +1901,24 @@ RPM_CHECK_LIB(
+     ], [])
  
  dnl # Squirrel (needs -lstdc++)
 -LIBSsave="$LIBS"
@@ -162,7 +168,7 @@
  
  dnl # Tcl (should tcl8.4 be supported too?)
  WITH_TCL_SUBDIR=""
-@@ -1803,8 +1849,14 @@ RPM_CHECK_LIB(
+@@ -1877,8 +1926,14 @@ RPM_CHECK_LIB(
      [Tcl], [tcl],
      [tcl8.6 tcl8.5 tcl], [Tcl_CreateInterp], [tcl.h],
      [no,external:none], [],
@@ -179,26 +185,32 @@
  AC_SUBST(WITH_TCL_SUBDIR)
  
  dnl # FICL
---- rpm-5.4.12/rpmio/Makefile.am.dlopen~	2013-07-08 06:43:02.000000000 +0200
-+++ rpm-5.4.12/rpmio/Makefile.am	2013-07-30 16:39:13.171550997 +0200
-@@ -93,8 +93,8 @@ RPM_LDADD_COMMON = \
- 	$(top_builddir)/rpmdb/librpmdb.la \
- 	$(RPMIO_LDADD_COMMON)
- 
--#pkglibdir = @USRLIBRPM@
--#pkglib_LTLIBRARIES = libsqlio.la
-+zpkglibdir = @USRLIBRPM@/lib
-+zpkglib_LTLIBRARIES = #libsqlio.la
- 
- pkgincdir = $(pkgincludedir)$(WITH_PATH_VERSIONED_SUFFIX)
- pkginc_HEADERS = argv.h mire.h rpmzlog.h yarn.h \
-@@ -211,6 +211,52 @@ endif
+@@ -1994,10 +2049,12 @@ dnl           *-*-linux* ) USE_LUA_SHADO
+ dnl       esac
+           AC_DEFINE(WITH_LUA_INTERNAL, 1, [Define if building with internal Lua])
+           AC_CONFIG_FILES([lua/Makefile])
++	  AM_CONDITIONAL(WITH_LUA_INTERNAL, [true])
+       else
+           AC_CHECK_LIB(m, fabs)
+           AC_CHECK_LIB(dl, dlopen)
+           AC_CHECK_FUNC(dlopen)
++	  AM_CONDITIONAL(WITH_LUA_INTERNAL, [false])
+       fi
+     ], [])
+ AC_SUBST(WITH_LUA_SUBDIR_DEF)
+--- rpm-5.4.15/rpmio/Makefile.am.dlopen~	2014-08-17 06:27:49.000000000 +0200
++++ rpm-5.4.15/rpmio/Makefile.am	2014-12-05 21:14:24.582451110 +0100
+@@ -228,6 +228,56 @@ endif
  #librpmio.la: $(librpmio_la_OBJECTS) $(librpmio_la_DEPENDENCIES) 
  #	$(librpmio_la_LINK) -rpath $(usrlibdir) $(librpmio_la_OBJECTS) $(librpmio_la_LIBADD)
  
++pkgdir = @USRLIBRPM@
++pkglibdir = $(pkgdir)/lib
++pkglib_LTLIBRARIES =
++
 +if WITH_PERLEMBED
-+librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
-+zpkglib_LTLIBRARIES	+= rpmperl.la
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(pkglibdir)
++pkglib_LTLIBRARIES	+= rpmperl.la
 +rpmperl_la_SOURCES	= rpmperl.c
 +rpmperl_la_CPPFLAGS	= -DMODULE_EMBED
 +rpmperl_la_CFLAGS	= $(WITH_PERL_CFLAGS)
@@ -207,8 +219,8 @@
 +endif
 +
 +if WITH_PYTHONEMBED
-+librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
-+zpkglib_LTLIBRARIES	+= rpmpython.la
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(pkglibdir)
++pkglib_LTLIBRARIES	+= rpmpython.la
 +rpmpython_la_SOURCES	= rpmpython.c
 +rpmpython_la_CPPFLAGS	= -I@WITH_PYTHON_INCDIR@ -DMODULE_EMBED
 +rpmpython_la_LDFLAGS	= -module -avoid-version
@@ -216,8 +228,8 @@
 +endif
 +
 +if WITH_RUBYEMBED
-+librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
-+zpkglib_LTLIBRARIES	+= rpmruby.la
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(pkglibdir)
++pkglib_LTLIBRARIES	+= rpmruby.la
 +rpmruby_la_SOURCES	= rpmruby.c
 +rpmruby_la_CPPFLAGS	= $(WITH_RUBY_CPPFLAGS) -DMODULE_EMBED
 +rpmruby_la_LDFLAGS	= -module -avoid-version $(WITH_RUBY_LDFLAGS)
@@ -225,8 +237,8 @@
 +endif
 +
 +if WITH_SQUIRREL
-+librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
-+zpkglib_LTLIBRARIES	+= rpmsquirrel.la
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(pkglibdir)
++pkglib_LTLIBRARIES	+= rpmsquirrel.la
 +rpmsquirrel_la_SOURCES	= rpmsquirrel.c
 +rpmsquirrel_la_CPPFLAGS	= $(SQUIRREL_CPPFLAGS) -DMODULE_EMBED
 +rpmsquirrel_la_LDFLAGS	= -module -avoid-version
@@ -234,8 +246,8 @@
 +endif
 +
 +if WITH_TCL
-+librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
-+zpkglib_LTLIBRARIES	+= rpmtcl.la
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(pkglibdir)
++pkglib_LTLIBRARIES	+= rpmtcl.la
 +rpmtcl_la_SOURCES	= rpmtcl.c
 +rpmtcl_la_CPPFLAGS	= -DMODULE_EMBED
 +rpmtcl_la_LDFLAGS	= -module -avoid-version
@@ -245,8 +257,8 @@
  #libsqlio_la_SOURCES	= libsqlio.c
  #libsqlio_la_LIBADD	= $(RPMIO_LDADD_COMMON)
  
---- rpm-5.4.12/rpmio/rpmperl.c.dlopen~	2012-04-15 23:20:53.000000000 +0200
-+++ rpm-5.4.12/rpmio/rpmperl.c	2013-07-30 16:39:13.172551011 +0200
+--- rpm-5.4.15/rpmio/rpmperl.c.dlopen~	2012-04-15 23:20:53.000000000 +0200
++++ rpm-5.4.15/rpmio/rpmperl.c	2014-12-05 21:08:13.960048232 +0100
 @@ -7,9 +7,15 @@
  #include "rpmperl.h"
  #include <rpmmacro.h>
@@ -360,26 +372,25 @@
  	STRLEN n_a;
  	SV * retSV;
  
---- rpm-5.4.12/rpmio/rpmpython.c.dlopen~	2013-07-05 18:52:58.000000000 +0200
-+++ rpm-5.4.12/rpmio/rpmpython.c	2013-07-30 16:39:13.172551011 +0200
-@@ -8,9 +8,15 @@
- #define _RPMPYTHON_INTERNAL
- #include "rpmpython.h"
- 
+--- rpm-5.4.15/rpmio/rpmpython.c.dlopen~	2014-08-03 23:46:09.000000000 +0200
++++ rpm-5.4.15/rpmio/rpmpython.c	2014-12-05 21:08:13.960048232 +0100
+@@ -1,9 +1,14 @@
+ #include "config.h"
 -#if defined(WITH_PYTHONEMBED)
 +#if defined(MODULE_EMBED)
  #include <Python.h>
  #include <cStringIO.h>
 +#undef WITH_PYTHONEMBED
-+#endif
+ #endif
+ 
 +
 +#if defined(WITH_PYTHONEMBED)
 +#include <dlfcn.h>
 +#include <rpmlog.h>
- #endif
+ #include "system.h"
  
- #include "debug.h"
-@@ -21,13 +27,20 @@ int _rpmpython_debug = 0;
+ #define	_RPMIOB_INTERNAL	/* XXX necessary? */
+@@ -22,13 +27,20 @@ int _rpmpython_debug = 0;
  /*@unchecked@*/ /*@relnull@*/
  rpmpython _rpmpythonI = NULL;
  
@@ -401,7 +412,7 @@
      Py_Finalize();
  #endif
      python->I = NULL;
-@@ -51,7 +64,7 @@ static rpmpython rpmpythonGetPool(/*@nul
+@@ -52,7 +64,7 @@ static rpmpython rpmpythonGetPool(/*@nul
  }
  
  /*@unchecked@*/
@@ -410,7 +421,7 @@
  static const char * _rpmpythonI_init = "\
  import sys\n\
  from cStringIO import StringIO\n\
-@@ -68,10 +81,40 @@ static rpmpython rpmpythonI(void)
+@@ -69,10 +81,40 @@ static rpmpython rpmpythonI(void)
      return _rpmpythonI;
  }
  
@@ -452,7 +463,7 @@
      int initialize = (!(flags & 0x80000000) || _rpmpythonI == NULL);
  #endif
      rpmpython python = (flags & 0x80000000)
-@@ -82,7 +125,7 @@ fprintf(stderr, "==> %s(%p, %d) python %
+@@ -83,7 +125,7 @@ fprintf(stderr, "==> %s(%p, %d) python %
  
      if (av == NULL) av = _av;
  
@@ -461,7 +472,7 @@
      if (!Py_IsInitialized()) {
  	Py_SetProgramName((char *)_av[0]);
  	Py_Initialize();
-@@ -108,6 +151,9 @@ fprintf(stderr, "==========\n%s\n=======
+@@ -109,6 +151,9 @@ fprintf(stderr, "==========\n%s\n=======
  
  rpmRC rpmpythonRunFile(rpmpython python, const char * fn, const char ** resultp)
  {
@@ -471,7 +482,7 @@
      rpmRC rc = RPMRC_FAIL;
  
  if (_rpmpython_debug)
-@@ -116,7 +162,7 @@ fprintf(stderr, "==> %s(%p,%s)\n", __FUN
+@@ -117,7 +162,7 @@ fprintf(stderr, "==> %s(%p,%s)\n", __FUN
      if (python == NULL) python = rpmpythonI();
  
      if (fn != NULL) {
@@ -480,7 +491,7 @@
  	const char * pyfn = ((fn == NULL || !strcmp(fn, "-")) ? "<stdin>" : fn);
  	FILE * pyfp = (!strcmp(pyfn, "<stdin>") ? stdin : fopen(fn, "rb"));
  	int closeit = (pyfp != stdin);
-@@ -157,6 +203,9 @@ static const char * rpmpythonSlurp(const
+@@ -158,6 +203,9 @@ static const char * rpmpythonSlurp(const
  
  rpmRC rpmpythonRun(rpmpython python, const char * str, const char ** resultp)
  {
@@ -490,7 +501,7 @@
      rpmRC rc = RPMRC_FAIL;
  
  if (_rpmpython_debug)
-@@ -166,7 +215,7 @@ fprintf(stderr, "==> %s(%p,%s,%p)\n", __
+@@ -167,7 +215,7 @@ fprintf(stderr, "==> %s(%p,%s,%p)\n", __
  
      if (str != NULL) {
  	const char * val = rpmpythonSlurp(str);
@@ -499,8 +510,8 @@
  	PyCompilerFlags cf = { 0 };
  	PyObject * m = PyImport_AddModule("__main__");
  	PyObject * d = (m ? PyModule_GetDict(m) : NULL);
---- rpm-5.4.12/rpmio/rpmruby.c.dlopen~	2013-07-09 07:11:31.000000000 +0200
-+++ rpm-5.4.12/rpmio/rpmruby.c	2013-07-30 16:47:29.509484562 +0200
+--- rpm-5.4.15/rpmio/rpmruby.c.dlopen~	2013-07-09 07:11:31.000000000 +0200
++++ rpm-5.4.15/rpmio/rpmruby.c	2014-12-05 21:08:13.960048232 +0100
 @@ -1,13 +1,16 @@
  #include "system.h"
  #include <argv.h>
@@ -626,10 +637,10 @@
      if (str) {
  	int state = -1;
  	ruby->state = rb_eval_string_protect(str, &state);
---- rpm-5.4.12/rpmio/rpmsquirrel.c.dlopen~	2013-07-16 20:48:04.000000000 +0200
-+++ rpm-5.4.12/rpmio/rpmsquirrel.c	2013-07-30 16:50:07.407576221 +0200
-@@ -3,8 +3,9 @@
- 
+--- rpm-5.4.15/rpmio/rpmsquirrel.c.dlopen~	2014-08-01 18:34:03.000000000 +0200
++++ rpm-5.4.15/rpmio/rpmsquirrel.c	2014-12-05 21:08:13.960048232 +0100
+@@ -5,8 +5,9 @@
+ #include <rpmiotypes.h>
  #include <argv.h>
  
 -#ifdef	WITH_SQUIRREL
@@ -639,7 +650,7 @@
  #include <sqstdaux.h>
  #include <sqstdblob.h>
  #include <sqstdio.h>
-@@ -13,6 +14,12 @@
+@@ -15,6 +16,12 @@
  #include <sqstdsystem.h>
  #endif
  
@@ -652,7 +663,7 @@
  #define _RPMSQUIRREL_INTERNAL
  #include "rpmsquirrel.h"
  
-@@ -24,13 +31,20 @@ int _rpmsquirrel_debug = 0;
+@@ -26,13 +33,20 @@ int _rpmsquirrel_debug = 0;
  /*@unchecked@*/ /*@relnull@*/
  rpmsquirrel _rpmsquirrelI = NULL;
  
@@ -674,7 +685,7 @@
      sq_close((HSQUIRRELVM)squirrel->I);
  #endif
      squirrel->I = NULL;
-@@ -55,7 +69,7 @@ static rpmsquirrel rpmsquirrelGetPool(/*
+@@ -57,7 +71,7 @@ static rpmsquirrel rpmsquirrelGetPool(/*
      return (rpmsquirrel) rpmioGetPool(pool, sizeof(*squirrel));
  }
  
@@ -683,7 +694,7 @@
  static void rpmsquirrelPrint(HSQUIRRELVM v, const SQChar *s, ...)
  {
      rpmsquirrel squirrel = sq_getforeignptr(v);
-@@ -102,15 +116,42 @@ static rpmsquirrel rpmsquirrelI(void)
+@@ -103,15 +117,42 @@ static rpmsquirrel rpmsquirrelI(void)
      return _rpmsquirrelI;
  }
  
@@ -731,10 +742,10 @@
      static char * _av[] = { "rpmsquirrel", NULL };
      SQInteger stacksize = 1024;
      HSQUIRRELVM v = sq_open(stacksize);
-@@ -152,13 +193,18 @@ rpmsquirrel rpmsquirrelNew(char ** av, u
- #endif
+@@ -169,13 +210,18 @@ assert(!SQ_FAILED(sq_newslot(v, -3, SQFa
+     sq_pop(v, 1);
+ #endif	/* defined(WITH_SQUIRREL) */
  
- #endif
 +#if !defined(WITH_SQUIRREL)
      squirrel->iob = rpmiobNew(0);
 +#endif
@@ -748,9 +759,9 @@
 +    if (dlopened) return rpmsquirrelRunFile_p(squirrel, fn, resultp);
 +#endif
      rpmRC rc = RPMRC_FAIL;
- 
- if (_rpmsquirrel_debug)
-@@ -178,6 +224,10 @@ fprintf(stderr, "==> %s(%p,%s)\n", __FUN
+     rpmiob iob = NULL;
+     char * b = NULL;
+@@ -210,6 +256,10 @@ exit:
  
  rpmRC rpmsquirrelRun(rpmsquirrel squirrel, const char * str, const char ** resultp)
  {
@@ -761,7 +772,7 @@
      rpmRC rc = RPMRC_FAIL;
  
  if (_rpmsquirrel_debug)
-@@ -185,7 +235,7 @@ fprintf(stderr, "==> %s(%p,%s)\n", __FUN
+@@ -217,7 +267,7 @@ fprintf(stderr, "==> %s(%p,%s)\n", __FUN
  
      if (squirrel == NULL) squirrel = rpmsquirrelI();
  
@@ -770,8 +781,8 @@
      if (str != NULL) {
  	size_t ns = strlen(str);
  	if (ns > 0) {
---- rpm-5.4.12/rpmio/rpmtcl.c.dlopen~	2012-04-15 23:20:53.000000000 +0200
-+++ rpm-5.4.12/rpmio/rpmtcl.c	2013-07-30 16:39:13.174551040 +0200
+--- rpm-5.4.15/rpmio/rpmtcl.c.dlopen~	2012-04-15 23:20:53.000000000 +0200
++++ rpm-5.4.15/rpmio/rpmtcl.c	2014-12-05 21:08:13.963381561 +0100
 @@ -2,9 +2,16 @@
  
  #include <argv.h>
@@ -916,8 +927,8 @@
      if (str != NULL && Tcl_Eval((Tcl_Interp *)tcl->I, str) == TCL_OK) {
  	rc = RPMRC_OK;
  	if (resultp)
---- rpm-5.4.12/ruby/Makefile.am.dlopen~	2013-07-02 18:29:08.000000000 +0200
-+++ rpm-5.4.12/ruby/Makefile.am	2013-07-30 16:39:13.174551040 +0200
+--- rpm-5.4.15/ruby/Makefile.am.dlopen~	2013-07-02 18:29:08.000000000 +0200
++++ rpm-5.4.15/ruby/Makefile.am	2014-12-05 21:08:13.963381561 +0100
 @@ -51,8 +51,8 @@ pkgbindir =     @USRLIBRPM@/bin
  pkgbin_PROGRAMS =       trb
  pkglib_LTLIBRARIES =    rpm.la
@@ -929,8 +940,8 @@
  rpm_la_LIBADD = \
  	$(top_builddir)/build/librpmbuild.la \
  	$(top_builddir)/lib/librpm.la \
---- rpm-5.4.12/ruby/system.h.dlopen~	2010-12-01 17:09:50.000000000 +0100
-+++ rpm-5.4.12/ruby/system.h	2013-07-30 16:39:13.174551040 +0200
+--- rpm-5.4.15/ruby/system.h.dlopen~	2010-12-01 17:09:50.000000000 +0100
++++ rpm-5.4.15/ruby/system.h	2014-12-05 21:08:13.963381561 +0100
 @@ -2,6 +2,7 @@
  #define	H_SYSTEM_RUBY
  

@@ -1,17 +1,6 @@
---- rpm-5.4.10/Makefile.am.cmakedeps~	2014-02-02 23:15:43.491973554 +0100
-+++ rpm-5.4.10/Makefile.am	2014-02-02 23:15:56.498640394 +0100
-@@ -116,7 +116,7 @@ pkgbin_SCRIPTS = install-sh mkinstalldir
- 
- pkgcfgdir =	$(pkgdatadir)/macros.d
- pkgcfg_DATA = \
--	macros/cmake macros/haskell macros/gstreamer macros/java macros/kernel \
-+	macros/cmake macros/cmakedeps macros/haskell macros/gstreamer macros/java macros/kernel \
- 	macros/libtool macros/mandriva macros/mono macros/perl macros/pkgconfig \
- 	macros/php macros/python macros/ruby macros/selinux macros/tcl
- 
---- rpm-5.4.10/configure.ac.cmakedeps~	2014-02-02 23:16:14.885307299 +0100
-+++ rpm-5.4.10/configure.ac	2014-02-02 23:16:27.701974133 +0100
-@@ -2570,7 +2570,7 @@ AC_CONFIG_FILES([ po/Makefile.in
+--- rpm-5.4.15/configure.ac.cmakedeps~	2014-09-05 06:48:38.489676458 +0200
++++ rpm-5.4.15/configure.ac	2014-09-05 06:48:38.566343887 +0200
+@@ -2685,7 +2685,7 @@ AC_CONFIG_FILES([ po/Makefile.in
      scripts/Makefile
      rpmdb/DB_CONFIG
      macros/macros macros/macros.rpmbuild
@@ -20,8 +9,8 @@
      macros/mandriva macros/suse macros/fedora macros/mono macros/perl macros/pkgconfig macros/php
      macros/python macros/ruby macros/selinux macros/tcl
      doc/Makefile
---- rpm-5.4.10/lib/rpmfc.c.cmakedeps~	2014-02-02 23:17:44.391975140 +0100
-+++ rpm-5.4.10/lib/rpmfc.c	2014-02-02 23:21:35.091978169 +0100
+--- rpm-5.4.15/lib/rpmfc.c.cmakedeps~	2014-09-05 06:48:38.546343689 +0200
++++ rpm-5.4.15/lib/rpmfc.c	2014-09-05 06:48:38.566343887 +0200
 @@ -646,6 +646,7 @@ static struct rpmfcTokens_s rpmfcTokens[
  
    { "libtool library ",		RPMFC_LIBTOOL|RPMFC_INCLUDE },
@@ -61,8 +50,8 @@
  	    /* XXX all files with extension ".php" are PHP for now. */
  	    else if (_suffix(s, ".php"))
  		ftype = "PHP script text";
---- rpm-5.4.10/lib/rpmfc.h.cmakedeps~	2014-02-02 23:18:28.198642381 +0100
-+++ rpm-5.4.10/lib/rpmfc.h	2014-02-02 23:19:36.865309951 +0100
+--- rpm-5.4.15/lib/rpmfc.h.cmakedeps~	2014-09-05 06:48:38.456342793 +0200
++++ rpm-5.4.15/lib/rpmfc.h	2014-09-05 06:48:38.566343887 +0200
 @@ -24,7 +24,7 @@ typedef enum FCOLOR_e {
  #define	RPMFC_ELF	(RPMFC_ELF32|RPMFC_ELF64|RPMFC_ELFMIPSN32)
  	/* (1 << 3) leaks into package headers, reserved */
@@ -72,8 +61,8 @@
      RPMFC_TYPELIB		= (1 <<  5),
      RPMFC_HASKELL		= (1 <<  6),
      RPMFC_RUBY			= (1 <<  7),
---- rpm-5.4.10/macros/cmakedeps.in.cmakedeps~	2014-02-02 23:15:10.088639781 +0100
-+++ rpm-5.4.10/macros/cmakedeps.in	2014-02-02 23:14:55.738639595 +0100
+--- rpm-5.4.15/macros/cmakedeps.in.cmakedeps~	2014-09-05 06:48:38.566343887 +0200
++++ rpm-5.4.15/macros/cmakedeps.in	2014-09-05 06:48:38.566343887 +0200
 @@ -0,0 +1,11 @@
 +# Pkgconfig specific macro definitions.
 +# To make use of these macros insert the following line into your spec file:
@@ -86,9 +75,9 @@
 +# helpers are also used by %{_rpmhome}/rpmdeps {--provides|--requires}.
 +%__cmake_provides	%{_rpmhome}/cmakedeps.sh --provides
 +%__cmake_requires	%{_rpmhome}/cmakedeps.sh --requires
---- rpm-5.4.10/macros/macros.in.cmakedeps~	2014-02-02 23:16:52.895307798 +0100
-+++ rpm-5.4.10/macros/macros.in	2014-02-02 23:17:31.425308304 +0100
-@@ -1030,6 +1030,10 @@ $_arbitrary_tags_tests	Foo:Bar
+--- rpm-5.4.15/macros/macros.in.cmakedeps~	2014-09-05 06:48:38.523010123 +0200
++++ rpm-5.4.15/macros/macros.in	2014-09-05 06:48:38.566343887 +0200
+@@ -1056,6 +1056,10 @@ $_arbitrary_tags_tests	Foo:Bar
  %{load:%{_usrlibrpm}/macros.d/cmake}
  
  #------------------------------------------------------------------------
@@ -99,28 +88,19 @@
  # gstreamer(...) configuration.
  %{load:%{_usrlibrpm}/macros.d/gstreamer}
  
---- rpm-5.4.10/scripts/Makefile.am.cmakedeps~	2014-02-02 23:13:26.501971756 +0100
-+++ rpm-5.4.10/scripts/Makefile.am	2014-02-02 23:13:58.131972172 +0100
-@@ -27,7 +27,7 @@ EXTRA_DIST = api-sanity-autotest.pl api-
- 	multiarch-dispatch.h mkmultiarch gem_helper.rb \
- 	URPM-Makefile.PL.in URPM-Makefile.am \
- 	nix_meta \
--	osgideps.pl pkgconfigdeps.sh \
-+	osgideps.pl pkgconfigdeps.sh cmakedeps.sh \
- 	perldeps.pl perl.prov perl.req pythondeps.sh pythoneggs.py \
- 	php.prov php.req pom2spec psq_pkgng_yaml rpm2cpio \
- 	rpmdb_loadcvt rpmdiff rpmdiff.cgi \
-@@ -60,7 +60,7 @@ pkgdata_SCRIPTS = \
- 	kmod-deps.sh gstreamer.sh javadeps.sh libtooldeps.sh \
- 	mono-find-provides mono-find-requires \
- 	check-multiarch-files mkmultiarch \
--	osgideps.pl pkgconfigdeps.sh \
-+	osgideps.pl pkgconfigdeps.sh cmakedeps.sh \
- 	perldeps.pl perl.prov perl.req pythondeps.sh pythoneggs.py \
- 	php.prov php.req \
- 	rpm2cpio rpmdb_loadcvt \
---- rpm-5.4.10/scripts/cmakedeps.sh.cmakedeps~	2014-02-02 23:13:18.921971657 +0100
-+++ rpm-5.4.10/scripts/cmakedeps.sh	2014-02-02 23:13:12.635304907 +0100
+--- rpm-5.4.15/Makefile.am.cmakedeps~	2014-09-05 06:48:38.433009227 +0200
++++ rpm-5.4.15/Makefile.am	2014-09-05 06:48:38.566343887 +0200
+@@ -187,7 +187,7 @@ pkgbin_SCRIPTS = install-sh mkinstalldir
+ 
+ pkgcfgdir =	$(pkgdatadir)/macros.d
+ pkgcfg_DATA = \
+-	macros/cmake macros/haskell macros/gstreamer macros/java macros/kernel \
++	macros/cmake macros/cmakedeps macros/haskell macros/gstreamer macros/java macros/kernel \
+ 	macros/libtool macros/mandriva macros/mono macros/perl macros/pkgconfig \
+ 	macros/php macros/python macros/ruby macros/selinux macros/tcl
+ 
+--- rpm-5.4.15/scripts/cmakedeps.sh.cmakedeps~	2014-09-05 06:48:38.566343887 +0200
++++ rpm-5.4.15/scripts/cmakedeps.sh	2014-09-05 06:48:38.566343887 +0200
 @@ -0,0 +1,43 @@
 +#!/bin/bash
 +
@@ -165,3 +145,23 @@
 +	;;
 +esac
 +exit 0
+--- rpm-5.4.15/scripts/Makefile.am.cmakedeps~	2014-09-05 06:48:38.443009327 +0200
++++ rpm-5.4.15/scripts/Makefile.am	2014-09-05 06:49:53.303754468 +0200
+@@ -27,7 +27,7 @@ EXTRA_DIST = api-sanity-autotest.pl api-
+ 	multiarch-dispatch.h mkmultiarch gem_helper.rb \
+ 	URPM-Makefile.PL.in URPM-Makefile.am \
+ 	nix_meta \
+-	osgideps.pl pkgconfigdeps.sh \
++	osgideps.pl pkgconfigdeps.sh cmakedeps.sh cmakedeps.sh \
+ 	perldeps.pl perl.prov perl.req pythondeps.sh pythoneggs.py \
+ 	php.prov php.req pom2spec psq_pkgng_yaml rpm2cpio \
+ 	rpmdb_loadcvt rpmdiff rpmdiff.cgi \
+@@ -66,7 +66,7 @@ pkgdata_SCRIPTS = \
+ 	mono-find-provides mono-find-requires \
+ 	osgideps.pl pkgconfigdeps.sh \
+ 	perldeps.pl perl.prov perl.req pythondeps.sh pythoneggs.py \
+-	php.prov php.req \
++	php.prov php.req cmakedeps.sh \
+ 	rpm2cpio rpmdb_loadcvt \
+ 	rpm.daily rpm.log rpm.xinetd \
+ 	rubygems.rb \

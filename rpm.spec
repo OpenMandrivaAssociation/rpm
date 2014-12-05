@@ -297,8 +297,8 @@ Patch131:	rpm-5.4.15-dlopen-embedded-interpreters.patch
 Patch132:	rpm-5.4.9-rpmpython-fix-input.patch
 # status: same as for other dep gen patches
 Patch133:	rpm-5.4.7-generate-devel-provides-outside-of-libdirs.patch
-# status: ready
-Patch134:	rpm-5.4.14-actually-perform-linking-against-internal-lua.patch
+## status: ready/merged?
+#Patch134:	rpm-5.4.14-actually-perform-linking-against-internal-lua.patch
 # status: ready
 Patch135:	rpm-5.4.7-no-seqid_init-on-rdonly-database.patch
 # status: same as for other dep gen patches
@@ -319,12 +319,12 @@ Patch137:	rpm-5.4.9-avoid-double-slash-in-path-for-dirname-filetrigger-matching.
 # everyone, requiring some greater discussion to take place before even
 # considering merging it upstream.
 # status: ready for use, but keep locally for now...
-Patch138:	rpm-5.4.14-trigtrans.patch
+Patch138:	rpm-5.4.15-trigtrans.patch
 # status: probably ready to merge, discuss on rpm-devel first
 # https://qa.mandriva.com/show_bug.cgi?id=64378
 Patch139:	rpm-5.4.9-fix-verify-segfault.patch
 # status: keep locally
-Patch140:	rpm-5.4.7-rpmv3-support.patch
+Patch140:	rpm-5.4.15-rpmv3-support.patch
 # status: ready
 Patch143:	rpm-5.4.7-mono-find-requires-strip-newlines.patch
 # status: ready
@@ -338,8 +338,8 @@ Patch150:	rpm-5.4.9-dont-remap-i18n-strings-if-enabled.patch
 Patch151:	rpm-5.4.9-disable-support-for-i18nstring-type.patch
 # lack insight on actual functionality, which anyways seems broken, so let's
 # disable it to avoid errors from berkeley db..
-# status: keep locally
-Patch152:	rpm-5.4.9-disable-l10ndir.patch
+# status: keep locally/disabled upstream as well
+#Patch152:	rpm-5.4.9-disable-l10ndir.patch
 # the php dependency generator carried with rpm5 is based on a version from PLD
 # that they've backed out later on, reverting to their older version.
 # this patch replaces current upstream rpm5 version with mandriva one, which is
@@ -501,7 +501,8 @@ Patch201:	rpm-5.4.10-fix-log-install-remove-to-syslog.patch
 Patch203:	rpm-5.4.10-postpone_subpackage_build_failures.patch
 # Do not generate pythonegg provides for python3 until we find a better solution
 Patch204:       rpm-5.4.10-python3-egg-reqs.patch
-Patch205:	rpm-5.4.12-fix-squirrel-version-check.patch
+# fixed upstream
+#Patch205:	rpm-5.4.12-fix-squirrel-version-check.patch
 Patch209:	rpm-5.4.12-fix-rpmlua-print.patch
 Patch210:	rpm-5.4.13-fix-rpmpython-module-import-init.patch
 Patch211:	rpm-5.4.12-truncate-output-buffer-after-use.patch
@@ -511,13 +512,11 @@ Patch215:	rpm-5.4.13-fix-free-of-memory-still-in-use.patch
 Patch216:	rpm-5.4.13-perl-bindings-do-not-use-xmalloc.patch
 # (bero): Add libpackage macro -- these lines are replicated into way too many spec files
 Patch217:	rpm-5.4.10-libpackage-macro.patch
-# backport from cvs, do not clobber errno
-Patch218:	rpm_patchset_17344.diff
 Patch219:	rpm-5.4.14-allow-overriding-etcrpm-etc-during-runtime.patch
 # (fedya): add aarch64 macro
 Patch221:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
 Patch222:	fix-config-sub-in-configure.patch
-Patch223:	rpm-5.4.10-cmake-dependency-generator.patch
+Patch223:	rpm-5.4.15-cmake-dependency-generator.patch
 # there's some funky businiss going on with ABF where omv macros gets used,
 # so let's make our variables read only for now...
 Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
@@ -533,10 +532,11 @@ Patch233:	rpm-5.4.14-avoid-false-positives-checking-for-arbitrary-tags.patch
 Patch234:	rpm-5.4.14-query-always-noisy.patch
 Patch235:	rpm-5.4.14-fix-filedigests-verify.patch
 Patch236:	rpm-5.4.14-null-term-ascii-digest.patch
-Patch237:	rpm-5.4.14-verify-ghosts-broken-logic.patch
+# fixed upstream
+#Patch237:	rpm-5.4.14-verify-ghosts-broken-logic.patch
 Patch238:	rpm-5.4.14-lua-enable-extra-libs.patch
 Patch239:	rpm-5.4.14-gst-inspect-typo.patch
-Patch240:	rpm-5.4.14-add-missing-openmp-flags.patch
+Patch240:	rpm-5.4.15-add-missing-openmp-flags.patch
 Patch241:	rpm-5.4.14-scripts-closefds.patch
 Patch242:	rpm-5.4.14-fix-internal-lua-build.patch
 Patch243:	rpm-5.4.14-ruby-archdirs.patch
@@ -545,7 +545,8 @@ Patch245:	rpm-5.4.14-gem_helper-spec-arg.patch
 Patch246:	rpm-5.4.14-rubygems2-support.patch
 Patch247:	rpm-5.4.14-update-ruby_gemdir-and-ruby_ridir-macros.patch
 Patch248:	rpm-5.4.14-fix-dependency-generation-when-ruby_version-is-empty.patch
-Patch249:	rpm-5.4.14-fix-undef-with_embedded-typo.patch
+# ???
+#Patch249:	rpm-5.4.14-fix-undef-with_embedded-typo.patch
 Patch250:	rpm-5.4.14-add-missing-_RPMLUA_INTERNAL-define.patch
 Patch251:	rpm-5.4.14-workaround-scriptlet-dependency-ordering-issue.patch
 Patch252:	rpm-5.4.14-add-support-for-deprecating-epoch.patch
@@ -556,7 +557,7 @@ Patch256:	rpm-5.4.14-preserve-tag-type.patch
 Patch257:	rpm-5.4.10-namespace-compare.patch
 Patch258:	rpm-5.4.12-revert-gpg-argv-parsing.patch
 Patch259:	rpm-5.4.10-fix--p-interpreter-and-empty-script.patch
-Patch260:	rpm-5.4.10-fix-missing-types-in-headers.patch
+Patch260:	rpm-5.4.15-fix-missing-types-in-headers.patch
 Patch261:	rpm-4.5-unglobal.patch
 Patch262:	rpm-5.4.13-double-check-unpackaged-dirs.patch
 Patch263:	rpm-5.4.9-debugedit-segv.patch
@@ -579,6 +580,10 @@ Patch270:	rpm-5.4.14-add-support-for-disabling-default-doc-files.patch
 Patch271:	rpm-5.4.14-no-assert-abort-with-broken-headers.patch
 Patch272:	rpm-5.4.14-delete-require-tags-if-all-dependencies-are-removed.patch
 Patch273:	rpm-5.4.14-add-missing-delMacroAll-prototype.patch
+Patch274:	rpm-5.4.15-fix-typo-in-configure.ac-breaking-perlembed.patch
+Patch275:	rpm-5.4.15-fix-missing-rpmpython-endif.patch
+Patch276:	rpm-5.4.15-rpmpython-fix-proper-inclusion-order.patch
+Patch277:	rpm-5.4.15-revive-multiarch-optional.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -933,7 +938,7 @@ popd
 %patch131 -p1 -b .dlopen~
 %patch132 -p1 -b .py_input~
 %patch133 -p1 -b .devel_prov~
-%patch134 -p1 -b .lua~
+#patch134 -p1 -b .lua~
 %patch135 -p1 -b .db_rdonly~
 %patch136 -p1 -b .ds_merge~
 %patch137 -p1 -b .slash~
@@ -945,7 +950,7 @@ popd
 %patch146 -p1 -b .nosig~
 %patch150 -p1 -b .i18n_str~
 %patch151 -p1 -b .noi18n~
-%patch152 -p1 -b .l10ndir~
+#patch152 -p1 -b .l10ndir~
 %patch156 -p1 -b .php_deps~
 %patch157 -p1 -b .perl_deps~
 %patch158 -p1 -b .dl_error~
@@ -991,7 +996,7 @@ popd
 %patch201 -p1 -b .syslog~
 %patch203 -p1 -b .subpackage_errors~
 %patch204 -p1 -b .python3~
-%patch205 -p1 -b .squir_ver~
+#patch205 -p1 -b .squir_ver~
 %patch209 -p1 -b .rpmluaprint~
 %patch210 -p1 -b .rpmpythonmod~
 %patch211 -p1 -b .rpmpythontrunc~
@@ -999,7 +1004,6 @@ popd
 %patch215 -p1 -b .tok_free~
 %patch216 -p1 -b .xmalloc~
 %patch217 -p1 -b .libpackage~
-%patch218 -p0 -b .errno~
 %patch219 -p1 -b .etcrpm~
 %patch221 -p1 -b .aarch64_multiarch~
 %patch222 -p1 -b .update_config.subguess~
@@ -1017,7 +1021,7 @@ popd
 %patch234 -p1 -b .querynoise~
 %patch235 -p1 -b .fixfdigests~
 %patch236 -p1 -b .asciinullterm~
-%patch237 -p1 -b .broken_verify~
+#patch237 -p1 -b .broken_verify~
 %patch238 -p1 -b .lua_posix~
 %patch239 -p1 -b .gst_typo~
 %patch240 -p1 -b .openmp~
@@ -1029,7 +1033,7 @@ popd
 %patch246 -p1 -b .rubygems2~
 %patch247 -p1 -b .ruby_macros~
 %patch248 -p1 -b .no_ruby_version~
-%patch249 -p1 -b .fixembtypo~
+#patch249 -p1 -b .fixembtypo~
 %patch250 -p1 -b .rpmlua_internal~
 %patch251 -p1 -b .order~
 %patch252 -p1 -b .deprecate_epoch~
@@ -1054,6 +1058,10 @@ popd
 %patch271 -p1 -b .noassert~
 %patch272 -p1 -b .remove_all_deptags~
 %patch273 -p1 -b .missing_prototype~
+%patch274 -p1 -b .perlembed_typo~
+%patch275 -p1 -b .fix_rpmpython_conds~
+%patch276 -p1 -b .system_header~
+%patch277 -p1 -b .multiarch~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1063,7 +1071,10 @@ popd
 sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 
 %build
-%configure2_5x	--enable-nls \
+# this should really have been fixed by P240, but for some reason this no
+# longer seems to be the case
+LDFLAGS="-fopenmp" \
+%configure	--enable-nls \
 		--enable-shared \
 		--enable-static \
 		--with-pic \
@@ -1163,7 +1174,8 @@ sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 %endif
 		--with-rundir=/run \
 		--with-vendor=mandriva \
-		--enable-build-warnings
+		--enable-build-warnings \
+		--with-multiarch
 # XXX: Making ie. a --with-pre-macros option might be more aestethic and easier
 # of use to others if pushed back upstream?
 # For our case, this is only used to define _prefer_target_cpu before any other
