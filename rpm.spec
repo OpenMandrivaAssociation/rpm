@@ -584,6 +584,7 @@ Patch274:	rpm-5.4.15-fix-typo-in-configure.ac-breaking-perlembed.patch
 Patch275:	rpm-5.4.15-fix-missing-rpmpython-endif.patch
 Patch276:	rpm-5.4.15-rpmpython-fix-proper-inclusion-order.patch
 Patch277:	rpm-5.4.15-revive-multiarch-optional.patch
+Patch278:	rpm-5.4.15-fix-fortify-passing.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1062,6 +1063,7 @@ popd
 %patch275 -p1 -b .fix_rpmpython_conds~
 %patch276 -p1 -b .system_header~
 %patch277 -p1 -b .multiarch~
+%patch278 -p1 -b .fortify~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
