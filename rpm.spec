@@ -1,4 +1,5 @@
-%define	_target_vendor mandriva
+%define python_version 2.7
+%define	_target_vendor	mandriva
 
 %bcond_with	bootstrap
 %bcond_with	debug
@@ -58,6 +59,12 @@
 %define	devname	%mklibname -d rpm
 %define	static	%mklibname -d -s rpm
 
+%ifarch aarch64
+# "linux32 rpm -E %{_arch}" returns aarch64 on aarch64...
+# Force it to do the right thing for now
+%define multiarch_platform multiarch-arm-%{_target_os}
+%endif
+
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
@@ -92,23 +99,11 @@ Source4:	legacy_compat.macros
 Source5:	RPMBDB-0.1.tar.xz
 Source6:	git-repository--after-tarball
 Source7:	git-repository--apply-patch
-# already merged upstream
-Patch0:		rpm-5.3.8-set-default-bdb-log-dir.patch
-# TODO: should be disable for cooker, packaging needs to be fixed (enable for legacy compatibility)
-# status: to be removed later..
-Patch1:		rpm-5.3.8-dependency-whiteout.patch
 # TODO: make conditional & disabled through macro by default (enable for legacy compatibility)
 # status: to be removed later
 Patch2:		rpm-5.4.9-non-pre-scripts-dont-fail.patch
 # status: to be removed later
 Patch3:		rpm-5.4.9-no-doc-conflicts.patch
-# if distsuffix is defined, use it for disttag (from Anssi)
-# status: merged upstream IIRC, could probably be dropped
-Patch4:		rpm-5.3.8-disttag-distsuffix-fallback.patch
-# ugly hack to workaround disttag/distepoch pattern matching issue to buy some
-# time to come up with better pattern fix..
-# status: needs to be fixed properly, but can be merged upstream
-Patch5:		rpm-5.3.8-distepoch-pattern-hack.patch
 # Don't disable keyserver queries
 Patch6:		rpm-5.4.10-use-keyserver.patch
 # Don't override libexecdir, that's bogus
@@ -120,11 +115,6 @@ Patch11:	rpm-5.4.9-fix-russian-typo.patch
 # a huge memleak...
 # DIE
 Patch15:	rpm-5.3.8-fire-file-triggers-only-once.patch
-# status: keep as mandriva specific for now
-Patch21:	rpm-5.3.12-change-dep-loop-errors-to-warnings.patch
-# status: need to be revisited and made sure that we get the correct behaviour,
-# regression tests certainly required
-Patch22:	rpm-5.3.12-55810-rpmevrcmp-again-grf.patch
 # status: ready to merge, it's already been merged on HEAD, so commiting it to rpm-5_4
 # would basically just mean backporting it..
 Patch29:	rpm-5.4.4-add-_specfile-macro.patch
@@ -201,8 +191,6 @@ Patch78:	rpm-5.4.9-ruby1.9-fixes.patch
 # mdvbz#65269
 # status: same as for other dependency generation patches
 Patch79:	rpm-5.4.4-dont-consider-ranged-dependencies-as-overlapping-for-removal.patch
-# status: ignoree for now
-Patch81:	rpm-5.4.5-libsql-conditional.patch
 # status: same as for other dependency generation patches
 Patch85:	rpm-5.4.5-fix-removal-of-overlapping-dependencies-for-internal-dependency-generator.patch
 # this updates to using the dependency generator shipped with mono, it has some
@@ -264,8 +252,6 @@ Patch114:	rpm-5.4.9-dont-add-versioneddependency-rpmlib-feature-dependency.patch
 Patch116:	rpm-5.4.12-dont-try-generate-rpmfc-dependencies-from-doc-files.patch
 # status: ready to merge
 Patch117:	rpm-5.4.7-only-generate-ruby-and-python-deps-for-executables-and-modules.patch
-# status: same as for other dep gen patches
-Patch118:	rpm-5.4.7-dont-generate-soname-provides-for-dsos-with-no-soname.patch
 # status: ready
 Patch119:	rpm-5.4.7-fix-generation-of-ruby-abi-provides.patch
 # status: same as for other dep gen patches
@@ -585,6 +571,30 @@ Patch275:	rpm-5.4.15-fix-missing-rpmpython-endif.patch
 Patch276:	rpm-5.4.15-rpmpython-fix-proper-inclusion-order.patch
 Patch277:	rpm-5.4.15-revive-multiarch-optional.patch
 Patch278:	rpm-5.4.15-fix-fortify-passing.patch
+# Default to clang/clang++ for __cc and __cxx
+Patch279:      rpm-5.4.10-default-to-clang.patch
+# Use -gnueabihf rather than -gnueabi as suffix for arm hardfloat
+# targets
+# file 5.18+ reports xz files as "XZ compressed data" while older
+# versions say "xz compressed data" -- make the check case insensitive.
+Patch280:	rpm-5.4.10-rpm2cpio-file-5.18.patch
+# Make sure macros work with python 3.x
+Patch281:	rpm-5.4.10-macros-python3.patch
+# Make the perl module use the same toolchain as everything else
+Patch282:	rpm-5.4.10-perl-use-same-toolchain.patch
+# Fix the %%config_update macro for config.* files in subdirectories
+# whose names contain spaces (seen in resIL)
+Patch283:	rpm-5.4.10-config_update-spaces-in-filenames.patch
+# Default optflags to -Oz
+Patch284:	rpm-5.4.10-default-to-Oz.patch
+# Fix mklibname to automatically generate e.g. lib64qtxdg5_0
+# (rather than lib64qtxdg50) for "%%mklibname qtxdg5 0"
+Patch285:	rpm-5.4.14-mklibname-fix-lib-names-ending-with-digits.patch
+Patch286:	rpm-5.4.14-rubygems2.2-support.patch
+Patch287:	rpm-5.4.14-rubygems2_more_fixes.patch
+# Turn back old implementation of __urlgetfile handling
+Patch288:       rpm-5.4.10-turn-back-urlgetfile.patch
+Patch289:	rpm-5.4.14-MDV-use-gnu-tar-compression-detection-for-parsePrep.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -635,7 +645,7 @@ BuildRequires:	%{bdb}-utils
 BuildRequires:	perl-devel
 %endif
 %if %{with python}
-BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python) = 2.7 
 %endif
 %if %{with js}
 BuildRequires:	pkgconfig(mozjs185)
@@ -667,7 +677,9 @@ BuildRequires:	spec-helper >= 0.31.12
 BuildRequires:	stdc++-static-devel >= 4.6.2-8
 BuildRequires:	elfutils >= 0.154
 BuildRequires:	libtool >= 2.4.2-3
-Requires:	cpio
+# rpm can't be built with clang currently (nested functions)
+BuildRequires:	gcc
+Requires:	bsdcpio
 Requires:	gawk
 Requires:	coreutils
 Requires:	update-alternatives
@@ -747,8 +759,14 @@ Requires:	spec-helper >= 0.31.12
 Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
 %if %{without bootstrap}
 Requires:	python-rpm = %{EVRD}
+%if "%{distepoch}" < "2015.0"
 Requires:	python-pkg-resources
 BuildRequires:	python-pkg-resources
+%define	py2_platsitedir	%py_platsitedir
+%else
+Requires:	python2-pkg-resources
+BuildRequires:	python2-pkg-resources
+%endif
 %endif
 Requires:	pkgconfig
 # ditch to eliminate dependency on perl deps not part of standard perl library
@@ -851,23 +869,14 @@ popd
 %patch111 -p1 -b .script_macros~
 # These patches has been commited hastily upstream for review,
 # keeping them around here for now untill finished...
-%if 0
-%patch0 -p1 -b .set_lg_dir~
-%patch1 -p1 -b .dep_whiteout~
-%endif
 %patch2 -p1 -b .scriptlet~
 %patch3 -p1 -b .doc_conflicts~
 %patch11 -p1 -b .ru~
 %if 0
-%patch4 -p1 -b .distsuffix~
-%patch5 -p1 -b .distpatt~
 %patch15 -p1 -b .trigger_once~
 %endif
 %patch6 -p1 -b .keyserver~
 %patch7 -p1 -b .libexec~
-#%%patch21 -p1 -b .loop_warnings~
-#%%patch22 -p1 -b .55810~
-#patch27 -p1 -b .mdv~
 %patch29 -p1 -b .specfile~
 %patch31 -p1 -b .rpm_qa~
 #%%patch32 -p1 -b .clean~
@@ -893,7 +902,6 @@ popd
 %patch77 -p1 -b .db52~
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
-#patch81 -p1 -b .libsql~
 %patch85 -p1 -b .int_gen_overlap~
 %patch86 -p1 -b .mono_deps_new~
 %patch87 -p1 -b .php_dep_gen~
@@ -923,7 +931,6 @@ popd
 %patch114 -p1 -b .no_verdepfeat~
 %patch116 -p1 -b .skip_doc~
 %patch117 -p1 -b .exec_modules~
-#patch118 -p1 -b .soname_only~
 %patch119 -p1 -b .rubyabi_prov~
 %patch120 -p1 -b .filedep_origins~
 %patch121 -p1 -b .equal_overlaps~
@@ -960,7 +967,7 @@ popd
 %patch160 -p1 -b .xz_level~
 %patch161 -p1 -b .uclibc_buildroot~
 %patch162 -p1 -b .uninitialized~
-%patch163 -p1 -b .mdk~
+#patch163 -p1 -b .mdk~
 %patch164 -p1 -b .verbosebuilds~
 %patch165 -p1 -b .helper_order~
 %patch166 -p1 -b .ldflags~
@@ -1009,7 +1016,7 @@ popd
 %patch221 -p1 -b .aarch64_multiarch~
 %patch222 -p1 -b .update_config.subguess~
 %patch223 -p1 -b .cmakedeps~
-%patch224 -p1 -b .ro~
+#patch224 -p1 -b .ro~
 %patch225 -p1 -b .armx~
 %patch226 -p1 -b .multithread~
 %patch227 -p1 -b .outputsync~
@@ -1064,6 +1071,17 @@ popd
 %patch276 -p1 -b .system_header~
 %patch277 -p1 -b .multiarch~
 %patch278 -p1 -b .fortify~
+%patch279 -p1 -b .clangdefault~
+%patch280 -p1 -b .file~
+%patch281 -p1 -b .python3~
+%patch282 -p1 -b .sameToolchain~
+%patch283 -p1 -b .configUpdate~
+%patch284 -p1 -b .Oz~
+%patch285 -p1 -b .mklibname_fix~
+%patch286 -p1 -b .rubygems2.2
+%patch287 -p1 -b .morerubygems2
+%patch288 -p1 -b .urlgetfile~
+%patch289 -p1 -b .tar~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1073,6 +1091,10 @@ popd
 sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 
 %build
+# rpm can't be built with clang currently (nested functions)
+export CC=gcc
+export CXX=g++
+export __PYTHON=%{_bindir}/python2
 # this should really have been fixed by P240, but for some reason this no
 # longer seems to be the case
 LDFLAGS="-fopenmp" \
@@ -1178,6 +1200,7 @@ LDFLAGS="-fopenmp" \
 		--with-vendor=mandriva \
 		--enable-build-warnings \
 		--with-multiarch
+
 # XXX: Making ie. a --with-pre-macros option might be more aestethic and easier
 # of use to others if pushed back upstream?
 # For our case, this is only used to define _prefer_target_cpu before any other
@@ -1239,8 +1262,8 @@ EOF
 
 # Get rid of unpackaged files
 # XXX: is there any of these we might want to keep?
-for f in %{py_platsitedir}/poptmodule.a %{py_platsitedir}/rpmmodule.a \
-	%{py_platsitedir}/rpm/*.a %{_rpmhome}/*.a %{_rpmhome}/lib/*.a\
+for f in %{py2_platsitedir}/poptmodule.a %{py2_platsitedir}/_rpmmodule.a \
+	%{py2_platsitedir}/rpm/*.a %{_rpmhome}/*.a %{_rpmhome}/lib/*.a\
 	%{_rpmhome}/{Specfile.pm,cpanflute2,cpanflute,sql.prov,sql.req,tcl.req} \
 	%{_rpmhome}/{config.site,cross-build,rpmdiff.cgi} \
 	%{_rpmhome}/trpm %{_bindir}/rpmdiff; do
@@ -1511,9 +1534,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %if %{with embed}
 %{_rpmhome}/lib/rpmpython.so
 %endif
-%dir %{py_platsitedir}/rpm
-%{py_platsitedir}/rpm/*.py
-%{py_platsitedir}/rpm/*.so
+%dir %{py2_platsitedir}/rpm
+%{py2_platsitedir}/rpm/*.py
+%{py2_platsitedir}/rpm/*.so
 %endif
 
 %if %{with ruby}
