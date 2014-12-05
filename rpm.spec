@@ -1245,7 +1245,7 @@ for f in %{py_platsitedir}/poptmodule.a %{py_platsitedir}/rpmmodule.a \
 	rm -f %{buildroot}$f
 done
 
-%find_lang %{name}
+%find_lang %{name} --with-man --all-name
 
 mkdir -p %{buildroot}/var/lib/rpm/{log,tmp}
 for dbi in `./rpm --macros macros/macros --eval %_dbi_tags_4|tr : ' '` __db.00{0..9}; do
@@ -1353,12 +1353,6 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_sysconfdir}/%{name}/premacros.d/*.macros
 
 %{_mandir}/man[18]/*.[18]*
-%lang(pl)	%{_mandir}/pl/man[18]/*.[18]*
-%lang(ru)	%{_mandir}/ru/man[18]/*.[18]*
-%lang(ja)	%{_mandir}/ja/man[18]/*.[18]*
-%lang(sk)	%{_mandir}/sk/man[18]/*.[18]*
-%lang(fr)	%{_mandir}/fr/man[18]/*.[18]*
-%lang(ko)	%{_mandir}/ko/man[18]/*.[18]*
 %exclude	%{_mandir}/man8/rpmbuild.8*
 %exclude	%{_mandir}/man8/rpmdeps.8*
 
