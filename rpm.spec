@@ -598,6 +598,7 @@ Patch289:	rpm-5.4.14-MDV-use-gnu-tar-compression-detection-for-parsePrep.patch
 # backport from cvs
 Patch290:	0001-rpmds-fix-off-by-1-comparison-check-parsing-N.A-comp.patch
 Patch291:	rpm-5.4.15-add-disablers-for-target-host-build-configure-args.patch
+Patch292:	rpm-5.4.15-define-proper-sharedstatedir.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1087,6 +1088,7 @@ popd
 %patch289 -p1 -b .tar~
 %patch290 -p1 -b .rpmds_offbyone~
 %patch291 -p1 -b .no_conf_target_host_build~
+%patch292 -p1 -b .sharedstatedir~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
