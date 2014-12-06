@@ -595,6 +595,8 @@ Patch287:	rpm-5.4.14-rubygems2_more_fixes.patch
 # Turn back old implementation of __urlgetfile handling
 Patch288:       rpm-5.4.10-turn-back-urlgetfile.patch
 Patch289:	rpm-5.4.14-MDV-use-gnu-tar-compression-detection-for-parsePrep.patch
+# backport from cvs
+Patch290:	0001-rpmds-fix-off-by-1-comparison-check-parsing-N.A-comp.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1082,6 +1084,7 @@ popd
 %patch287 -p1 -b .morerubygems2
 %patch288 -p1 -b .urlgetfile~
 %patch289 -p1 -b .tar~
+%patch290 -p1 -b .rpmds_offbyone~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
