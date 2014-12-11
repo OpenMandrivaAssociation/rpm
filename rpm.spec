@@ -600,6 +600,7 @@ Patch290:	0001-rpmds-fix-off-by-1-comparison-check-parsing-N.A-comp.patch
 Patch291:	rpm-5.4.15-add-disablers-for-target-host-build-configure-args.patch
 Patch292:	rpm-5.4.15-define-proper-sharedstatedir.patch
 Patch293:	rpm-5.4.15-drop-non-existant-file-from-libtpm-configure.patch
+Patch294:	rpm-5.4.15-if-no-release-is-defined-dont-print-distepoch-as-part-of-EVRD.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1091,6 +1092,7 @@ popd
 %patch291 -p1 -b .no_conf_target_host_build~
 %patch292 -p1 -b .sharedstatedir~
 %patch293 -p1 -b .tpm_ac~
+%patch294 -p1 -b .EVRD~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
