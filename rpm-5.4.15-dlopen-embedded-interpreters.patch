@@ -204,13 +204,13 @@
  #librpmio.la: $(librpmio_la_OBJECTS) $(librpmio_la_DEPENDENCIES) 
  #	$(librpmio_la_LINK) -rpath $(usrlibdir) $(librpmio_la_OBJECTS) $(librpmio_la_LIBADD)
  
-+pkgdir = @USRLIBRPM@
-+pkglibdir = $(pkgdir)/lib
-+pkglib_LTLIBRARIES =
++zpkgdir = @USRLIBRPM@
++zpkglibdir = $(zpkgdir)/lib
++zpkglib_LTLIBRARIES =
 +
 +if WITH_PERLEMBED
-+librpmio_la_LDFLAGS	+= -Wl,-rpath=$(pkglibdir)
-+pkglib_LTLIBRARIES	+= rpmperl.la
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
++zpkglib_LTLIBRARIES	+= rpmperl.la
 +rpmperl_la_SOURCES	= rpmperl.c
 +rpmperl_la_CPPFLAGS	= -DMODULE_EMBED
 +rpmperl_la_CFLAGS	= $(WITH_PERL_CFLAGS)
@@ -219,8 +219,8 @@
 +endif
 +
 +if WITH_PYTHONEMBED
-+librpmio_la_LDFLAGS	+= -Wl,-rpath=$(pkglibdir)
-+pkglib_LTLIBRARIES	+= rpmpython.la
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
++zpkglib_LTLIBRARIES	+= rpmpython.la
 +rpmpython_la_SOURCES	= rpmpython.c
 +rpmpython_la_CPPFLAGS	= -I@WITH_PYTHON_INCDIR@ -DMODULE_EMBED
 +rpmpython_la_LDFLAGS	= -module -avoid-version
@@ -228,8 +228,8 @@
 +endif
 +
 +if WITH_RUBYEMBED
-+librpmio_la_LDFLAGS	+= -Wl,-rpath=$(pkglibdir)
-+pkglib_LTLIBRARIES	+= rpmruby.la
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
++zpkglib_LTLIBRARIES	+= rpmruby.la
 +rpmruby_la_SOURCES	= rpmruby.c
 +rpmruby_la_CPPFLAGS	= $(WITH_RUBY_CPPFLAGS) -DMODULE_EMBED
 +rpmruby_la_LDFLAGS	= -module -avoid-version $(WITH_RUBY_LDFLAGS)
@@ -237,8 +237,8 @@
 +endif
 +
 +if WITH_SQUIRREL
-+librpmio_la_LDFLAGS	+= -Wl,-rpath=$(pkglibdir)
-+pkglib_LTLIBRARIES	+= rpmsquirrel.la
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
++zpkglib_LTLIBRARIES	+= rpmsquirrel.la
 +rpmsquirrel_la_SOURCES	= rpmsquirrel.c
 +rpmsquirrel_la_CPPFLAGS	= $(SQUIRREL_CPPFLAGS) -DMODULE_EMBED
 +rpmsquirrel_la_LDFLAGS	= -module -avoid-version
@@ -246,8 +246,8 @@
 +endif
 +
 +if WITH_TCL
-+librpmio_la_LDFLAGS	+= -Wl,-rpath=$(pkglibdir)
-+pkglib_LTLIBRARIES	+= rpmtcl.la
++librpmio_la_LDFLAGS	+= -Wl,-rpath=$(zpkglibdir)
++zpkglib_LTLIBRARIES	+= rpmtcl.la
 +rpmtcl_la_SOURCES	= rpmtcl.c
 +rpmtcl_la_CPPFLAGS	= -DMODULE_EMBED
 +rpmtcl_la_LDFLAGS	= -module -avoid-version
