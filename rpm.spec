@@ -1119,7 +1119,7 @@ LDFLAGS="-fopenmp" \
 %if %{with python}
 		--with-python=%{python_version} \
 		--with-python-inc-dir="$(${__PYTHON} -c 'from distutils.sysconfig import get_python_inc; print get_python_inc()')" \
-		--with-python-lib-dir="$(${__PYTHON} -c 'from distutils.sysconfig import get_python_lib; print get_python_lib(1)')`" \
+		--with-python-lib-dir="$(${__PYTHON} -c 'from distutils.sysconfig import get_python_lib; print get_python_lib(1)')" \
 %if %{with embed}
 		--with-pythonembed=external \
 %endif
