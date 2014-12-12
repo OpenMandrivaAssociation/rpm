@@ -753,6 +753,7 @@ Summary:	Scripts and executable programs used to build packages
 Group:		System/Configuration/Packaging
 Requires:	autoconf
 Requires:	automake
+Requires:	clang
 Requires:	file
 Requires:	gcc-c++
 Requires:	libtool-base >= 2.4.2-3
