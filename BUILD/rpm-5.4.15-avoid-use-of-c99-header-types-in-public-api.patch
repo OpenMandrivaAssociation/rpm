@@ -1,0 +1,73 @@
+--- rpm-5.4.15/lib/rpmversion.h.in.noc99_types~	2014-12-18 06:19:12.332477458 +0100
++++ rpm-5.4.15/lib/rpmversion.h.in	2014-12-18 06:20:15.643942905 +0100
+@@ -1,6 +1,8 @@
+ #ifndef __RPMVERSION_H__
+ #define __RPMVERSION_H__
+ 
++#include <rpmtypes.h>
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+@@ -70,11 +72,11 @@ extern int rpmFLAGS;
+ */
+ 
+ /* link-time information */
+-extern uint32_t rpmlibVersion(void)
++extern rpmuint32_t rpmlibVersion(void)
+ 	/*@*/;
+-extern uint32_t rpmlibTimestamp(void)
++extern rpmuint32_t rpmlibTimestamp(void)
+ 	/*@*/;
+-extern uint32_t rpmlibVendor(void)
++extern rpmuint32_t rpmlibVendor(void)
+ 	/*@*/;
+ 
+ /* compile-time information */
+--- rpm-5.4.15/rpmio/rpmpgp.h.noc99_types~	2014-12-18 06:16:06.715051021 +0100
++++ rpm-5.4.15/rpmio/rpmpgp.h	2014-12-18 06:16:29.622018829 +0100
+@@ -1167,28 +1167,28 @@ const char * pgpValStr(pgpValTbl vs, rpm
+ }
+ 
+ /*@unused@*/ static inline /*@observer@*/
+-const char * _pgpTag2Name(uint32_t tag)
++const char * _pgpTag2Name(rpmuint32_t tag)
+ 	/*@*/
+ {
+     return pgpValStr(pgpTagTbl, (rpmuint8_t)tag);
+ }
+ 
+ /*@unused@*/ static inline /*@observer@*/
+-const char * _pgpSigType2Name(uint32_t sigtype)
++const char * _pgpSigType2Name(rpmuint32_t sigtype)
+ 	/*@*/
+ {
+     return pgpValStr(pgpSigTypeTbl, (rpmuint8_t)sigtype);
+ }
+ 
+ /*@unused@*/ static inline /*@observer@*/
+-const char * _pgpHashAlgo2Name(uint32_t algo)
++const char * _pgpHashAlgo2Name(rpmuint32_t algo)
+ 	/*@*/
+ {
+     return pgpValStr(pgpHashTbl, (rpmuint8_t)algo);
+ }
+ 
+ /*@unused@*/ static inline /*@observer@*/
+-const char * _pgpPubkeyAlgo2Name(uint32_t algo)
++const char * _pgpPubkeyAlgo2Name(rpmuint32_t algo)
+ 	/*@*/
+ {
+     return pgpValStr(pgpPubkeyTbl, (rpmuint8_t)algo);
+@@ -1492,9 +1492,9 @@ pgpDig pgpDigNew(pgpVSFlags vsflags, pgp
+ void pgpDigClean(/*@null@*/ pgpDig dig)
+ 	/*@modifies dig @*/;
+ 
+-const char * pgpHashAlgo2Name(uint32_t algo)
++const char * pgpHashAlgo2Name(rpmuint32_t algo)
+ 	/*@*/;
+-const char * pgpPubkeyAlgo2Name(uint32_t algo)
++const char * pgpPubkeyAlgo2Name(rpmuint32_t algo)
+ 	/*@*/;
+ rpmuint8_t pgpHashName2Algo(const char * name)
+ 	/*@*/;

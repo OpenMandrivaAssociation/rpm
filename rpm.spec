@@ -602,6 +602,7 @@ Patch292:	rpm-5.4.15-define-proper-sharedstatedir.patch
 Patch293:	rpm-5.4.15-drop-non-existant-file-from-libtpm-configure.patch
 Patch294:	rpm-5.4.15-if-no-release-is-defined-dont-print-distepoch-as-part-of-EVRD.patch
 Patch295:	rpm-5.4.15-lib_soname-macro.patch
+Patch296:	rpm-5.4.15-avoid-use-of-c99-header-types-in-public-api.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1096,6 +1097,7 @@ popd
 %patch293 -p1 -b .tpm_ac~
 %patch294 -p1 -b .EVRD~
 %patch295 -p1 -b .lib_soname~
+%patch296 -p1 -b .noc99_types~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
