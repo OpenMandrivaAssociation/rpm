@@ -874,7 +874,8 @@ This package contains the RPM API documentation generated in HTML format.
 %setup -q -a5
 mkdir platform
 pushd platform
-ar x %{SOURCE3}
+# breaks on arm?!?!
+%{_target_platform}-ar x %{SOURCE3}
 popd
 %patch111 -p1 -b .script_macros~
 # These patches has been commited hastily upstream for review,
