@@ -69,7 +69,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}1
+Release:	%{?prereldate:0.%{prereldate}.}2
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -774,6 +774,7 @@ BuildRequires:	python-pkg-resources
 %define	py2_platsitedir	%py_platsitedir
 %else
 Requires:	python2-pkg-resources
+Requires:	python-pkg-resources
 BuildRequires:	python2-pkg-resources
 %endif
 %endif
