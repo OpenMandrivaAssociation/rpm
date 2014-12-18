@@ -4,26 +4,11 @@
  #ifndef __RPMVERSION_H__
  #define __RPMVERSION_H__
  
-+#include <rpmiotypes.h>
++#include <stdint.h>
 +
  #ifdef __cplusplus
  extern "C" {
  #endif
-@@ -70,11 +72,11 @@ extern int rpmFLAGS;
- */
- 
- /* link-time information */
--extern uint32_t rpmlibVersion(void)
-+extern rpmuint32_t rpmlibVersion(void)
- 	/*@*/;
--extern uint32_t rpmlibTimestamp(void)
-+extern rpmuint32_t rpmlibTimestamp(void)
- 	/*@*/;
--extern uint32_t rpmlibVendor(void)
-+extern rpmuint32_t rpmlibVendor(void)
- 	/*@*/;
- 
- /* compile-time information */
 --- rpm-5.4.15/rpmio/rpmpgp.h.noc99_types~	2014-05-05 01:48:27.000000000 +0200
 +++ rpm-5.4.15/rpmio/rpmpgp.h	2014-12-18 17:51:29.000915208 +0100
 @@ -1167,28 +1167,28 @@ const char * pgpValStr(pgpValTbl vs, rpm
