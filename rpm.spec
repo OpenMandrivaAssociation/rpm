@@ -603,7 +603,7 @@ Patch293:	rpm-5.4.15-drop-non-existant-file-from-libtpm-configure.patch
 Patch294:	rpm-5.4.15-if-no-release-is-defined-dont-print-distepoch-as-part-of-EVRD.patch
 Patch295:	rpm-5.4.15-lib_soname-macro.patch
 Patch296:	rpm-5.4.15-avoid-use-of-c99-header-types-in-public-api.patch
-Patch297:	rpm-5.4.15-automatic-platform-detect.patch
+Patch297:	rpm-5.4.15-platform_detect.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1193,6 +1193,7 @@ LDFLAGS="-fopenmp" \
 		--with-xar=%{_includedir}/xar \
 %endif
 		--with-db \
+		--with-dbabi=db
 		--with-dbsql=external \
 		--without-db-tools-integrated \
 %if %{with sqlite}

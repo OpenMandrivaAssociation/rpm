@@ -1,0 +1,61 @@
+--- rpm-5.4.15/config.h.in.platform_detect~	2014-08-17 14:03:48.000000000 +0200
++++ rpm-5.4.15/config.h.in	2014-12-19 10:49:50.170038647 +0100
+@@ -1467,6 +1467,9 @@
+ /* Define as 1 if building with Syck library */
+ #undef WITH_SYCK
+ 
++/* Define as if you want autodetection of platform */
++#undef WITH_PLATFORM_DETECT
++
+ /* Define as 1 if building with Tcl library */
+ #undef WITH_TCL
+ 
+--- rpm-5.4.15/configure.ac.platform_detect~	2014-12-19 10:50:52.246854313 +0100
++++ rpm-5.4.15/configure.ac	2014-12-19 10:50:52.256854284 +0100
+@@ -2211,6 +2211,17 @@ RPM_CHECK_LIB(
+     [no,external:none], [],
+     [AC_MSG_WARN([CPUInfo support is under development])], [])
+ 
++dnl # Automatic /etc/rpm/platform detection
++AC_ARG_WITH([platform-detect],
++	    AS_HELP_STRING([--enable-platform-detect], [enable automatic platform detection]),
++	    [WITH_PLATFORM_DETECT=yes],
++	    [WITH_PLATFORM_DETECT=no])
++AM_CONDITIONAL(
++    [WITH_PLATFORM_DETECT],
++    [ test ".$WITH_PLATFORM_DETECT" = .yes ])
++AC_DEFINE_UNQUOTED([[WITH_PLATFORM_DETECT])
++AC_SUBST([WITH_PLATFORM_DETECT])
++
+ dnl # Mandriva Linux derived multiarch
+ AC_ARG_WITH([multiarch],
+ 	    AS_HELP_STRING([--with-multiarch], [install multiarch support]),
+--- rpm-5.4.15/lib/rpmrc.c.platform_detect~	2014-12-19 10:49:50.103038846 +0100
++++ rpm-5.4.15/lib/rpmrc.c	2014-12-19 10:49:50.171038644 +0100
+@@ -518,7 +518,7 @@ exit:
+ }
+ /*@=onlytrans@*/
+ 
+-#if defined(WITH_CPUINFO) && defined(WITH_SYCK)
++#if defined(WITH_PLATFORM_DETECT) && defined(WITH_SYCK)
+ static inline int rpmCpuinfoMatch(const char * feature, const char * EVR, rpmds cpuinfo)
+ {
+     rpmds cpufeature = rpmdsSingle(RPMTAG_REQUIRENAME, feature, EVR, RPMSENSE_PROBE);
+@@ -755,7 +755,7 @@ static void defaultMachine(/*@out@*/ con
+ 	if (cp == NULL || cp[0] == '\0')
+ 	    cp = _platform;
+ 	if (rpmPlatform(cp) == RPMRC_OK) {
+-#elif defined(WITH_CPUINFO) && defined(WITH_SYCK)
++#elif defined(WITH_PLATFORM_DETECT) && defined(WITH_SYCK)
+ 	if (rpmPlatform(_platform) == RPMRC_OK || rpmCpuinfo() == RPMRC_OK)
+ #else
+ 	if (rpmPlatform(_platform) == RPMRC_OK)
+@@ -897,7 +897,7 @@ static void getMachineInfo(int type, /*@
+ 	if (name) *name = canon->short_name;
+     } else {
+ 	if (num) *num = 255;
+-#if defined(WITH_CPUINFO)
++#if defined(WITH_TARGET_PLATFORM)
+ 	if (name) {
+ 	    if(type == ARCH) {
+ 		int i, j, n;
