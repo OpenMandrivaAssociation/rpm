@@ -604,6 +604,7 @@ Patch294:	rpm-5.4.15-if-no-release-is-defined-dont-print-distepoch-as-part-of-EV
 Patch295:	rpm-5.4.15-lib_soname-macro.patch
 Patch296:	rpm-5.4.15-avoid-use-of-c99-header-types-in-public-api.patch
 Patch297:	rpm-5.4.15-platform_detect.patch
+Patch298:	rpm-5.4.15-ignore-missing-macro-files.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1102,6 +1103,7 @@ popd
 %patch295 -p1 -b .lib_soname~
 %patch296 -p1 -b .noc99_types~
 %patch297 -p1 -b .platform_detect~
+%patch298 -p1 -b .ignore_missinc_macros~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
