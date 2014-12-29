@@ -1,5 +1,5 @@
---- rpm-5.4.15/config.h.in.platform_detect~	2014-08-17 14:03:48.000000000 +0200
-+++ rpm-5.4.15/config.h.in	2014-12-19 10:49:50.170038647 +0100
+--- rpm-5.4.15/config.h.in.platform_detect~	2014-12-19 18:24:28.416153293 +0100
++++ rpm-5.4.15/config.h.in	2014-12-19 18:24:28.878151986 +0100
 @@ -1467,6 +1467,9 @@
  /* Define as 1 if building with Syck library */
  #undef WITH_SYCK
@@ -10,28 +10,24 @@
  /* Define as 1 if building with Tcl library */
  #undef WITH_TCL
  
---- rpm-5.4.15/configure.ac.platform_detect~	2014-12-19 10:50:52.246854313 +0100
-+++ rpm-5.4.15/configure.ac	2014-12-19 10:50:52.256854284 +0100
-@@ -2211,6 +2211,17 @@ RPM_CHECK_LIB(
+--- rpm-5.4.15/configure.ac.platform_detect~	2014-12-19 18:24:28.832152117 +0100
++++ rpm-5.4.15/configure.ac	2014-12-19 18:25:46.362932305 +0100
+@@ -2211,6 +2211,13 @@ RPM_CHECK_LIB(
      [no,external:none], [],
      [AC_MSG_WARN([CPUInfo support is under development])], [])
  
 +dnl # Automatic /etc/rpm/platform detection
-+AC_ARG_WITH([platform-detect],
-+	    AS_HELP_STRING([--enable-platform-detect], [enable automatic platform detection]),
-+	    [WITH_PLATFORM_DETECT=yes],
++ AC_ARG_WITH([platform-detect],
++ 	    AS_HELP_STRING([--enable-platform-detect], [enable automatic platform detection]),
++	    [WITH_PLATFORM_DETECT=yes])
 +	    [WITH_PLATFORM_DETECT=no])
-+AM_CONDITIONAL(
-+    [WITH_PLATFORM_DETECT],
-+    [ test ".$WITH_PLATFORM_DETECT" = .yes ])
-+AC_DEFINE_UNQUOTED([[WITH_PLATFORM_DETECT])
-+AC_SUBST([WITH_PLATFORM_DETECT])
++AC_DEFINE(WITH_PLATFORM_DETECT, [test ".$WITH_PLATFORM_DETECT" = .yes], [ Set to 1 to enable automatic platform detection])
 +
  dnl # Mandriva Linux derived multiarch
  AC_ARG_WITH([multiarch],
  	    AS_HELP_STRING([--with-multiarch], [install multiarch support]),
---- rpm-5.4.15/lib/rpmrc.c.platform_detect~	2014-12-19 10:49:50.103038846 +0100
-+++ rpm-5.4.15/lib/rpmrc.c	2014-12-19 10:49:50.171038644 +0100
+--- rpm-5.4.15/lib/rpmrc.c.platform_detect~	2014-12-19 18:24:28.808152184 +0100
++++ rpm-5.4.15/lib/rpmrc.c	2014-12-19 18:24:28.880151981 +0100
 @@ -518,7 +518,7 @@ exit:
  }
  /*@=onlytrans@*/
