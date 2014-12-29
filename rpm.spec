@@ -605,6 +605,7 @@ Patch295:	rpm-5.4.15-lib_soname-macro.patch
 Patch296:	rpm-5.4.15-avoid-use-of-c99-header-types-in-public-api.patch
 Patch297:	rpm-5.4.15-platform_detect.patch
 Patch298:	rpm-5.4.15-ignore-missing-macro-files.patch
+Patch299:	rpm-5.4.15-update-autoconf-syntax.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1104,6 +1105,7 @@ popd
 %patch296 -p1 -b .noc99_types~
 %patch297 -p1 -b .platform_detect~
 %patch298 -p1 -b .ignore_missinc_macros~
+%patch299 -p1 -b .ac_syntax~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
@@ -1117,6 +1119,7 @@ sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 export CC=gcc
 export CXX=g++
 export __PYTHON=%{_bindir}/python2
+export CONFIGFILES=""
 # this should really have been fixed by P240, but for some reason this no
 # longer seems to be the case
 LDFLAGS="-fopenmp" \
@@ -1181,7 +1184,6 @@ LDFLAGS="-fopenmp" \
 %else
 		--without-cpuinfo \
 %endif
-		--enable-platform-detect \
 		--with-syck=external \
 		--with-file=external \
 		--with-path-magic=%{_datadir}/misc/magic.mgc \
@@ -1195,7 +1197,7 @@ LDFLAGS="-fopenmp" \
 		--with-xar=%{_includedir}/xar \
 %endif
 		--with-db \
-		--with-dbabi=db
+		--with-dbabi=db \
 		--with-dbsql=external \
 		--without-db-tools-integrated \
 %if %{with sqlite}
@@ -1225,6 +1227,7 @@ LDFLAGS="-fopenmp" \
 		--with-rundir=/run \
 		--with-vendor=mandriva \
 		--enable-build-warnings \
+		--with-platform-detect=yes \
 		--with-multiarch
 
 # XXX: Making ie. a --with-pre-macros option might be more aestethic and easier
