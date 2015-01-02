@@ -498,6 +498,13 @@ Patch215:	rpm-5.4.13-fix-free-of-memory-still-in-use.patch
 Patch216:	rpm-5.4.13-perl-bindings-do-not-use-xmalloc.patch
 # (bero): Add libpackage macro -- these lines are replicated into way too many spec files
 Patch217:	rpm-5.4.10-libpackage-macro.patch
+# Allows to override location of /etc/rpm, ie. convenient for avoiding to
+# modify the platform configuration in the host environment such as explained
+# at https://wiki.openmandriva.org/en/ARM (someone please update wiki).
+# The following paths may be overridden during runtime:
+# RPM_USRLIBRPM=/usr/lib/rpm
+# RPM_ETCRPM=/etc/rpm
+# RPM_LOCALEDIR=/usr/share/locale
 Patch219:	rpm-5.4.14-allow-overriding-etcrpm-etc-during-runtime.patch
 # (fedya): add aarch64 macro
 Patch221:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
