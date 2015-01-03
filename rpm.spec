@@ -613,7 +613,7 @@ Patch296:	rpm-5.4.15-avoid-use-of-c99-header-types-in-public-api.patch
 Patch297:	rpm-5.4.15-platform_detect.patch
 Patch298:	rpm-5.4.15-ignore-missing-macro-files.patch
 Patch299:	rpm-5.4.15-update-autoconf-syntax.patch
-
+Patch300:	rpm-5.4.14-tag-generate-endian-conversion-fix.patch
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -1113,6 +1113,7 @@ popd
 %patch297 -p1 -b .platform_detect~
 %patch298 -p1 -b .ignore_missinc_macros~
 %patch299 -p1 -b .ac_syntax~
+%patch300 -p1 -b .tag_endian~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
