@@ -615,6 +615,8 @@ Patch298:	rpm-5.4.15-ignore-missing-macro-files.patch
 Patch299:	rpm-5.4.15-update-autoconf-syntax.patch
 Patch300:	rpm-5.4.14-tag-generate-endian-conversion-fix.patch
 Patch301:	rpm-5.4.14-showrc-memleak-workaround.patch
+Patch302:	rpmqv_cc_b_gone.patch
+
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
@@ -1116,6 +1118,7 @@ popd
 %patch299 -p1 -b .ac_syntax~
 %patch300 -p1 -b .tag_endian~
 %patch301 -p1 -b .showrc_memleak~
+%patch302 -p1 -b .rpmqv_cc~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
