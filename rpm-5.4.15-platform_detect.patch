@@ -19,7 +19,7 @@
 +dnl # Automatic /etc/rpm/platform detection
 + AC_ARG_WITH([platform-detect],
 + 	    AS_HELP_STRING([--enable-platform-detect], [enable automatic platform detection]),
-+	    [WITH_PLATFORM_DETECT=yes])
++	    [WITH_PLATFORM_DETECT=yes],
 +	    [WITH_PLATFORM_DETECT=no])
 +AC_DEFINE(WITH_PLATFORM_DETECT, [test ".$WITH_PLATFORM_DETECT" = .yes], [ Set to 1 to enable automatic platform detection])
 +
