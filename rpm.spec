@@ -623,6 +623,7 @@ Patch306:	rpm-5.4.14-fix-platform-and-sysinfo-loading.patch
 Patch307:	rpm-5.4.15-rpmpy-dont-uncoditionally-reread-configuration-files.patch
 Patch308:	rpm-5.4.15-rubygems.rb-pld-ruby-2.0-fixes.patch
 Patch309:	rpm-5.4.15-gem_helper.rb-merge-pld-fixes-for-ruby-2.0-etc.patch
+Patch310:	rpm-perl-magic.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1133,6 +1134,7 @@ popd
 %patch307 -p1 -b .py_confread~
 %patch308 -p1 -b .pld_ruby20~
 %patch309 -p1 -b .pld_gemhelper_ruby20~
+%patch310 -p0 -b .perl-magic~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh

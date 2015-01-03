@@ -1,0 +1,11 @@
+--- lib/rpmfc.c.orig	2014-10-07 15:53:03.185631053 +0100
++++ lib/rpmfc.c	2014-10-07 16:02:32.487591097 +0100
+@@ -593,7 +593,8 @@
+ 
+   { "Desktop Entry",		RPMFC_DESKTOP_FILE|RPMFC_INCLUDE },
+ 
+   { "perl script text",		RPMFC_PERL|RPMFC_INCLUDE },
++  { "Perl script",		RPMFC_PERL|RPMFC_INCLUDE },
+   { "Perl5 module source text", RPMFC_PERL|RPMFC_MODULE|RPMFC_INCLUDE },
+ 
+   { "PHP script text",		RPMFC_PHP|RPMFC_INCLUDE },
