@@ -617,6 +617,7 @@ Patch300:	rpm-5.4.14-tag-generate-endian-conversion-fix.patch
 Patch301:	rpm-5.4.14-showrc-memleak-workaround.patch
 Patch302:	rpmqv_cc_b_gone.patch
 Patch303:	rpm-5.4.10-payload-use-hashed-inode.patch
+Patch304:	rpm-5.4.15-properly-load-password-and-group-for-root-environment.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1121,6 +1122,7 @@ popd
 %patch301 -p1 -b .showrc_memleak~
 %patch302 -p1 -b .rpmqv_cc~
 %patch303 -p1 -b .hashed_inode~
+%patch304 -p1 -b .init_pw_gr~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
