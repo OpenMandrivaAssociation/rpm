@@ -1125,7 +1125,8 @@ popd
 %patch298 -p1 -b .ignore_missinc_macros~
 %patch299 -p1 -b .ac_syntax~
 %patch300 -p1 -b .tag_endian~
-%patch301 -p1 -b .showrc_memleak~
+# ???
+#patch301 -p1 -b .showrc_memleak~
 %patch302 -p1 -b .rpmqv_cc~
 %patch303 -p1 -b .hashed_inode~
 %patch304 -p1 -b .init_pw_gr~
