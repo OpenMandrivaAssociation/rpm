@@ -620,6 +620,7 @@ Patch303:	rpm-5.4.10-payload-use-hashed-inode.patch
 Patch304:	rpm-5.4.15-properly-load-password-and-group-for-root-environment.patch
 Patch305:	rpm-5.4.14-hardlink-segfault-fix.patch
 Patch306:	rpm-5.4.14-fix-platform-and-sysinfo-loading.patch
+Patch307:	rpm-5.4.15-rpmpy-dont-uncoditionally-reread-configuration-files.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1127,6 +1128,7 @@ popd
 %patch304 -p1 -b .init_pw_gr~
 %patch305 -p1 -b .hardlink_segafault~
 %patch306 -p1 -b .platform_sysinfo~
+%patch307 -p1 -b .py_confread~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
