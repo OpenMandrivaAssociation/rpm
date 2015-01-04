@@ -542,7 +542,7 @@ Patch248:	rpm-5.4.14-fix-dependency-generation-when-ruby_version-is-empty.patch
 #Patch249:	rpm-5.4.14-fix-undef-with_embedded-typo.patch
 Patch250:	rpm-5.4.14-add-missing-_RPMLUA_INTERNAL-define.patch
 Patch251:	rpm-5.4.14-workaround-scriptlet-dependency-ordering-issue.patch
-Patch252:	rpm-5.4.14-add-support-for-deprecating-epoch.patch
+Patch252:	rpm-5.4.15-add-support-for-deprecating-epoch.patch
 Patch253:	rpm-5.4.14-enable-twiddle-in-evr-tupple.patch
 Patch254:	rpm-5.4.14-rpmdav-handle-301-302-redirects.patch
 Patch255:	rpm-5.4.10-silence-RPM_CHAR_TYPE.patch

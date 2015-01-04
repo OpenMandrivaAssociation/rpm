@@ -1,5 +1,5 @@
---- rpm-5.4.14/build/misc.c.deprecate_epoch~	2008-07-31 04:40:05.000000000 +0200
-+++ rpm-5.4.14/build/misc.c	2014-06-20 03:46:14.613488919 +0200
+--- rpm-5.4.15/build/misc.c.deprecate_epoch~	2008-07-31 04:40:05.000000000 +0200
++++ rpm-5.4.15/build/misc.c	2015-01-04 07:34:35.132871666 +0100
 @@ -18,3 +18,14 @@ int parseNum(const char * line, rpmuint3
      if (res) *res = rc;
      return (((*s1) || (s1 == line) || (rc == ULONG_MAX)) ? 1 : 0);
@@ -15,8 +15,8 @@
 +    if (res) *res = rc;
 +    return (((*s1) || (s1 == line) || (rc == LONG_MAX)) ? 1 : 0);
 +}
---- rpm-5.4.14/build/parsePreamble.c.deprecate_epoch~	2014-06-20 03:46:14.470154271 +0200
-+++ rpm-5.4.14/build/parsePreamble.c	2014-06-20 03:46:14.613488919 +0200
+--- rpm-5.4.15/build/parsePreamble.c.deprecate_epoch~	2015-01-04 07:34:35.020871834 +0100
++++ rpm-5.4.15/build/parsePreamble.c	2015-01-04 07:34:35.132871666 +0100
 @@ -613,7 +613,7 @@ static rpmRC handlePreambleTag(Spec spec
      int multiToken = 0;
      rpmsenseFlags tagflags;
@@ -58,8 +58,8 @@
  	he->c = 1;
  	xx = headerPut(pkg->header, he, 0);
  
---- rpm-5.4.14/build/parseReqs.c.deprecate_epoch~	2014-06-20 03:46:14.350153170 +0200
-+++ rpm-5.4.14/build/parseReqs.c	2014-06-20 03:46:14.613488919 +0200
+--- rpm-5.4.15/build/parseReqs.c.deprecate_epoch~	2015-01-04 07:34:34.927871972 +0100
++++ rpm-5.4.15/build/parseReqs.c	2015-01-04 07:34:35.132871666 +0100
 @@ -28,6 +28,7 @@ rpmRC parseRCPOT(Spec spec, Package pkg,
      Header h;
      rpmRC rc = RPMRC_FAIL;	/* assume failure */
@@ -102,8 +102,8 @@
  		evr->str = _free(evr->str);
  	    }
  	    if (ix != 0) {
---- rpm-5.4.14/build/rpmbuild.h.deprecate_epoch~	2014-06-20 03:46:14.350153170 +0200
-+++ rpm-5.4.14/build/rpmbuild.h	2014-06-20 03:46:14.613488919 +0200
+--- rpm-5.4.15/build/rpmbuild.h.deprecate_epoch~	2015-01-04 07:34:34.929871969 +0100
++++ rpm-5.4.15/build/rpmbuild.h	2015-01-04 07:34:35.133871665 +0100
 @@ -233,6 +233,15 @@ int parseNum(/*@null@*/ const char * lin
  	/*@modifies *res @*/;
  
@@ -120,9 +120,9 @@
   * Add changelog entry to header.
   * @todo addChangelogEntry should be static.
   * @param h		header
---- rpm-5.4.14/macros/macros.in.deprecate_epoch~	2014-06-20 03:46:14.523488093 +0200
-+++ rpm-5.4.14/macros/macros.in	2014-06-20 03:46:14.613488919 +0200
-@@ -740,7 +740,7 @@ $_arbitrary_tags_tests	Foo:Bar
+--- rpm-5.4.15/macros/macros.in.deprecate_epoch~	2015-01-04 07:34:35.069871760 +0100
++++ rpm-5.4.15/macros/macros.in	2015-01-04 07:34:35.133871665 +0100
+@@ -766,7 +766,7 @@ $_arbitrary_tags_tests	Foo:Bar
  # STEP 1: Match the string and capture regex parts
  #                      1          2           3             4
  #                      E      ":" V        "-"R          ":"D
@@ -131,7 +131,7 @@
  
  # STEP 2: Assemble <E,V,R,D> tuple from regex parts
  # <E,V,R,D>         case 1:  case 2:  case 3:  case 4:  case 5:  case 6:
-@@ -755,7 +755,7 @@ $_arbitrary_tags_tests	Foo:Bar
+@@ -781,7 +781,7 @@ $_arbitrary_tags_tests	Foo:Bar
  # STEP 1: Match the string and capture regex parts
  #                      1          2           3              4             5
  #                      E      ":" V        "~"T           "-"R          ":"D
@@ -140,7 +140,7 @@
  
  # STEP 2: Assemble <E,V,T,R,D> tuple from regex parts (11 cases)
  #     E:V~T-R:D    12345
-@@ -776,7 +776,7 @@ $_arbitrary_tags_tests	Foo:Bar
+@@ -802,7 +802,7 @@ $_arbitrary_tags_tests	Foo:Bar
     
  # data validation patterns for identifier tags
  %pattern_Name		^[A-Za-z0-9][A-Za-z0-9+._-]*$
@@ -149,8 +149,8 @@
  %pattern_Version	^[A-Za-z0-9+._~]+$
  %pattern_Release	^[A-Za-z0-9+._]+$
  %pattern_Disttag	^[A-Za-z0-9]+$
---- rpm-5.4.14/perl/RPM_Header.xs.deprecate_epoch~	2012-04-25 22:34:49.000000000 +0200
-+++ rpm-5.4.14/perl/RPM_Header.xs	2014-06-20 03:46:14.613488919 +0200
+--- rpm-5.4.15/perl/RPM_Header.xs.deprecate_epoch~	2012-04-25 22:34:49.000000000 +0200
++++ rpm-5.4.15/perl/RPM_Header.xs	2015-01-04 07:34:35.134871663 +0100
 @@ -404,9 +404,16 @@ tag(h, sv_tag)
  
                          EXTEND(SP, he->c);
@@ -171,9 +171,9 @@
                      }
                  break;
                  case RPM_BIN_TYPE:
---- rpm-5.4.14/python/header-py.c.deprecate_epoch~	2013-07-26 08:09:05.000000000 +0200
-+++ rpm-5.4.14/python/header-py.c	2014-06-20 03:46:25.636923365 +0200
-@@ -541,7 +541,10 @@ static PyObject * hdr_subscript(hdrObjec
+--- rpm-5.4.15/python/header-py.c.deprecate_epoch~	2014-07-27 23:47:04.000000000 +0200
++++ rpm-5.4.15/python/header-py.c	2015-01-04 07:34:35.134871663 +0100
+@@ -538,7 +538,10 @@ static PyObject * hdr_subscript(hdrObjec
  	    }
  	    o = metao;
  	} else {
@@ -185,8 +185,59 @@
  	}
  	break;
  
---- rpm-5.4.14/rpmdb/rpmevr.c.deprecate_epoch~	2013-06-26 21:43:15.000000000 +0200
-+++ rpm-5.4.14/rpmdb/rpmevr.c	2014-06-20 03:46:14.613488919 +0200
+--- rpm-5.4.15/rpmdb/hdrfmt.c.deprecate_epoch~	2015-01-04 07:34:34.933871963 +0100
++++ rpm-5.4.15/rpmdb/hdrfmt.c	2015-01-04 07:35:40.695773814 +0100
+@@ -147,7 +147,7 @@ static char * intFormat(HE_t he, /*@unus
+ 	nb = 64;
+ 	b = alloca(nb);
+ /*@-formatconst@*/
+-	xx = snprintf(b, nb, myfmt, ival);
++	xx = snprintf(b, nb, (fmt != NULL && *fmt == '%') ? fmt : myfmt, ival);
+ /*@=formatconst@*/
+ 	b[nb-1] = '\0';
+     } else
+@@ -193,6 +193,18 @@ static char * decFormat(HE_t he, /*@null
+ }
+ 
+ /**
++ * Return signed formatted data.
++ * @param he		tag container
++ * @param av		parameter list (or NULL)
++ * @return		formatted string
++ */
++static char * signedFormat(HE_t he, /*@null@*/ const char ** av)
++	/*@*/
++{
++    return intFormat(he, av, "%i");
++}
++
++/**
+  * Return strftime formatted data.
+  * @param he		tag container
+  * @param av		parameter list (or NULL)
+@@ -316,6 +328,8 @@ static struct headerSprintfExtension_s _
+ 	{ .fmtFunction = decFormat } },
+     { HEADER_EXT_FORMAT, "dec",
+ 	{ .fmtFunction = decFormat } },
++    { HEADER_EXT_FORMAT, "signed",
++	{ .fmtFunction = signedFormat } },
+     { HEADER_EXT_FORMAT, "date",
+ 	{ .fmtFunction = dateFormat } },
+     { HEADER_EXT_FORMAT, "day",
+@@ -6434,8 +6448,9 @@ fprintf(stderr, "\t%s(%s) %p(%p,%p) |%s|
+ 	}
+     }
+ 
+-    if (val == NULL)
+-	val = intFormat(vhe, NULL, NULL);
++    if (val == NULL) /* XXX: hardcoding this specific single case here is certainly fugly... */
++	val = intFormat(vhe, NULL, he->tag == RPMTAG_EPOCH ? "%i" : NULL);
++
+ /*@=compmempass@*/
+ assert(val != NULL);
+     if (val)
+--- rpm-5.4.15/rpmdb/rpmevr.c.deprecate_epoch~	2013-06-26 21:43:15.000000000 +0200
++++ rpm-5.4.15/rpmdb/rpmevr.c	2015-01-04 07:34:35.134871663 +0100
 @@ -148,7 +148,7 @@ assert(b != NULL);
  
  /*@unchecked@*/ /*@observer@*/ /*@null@*/
