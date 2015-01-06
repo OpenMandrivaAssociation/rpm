@@ -1,3 +1,7 @@
+%ifarch %{arm}
+%define _xz_threads 0
+%endif
+
 %define python_version 2.7
 %define	_target_vendor	mandriva
 
@@ -69,7 +73,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}5
+Release:	%{?prereldate:0.%{prereldate}.}6
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -1051,7 +1055,9 @@ popd
 %patch223 -p1 -b .cmakedeps~
 #patch224 -p1 -b .ro~
 %patch225 -p1 -b .armx~
+%ifnarch %{arm}
 %patch226 -p1 -b .multithread~
+%endif
 %patch227 -p1 -b .outputsync~
 %patch228 -p1 -b .timestamps~
 %patch229 -p1 -b .str_term~
