@@ -237,7 +237,7 @@
  assert(val != NULL);
      if (val)
 --- rpm-5.4.15/rpmdb/rpmevr.c.deprecate_epoch~	2013-06-26 21:43:15.000000000 +0200
-+++ rpm-5.4.15/rpmdb/rpmevr.c	2015-01-04 07:34:35.134871663 +0100
++++ rpm-5.4.15/rpmdb/rpmevr.c	2015-01-07 22:35:17.180615841 +0100
 @@ -148,7 +148,7 @@ assert(b != NULL);
  
  /*@unchecked@*/ /*@observer@*/ /*@null@*/
@@ -255,7 +255,7 @@
  
  	switch ((int)*s) {
  	default:	continue;	/*@notreached@*/ /*@switchbreak@*/break;
-@@ -311,6 +312,20 @@ assert(b->F[RPMEVR_D] != NULL);
+@@ -311,6 +312,21 @@ assert(b->F[RPMEVR_D] != NULL);
  		break;
  #endif
  
@@ -265,7 +265,8 @@
 +			a->F[ix] = "0";
 +		else
 +		    anegoff++;
-+	    } else if (*b->F[ix] == '-') {
++	    }
++	    if (*b->F[ix] == '-') {
 +		if (*a->F[ix] == '0')
 +		    b->F[ix] = "0";
 +		else
@@ -276,7 +277,7 @@
  	/* XXX ALT version-set comparison */
  	if (ix == RPMEVR_V
  	 && !strncmp(a->F[ix], "set:", sizeof("set:")-1)
-@@ -329,7 +344,13 @@ assert(b->F[RPMEVR_D] != NULL);
+@@ -329,7 +345,13 @@ assert(b->F[RPMEVR_D] != NULL);
  	if (ix == RPMEVR_T)	/* XXX twiddle-in-version "negative" compare */
  	    rc = -compare_values(a->F[ix], b->F[ix]);
  	else
@@ -291,7 +292,7 @@
  	if (rc)
  	    break;
      }
-@@ -427,7 +448,7 @@ int rpmVersionCompare(Header A, Header B
+@@ -427,7 +449,7 @@ int rpmVersionCompare(Header A, Header B
      HE_t Ahe = (HE_t) memset(alloca(sizeof(*Ahe)), 0, sizeof(*Ahe));
      HE_t Bhe = (HE_t) memset(alloca(sizeof(*Bhe)), 0, sizeof(*Bhe));
      const char * one, * two;
@@ -300,7 +301,7 @@
      const char * s;
      int rc = 0;
      int xx;
-@@ -442,10 +463,12 @@ int rpmVersionCompare(Header A, Header B
+@@ -442,10 +464,12 @@ int rpmVersionCompare(Header A, Header B
  	    Bhe->tag = RPMTAG_EPOCH;
  	    xx = headerGet(B, Bhe, 0);
  	    Etwo = (xx && Bhe->p.ui32p ? Bhe->p.ui32p[0] : 0);
