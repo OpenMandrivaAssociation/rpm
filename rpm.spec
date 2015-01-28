@@ -73,7 +73,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}7
+Release:	%{?prereldate:0.%{prereldate}.}8
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -1140,7 +1140,8 @@ popd
 %patch305 -p1 -b .hardlink_segafault~
 %patch306 -p1 -b .platform_sysinfo~
 %patch307 -p1 -b .py_confread~
-%patch308 -p1 -b .pld_ruby20~
+#disabled as it breaks the way we have things (empty version number as per fedora)
+#patch308 -p1 -b .pld_ruby20~
 %patch309 -p1 -b .pld_gemhelper_ruby20~
 %patch310 -p1 -b .perl-magic~
 %patch311 -p1 -b .strip_gnu~
