@@ -104,14 +104,6 @@
  	    if (ix != 0) {
 --- rpm-5.4.15/build/rpmbuild.h.deprecate_epoch~	2015-01-07 22:27:06.617102531 +0100
 +++ rpm-5.4.15/build/rpmbuild.h	2015-01-28 19:48:12.944628868 +0100
-@@ -7,6 +7,7 @@
-  */
- 
- #include <rpmiotypes.h>
-+#include <rpmio.h>	/* XXX FD_t typedef */
- #include <rpmmacro.h>
- #include <rpmtypes.h>
- #include <rpmtag.h>
 @@ -233,6 +234,15 @@ int parseNum(/*@null@*/ const char * lin
  	/*@modifies *res @*/;
  
@@ -157,42 +149,6 @@
  %pattern_Version	^[A-Za-z0-9+._~]+$
  %pattern_Release	^[A-Za-z0-9+._]+$
  %pattern_Disttag	^[A-Za-z0-9]+$
-@@ -955,6 +955,7 @@ $_arbitrary_tags_tests	Foo:Bar
- %_initddir              %{_sysconfdir}/rc.d/init.d
- # This is a deprecated misspelling, present for backwards compatibility.
- %_initrddir             %{_initddir}
-+%_rundir                @RUNDIR@
- 
- #---------------------------------------------------------------------
- #   Multilibs
-@@ -1021,13 +1022,7 @@ $_arbitrary_tags_tests	Foo:Bar
- %{nil}
- 
- #==============================================================================
--# XXX Caveat:
--# XXX With %{load:...} being interpreted immediately -- not lazily --
--# XXX within a macro init file, a failure to load causes immediate loading
--# XXX termination silently.
--# XXX
--# XXX So the order as well as the existence of the %{load:...} macros below
--# XXX are critically important.
-+# XXX If a file specified in %{load:...} does not exist, it will be skipped.
- # XXX
- # XXX Note also that loaded macro files can NOT recursively load other
- # XXX macro files; only a top-level (i.e. after --macros, or within a *.spec)
-@@ -1038,11 +1033,8 @@ $_arbitrary_tags_tests	Foo:Bar
- # XXX for configuring RPM itself.
- # XXX
- # XXX Simple example(s):
--# XXX	If the file %{_usrlibrpm}/macros.d/selinux doesn't exist,
--# XXX	then %{_usrlibrpm}/macros.rpmbuild will NOT be loaded.
--# XXX
- # XXX	if the file %{_usrlibrpm}/macros.d/cmake attempts another
--# XXX	%{load:...}, then loading will CEASE at that point in the file.
-+# XXX	%{load:...}, then the statement will be IGNORED.
- #==============================================================================
- # ---- SELinux configuration macros.
- %{load:%{_usrlibrpm}/macros.d/selinux}
 --- rpm-5.4.15/perl/RPM_Header.xs.deprecate_epoch~	2012-04-25 22:34:49.000000000 +0200
 +++ rpm-5.4.15/perl/RPM_Header.xs	2015-01-07 22:27:06.898203854 +0100
 @@ -404,9 +404,16 @@ tag(h, sv_tag)
