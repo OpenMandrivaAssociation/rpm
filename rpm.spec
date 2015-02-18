@@ -73,7 +73,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}10
+Release:	%{?prereldate:0.%{prereldate}.}11
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -417,7 +417,7 @@ Patch175:	rpm-5.4.10-run-spec-helper-at-end-of-doc-stage.patch
 # status: as it reverts a previous upstream change, it prolly' shouldn't be
 # merged, but probably worthwhile a discussion at least...
 Patch176:	rpm-5.4.10-drop-rpath-from-perl-module.patch
-Patch178:	rpm-5.4.10-crosscompile.patch
+Patch178:	rpm-5.4.15-crosscompile.patch
 # tool for automatically checking and fixing broken rpmdb
 # status: probably' worth merging upstream
 Patch179:	rpm-5.4.14-rpmdbchk.patch

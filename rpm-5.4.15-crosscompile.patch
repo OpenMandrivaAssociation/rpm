@@ -1,5 +1,5 @@
---- rpm-5.4.10/macros/cmake.in.cross~	2010-10-16 06:37:54.000000000 +0200
-+++ rpm-5.4.10/macros/cmake.in	2013-02-01 08:48:00.860899379 +0100
+--- rpm-5.4.15/macros/cmake.in.cross~	2010-10-16 06:37:54.000000000 +0200
++++ rpm-5.4.15/macros/cmake.in	2015-02-18 08:29:28.603595354 +0100
 @@ -10,10 +10,14 @@
  %_cmake_version		%(%{__cmake} --version|sed -e 's#.* \(\S*\)$#\1#g')
  
@@ -18,9 +18,9 @@
  	%{_cmake_skip_rpath} \\\
          %{_cmake_verbose} \\\
          -DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \\\
---- rpm-5.4.10/macros/macros.in.cross~	2013-02-01 08:48:00.737897778 +0100
-+++ rpm-5.4.10/macros/macros.in	2013-02-01 08:48:00.861899392 +0100
-@@ -898,9 +898,10 @@ $_arbitrary_tags_tests	Foo:Bar
+--- rpm-5.4.15/macros/macros.in.cross~	2015-02-18 08:29:28.472595596 +0100
++++ rpm-5.4.15/macros/macros.in	2015-02-18 08:29:28.603595354 +0100
+@@ -924,9 +924,10 @@ $_arbitrary_tags_tests	Foo:Bar
  %_vendor		@RPMCANONVENDOR@
  %_os			@RPMCANONOS@
  %_gnu			@RPMCANONGNU@
@@ -32,7 +32,7 @@
  %_target_platform	%{_target_cpu}-%{_target_vendor}-%{_target_os}%{?_gnu}
  
  #==============================================================================
-@@ -937,11 +938,11 @@ $_arbitrary_tags_tests	Foo:Bar
+@@ -963,11 +964,11 @@ $_arbitrary_tags_tests	Foo:Bar
  # ---- config.guess platform macros.
  #	Macro(s) similar to the tokens used by configure.
  #
@@ -49,9 +49,9 @@
  %_host			@host@
  %_host_alias		@host_alias@%{nil}
  %_host_cpu		@host_cpu@
---- rpm-5.4.10/macros/macros.rpmbuild.in.cross~	2013-02-01 08:48:00.852899275 +0100
-+++ rpm-5.4.10/macros/macros.rpmbuild.in	2013-02-01 08:49:18.040903783 +0100
-@@ -547,7 +547,19 @@ echo "Patch #%{__patch_number} (%{basena
+--- rpm-5.4.15/macros/macros.rpmbuild.in.cross~	2015-02-18 08:29:28.597595365 +0100
++++ rpm-5.4.15/macros/macros.rpmbuild.in	2015-02-18 08:52:56.893144776 +0100
+@@ -573,7 +573,19 @@ echo "Patch #%{__patch_number} (%{basena
    CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
    CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
    FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
@@ -72,7 +72,7 @@
  	--target=%{_target_platform} \\\
  	--program-prefix=%{?_program_prefix} \\\
   	--prefix=%{_prefix} \\\
-@@ -704,5 +716,27 @@ done \
+@@ -730,5 +742,21 @@ done \
  %__desktop_provides        %{_rpmhome}/desktop-file.prov
  #%__desktop_requires        %{_rpmhome}/desktop-file.prov
  
@@ -81,28 +81,22 @@
 +#
 +# Get the base architecture (e.g. i386 for any x86, arm for any arm)
 +#
-+%_base_arch()	%(TARGET='%*'; \
-+		echo $TARGET |grep -q '^i[0-9]86$' && TARGET=i386 \
-+		echo $TARGET |grep -q '^pentium[1-9]$' && TARGET=i386 \
-+		echo $TARGET |grep -Eq '^(prescott|nocona|i7_32)$' && TARGET=i386 \
-+		echo $TARGET |grep -Eq '^(athlon|duron|geode)$' && TARGET=i386 \
-+		echo $TARGET |grep -Eq '^(viac3|viac3_2)$' && TARGET=i386 \
-+		echo $TARGET |grep -Eq '^(mips.*)$' && TARGET=mips \
-+		echo $TARGET |grep -Eq '^(amd64|intel64|atom|i7)$' && TARGET=x86_64 \
-+		echo $TARGET |grep -Eq '^(arm.*|xscale)$' && TARGET=arm \
-+		echo $TARGET |grep -Eq '^(arm64|aarch64)$' && TARGET=aarch64 \
-+		echo -n $TARGET)
++%_base_arch()	%(rpm --target='%1' -E '%%{_arch}' | tr -d '\n')
 +
 +#
 +# 1 if cross-compiling, 0 if doing a regular build
++# Note: In order to avoid ie. building for i586 on x86_64 being treated as if
++# cross-compiling, a check to see if base arch is listed with 'setarch --list'
++# is performed.
 +#
-+%cross_compiling	%(if [ %{_base_arch %{_host_cpu}} != %{_base_arch %{_target_cpu}} -a %{_target_cpu} != noarch ]; then echo -n 1; else echo -n 0; fi)
++
++%cross_compiling	%(if [ %{_base_arch %{_host_cpu}} != %{_base_arch %{_target_cpu}} -a %{_target_cpu} != noarch -a "%(setarch --list | grep -e %{_base_arch %{_target_cpu}} -e %{_base_arch %{_host_cpu}})" = "" ]; then echo -n 1; else echo -n 0; fi)
 +
  # \endverbatim
  #*/
---- rpm-5.4.10/macros/mandriva.in.cross~	2013-02-01 08:48:00.852899275 +0100
-+++ rpm-5.4.10/macros/mandriva.in	2013-02-01 08:48:00.862899405 +0100
-@@ -356,6 +356,18 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
+--- rpm-5.4.15/macros/mandriva.in.cross~	2015-02-18 08:29:28.597595365 +0100
++++ rpm-5.4.15/macros/mandriva.in	2015-02-18 08:29:28.604595352 +0100
+@@ -350,6 +350,18 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
    CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
    FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
    %{?ldflags:LDFLAGS="${LDFLAGS:-%{ldflags}}"; export LDFLAGS ;} \
@@ -121,7 +115,7 @@
    %{nil}
  
  %before_configure \
-@@ -373,7 +385,7 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
+@@ -367,7 +379,7 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
    %{?!_disable_libtoolize:%{?__libtoolize_configure:%{__libtoolize_configure};}} \
    [ -f $CONFIGURE_TOP/configure.in -o -f $CONFIGURE_TOP/configure.ac ] && \
    CONFIGURE_XPATH="--x-includes=%{_prefix}/include --x-libraries=%{_prefix}/%{_lib}" \
@@ -130,7 +124,7 @@
    	--disable-silent-rules \\\
  	--program-prefix=%{?_program_prefix} \\\
   	--prefix=%{_prefix} \\\
-@@ -396,8 +408,9 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
+@@ -390,8 +402,9 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} -
    %{?_enable_libtoolize:%{?__libtoolize_configure:%{__libtoolize_configure};}} \
    [ -f $CONFIGURE_TOP/configure.in -o -f $CONFIGURE_TOP/configure.ac ] && \
    CONFIGURE_XPATH="--x-includes=%{_prefix}/include --x-libraries=%{_prefix}/%{_lib}" \
