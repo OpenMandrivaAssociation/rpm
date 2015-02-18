@@ -1,33 +1,35 @@
---- rpm-5.4.15/config.h.in.platform_detect~	2014-12-19 18:24:28.416153293 +0100
-+++ rpm-5.4.15/config.h.in	2014-12-19 18:24:28.878151986 +0100
+--- rpm-5.4.15/config.h.in.platform_detect~	2015-02-18 07:40:04.832209499 +0100
++++ rpm-5.4.15/config.h.in	2015-02-18 07:40:05.415208062 +0100
 @@ -1467,6 +1467,9 @@
  /* Define as 1 if building with Syck library */
  #undef WITH_SYCK
  
-+/* Define as if you want autodetection of platform */
++/* Define as 1 if you want autodetection of platform */
 +#undef WITH_PLATFORM_DETECT
 +
  /* Define as 1 if building with Tcl library */
  #undef WITH_TCL
  
---- rpm-5.4.15/configure.ac.platform_detect~	2014-12-19 18:24:28.832152117 +0100
-+++ rpm-5.4.15/configure.ac	2014-12-19 18:25:46.362932305 +0100
-@@ -2211,6 +2211,13 @@ RPM_CHECK_LIB(
+--- rpm-5.4.15/configure.ac.platform_detect~	2015-02-18 07:40:05.356208207 +0100
++++ rpm-5.4.15/configure.ac	2015-02-18 07:40:20.309171429 +0100
+@@ -2211,6 +2211,15 @@ RPM_CHECK_LIB(
      [no,external:none], [],
      [AC_MSG_WARN([CPUInfo support is under development])], [])
  
 +dnl # Automatic /etc/rpm/platform detection
-+ AC_ARG_WITH([platform-detect],
++AC_ARG_WITH([platform-detect],
 + 	    AS_HELP_STRING([--enable-platform-detect], [enable automatic platform detection]),
 +	    [WITH_PLATFORM_DETECT=yes],
 +	    [WITH_PLATFORM_DETECT=no])
-+AC_DEFINE(WITH_PLATFORM_DETECT, [test ".$WITH_PLATFORM_DETECT" = .yes], [ Set to 1 to enable automatic platform detection])
++if test ".$WITH_PLATFORM_DETECT" = .yes; then
++          AC_DEFINE(WITH_PLATFORM_DETECT, 1, [Define to 1 to enable automatic platform detection])
++fi
 +
  dnl # Mandriva Linux derived multiarch
  AC_ARG_WITH([multiarch],
  	    AS_HELP_STRING([--with-multiarch], [install multiarch support]),
---- rpm-5.4.15/lib/rpmrc.c.platform_detect~	2014-12-19 18:24:28.808152184 +0100
-+++ rpm-5.4.15/lib/rpmrc.c	2014-12-19 18:24:28.880151981 +0100
+--- rpm-5.4.15/lib/rpmrc.c.platform_detect~	2015-02-18 07:40:05.324208286 +0100
++++ rpm-5.4.15/lib/rpmrc.c	2015-02-18 07:40:45.541109695 +0100
 @@ -518,7 +518,7 @@ exit:
  }
  /*@=onlytrans@*/
@@ -51,7 +53,7 @@
      } else {
  	if (num) *num = 255;
 -#if defined(WITH_CPUINFO)
-+#if defined(WITH_TARGET_PLATFORM)
++#if defined(WITH_PLATFORM_DETECT)
  	if (name) {
  	    if(type == ARCH) {
  		int i, j, n;
