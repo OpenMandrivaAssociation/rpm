@@ -73,7 +73,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}11
+Release:	%{?prereldate:0.%{prereldate}.}12
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -629,6 +629,7 @@ Patch308:	rpm-5.4.15-rubygems.rb-pld-ruby-2.0-fixes.patch
 Patch309:	rpm-5.4.15-gem_helper.rb-merge-pld-fixes-for-ruby-2.0-etc.patch
 Patch310:	rpm-5.4.15-perl-magic.patch
 Patch311:	rpm-5.4.15-strip-away-gnu-suffix-from-host_os-and-target_os-properly.patch
+Patch312:	rpm-5.4.15-Fix-find-debuginfo.sh-for-ELF-with-file-warnings.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1146,6 +1147,7 @@ popd
 #patch309 -p1 -b .pld_gemhelper_ruby20~
 %patch310 -p1 -b .perl-magic~
 %patch311 -p1 -b .strip_gnu~
+%patch312 -p1 -b .debuginfo_too_many_notes~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
