@@ -631,6 +631,7 @@ Patch310:	rpm-5.4.15-perl-magic.patch
 Patch311:	rpm-5.4.15-strip-away-gnu-suffix-from-host_os-and-target_os-properly.patch
 Patch312:	rpm-5.4.15-Fix-find-debuginfo.sh-for-ELF-with-file-warnings.patch
 Patch313:	rpm-5.4.15-dont-require-ghost-files-to-be-created-during-build.patch
+Patch314:	rpm-5.4.15-add-back-rpmvsf-nodigests_nosignatures.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1150,6 +1151,7 @@ popd
 %patch311 -p1 -b .strip_gnu~
 %patch312 -p1 -b .debuginfo_too_many_notes~
 %patch313 -p1 -b .noghost~
+%patch314 -p1 -b .rpmvsf~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
