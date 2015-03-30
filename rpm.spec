@@ -1162,8 +1162,8 @@ sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 
 %build
 # rpm can't be built with clang currently (nested functions)
-export CC=gcc
-export CXX=g++
+#export CC=gcc
+#export CXX=g++
 export __PYTHON=%{_bindir}/python2
 export CONFIGFILES=""
 # this should really have been fixed by P240, but for some reason this no
