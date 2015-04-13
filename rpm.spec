@@ -55,7 +55,7 @@
 %define	bdb		db52
 
 %define	libver		5.4
-%define	minorver	15
+%define	minorver	16
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -363,7 +363,8 @@ Patch160:	rpm-5.4.10-bump-up-to-default-xz-compression-level.patch
 Patch161:	rpm-5.4.10-search-through-buildroot-library-dirs-for-uclibc-deps.patch
 # status: same as for other dep gen patches
 Patch162:	rpm-5.4.10-fix-uninitialized-variable.patch
-Patch163:	rpm-5.4.10-new-moondrake-name.patch
+# (tpg) weird stuff, right ?
+#Patch163:	rpm-5.4.10-new-moondrake-name.patch
 # pass --disable-silent-rules to configure so that we'll by default always get
 # consistent behaviour of verbose build output
 # status: ready
@@ -516,7 +517,9 @@ Patch222:	fix-config-sub-in-configure.patch
 Patch223:	rpm-5.4.15-cmake-dependency-generator.patch
 # there's some funky businiss going on with ABF where omv macros gets used,
 # so let's make our variables read only for now...
-Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
+# (tpg) weird stuff again ?
+#Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
+Patch224:	rpm-5.4.10-openmandriva-name.patch
 Patch225:	rpm-5.4.14-add-more-archs-to-arm-macro.patch
 Patch226:	rpm-5.4.14-support-multithreaded-xz-compression.patch
 Patch227:	rpm-5.4.14-add-output-sync-to-make-macro.patch
