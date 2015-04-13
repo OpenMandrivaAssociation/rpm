@@ -73,7 +73,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}16
+Release:	%{?prereldate:0.%{prereldate}.}17
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -365,6 +365,7 @@ Patch161:	rpm-5.4.10-search-through-buildroot-library-dirs-for-uclibc-deps.patch
 Patch162:	rpm-5.4.10-fix-uninitialized-variable.patch
 # (tpg) weird stuff, right ?
 #Patch163:	rpm-5.4.10-new-moondrake-name.patch
+Patch163:	rpm-5.4.10-openmandriva-name.patch
 # pass --disable-silent-rules to configure so that we'll by default always get
 # consistent behaviour of verbose build output
 # status: ready
@@ -519,7 +520,7 @@ Patch223:	rpm-5.4.15-cmake-dependency-generator.patch
 # so let's make our variables read only for now...
 # (tpg) weird stuff again ?
 #Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
-Patch224:	rpm-5.4.10-openmandriva-name.patch
+
 Patch225:	rpm-5.4.14-add-more-archs-to-arm-macro.patch
 Patch226:	rpm-5.4.14-support-multithreaded-xz-compression.patch
 Patch227:	rpm-5.4.14-add-output-sync-to-make-macro.patch
@@ -1010,7 +1011,7 @@ popd
 %patch160 -p1 -b .xz_level~
 %patch161 -p1 -b .uclibc_buildroot~
 %patch162 -p1 -b .uninitialized~
-#patch163 -p1 -b .mdk~
+%patch163 -p1 -b .omv~
 %patch164 -p1 -b .verbosebuilds~
 %patch165 -p1 -b .helper_order~
 %patch166 -p1 -b .ldflags~
