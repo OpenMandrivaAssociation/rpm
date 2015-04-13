@@ -90,7 +90,7 @@
 +# is performed.
 +#
 +
-+%cross_compiling	%(if [ %{_base_arch %{_host_cpu}} != %{_base_arch %{_target_cpu}} -a %{_target_cpu} != noarch -a "%(setarch --list | grep -e %{_base_arch %{_target_cpu}} -e %{_base_arch %{_host_cpu}})" = "" ]; then echo -n 1; else echo -n 0; fi)
++%cross_compiling	%(if [ %{_base_arch %{_host_cpu}} != %{_base_arch %{_target_cpu}} -a %{_target_cpu} != noarch -a "%(setarch --list | grep -e %{_base_arch %{_target_cpu}})" = "" ]; then echo -n 1; else echo -n 0; fi)
 +
  # \endverbatim
  #*/

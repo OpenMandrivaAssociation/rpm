@@ -1,5 +1,5 @@
 !<arch>
-//                                              796       `
+//                                              818       `
 aarch64-linux.macros/
 alphaev56-linux.macros/
 alphaev5-linux.macros/
@@ -10,7 +10,9 @@ alphapca56-linux.macros/
 amd64-linux.macros/
 armv6j-linux.macros/
 armv7hl-linux.macros/
+armv7hnl-linux.macros/
 armv7l-linux.macros/
+armv7nhl-linux.macros/
 athlon-linux.macros/
 i386-linux.macros/
 i486-linux.macros/
@@ -36,9 +38,7 @@ sparc-linux.macros/
 sparcv9-linux.macros/
 x32-linux.macros/
 x86_64-linux.macros/
-armv7hnl-linux.macros/
-
-/0              0           0     0     644     772       `
+/0              1428935958  1000  1000  100644  772       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -58,7 +58,7 @@ armv7hnl-linux.macros/
 #       Multilibs
 %_multilibno            2
 %_multilibpatt          (/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/22             0           0     0     644     351       `
+/22             1428935958  1000  1000  100644  351       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -74,7 +74,7 @@ armv7hnl-linux.macros/
 #
 %_lib			lib
 
-/46             0           0     0     644     349       `
+/46             1428935958  1000  1000  100644  349       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -90,7 +90,7 @@ armv7hnl-linux.macros/
 #
 %_lib			lib
 
-/69             0           0     0     644     351       `
+/69             1428935958  1000  1000  100644  351       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -106,7 +106,7 @@ armv7hnl-linux.macros/
 #
 %_lib			lib
 
-/93             0           0     0     644     349       `
+/93             1428935958  1000  1000  100644  349       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -122,7 +122,7 @@ armv7hnl-linux.macros/
 #
 %_lib			lib
 
-/116            0           0     0     644     336       `
+/116            1428935958  1000  1000  100644  336       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -137,7 +137,7 @@ armv7hnl-linux.macros/
 # ---- configure macros.
 #
 %_lib			lib
-/136            0           0     0     644     353       `
+/136            1428935958  1000  1000  100644  353       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -153,7 +153,7 @@ armv7hnl-linux.macros/
 #
 %_lib			lib
 
-/161            0           0     0     644     673       `
+/161            1428935958  1000  1000  100644  673       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -174,7 +174,7 @@ armv7hnl-linux.macros/
 %_multilibno		2
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
 
-/181            0           0     0     644     698       `
+/181            1428935958  1000  1000  100644  698       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -194,7 +194,7 @@ armv7hnl-linux.macros/
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/202            0           0     0     644     702       `
+/202            1428935958  1000  1000  100644  702       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -214,7 +214,28 @@ armv7hnl-linux.macros/
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/224            0           0     0     644     702       `
+/224            1428935958  1000  1000  100644  697       `
+# Per-platform rpm configuration file.
+
+#==============================================================================
+# ---- per-platform macros.
+#
+%_arch			arm
+%_os			linux
+%_gnu			-gnueabihf
+%optflags		%{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC -g -march=armv7-a -mfloat-abi=hard -mfpu=neon}%{!?__common_cflags_with_ssp:-O2}
+
+#==============================================================================
+# ---- configure macros.
+#
+%_lib			lib
+
+#---------------------------------------------------------------------
+#	Multilibs
+%_multilibno		1
+%_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
+
+/247            1428935958  1000  1000  100644  702       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -234,7 +255,28 @@ armv7hnl-linux.macros/
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/245            0           0     0     644     712       `
+/268            1428935958  1000  1000  100644  697       `
+# Per-platform rpm configuration file.
+
+#==============================================================================
+# ---- per-platform macros.
+#
+%_arch			arm
+%_os			linux
+%_gnu			-gnueabihf
+%optflags		%{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC -g -march=armv7-a -mfloat-abi=hard -mfpu=neon}%{!?__common_cflags_with_ssp:-O2}
+
+#==============================================================================
+# ---- configure macros.
+#
+%_lib			lib
+
+#---------------------------------------------------------------------
+#	Multilibs
+%_multilibno		1
+%_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
+
+/291            1428935958  1000  1000  100644  712       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -254,7 +296,7 @@ armv7hnl-linux.macros/
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/266            0           0     0     644     725       `
+/312            1428935958  1000  1000  100644  725       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -275,7 +317,7 @@ armv7hnl-linux.macros/
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
 
-/285            0           0     0     644     710       `
+/331            1428935958  1000  1000  100644  710       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -295,7 +337,7 @@ armv7hnl-linux.macros/
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/304            0           0     0     644     722       `
+/350            1428935958  1000  1000  100644  722       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -315,7 +357,7 @@ armv7hnl-linux.macros/
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/323            0           0     0     644     725       `
+/369            1428935958  1000  1000  100644  725       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -336,7 +378,7 @@ armv7hnl-linux.macros/
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
 
-/342            0           0     0     644     673       `
+/388            1428935958  1000  1000  100644  673       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -357,7 +399,7 @@ armv7hnl-linux.macros/
 %_multilibno		2
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
 
-/362            0           0     0     644     387       `
+/408            1428935958  1000  1000  100644  387       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -373,7 +415,7 @@ armv7hnl-linux.macros/
 #
 %_lib			lib
 
-k6-linux.macros/0           0     0     644     708       `
+k6-linux.macros/1428935958  1000  1000  100644  708       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -393,7 +435,7 @@ k6-linux.macros/0           0     0     644     708       `
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/381            0           0     0     644     654       `
+/427            1428935958  1000  1000  100644  654       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -413,7 +455,7 @@ k6-linux.macros/0           0     0     644     708       `
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/402            0           0     0     644     634       `
+/448            1428935958  1000  1000  100644  634       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -433,7 +475,7 @@ k6-linux.macros/0           0     0     644     708       `
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/421            0           0     0     644     541       `
+/467            1428935958  1000  1000  100644  541       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -453,7 +495,7 @@ k6-linux.macros/0           0     0     644     708       `
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
 
-/442            0           0     0     644     714       `
+/488            1428935958  1000  1000  100644  714       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -473,7 +515,7 @@ k6-linux.macros/0           0     0     644     708       `
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/465            0           0     0     644     714       `
+/511            1428935958  1000  1000  100644  714       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -493,7 +535,7 @@ k6-linux.macros/0           0     0     644     708       `
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/488            0           0     0     644     332       `
+/534            1428935958  1000  1000  100644  332       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -508,7 +550,7 @@ k6-linux.macros/0           0     0     644     708       `
 # ---- configure macros.
 #
 %_lib			lib
-/515            0           0     0     644     579       `
+/561            1428935958  1000  1000  100644  579       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -529,7 +571,7 @@ k6-linux.macros/0           0     0     644     708       `
 %_multilibno		2
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
 
-/535            0           0     0     644     332       `
+/581            1428935958  1000  1000  100644  332       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -544,7 +586,7 @@ k6-linux.macros/0           0     0     644     708       `
 # ---- configure macros.
 #
 %_lib			lib
-/562            0           0     0     644     348       `
+/608            1428935958  1000  1000  100644  348       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -559,7 +601,7 @@ k6-linux.macros/0           0     0     644     708       `
 # ---- configure macros.
 #
 %_lib			lib
-/587            0           0     0     644     561       `
+/633            1428935958  1000  1000  100644  561       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -580,7 +622,7 @@ k6-linux.macros/0           0     0     644     708       `
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
 
-/605            0           0     0     644     348       `
+/651            1428935958  1000  1000  100644  348       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -595,7 +637,7 @@ k6-linux.macros/0           0     0     644     708       `
 # ---- configure macros.
 #
 %_lib			lib
-/630            0           0     0     644     562       `
+/676            1428935958  1000  1000  100644  562       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -615,7 +657,7 @@ k6-linux.macros/0           0     0     644     708       `
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/649            0           0     0     644     565       `
+/695            1428935958  1000  1000  100644  565       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -636,7 +678,7 @@ k6-linux.macros/0           0     0     644     708       `
 %_multilibno		2
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
 
-/669            0           0     0     644     584       `
+/715            1428935958  1000  1000  100644  584       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -656,7 +698,7 @@ k6-linux.macros/0           0     0     644     708       `
 #	Multilibs
 %_multilibno		2
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/691            0           0     0     644     590       `
+/737            1428935958  1000  1000  100644  590       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -676,7 +718,7 @@ k6-linux.macros/0           0     0     644     708       `
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/711            0           0     0     644     580       `
+/757            1428935958  1000  1000  100644  580       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -696,7 +738,7 @@ k6-linux.macros/0           0     0     644     708       `
 #	Multilibs
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-/733            0           0     0     644     693       `
+/779            1428935958  1000  1000  100644  693       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -717,7 +759,7 @@ k6-linux.macros/0           0     0     644     708       `
 %_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
 
-/751            0           0     0     644     673       `
+/797            1428935958  1000  1000  100644  673       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -736,26 +778,5 @@ k6-linux.macros/0           0     0     644     708       `
 #---------------------------------------------------------------------
 #	Multilibs
 %_multilibno		2
-%_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
-
-/772            0           0     0     644     697       `
-# Per-platform rpm configuration file.
-
-#==============================================================================
-# ---- per-platform macros.
-#
-%_arch			arm
-%_os			linux
-%_gnu			-gnueabihf
-%optflags		%{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC -g -march=armv7-a -mfloat-abi=hard -mfpu=neon}%{!?__common_cflags_with_ssp:-O2}
-
-#==============================================================================
-# ---- configure macros.
-#
-%_lib			lib
-
-#---------------------------------------------------------------------
-#	Multilibs
-%_multilibno		1
 %_multilibpatt		(/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
 
