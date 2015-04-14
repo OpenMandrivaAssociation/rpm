@@ -98,6 +98,8 @@ Source2:	rpm.rpmlintrc
 # <perform your changes>
 # popd
 # ar cDr cpu-os-macros.a foo/*macros
+#
+# !!! THIS FILE SHOULD BE MAINTAINED IN GIT !!!
 Source3:	cpu-os-macros.a
 Source4:	legacy_compat.macros
 Source5:	RPMBDB-0.1.tar.xz
