@@ -73,7 +73,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}18
+Release:	%{?prereldate:0.%{prereldate}.}19
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -1171,9 +1171,12 @@ popd
 sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 
 %build
-# rpm can't be built with clang currently (nested functions)
-#export CC=gcc
-#export CXX=g++
+# XXX:
+# building rpm with clang breaks it due to strict aliasing issue at psm.c:1065
+#    pid = rpmsqFork(&psm->sq);
+# triggered by execution of package scriptlets....
+export CC=gcc
+export CXX=g++
 export __PYTHON=%{_bindir}/python2
 export CONFIGFILES=""
 # this should really have been fixed by P240, but for some reason this no
