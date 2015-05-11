@@ -90,7 +90,7 @@
 +# is performed.
 +#
 +
-+%cross_compiling	%(echo 'int main() { return 0; }' | %{__cc} %{optflags} -x c - -o rpm_cc_test &>/dev/null; if ./rpm_cc_test 2>/dev/null; then echo -n 0; else echo -n 1; fi)
++%cross_compiling	%(echo 'int main() { return 0; }' | %{__cc} %{optflags} -x c - -o /tmp/rpm_cc_test &>/dev/null; if /tmp/rpm_cc_test 2>/dev/null; then echo -n 0; else echo -n 1; fi)
 +
  # \endverbatim
  #*/
