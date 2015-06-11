@@ -73,7 +73,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}22
+Release:	%{?prereldate:0.%{prereldate}.}23
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -1177,6 +1177,8 @@ sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 # triggered by execution of package scriptlets....
 export CC=gcc
 export CXX=g++
+export CFLAGS="$CFLAGS -flto"
+export CXXFLAGS="$CXXFLAGS -flto"
 export __PYTHON=%{_bindir}/python2
 export CONFIGFILES=""
 # this should really have been fixed by P240, but for some reason this no
@@ -1305,7 +1307,7 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 
 %if %{with perl}
 pushd RPMBDB-*
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}" CCCDLFLAGS="-fno-PIE -fPIC"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags} -flto" CCCDLFLAGS="-fno-PIE -fPIC"
 sed -i -e 's,-fPIC -fno-PIE,-fno-PIE -fPIC,g' ../perl/Makefile.perl
 %make
 popd
