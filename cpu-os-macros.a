@@ -38,7 +38,7 @@ sparc-linux.macros/
 sparcv9-linux.macros/
 x32-linux.macros/
 x86_64-linux.macros/
-/0              0           0     0     644     772       `
+/0              0           0     0     644     741       `
 # Per-platform rpm configuration file.
 
 #==============================================================================
@@ -47,8 +47,7 @@ x86_64-linux.macros/
 %_arch                  aarch64
 %_os                    linux
 %_gnu                   -gnu
-%optflags               %{?__common_flags:%{__common_flags} -fPIC -fomit-frame-pointer -fweb -frename-registers}%{!?__common_flags}:-O2 -g}
-
+%optflags		%{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g}
 #==============================================================================
 # ---- configure macros.
 #
@@ -58,6 +57,7 @@ x86_64-linux.macros/
 #       Multilibs
 %_multilibno            2
 %_multilibpatt          (/%{_lib}|/usr/%{_lib}(|/gconv)|/usr/local/%{_lib}|/usr/X11R6/%{_lib}|/opt/%{_lib})/[^/]*\\.([oa]|la|so[0-9.]*)$
+
 /22             0           0     0     644     351       `
 # Per-platform rpm configuration file.
 
