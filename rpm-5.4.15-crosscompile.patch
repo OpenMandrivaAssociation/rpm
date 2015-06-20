@@ -10,7 +10,7 @@
 +  %setup_compile_flags \
 +  CROSSCOMPILE="" ; \
 +%if %{cross_compiling} \
-+  CROSSCOMPILE="-DCMAKE_TOOLCHAIN_FILE=\"%{_prefix}/%{_target_platform}/share/cmake/%{_target_platform}.toolchain\"" ; \
++  CROSSCOMPILE="-DCMAKE_TOOLCHAIN_FILE=\"%{_prefix}/%{_target_platform}/share/cmake/%{_target_platform}.toolchain\" -DCMAKE_CROSSCOMPILING:BOOL=ON" ; \
 +%endif \
 +  export CROSSCOMPILE ; \
    %{__cmake} \\\
@@ -90,7 +90,7 @@
 +# is performed.
 +#
 +
-+%cross_compiling	%(echo 'int main() { return 0; }' | %{__cc} %{optflags} -x c - -o /tmp/rpm_cc_test &>/dev/null; if /tmp/rpm_cc_test 2>/dev/null; then echo -n 0; else echo -n 1; fi)
++%cross_compiling	%(rm -f /tmp/rpm_cc_test 2>/dev/null; echo 'int main() { return 0; }' | %{__cc} %{optflags} -x c - -o /tmp/rpm_cc_test &>/dev/null; if /tmp/rpm_cc_test 2>/dev/null; then echo -n 0; else echo -n 1; fi; rm -f /tmp/rpm_cc_test 2>/dev/null)
 +
  # \endverbatim
  #*/
