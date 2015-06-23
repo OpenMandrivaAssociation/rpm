@@ -1171,18 +1171,20 @@ popd
 sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 
 %build
+# (tpg) these are needed to enable FLTO
+%global optflags %{optflags} -flto -fuse-linker-plugin
+%global ldflags %{ldflags} -flto -fuse-linker-plugin
+
 # XXX:
 # building rpm with clang breaks it due to strict aliasing issue at psm.c:1065
 #    pid = rpmsqFork(&psm->sq);
 # triggered by execution of package scriptlets....
 export CC=gcc
 export CXX=g++
-export CFLAGS="$CFLAGS -flto"
-export CXXFLAGS="$CXXFLAGS -flto"
+export CFLAGS="$CFLAGS"
+export CXXFLAGS="$CXXFLAGS"
 export __PYTHON=%{_bindir}/python2
 export CONFIGFILES=""
-ld --help | grep plugin
-exit 1
 # this should really have been fixed by P240, but for some reason this no
 # longer seems to be the case
 LDFLAGS="-fopenmp" \
@@ -1309,7 +1311,7 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 
 %if %{with perl}
 pushd RPMBDB-*
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags} -flto" CCCDLFLAGS="-flto -fno-PIE -fPIC"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}" CCCDLFLAGS="-flto -fuse-linker-plugin -fno-PIE -fPIC"
 sed -i -e 's,-fPIC -fno-PIE,-fno-PIE -fPIC,g' ../perl/Makefile.perl
 %make
 popd
