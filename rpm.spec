@@ -1181,6 +1181,8 @@ export CFLAGS="$CFLAGS -flto"
 export CXXFLAGS="$CXXFLAGS -flto"
 export __PYTHON=%{_bindir}/python2
 export CONFIGFILES=""
+ld --help | grep plugin
+exit 1
 # this should really have been fixed by P240, but for some reason this no
 # longer seems to be the case
 LDFLAGS="-fopenmp" \
