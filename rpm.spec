@@ -9,6 +9,7 @@
 %bcond_with	debug
 %bcond_without	ossp_uuid
 %bcond_without	augeas
+%bcond_without	multiarch
 
 #XXX: this macro is a bit awkward, better can be done!
 %if %{with bootstrap}
@@ -1295,7 +1296,9 @@ LDFLAGS="-fopenmp" \
 		--with-vendor=mandriva \
 		--enable-build-warnings \
 		--with-platform-detect=yes \
+%if %{with multiarch}
 		--with-multiarch
+%endif
 
 # XXX: Making ie. a --with-pre-macros option might be more aestethic and easier
 # of use to others if pushed back upstream?
@@ -1421,7 +1424,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %exclude %{_docdir}/rpm/html
 %endif
 /bin/rpm
+%if %{with multiarch}
 %{_bindir}/multiarch-dispatch
+%endif
 %{_bindir}/rpmconstant*
 %{_bindir}/rpm2cpio*
 %{_rpmhome}/bin/augtool
@@ -1480,6 +1485,7 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_sysconfdir}/cron.daily/rpm
 %config(noreplace,missingok) %{_sysconfdir}/logrotate.d/rpm
 
+%if %{with multiarch}
 %dir %{multiarch_bindir}
 %dir %{multiarch_includedir}
 %if "%{_lib}" == "lib64"
@@ -1488,11 +1494,14 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %endif
 
 %{_includedir}/multiarch-dispatch.h
+%endif
 
 %files build
 %{_bindir}/gendiff
 %{_bindir}/rpmbuild
+%if %{with multiarch}
 %{_bindir}/multiarch-platform
+%endif
 #%%{_rpmhome}/bin/abi-compliance-checker.pl
 %{_rpmhome}/bin/api-sanity-autotest.pl
 %{_rpmhome}/bin/api-sanity-checker.pl
@@ -1519,7 +1528,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/vcheck
 %{_rpmhome}/brp-*
 %{_rpmhome}/check-files
+%if %{with multiarch}
 %{_rpmhome}/check-multiarch-files
+%endif
 #%%{_rpmhome}/cross-build
 %{_rpmhome}/desktop-file.prov
 %{_rpmhome}/find-debuginfo.sh
@@ -1538,7 +1549,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/http.req
 %{_rpmhome}/javadeps.sh
 %{_rpmhome}/kmod-deps.sh
+%if %{with multiarch}
 %{_rpmhome}/mkmultiarch
+%endif
 %{_rpmhome}/mono-find-provides
 %{_rpmhome}/mono-find-requires
 %{_rpmhome}/executabledeps.sh
