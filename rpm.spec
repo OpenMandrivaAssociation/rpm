@@ -74,7 +74,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}26
+Release:	%{?prereldate:0.%{prereldate}.}27
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -797,6 +797,7 @@ Requires:	gcc-c++
 %endif
 Requires:	libtool-base >= 2.4.2-3
 Requires:	patch >= 2.5.9-7
+Requires:	diffutils
 Requires:	make
 Requires:	unzip
 Requires:	elfutils >= 0.152-4
