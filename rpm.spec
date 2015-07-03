@@ -1317,9 +1317,9 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 
 %if %{with perl}
 pushd RPMBDB-*
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}" CCCDLFLAGS="-flto -fuse-linker-plugin -fno-PIE -fPIC"
+perl Makefile.PL CC=gcc INSTALLDIRS=vendor OPTIMIZE="%{optflags} -flto -fuse-linker-plugin" CCCDLFLAGS="-flto -fuse-linker-plugin -fno-PIE -fPIC" LDFLAGS="%{ldflags} -flto -fuse-linker-plugin"
 sed -i -e 's,-fPIC -fno-PIE,-fno-PIE -fPIC,g' ../perl/Makefile.perl
-%make
+%make CC=gcc
 popd
 %endif
 
