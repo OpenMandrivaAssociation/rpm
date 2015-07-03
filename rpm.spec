@@ -1489,9 +1489,11 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %if %{with multiarch}
 %dir %{multiarch_bindir}
 %dir %{multiarch_includedir}
+%ifnarch aarch64
 %if "%{_lib}" == "lib64"
 %dir %(linux32 rpm -E %%{multiarch_bindir})
 %dir %(linux32 rpm -E %%{multiarch_includedir})
+%endif
 %endif
 
 %{_includedir}/multiarch-dispatch.h
