@@ -74,7 +74,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}27
+Release:	%{?prereldate:0.%{prereldate}.}28
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -1176,8 +1176,8 @@ sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 
 %build
 # (tpg) these are needed to enable FLTO
-%global optflags %{optflags} -flto -fuse-linker-plugin
-%global ldflags %{ldflags} -flto -fuse-linker-plugin
+# global optflags %{optflags} -flto -fuse-linker-plugin
+# global ldflags %{ldflags} -flto -fuse-linker-plugin
 
 # XXX:
 # building rpm with clang breaks it due to strict aliasing issue at psm.c:1065
@@ -1317,7 +1317,7 @@ echo '#define PREMACROFILES "%{_sysconfdir}/rpm/premacros.d/*.macros"' >> config
 
 %if %{with perl}
 pushd RPMBDB-*
-perl Makefile.PL CC=gcc INSTALLDIRS=vendor OPTIMIZE="%{optflags} -flto -fuse-linker-plugin" CCCDLFLAGS="-flto -fuse-linker-plugin -fno-PIE -fPIC" LDFLAGS="%{ldflags} -flto -fuse-linker-plugin"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}" CCCDLFLAGS="-fno-PIE -fPIC"
 sed -i -e 's,-fPIC -fno-PIE,-fno-PIE -fPIC,g' ../perl/Makefile.perl
 %make CC=gcc
 popd
