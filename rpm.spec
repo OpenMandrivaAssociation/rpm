@@ -639,6 +639,7 @@ Patch315:	rpm-5.4.15-fix-non-void-function-not-returning-a-value.patch
 Patch316:	rpm-5.4.15-dont-use-nested-functions.patch
 Patch317:	rpm-5.4.15-fix-implicit-function-declaration-missing-header.patch
 Patch318:	rpm-5.4.15-fix-faulty-null-pointer-check-against-sstate-array.patch
+Patch318:	rpm-5.4.15-drop-compress-debug-sections-cflag.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1166,6 +1167,7 @@ popd
 %patch316 -p1 -b .nested_func~
 %patch317 -p1 -b .implicit_func_decl~
 %patch318 -p1 -b .sstate_check~
+%patch319 -p1 -b .no_comp_debug~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
