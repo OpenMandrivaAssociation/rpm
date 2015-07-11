@@ -641,6 +641,9 @@ Patch317:	rpm-5.4.15-fix-implicit-function-declaration-missing-header.patch
 Patch318:	rpm-5.4.15-fix-faulty-null-pointer-check-against-sstate-array.patch
 Patch319:	rpm-5.4.15-drop-compress-debug-sections-cflag.patch
 Patch320:	rpm-5.4.15-cflags-ldflags--flto.patch
+# We ship a newer, better and conflicting set of cmake
+# related macros in the cmake package -- no need for duplication
+Patch321:	rpm-5.4.15-no-cmake-macros.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1170,6 +1173,8 @@ popd
 %patch318 -p1 -b .sstate_check~
 %patch319 -p1 -b .no_comp_debug~
 %patch320 -p1 -b .flto~
+%patch321 -p1 -b .nocmakemacros~
+rm macros/cmake
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
