@@ -74,7 +74,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}28
+Release:	%{?prereldate:0.%{prereldate}.}29
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -640,6 +640,7 @@ Patch316:	rpm-5.4.15-dont-use-nested-functions.patch
 Patch317:	rpm-5.4.15-fix-implicit-function-declaration-missing-header.patch
 Patch318:	rpm-5.4.15-fix-faulty-null-pointer-check-against-sstate-array.patch
 Patch319:	rpm-5.4.15-drop-compress-debug-sections-cflag.patch
+Patch320:	rpm-5.4.15-cflags-ldflags--flto.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1168,6 +1169,7 @@ popd
 %patch317 -p1 -b .implicit_func_decl~
 %patch318 -p1 -b .sstate_check~
 %patch319 -p1 -b .no_comp_debug~
+%patch320 -p1 -b .flto~
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
