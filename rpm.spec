@@ -639,7 +639,7 @@ Patch315:	rpm-5.4.15-fix-non-void-function-not-returning-a-value.patch
 Patch316:	rpm-5.4.15-dont-use-nested-functions.patch
 Patch317:	rpm-5.4.15-fix-implicit-function-declaration-missing-header.patch
 Patch318:	rpm-5.4.15-fix-faulty-null-pointer-check-against-sstate-array.patch
-Patch318:	rpm-5.4.15-drop-compress-debug-sections-cflag.patch
+Patch319:	rpm-5.4.15-drop-compress-debug-sections-cflag.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
