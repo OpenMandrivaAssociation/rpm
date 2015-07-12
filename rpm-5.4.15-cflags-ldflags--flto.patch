@@ -14,7 +14,7 @@
  %GNUconfigure(MCs:)      \
    CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS; \
 -  LDFLAGS="${LDFLAGS:-%{-s:-s}}"  ; export LDFLAGS; \
-+  LDFLAGS="${LDFLAGS:-%optflags}"  ; export LDFLAGS; \
++  LDFLAGS="${LDFLAGS:-%{optflags} %{?!_disable_lto:-flto}}"  ; export LDFLAGS; \
    %{-C:_mydir="`pwd`"; %{-M: %{__mkdir} -p "%{-C*}";} cd "%{-C*}"} \
    dirs="`find ${_mydir} -name 'configure.[ai][cn]' -print`"; export dirs; \
      for coin in `echo ${dirs}` \
@@ -25,7 +25,7 @@
  %__libtoolize_configure %{?__libtoolize:(cd $CONFIGURE_TOP; [ ! -f configure.in -a ! -f configure.ac ] || %{__libtoolize} --copy --force)}
  
 -%ldflags %{?!_disable_ld_no_undefined: -Wl,--no-undefined} %{?_hardened_flags}
-+%ldflags -Wl,-O2 %{?!_disable_ld_no_undefined: -Wl,--no-undefined} %{?!_disable_lto:-flto} %{?_hardened_flags}
++%ldflags %{optflags} -Wl,-O2 %{?!_disable_ld_no_undefined: -Wl,--no-undefined} %{?!_disable_lto:-flto} %{?_hardened_flags}
  
  %setup_compile_flags \
    CC="${CC:-%__cc}" ; export CC ; \
