@@ -74,7 +74,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}30
+Release:	%{?prereldate:0.%{prereldate}.}31
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -644,6 +644,9 @@ Patch320:	rpm-5.4.15-cflags-ldflags--flto.patch
 # We ship a newer, better and conflicting set of cmake
 # related macros in the cmake package -- no need for duplication
 Patch321:	rpm-5.4.15-no-cmake-macros.patch
+# Update libtool and rebuild autoconf bits during %%config_update
+# old libtool versions wreak havoc with LTO
+Patch322:	rpm-5.4.15-config_update-update-libtool.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1175,6 +1178,9 @@ popd
 %patch320 -p1 -b .flto~
 %patch321 -p1 -b .nocmakemacros~
 rm macros/cmake
+%patch322 -p1 -b .ltupdate~
+# Misnamed aclocal.m4
+rm neon/acinclude.m4
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
