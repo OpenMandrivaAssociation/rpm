@@ -11,7 +11,7 @@
 +        libtoolize --force ; \
 +      fi ; \
 +      aclocal $((find . -name "*.m4" 2>/dev/null |grep -vE 'ac(local|include).m4' | xargs dirname) | grep -v '^\.$' |sort |uniq |cut -d/ -f2- |while read R; do [ -e $R/configure.ac ] || echo -n "-I$R "; done) ; \
-+      automake -a ; \
++      automake -a --foreign ; \
 +      autoconf ; \
 +      popd ; \
 +    done ; \
