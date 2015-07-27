@@ -10,6 +10,14 @@
 %bcond_without	ossp_uuid
 %bcond_without	augeas
 %bcond_without	multiarch
+# As of clang 3.7, gcc 5.1, binutils 2.25.51, LTO on i586
+# is buggy and causes numerous compiler crashes.
+# Let's avoid it for now.
+%ifarch %{ix86}
+%bcond_with	lto
+%else
+%bcond_without	lto
+%endif
 
 #XXX: this macro is a bit awkward, better can be done!
 %if %{with bootstrap}
@@ -74,7 +82,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}32
+Release:	%{?prereldate:0.%{prereldate}.}33
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -1175,7 +1183,9 @@ popd
 %patch317 -p1 -b .implicit_func_decl~
 %patch318 -p1 -b .sstate_check~
 %patch319 -p1 -b .no_comp_debug~
+%if %{with lto}
 %patch320 -p1 -b .flto~
+%endif
 %patch321 -p1 -b .nocmakemacros~
 rm macros/cmake
 %patch322 -p1 -b .ltupdate~
