@@ -82,7 +82,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}33
+Release:	%{?prereldate:0.%{prereldate}.}34
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -655,6 +655,8 @@ Patch321:	rpm-5.4.15-no-cmake-macros.patch
 # Update libtool and rebuild autoconf bits during %%config_update
 # old libtool versions wreak havoc with LTO
 Patch322:	rpm-5.4.15-config_update-update-libtool.patch
+# use monos find-requires/provides as it works correctly
+Patch323:	rpm-5.4.15-use_mono_utils.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1189,6 +1191,7 @@ popd
 %patch321 -p1 -b .nocmakemacros~
 rm macros/cmake
 %patch322 -p1 -b .ltupdate~
+%patch323 -p1 -b .mono~
 # Misnamed aclocal.m4
 rm neon/acinclude.m4
 
