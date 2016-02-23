@@ -657,12 +657,14 @@ Patch321:	rpm-5.4.15-no-cmake-macros.patch
 Patch322:	rpm-5.4.15-config_update-update-libtool.patch
 # use monos find-requires/provides as it works correctly
 Patch323:	rpm-5.4.15-use_mono_utils.patch
+# /usr/bin/clang as ld patch
+Patch324:	remove-hardcoded-ld-as-clang.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
 BuildRequires:	elfutils-devel >= 0.154
-BuildRequires:	sed >= 4.0.3
+BuildRequires:	sed >= 4.0.3B
 BuildRequires:	beecrypt-devel >= 4.2.1-8
 BuildRequires:	ed
 BuildRequires:	gettext-devel
@@ -1192,6 +1194,7 @@ popd
 rm macros/cmake
 %patch322 -p1 -b .ltupdate~
 %patch323 -p1 -b .mono~
+%patch324 -p1 -b .ld_clang
 # Misnamed aclocal.m4
 rm neon/acinclude.m4
 
@@ -1213,6 +1216,7 @@ sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 # triggered by execution of package scriptlets....
 export CC=gcc
 export CXX=g++
+export LD=ld
 export CFLAGS="$CFLAGS"
 export CXXFLAGS="$CXXFLAGS"
 export __PYTHON=%{_bindir}/python2
