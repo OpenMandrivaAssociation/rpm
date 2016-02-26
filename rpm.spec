@@ -82,7 +82,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}34
+Release:	%{?prereldate:0.%{prereldate}.}35
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -659,6 +659,8 @@ Patch322:	rpm-5.4.15-config_update-update-libtool.patch
 Patch323:	rpm-5.4.15-use_mono_utils.patch
 # /usr/bin/clang as ld patch
 Patch324:	remove-hardcoded-ld-as-clang.patch
+# Don't miss Requires.private: dependencies in pkg-config files
+Patch325:	rpm-5.4.15-pkgconfig-dep-reqs.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1195,6 +1197,7 @@ rm macros/cmake
 %patch322 -p1 -b .ltupdate~
 %patch323 -p1 -b .mono~
 %patch324 -p1 -b .ld_clang
+%patch325 -p1 -b .pkgconfigdeps~
 # Misnamed aclocal.m4
 rm neon/acinclude.m4
 
