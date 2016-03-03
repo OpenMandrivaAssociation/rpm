@@ -4,8 +4,8 @@
  
  #
  # Define a generic value for optflags. Normally overridden by per-target macros.
--%optflags		-Oz
-+%optflags		-Oz %{?!_disable_lto:-flto}
+-%optflags		-Os
++%optflags		-Os %{?!_disable_lto:-flto}
  
  #
  # Define per-arch and per-os defaults. Normally overridden by per-target macros.

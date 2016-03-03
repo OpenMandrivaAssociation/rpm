@@ -5,7 +5,7 @@
  #
  # Define a generic value for optflags. Normally overridden by per-target macros.
 -%optflags		-O2
-+%optflags		-Oz
++%optflags		-Os
  
  #
  # Define per-arch and per-os defaults. Normally overridden by per-target macros.
@@ -16,7 +16,7 @@
  
  %_ssp_cflags -fstack-protector --param=ssp-buffer-size=4 %{?_serverbuild_flags}
 -%__common_cflags -O2 %{debugcflags} -pipe %{Werror_cflags} %{?_fortify_cflags}
-+%__common_cflags -Oz %{debugcflags} -pipe %{Werror_cflags} %{?_fortify_cflags}
++%__common_cflags -Os %{debugcflags} -pipe %{Werror_cflags} %{?_fortify_cflags}
  %__common_cflags_with_ssp %{__common_cflags} %{?_ssp_cflags}
  
  # Servers opt flags.
