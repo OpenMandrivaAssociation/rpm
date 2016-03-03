@@ -607,8 +607,9 @@ Patch282:	rpm-5.4.10-perl-use-same-toolchain.patch
 # Fix the %%config_update macro for config.* files in subdirectories
 # whose names contain spaces (seen in resIL)
 Patch283:	rpm-5.4.10-config_update-spaces-in-filenames.patch
-# Default optflags to -Oz
-Patch284:	rpm-5.4.10-default-to-Oz.patch
+# By default we were using -Oz, but it turned out that with LLVM/clang-3.8+ it got broken
+# Default optflags to -Os
+Patch284:	rpm-5.4.10-default-to-Os.patch
 # Fix mklibname to automatically generate e.g. lib64qtxdg5_0
 # (rather than lib64qtxdg50) for "%%mklibname qtxdg5 0"
 Patch285:	rpm-5.4.14-mklibname-fix-lib-names-ending-with-digits.patch
