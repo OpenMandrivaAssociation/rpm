@@ -1203,7 +1203,9 @@ rm macros/cmake
 %patch323 -p1 -b .mono~
 %patch324 -p1 -b .ld_clang
 %patch325 -p1 -b .pkgconfigdeps~
+%ifarch %armx x86_64
 %patch326 -p1 -b .mfpu_neon
+%endif
 %patch327 -p1 -b .libarchive_cpio
 # Misnamed aclocal.m4
 rm neon/acinclude.m4
