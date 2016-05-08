@@ -2,6 +2,9 @@
 %define _xz_threads 0
 %endif
 
+# remove me
+%define debug_package	%nil
+
 %define python_version 2.7
 %define	_target_vendor	mandriva
 
