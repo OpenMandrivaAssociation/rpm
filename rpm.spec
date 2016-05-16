@@ -82,7 +82,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}38
+Release:	%{?prereldate:0.%{prereldate}.}39
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -666,6 +666,8 @@ Patch325:	rpm-5.4.15-pkgconfig-dep-reqs.patch
 Patch326:	rpm-5.4.15-neon-optional.patch
 # --nosecure for cpio
 Patch327:	rpm-5.4.15-libarchive-3.2.0-insecure-cpio.patch
+# Fix mdkversion to work with the 2015.0 -> 3 visible version change
+Patch328:	rpm-5.4.15-mdkversion-for-omlx3.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1207,6 +1209,7 @@ rm macros/cmake
 %patch326 -p1 -b .mfpu_neon
 %endif
 %patch327 -p1 -b .libarchive_cpio
+%patch328 -p1 -b .mkdv~
 # Misnamed aclocal.m4
 rm neon/acinclude.m4
 
