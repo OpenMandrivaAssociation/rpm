@@ -5,7 +5,7 @@
  # - "10.2.2" => 1022
  # (user may copy the following line in specfile)
 -%mdkversion		%(perl -pe '/(\\d+)\\.(\\d)\\.?(\\d)?/; $_="$1$2".($3||0)' /etc/mandriva-release)
-+%mdkversion		%(cat /etc/os-release|grep VERSION_ID= |sed -e 's,.*=,,;s,\",,g;s,\.,0,g')
++%mdkversion		%(cat /etc/os-release|grep VERSION_ID= |sed -e 's,.*=,,;s,\",,g;s,\\.,0,g')
  
  #==============================================================================
  # ---- Build policy macros.
