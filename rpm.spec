@@ -82,7 +82,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}40
+Release:	%{?prereldate:0.%{prereldate}.}41
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -678,7 +678,7 @@ BuildRequires:	beecrypt-devel >= 4.2.1-8
 BuildRequires:	ed
 BuildRequires:	gettext-devel
 BuildRequires:	byacc
-BuildRequires:	pkgconfig
+BuildRequires:	pkgconf
 BuildRequires:	pkgconfig(neon)
 BuildRequires:	readline-devel
 BuildRequires:	pkgconfig(ncursesw)
@@ -718,7 +718,7 @@ BuildRequires:	%{bdb}-utils
 BuildRequires:	perl-devel
 %endif
 %if %{with python}
-BuildRequires:	pkgconfig(python) = 2.7 
+BuildRequires:	pkgconfig(python) = 2.7
 %endif
 %if %{with js}
 BuildRequires:	pkgconfig(mozjs185)
@@ -846,7 +846,7 @@ Requires:	python-pkg-resources
 BuildRequires:	python2-pkg-resources
 %endif
 %endif
-Requires:	pkgconfig
+Requires:	pkgconf
 # ditch to eliminate dependency on perl deps not part of standard perl library
 # also kinda wanna discourage heavy adoption of embedded perl interpreter
 #Requires:	perl-RPM = %{EVRD}
