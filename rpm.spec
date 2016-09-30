@@ -1152,9 +1152,7 @@ popd
 %patch276 -p1 -b .system_header~
 %patch277 -p1 -b .multiarch~
 %patch278 -p1 -b .fortify~
-%ifnarch %arm
 %patch279 -p1 -b .clangdefault~
-%endif
 %patch280 -p1 -b .file~
 %patch281 -p1 -b .python3~
 %patch282 -p1 -b .sameToolchain~
@@ -1214,6 +1212,15 @@ rm macros/cmake
 %patch328 -p1 -b .mkdv~
 # Misnamed aclocal.m4
 rm neon/acinclude.m4
+
+# go back to gcc due
+# https://issues.openmandriva.org/show_bug.cgi?id=1921
+# exist
+%ifarch %arm
+sed -i 's!/usr/bin/clang -E!@CPP@!g' macros/macros.rpmbuild.in
+sed -i 's!/usr/bin/clang++!@CXX@!g' macros/macros.rpmbuild.in
+sed -i 's!/usr/bin/clang!@CC@!g' macros/macros.rpmbuild.in
+%endif
 
 #required by P55, P80, P81, P94..
 ./autogen.sh
