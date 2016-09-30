@@ -1152,7 +1152,9 @@ popd
 %patch276 -p1 -b .system_header~
 %patch277 -p1 -b .multiarch~
 %patch278 -p1 -b .fortify~
+%ifnarch %arm
 %patch279 -p1 -b .clangdefault~
+%endif
 %patch280 -p1 -b .file~
 %patch281 -p1 -b .python3~
 %patch282 -p1 -b .sameToolchain~
