@@ -64,7 +64,7 @@
 %define	bdb		db52
 
 %define	libver		5.4
-%define	minorver	15
+%define	minorver	17
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
