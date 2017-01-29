@@ -3,7 +3,7 @@
 %endif
 
 %define python_version 2.7
-%define	_target_vendor	mandriva
+%define	_target_vendor mandriva
 
 %bcond_with	bootstrap
 %bcond_with	debug
@@ -663,7 +663,7 @@ BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
 BuildRequires:	elfutils-devel >= 0.154
 BuildRequires:	sed >= 4.0.3B
-BuildRequires:	beecrypt-devel >= 4.2.1-8
+BuildRequires:	tomcrypt-devel >= 1.17
 BuildRequires:	ed
 BuildRequires:	gettext-devel
 BuildRequires:	byacc
@@ -762,7 +762,7 @@ installing, uninstalling, verifying, querying, and updating software packages.
 Each software package consists of an archive of files along with information
 about the package like its version, a description, etc.
 
-%package -n	%{libname}
+%package -n %{libname}
 Summary:	Libraries used by rpm
 Group:		System/Libraries
 # Forcing upgrades of anything else linked against it as rpmdb is incompatible
@@ -777,7 +777,7 @@ RPM is a powerful command line driven package management system capable of
 installing, uninstalling, verifying, querying, and updating software packages.
 This package contains common files to all applications based on rpm.
 
-%package -n	%{devname}
+%package -n %{devname}
 Summary:	Development files for applications which will manipulate RPM packages
 Group:		Development/C
 Requires:	%{libname} = %{EVRD}
@@ -795,7 +795,7 @@ that need an intimate knowledge of RPM packages in order to function.
 This package should be installed if you want to develop programs that
 will manipulate RPM packages and databases.
 
-%package -n	%{static}
+%package -n %{static}
 Summary:	Static libraries for rpm development
 Group:		Development/C
 Requires:	%{devname} = %{EVRD}
@@ -803,7 +803,7 @@ Requires:	%{devname} = %{EVRD}
 %description -n %{static}
 Static libraries for rpm development.
 
-%package	build
+%package build
 Summary:	Scripts and executable programs used to build packages
 Group:		System/Configuration/Packaging
 Requires:	autoconf
@@ -848,12 +848,12 @@ Conflicts:	rpm < 1:5.4.4-32
 %define __noautoreqfiles %{_rpmhome}/bin/pom2spec
 Suggests:	perl(LWP::UserAgent) perl(XML::LibXML)
 
-%description	build
+%description build
 This package contains scripts and executable programs that are used to
 build packages using RPM.
 
 %if %{with python}
-%package -n	python-rpm
+%package -n python-rpm
 Summary:	Python bindings for apps which will manipulate RPM packages
 Group:		Development/Python
 
@@ -868,7 +868,7 @@ programs that will manipulate RPM packages and databases.
 
 %if %{with perl}
 %define	perlmod	RPM
-%package -n	perl-%{perlmod}
+%package -n perl-%{perlmod}
 Summary:	Perl bindings for RPM
 Group:		Development/Perl
 Obsoletes:	perl-RPM4
@@ -878,7 +878,7 @@ Requires:	perl(IO::String)
 The RPM Perl module provides an object-oriented interface to querying both
 the installed RPM database as well as files on the filesystem.
 
-%package -n	perl-RPMBDB
+%package -n perl-RPMBDB
 Summary:	Perl extension for accessing certain Berkeley DB functionality
 Group:		Development/Perl
 Requires:	%{libname} = %{EVRD}
@@ -888,7 +888,7 @@ This perl extension provides certain Berkeley DB functionality used by urpmi.
 %endif
 
 %if %{with ruby}
-%package -n	rpm-rubyembed
+%package -n rpm-rubyembed
 Summary:	Ruby embedding module for rpm
 Group:		Development/Ruby
 Requires:	ruby(abi)
@@ -898,7 +898,7 @@ This package provides embedded ruby interpreter support for RPM.
 %endif
 
 %if %{with tcl}
-%package -n	rpm-tclembed
+%package -n rpm-tclembed
 Summary:	Tcl embedding module for rpm
 Group:		Development/Other
 Requires:	tcl
@@ -908,7 +908,7 @@ This package provides embedded Tcl interpreter support for RPM.
 %endif
 
 %if %{with squirrel}
-%package -n	rpm-squirrelembed
+%package -n rpm-squirrelembed
 Summary:	Squirrel embedding module for rpm
 Group:		Development/Other
 Requires:	squirrel
@@ -918,12 +918,12 @@ This package provides embedded Squirrel interpreter support for RPM.
 %endif
 
 %if %{with docs}
-%package 	apidocs
+%package apidocs
 Summary:	API documentation for RPM
 Group:		Books/Computer books
 BuildArch:	noarch
 
-%description	apidocs
+%description apidocs
 This package contains the RPM API documentation generated in HTML format.
 %endif
 
@@ -948,26 +948,26 @@ popd
 %patch29 -p1 -b .specfile~
 %patch31 -p1 -b .rpm_qa~
 #%%patch32 -p1 -b .clean~
-%patch34 -p1 -b .ordering~
+#patch34 -p1 -b .ordering~ REDIFF
 %patch37 -p1 -b .drop_deps~
-%patch40 -p1 -b .pc_paths~
+#patch40 -p1 -b .pc_paths~ REDIFF
 %patch42 -p1 -b .glob~
 %patch46 -p1 -b .repackage~
 %patch47 -p1 -b .overlap~
-%patch48 -p1 -b .suggests~
-%patch55 -p1 -b .strip_reloc_debug~
+#patch48 -p1 -b .suggests~ REDIFF
+#patch55 -p1 -b .strip_reloc_debug~ REDIFF
 %patch61 -p1 -b .epoch_cmp~
 %patch63 -p1 -b .buildroot_dups~
 %patch64 -p1 -b .dups_terminate~
 %patch65 -p1 -b .subdir_terminate~
 %patch66 -p1 -b .withoutclean~
-%patch67 -p1 -b .strip_silent~
-%patch69 -p1 -b .oneshot~
+#patch67 -p1 -b .strip_silent~ REDIFF
+#patch69 -p1 -b .oneshot~ REDIFF
 %patch70 -p1 -b .drop_basedeps~
 %patch71 -p1 -b .locale~
-%patch74 -p1 -b .builddir~
-%patch76 -p1 -b .twice_terminate~
-%patch77 -p1 -b .db52~
+#patch74 -p1 -b .builddir~ REDIFF
+#patch76 -p1 -b .twice_terminate~ REDIFF
+#patch77 -p1 -b .db52~ REDIFF
 %patch78 -p1 -b .ruby19~
 %patch79 -p1 -b .range_nooverlap~
 %patch85 -p1 -b .int_gen_overlap~
@@ -979,57 +979,57 @@ popd
 %patch91 -p1 -b .fc_deps~
 %patch92 -p1 -b .rpmfc_ruby~
 %patch93 -p1 -b .rb_newline~
-%patch94 -p1 -b .haskell~
+#patch94 -p1 -b .haskell~ REDIFF
 %patch95 -p1 -b .interpret_deps~
 %patch97 -p1 -b .env_color~
-%patch98 -p1 -b .fc_overlap~
-%patch99 -p1 -b .py_macros~
+#patch98 -p1 -b .fc_overlap~ REDIFF
+#patch99 -p1 -b .py_macros~ REDIFF
 %patch100 -p1 -b .script_overlap~
-%patch101 -p1 -b .font~
-%patch102 -p1 -b .kmod~
-%patch103 -p1 -b .desktop~
+#patch101 -p1 -b .font~ REDIFF
+#patch102 -p1 -b .kmod~ REDIFF
+#patch103 -p1 -b .desktop~ REDIFF
 %patch104 -p1 -b .skip_chrdev~
-%patch106 -p1 -b .link_loop~
+#patch106 -p1 -b .link_loop~ REDIFF
 %patch107 -p1 -b .python_color~
 %patch110 -p1 -b .req_devel~
 %patch112 -p1 -b .gnu_hash~
 %patch113 -p1 -b .depoch_rpmlib~
 %patch114 -p1 -b .no_verdepfeat~
-%patch116 -p1 -b .skip_doc~
+#patch116 -p1 -b .skip_doc~ REDIFF
 %patch117 -p1 -b .exec_modules~
 %patch119 -p1 -b .rubyabi_prov~
-%patch120 -p1 -b .filedep_origins~
-%patch121 -p1 -b .equal_overlaps~
-%patch122 -p1 -b .strdup~
+#patch120 -p1 -b .filedep_origins~ REDIFF
+#patch121 -p1 -b .equal_overlaps~ REDIFF
+#patch122 -p1 -b .strdup~ REDIFF
 %patch123 -p1 -b .ds_fopen~
 %patch124 -p1 -b .debuginfo~
 %patch125 -p1 -b .unitialized~
-%patch126 -p1 -b .trig_pcre~
-%patch127 -p1 -b .trigger_args~
+#patch126 -p1 -b .trig_pcre~ REDIFF
+#patch127 -p1 -b .trigger_args~ REDIFF
 %patch128 -p1 -b .triggers_nooverlap~
-%patch129 -p1 -b .memleak~
+#patch129 -p1 -b .memleak~ MERGED
 %patch130 -p1 -b .str_nul~
-%patch131 -p1 -b .dlopen~
+#patch131 -p1 -b .dlopen~ REDIFF
 %patch132 -p1 -b .py_input~
 %patch133 -p1 -b .devel_prov~
 #patch134 -p1 -b .lua~
 %patch135 -p1 -b .db_rdonly~
 %patch136 -p1 -b .ds_merge~
-%patch137 -p1 -b .slash~
+#patch137 -p1 -b .slash~ REDIFF
 #patch138 -p1 -b .trigtrans~
-%patch139 -p1 -b .fix_verify~
-%patch140 -p1 -b .rpmv3~
+#patch139 -p1 -b .fix_verify~ REDIFF
+#patch140 -p1 -b .rpmv3~ REDIFF
 %patch143 -p1 -b .mono_newline~
 %patch144 -p1 -b .urpm~
-%patch146 -p1 -b .nosig~
-%patch150 -p1 -b .i18n_str~
-%patch151 -p1 -b .noi18n~
+#patch146 -p1 -b .nosig~ REDIFF
+#patch150 -p1 -b .i18n_str~ REDIFF
+#patch151 -p1 -b .noi18n~ REDIFF
 #patch152 -p1 -b .l10ndir~
 %patch156 -p1 -b .php_deps~
 %patch157 -p1 -b .perl_deps~
-%patch158 -p1 -b .dl_error~
-%patch159 -p1 -b .ignorearch~
-%patch138 -p1 -b .trigtrans~
+#patch158 -p1 -b .dl_error~ REDIFF
+#patch159 -p1 -b .ignorearch~ REDIFF
+#patch138 -p1 -b .trigtrans~ REDIFF
 %patch160 -p1 -b .xz_level~
 %patch162 -p1 -b .uninitialized~
 #patch163 -p1 -b .mdk~
@@ -1038,15 +1038,15 @@ popd
 %patch166 -p1 -b .ldflags~
 %patch167 -p1 -b .perl_abiver~
 %patch168 -p1 -b .perl_abireq~
-%patch169 -p1 -b .brpcomp~
+#patch169 -p1 -b .brpcomp~ REDIFF
 %patch170 -p1 -b .archtagged~
 %patch171 -p1 -b .ruby_utf8~
-%patch172 -p1 -b .debug_path~
+#patch172 -p1 -b .debug_path~ REDIFF
 %patch173 -p1 -b .debugedit_memleaks~
 %patch174 -p1 -b .debugedit_errmsg~
 %patch175 -p1 -b .doc_post~
-%patch176 -p1 -b .droprpath~
-%patch178 -p1 -b .cross~
+#patch176 -p1 -b .droprpath~ REDIFF
+#patch178 -p1 -b .cross~ REDIFF
 %patch179 -p1 -b .rpmdbchk~
 %patch180 -p1 -b .typecast~
 %patch181 -p1 -b .printspec~
@@ -1055,32 +1055,32 @@ popd
 %patch184 -p1 -b .legacy_macros~
 %patch185 -p1 -b .buildid_deps~
 %patch188 -p1 -b .gstreamer1.0~
-%patch189 -p1 -b .envvars~
-%patch190 -p1 -b .norpath~
+#patch189 -p1 -b .envvars~ REDIFF
+#patch190 -p1 -b .norpath~ REDIFF
 %patch191 -p1 -b .rename~
-%patch192 -p1 -b .mem_assert~
+#patch192 -p1 -b .mem_assert~ REDIFF
 %patch193 -p1 -b .xrealloc~
-%patch194 -p1 -b .cb~
-%patch195 -p1 -b .cb2~
+#patch194 -p1 -b .cb~ REDIFF
+#patch195 -p1 -b .cb2~ REDIFF
 %patch197 -p1 -b .permissive~
 %patch198 -p1 -b .rpmdbnofsync~
 %patch199 -p1 -b .fontdep_sure~
 %patch200 -p1 -b .unsilent~
-%patch201 -p1 -b .syslog~
+#patch201 -p1 -b .syslog~ REDIFF
 %patch203 -p1 -b .subpackage_errors~
 %patch204 -p1 -b .python3~
 #patch205 -p1 -b .squir_ver~
-%patch209 -p1 -b .rpmluaprint~
-%patch210 -p1 -b .rpmpythonmod~
-%patch211 -p1 -b .rpmpythontrunc~
-%patch212 -p1 -b .static~
+#patch209 -p1 -b .rpmluaprint~ REDIFF
+#patch210 -p1 -b .rpmpythonmod~ REDIFF
+#patch211 -p1 -b .rpmpythontrunc~ MERGED
+#patch212 -p1 -b .static~ REDIFF
 %patch215 -p1 -b .tok_free~
-%patch216 -p1 -b .xmalloc~
+#patch216 -p1 -b .xmalloc~ MERGED
 %patch217 -p1 -b .libpackage~
-%patch219 -p1 -b .etcrpm~
+#patch219 -p1 -b .etcrpm~ REDIFF
 %patch221 -p1 -b .aarch64_multiarch~
-%patch222 -p1 -b .update_config.subguess~
-%patch223 -p1 -b .cmakedeps~
+#patch222 -p1 -b .update_config.subguess~ REDIFF
+#patch223 -p1 -b .cmakedeps~ REDIFF
 #patch224 -p1 -b .ro~
 %patch225 -p1 -b .armx~
 %ifnarch %{arm}
@@ -1088,20 +1088,20 @@ popd
 %endif
 %patch227 -p1 -b .outputsync~
 %patch228 -p1 -b .timestamps~
-%patch229 -p1 -b .str_term~
-%patch230 -p1 -b .str_overlap~
-%patch231 -p1 -b .pcnomuteerr~
+#patch229 -p1 -b .str_term~ REDIFF
+#patch230 -p1 -b .str_overlap~ MERGED
+#patch231 -p1 -b .pcnomuteerr~ REDIFF
 %patch232 -p1 -b .exitifnone~
 %patch233 -p1 -b .noarb~
 %patch234 -p1 -b .querynoise~
 %patch235 -p1 -b .fixfdigests~
 %patch236 -p1 -b .asciinullterm~
 #patch237 -p1 -b .broken_verify~
-%patch238 -p1 -b .lua_posix~
+#patch238 -p1 -b .lua_posix~ REDIFF
 %patch239 -p1 -b .gst_typo~
-%patch240 -p1 -b .openmp~
+#patch240 -p1 -b .openmp~ REDIFF
 %patch241 -p1 -b .closefds~
-%patch242 -p1 -b .fixintlua~
+#patch242 -p1 -b .fixintlua~ REDIFF
 %patch243 -p1 -b .rubyarchdirs~
 %patch244 -p1 -b .rubyabiver~
 %patch245 -p1 -b .gem_spec~
@@ -1111,63 +1111,63 @@ popd
 #patch249 -p1 -b .fixembtypo~
 %patch250 -p1 -b .rpmlua_internal~
 %patch251 -p1 -b .order~
-%patch252 -p1 -b .deprecate_epoch~
+#patch252 -p1 -b .deprecate_epoch~ REDIFF
 %patch253 -p1 -b .twiddle~
-%patch254 -p1 -b .ne_redirect~
-%patch255 -p1 -b .silence_char_type~
-%patch256 -p1 -b .preserve_tag_type~
-%patch257 -p1 -b .namespace~
-%patch258 -p1 -b .gpg_parsing~
+#patch254 -p1 -b .ne_redirect~ REDIFF
+#patch255 -p1 -b .silence_char_type~ REDIFF
+#patch256 -p1 -b .preserve_tag_type~ REDIFF
+#patch257 -p1 -b .namespace~ REDIFF
+#patch258 -p1 -b .gpg_parsing~ REDIFF
 %patch259 -p1 -b .interpreter_script~
-%patch260 -p1 -b .missing_types~
+#patch260 -p1 -b .missing_types~ REDIFF
 %patch261 -p1 -b .unglobal~
 %patch262 -p1 -b .unpkg_dirdups~
-%patch263 -p1 -b .debugedit_segv~
-%patch264 -p1 -b .large_bss~
-%patch265 -p1 -b .clean_paths~
+#patch263 -p1 -b .debugedit_segv~ REDIFF
+#patch264 -p1 -b .large_bss~ MERGED
+#patch265 -p1 -b .clean_paths~ MERGED
 %patch266 -p1 -b .srcfilename~
-%patch267 -p1 -b .configure2_5x~
+#patch267 -p1 -b .configure2_5x~ REDIFF
 %patch268 -p1 -b .dlopen_req~
 %patch269 -p1 -b .rundir~
 %patch270 -p1 -b .nodefaultdocdir~
-%patch271 -p1 -b .noassert~
+#patch271 -p1 -b .noassert~ REDIFF
 %patch272 -p1 -b .remove_all_deptags~
 %patch273 -p1 -b .missing_prototype~
-%patch274 -p1 -b .perlembed_typo~
-%patch275 -p1 -b .fix_rpmpython_conds~
-%patch276 -p1 -b .system_header~
-%patch277 -p1 -b .multiarch~
+#patch274 -p1 -b .perlembed_typo~ REDIFF
+#patch275 -p1 -b .fix_rpmpython_conds~ REDIFF
+#patch276 -p1 -b .system_header~ REDIFF
+#patch277 -p1 -b .multiarch~ REDIFF
 %patch278 -p1 -b .fortify~
 %patch279 -p1 -b .clangdefault~
-%patch280 -p1 -b .file~
+#patch280 -p1 -b .file~ REDIFF
 %patch281 -p1 -b .python3~
-%patch282 -p1 -b .sameToolchain~
-%patch283 -p1 -b .configUpdate~
+#patch282 -p1 -b .sameToolchain~ REDIFF
+#patch283 -p1 -b .configUpdate~ REDIFF
 %patch284 -p1 -b .Oz~
 %patch285 -p1 -b .mklibname_fix~
 %patch286 -p1 -b .rubygems2.2
-%patch287 -p1 -b .morerubygems2
-%patch288 -p1 -b .urlgetfile~
+#patch287 -p1 -b .morerubygems2 REDIFF
+#patch288 -p1 -b .urlgetfile~ REDIFF
 %patch289 -p1 -b .tar~
-%patch290 -p1 -b .rpmds_offbyone~
-%patch291 -p1 -b .no_conf_target_host_build~
+#patch290 -p1 -b .rpmds_offbyone~ MERGED
+#patch291 -p1 -b .no_conf_target_host_build~ REDIFF
 %patch292 -p1 -b .sharedstatedir~
 %patch293 -p1 -b .tpm_ac~
 %patch294 -p1 -b .EVRD~
 %patch295 -p1 -b .lib_soname~
-%patch296 -p1 -b .noc99_types~
-%patch297 -p1 -b .platform_detect~
-%patch298 -p1 -b .ignore_missinc_macros~
-%patch299 -p1 -b .ac_syntax~
-%patch300 -p1 -b .tag_endian~
+#patch296 -p1 -b .noc99_types~ REDIFF
+#patch297 -p1 -b .platform_detect~ REDIFF
+#patch298 -p1 -b .ignore_missinc_macros~ REDIFF
+#patch299 -p1 -b .ac_syntax~ REDIFF
+#patch300 -p1 -b .tag_endian~ REDIFF
 # ???
 #patch301 -p1 -b .showrc_memleak~
-%patch302 -p1 -b .rpmqv_cc~
-%patch303 -p1 -b .hashed_inode~
+#patch302 -p1 -b .rpmqv_cc~ REDIFF
+#patch303 -p1 -b .hashed_inode~ MERGED
 %patch304 -p1 -b .init_pw_gr~
-%patch305 -p1 -b .hardlink_segafault~
-%patch306 -p1 -b .platform_sysinfo~
-%patch307 -p1 -b .py_confread~
+#patch305 -p1 -b .hardlink_segafault~ REDIFF
+#patch306 -p1 -b .platform_sysinfo~ MERGED
+#patch307 -p1 -b .py_confread~ REDIFF
 #disabled as it breaks the way we have things (empty version number as per fedora)
 #patch308 -p1 -b .pld_ruby20~
 #disabled as it breaks building extensions on ruby 2.2
@@ -1178,19 +1178,19 @@ popd
 %patch313 -p1 -b .noghost~
 %patch314 -p1 -b .rpmvsf~
 %patch315 -p1 -b .return_type~
-%patch316 -p1 -b .nested_func~
+#patch316 -p1 -b .nested_func~ REDIFF
 %patch317 -p1 -b .implicit_func_decl~
-%patch318 -p1 -b .sstate_check~
+#patch318 -p1 -b .sstate_check~ REDIFF
 %patch319 -p1 -b .no_comp_debug~
 %if %{with lto}
 %patch320 -p1 -b .flto~
 %endif
-%patch321 -p1 -b .nocmakemacros~
+#patch321 -p1 -b .nocmakemacros~ REDIFF
 rm macros/cmake
-%patch322 -p1 -b .ltupdate~
+#patch322 -p1 -b .ltupdate~ REDIFF
 %patch323 -p1 -b .mono~
-%patch324 -p1 -b .ld_clang
-%patch325 -p1 -b .pkgconfigdeps~
+#patch324 -p1 -b .ld_clang REDIFF
+#patch325 -p1 -b .pkgconfigdeps~ REDIFF
 %ifarch %armx x86_64
 %patch326 -p1 -b .mfpu_neon
 %endif
@@ -1229,6 +1229,9 @@ LDFLAGS="-fopenmp" \
 		--enable-shared \
 		--enable-static \
 		--with-pic \
+		--enable-build-pic \
+		--enable-build-pie \
+		--enable-build-lto \
 %if %{with debug}
 		--enable-debug \
 		--with-valgrind \
@@ -1289,8 +1292,8 @@ LDFLAGS="-fopenmp" \
 		--with-syck=external \
 		--with-file=external \
 		--with-path-magic=%{_datadir}/misc/magic.mgc \
-		--with-beecrypt=external \
-		--with-usecrypto=beecrypt \
+		--with-tomcrypt=external \
+		--with-usecrypto=tomcrypt \
 		--with-keyutils=external \
 		--with-neon=external \
 		--with-acl \
