@@ -230,8 +230,6 @@ Patch93:	rpm-5.4.5-rubygems-add-missing-newline.patch
 Patch94:	rpm-5.4.15-generate-haskell-dependencies.patch
 # status: same as for other dep gen patches
 Patch95:	rpm-5.4.5-drop-some-interpreter-deps.patch
-# status: probably okay to merge..
-Patch96:	rpm-5.4.5-fix-elf-interpreter-resolving-breaking-uclibc-deps.patch
 # status: probably okay to merge
 Patch97:	rpm-5.4.5-set-proper-file-color-for-scripts-using-env-in-shellbang.patch
 Patch98:	rpm-5.4.5-update-rpmfc-when-removing-overlapping-dependencies.patch
@@ -251,8 +249,6 @@ Patch104:	rpm-5.4.5-skip-dependencies-for-character-devices.patch
 Patch106:	rpm-5.4.5-break-out-of-elf-link-loop.patch
 # status: probably okay to merge
 Patch107:	rpm-5.4.5-rpmfc-apply-python-coloring-from-magic.patch
-# status: same as for other dep gen patches
-Patch109:	rpm-5.4.5-fix-generation-of-uclibc-deps-on-non-lib64.patch
 # status: idem
 Patch110:	rpm-5.4.7-only-generate-devel-deps-for-symlinks-start-with-lib.patch
 # status: keep locally
@@ -369,12 +365,8 @@ Patch158:	rpm-5.4.10-fix-neon-saving-error-pages-as-target-file.patch
 # status: needs to be discussed upstream before thinking about merging
 Patch159:	rpm-5.4.10-support-ignore-arch-and-os-again.patch
 Patch160:	rpm-5.4.10-bump-up-to-default-xz-compression-level.patch
-# fix so that we search through library dirs within buildroot for uclibc libraries
-# status: same as for other dep gen patches
-Patch161:	rpm-5.4.10-search-through-buildroot-library-dirs-for-uclibc-deps.patch
 # status: same as for other dep gen patches
 Patch162:	rpm-5.4.10-fix-uninitialized-variable.patch
-Patch163:	rpm-5.4.10-new-moondrake-name.patch
 # pass --disable-silent-rules to configure so that we'll by default always get
 # consistent behaviour of verbose build output
 # status: ready
@@ -525,9 +517,6 @@ Patch219:	rpm-5.4.14-allow-overriding-etcrpm-etc-during-runtime.patch
 Patch221:	0001-fix-aarch64-rpm5-multiarch-headers-scripting.patch
 Patch222:	fix-config-sub-in-configure.patch
 Patch223:	rpm-5.4.15-cmake-dependency-generator.patch
-# there's some funky businiss going on with ABF where omv macros gets used,
-# so let's make our variables read only for now...
-Patch224:	rpm-5.4.14-moondrake-ro-variables.patch
 Patch225:	rpm-5.4.14-add-more-archs-to-arm-macro.patch
 Patch226:	rpm-5.4.14-support-multithreaded-xz-compression.patch
 Patch227:	rpm-5.4.14-add-output-sync-to-make-macro.patch
@@ -992,7 +981,6 @@ popd
 %patch93 -p1 -b .rb_newline~
 %patch94 -p1 -b .haskell~
 %patch95 -p1 -b .interpret_deps~
-%patch96 -p1 -b .uclibc~
 %patch97 -p1 -b .env_color~
 %patch98 -p1 -b .fc_overlap~
 %patch99 -p1 -b .py_macros~
@@ -1003,7 +991,6 @@ popd
 %patch104 -p1 -b .skip_chrdev~
 %patch106 -p1 -b .link_loop~
 %patch107 -p1 -b .python_color~
-%patch109 -p1 -b .uclibc_nolib64~
 %patch110 -p1 -b .req_devel~
 %patch112 -p1 -b .gnu_hash~
 %patch113 -p1 -b .depoch_rpmlib~
@@ -1044,7 +1031,6 @@ popd
 %patch159 -p1 -b .ignorearch~
 %patch138 -p1 -b .trigtrans~
 %patch160 -p1 -b .xz_level~
-%patch161 -p1 -b .uclibc_buildroot~
 %patch162 -p1 -b .uninitialized~
 #patch163 -p1 -b .mdk~
 %patch164 -p1 -b .verbosebuilds~
