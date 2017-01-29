@@ -1,16 +1,7 @@
---- rpm-5.4.9/macros/macros.in.script_macros~	2012-05-07 00:36:51.000000000 +0200
-+++ rpm-5.4.9/macros/macros.in	2012-05-15 01:39:37.382649841 +0200
-@@ -993,63 +993,63 @@ $_arbitrary_tags_tests	Foo:Bar
- # XXX	%{load:...}, then loading will CEASE at that point in the file.
- #==============================================================================
- # ---- SELinux configuration macros.
--#%%{load:%{_usrlibrpm}/macros.d/selinux}
-+%{load:%{_usrlibrpm}/macros.d/selinux}
- 
- #==============================================================================
- # ---- rpmbuild macros.
--#%%{load:%{_usrlibrpm}/macros.rpmbuild}
-+%{load:%{_usrlibrpm}/macros.rpmbuild}
+diff -Naur rpm-5.4.17/macros/macros.in rpm-5.4.17.tpg/macros/macros.in
+--- rpm-5.4.17/macros/macros.in	2016-05-08 19:04:41.000000000 +0000
++++ rpm-5.4.17.tpg/macros/macros.in	2017-01-29 08:13:38.191995004 +0000
+@@ -1059,55 +1059,55 @@
  
  #------------------------------------------------------------------------
  # cmake(...) configuration
