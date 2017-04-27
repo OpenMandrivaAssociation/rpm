@@ -82,7 +82,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}40
+Release:	%{?prereldate:0.%{prereldate}.}41
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -484,7 +484,7 @@ Patch193:	rpm-5.4.10-fix-memalloc-realloc-to-0.patch
 #  OK/NOTFOUND/FAIL for success/non-fatal/fatal errors. Abusing "notfound"
 #  for warning result is ugly but differentiating it from the other
 #  cases allows callers to ignore SCRIPT_ERROR if they choose to
-#  implement stop and start. 
+#  implement stop and start.
 # status: ready
 Patch194:	rpm-5.4.10-implement-start-and-stop-callbacks.patch
 #From ff0ece3f6be58c8c28a766bdee5ed36daf1727b1 Mon Sep 17 00:00:00 2001
@@ -668,6 +668,7 @@ Patch326:	rpm-5.4.15-neon-optional.patch
 Patch327:	rpm-5.4.15-libarchive-3.2.0-insecure-cpio.patch
 # Fix mdkversion to work with the 2015.0 -> 3 visible version change
 Patch328:	rpm-5.4.15-mdkversion-for-omlx3.patch
+Patch329:	setup_linker_bfd-rpm-5.4.15.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -718,7 +719,7 @@ BuildRequires:	%{bdb}-utils
 BuildRequires:	perl-devel
 %endif
 %if %{with python}
-BuildRequires:	pkgconfig(python) = 2.7 
+BuildRequires:	pkgconfig(python) = 2.7
 %endif
 %if %{with js}
 BuildRequires:	pkgconfig(mozjs185)
@@ -1210,6 +1211,7 @@ rm macros/cmake
 %endif
 %patch327 -p1 -b .libarchive_cpio
 %patch328 -p1 -b .mkdv~
+%patch329 -p1 -b .bfd
 # Misnamed aclocal.m4
 rm neon/acinclude.m4
 
@@ -1449,7 +1451,7 @@ mv %{buildroot}%{_bindir}/rpm %{buildroot}/bin/rpm
 for i in platform/*macros; do
     install -m644 $i -D %{buildroot}%{_usrlibrpm}/platform/$(echo `basename $i`|sed -e 's#\.#/#g')
 done
- 
+
 install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/legacy_compat.macros
 install -m755 %{SOURCE6} -D %{buildroot}%{_rpmhome}/git-repository--after-tarball
 install -m755 %{SOURCE7} -D %{buildroot}%{_rpmhome}/git-repository--apply-patch
