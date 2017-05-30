@@ -88,7 +88,7 @@ Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
 # snapshot from rpm-5_4 branch: 'cvs -d :pserver:anonymous@rpm5.org:/cvs co -r rpm-5_4 rpm'
 # tarball generated with './devtool tarball.xz'
-Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}-%{srcver}.tar.gz
+Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}.omacoagulate-%{srcver}.tar.gz
 #Source1:	bootstrap.spec
 # These are a bit dated with a lot of redundant macros and many of them no
 # of use at all anymore! Should ideally just contain the macros different
