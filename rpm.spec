@@ -9,7 +9,6 @@
 %bcond_with	debug
 %bcond_without	ossp_uuid
 %bcond_without	augeas
-%bcond_without	multiarch
 # As of clang 3.7, gcc 5.1, binutils 2.25.51, LTO on i586
 # is buggy and causes numerous compiler crashes.
 # Let's avoid it for now.
@@ -71,12 +70,6 @@
 %define	libname	%mklibname rpm %{libver}
 %define	devname	%mklibname -d rpm
 %define	static	%mklibname -d -s rpm
-
-%ifarch aarch64
-# "linux32 rpm -E %{_arch}" returns aarch64 on aarch64...
-# Force it to do the right thing for now
-%define multiarch_platform multiarch-arm-%{_target_os}
-%endif
 
 Summary:	The RPM package management system
 Name:		rpm
@@ -668,6 +661,8 @@ Patch326:	rpm-5.4.15-neon-optional.patch
 Patch327:	rpm-5.4.15-libarchive-3.2.0-insecure-cpio.patch
 # Fix mdkversion to work with the 2015.0 -> 3 visible version change
 Patch328:	rpm-5.4.15-mdkversion-for-omlx3.patch
+# Fix build
+Patch329:	rpm-5.4.15-clang-4.0.1.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -765,6 +760,7 @@ Requires(pre):	coreutils
 %rename		multiarch-utils
 %rename		rpm-mandriva-setup
 %rename		rpm-manbo-setup
+Requires:	rpm-openmandriva-setup >= 0.1.0
 Obsoletes:	haskell-macros < 6.4-5
 
 %description
@@ -858,6 +854,7 @@ Conflicts:	rpm < 1:5.4.4-32
 # avoid depnendencies outside of standard perl library, rather make optional
 %define __noautoreqfiles %{_rpmhome}/bin/pom2spec
 Suggests:	perl(LWP::UserAgent) perl(XML::LibXML)
+Requires:	rpm-openmandriva-setup-build >= 0.1.0
 
 %description	build
 This package contains scripts and executable programs that are used to
@@ -1210,6 +1207,7 @@ rm macros/cmake
 %endif
 %patch327 -p1 -b .libarchive_cpio
 %patch328 -p1 -b .mkdv~
+%patch329 -p1 -b .build~
 # Misnamed aclocal.m4
 rm neon/acinclude.m4
 
@@ -1343,10 +1341,7 @@ LDFLAGS="-fopenmp" \
 		--with-rundir=/run \
 		--with-vendor=mandriva \
 		--enable-build-warnings \
-		--with-platform-detect=yes \
-%if %{with multiarch}
-		--with-multiarch
-%endif
+		--with-platform-detect=yes
 
 # XXX: Making ie. a --with-pre-macros option might be more aestethic and easier
 # of use to others if pushed back upstream?
@@ -1449,21 +1444,32 @@ install -d %{buildroot}%{_docdir}/rpm
 cp -r apidocs/html %{buildroot}%{_docdir}/rpm
 %endif
 
-install -d %{buildroot}%{multiarch_bindir}
-install -d %{buildroot}%{multiarch_includedir}
-%if "%{_lib}" == "lib64"
-%ifnarch aarch64
-install -d %{buildroot}%(linux32 rpm -E %%{multiarch_bindir})
-install -d %{buildroot}%(linux32 rpm -E %%{multiarch_includedir})
-%else
-install -d %{buildroot}
-install -d %{buildroot}%{multiarch_includedir}
-%endif
-%endif
-
 # should really be handled by make script..
 ln -f %{buildroot}%{_rpmhome}/bin/{rpmlua,lua}
 ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
+
+# Remove stuff we get from rpm-openmandriva-setup
+# and rpm-openmandriva-setup-build
+cd %{buildroot}%{_usrlibrpm}
+rm -rf \
+	macros.d/gstreamer \
+	macros.d/haskell \
+	macros.d/java \
+	macros.d/kernel \
+	macros.d/libtool \
+	macros.d/mandriva \
+	macros.d/mono \
+	macros.d/perl \
+	macros.d/php \
+	macros.d/pkgconfig \
+	macros.d/python \
+	macros.d/ruby \
+	macros.d/selinux \
+	macros.d/tcl \
+	platform \
+	brp-compress \
+	{cmake,haskell,kmod-,pkgconfig}deps.sh \
+	macros.d/cmakedeps
 
 # TODO: review which files goes into what packages...?
 %files -f %{name}.lang
@@ -1472,9 +1478,6 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %exclude %{_docdir}/rpm/html
 %endif
 /bin/rpm
-%if %{with multiarch}
-%{_bindir}/multiarch-dispatch
-%endif
 %{_bindir}/rpmconstant*
 %{_bindir}/rpm2cpio*
 %{_rpmhome}/bin/augtool
@@ -1504,19 +1507,15 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %dir %{_localstatedir}/lib/rpm/tmp
 
 
-%{_rpmhome}/macros.d/*
 %{_rpmhome}/cpuinfo.yaml
 %{_rpmhome}/macros
 %{_rpmhome}/rpmpopt
-%{_rpmhome}/platform/*/macros
 %config(noreplace) %{_localstatedir}/lib/rpm/DB_CONFIG
 
 %dir %{_localstatedir}/spool/repackage
 %dir %{_rpmhome}
 %dir %{_rpmhome}/bin
 %dir %{_rpmhome}/lib
-%dir %{_rpmhome}/platform/
-%dir %{_rpmhome}/platform/*/
 %dir %{_rpmhome}/macros.d
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/macros
@@ -1533,25 +1532,9 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_sysconfdir}/cron.daily/rpm
 %config(noreplace,missingok) %{_sysconfdir}/logrotate.d/rpm
 
-%if %{with multiarch}
-%dir %{multiarch_bindir}
-%dir %{multiarch_includedir}
-%ifnarch aarch64
-%if "%{_lib}" == "lib64"
-%dir %(linux32 rpm -E %%{multiarch_bindir})
-%dir %(linux32 rpm -E %%{multiarch_includedir})
-%endif
-%endif
-
-%{_includedir}/multiarch-dispatch.h
-%endif
-
 %files build
 %{_bindir}/gendiff
 %{_bindir}/rpmbuild
-%if %{with multiarch}
-%{_bindir}/multiarch-platform
-%endif
 #%%{_rpmhome}/bin/abi-compliance-checker.pl
 %{_rpmhome}/bin/api-sanity-autotest.pl
 %{_rpmhome}/bin/api-sanity-checker.pl
@@ -1578,9 +1561,6 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/vcheck
 %{_rpmhome}/brp-*
 %{_rpmhome}/check-files
-%if %{with multiarch}
-%{_rpmhome}/check-multiarch-files
-%endif
 #%%{_rpmhome}/cross-build
 %{_rpmhome}/desktop-file.prov
 %{_rpmhome}/find-debuginfo.sh
@@ -1595,13 +1575,8 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/git-repository--after-tarball
 %{_rpmhome}/git-repository--apply-patch
 %{_rpmhome}/gstreamer.sh
-%{_rpmhome}/haskelldeps.sh
 %{_rpmhome}/http.req
 %{_rpmhome}/javadeps.sh
-%{_rpmhome}/kmod-deps.sh
-%if %{with multiarch}
-%{_rpmhome}/mkmultiarch
-%endif
 %{_rpmhome}/mono-find-provides
 %{_rpmhome}/mono-find-requires
 %{_rpmhome}/executabledeps.sh
@@ -1612,8 +1587,6 @@ ln -f %{buildroot}%{_rpmhome}/bin/{rpmluac,luac}
 %{_rpmhome}/perl.req
 %{_rpmhome}/php.prov
 %{_rpmhome}/php.req
-%{_rpmhome}/cmakedeps.sh
-%{_rpmhome}/pkgconfigdeps.sh
 %{_rpmhome}/pythondeps.sh
 %{_rpmhome}/pythoneggs.py
 %{_rpmhome}/rubygems.rb
