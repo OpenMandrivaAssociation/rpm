@@ -1,0 +1,102 @@
+From 2f91428fa8cdde2338d6c5ed4c2a689c5714cc35 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Wed, 21 Jun 2017 20:40:52 +0200
+Subject: [PATCH] impose thread/memory limit on 32 bit archs
+
+This is to avoid exceeding memory address space when using
+multithreaded xz compression
+---
+ ...mit-on-32-bit-to-adjust-number-of-threads.patch | 51 ++++++++++++++++++++++
+ rpm.spec                                           |  4 +-
+ 2 files changed, 54 insertions(+), 1 deletion(-)
+ create mode 100644 rpm-5.4.15-impose-memlimit-on-32-bit-to-adjust-number-of-threads.patch
+
+diff --git a/rpm-5.4.15-impose-memlimit-on-32-bit-to-adjust-number-of-threads.patch b/rpm-5.4.15-impose-memlimit-on-32-bit-to-adjust-number-of-threads.patch
+new file mode 100644
+index 0000000..6cc6e95
+--- /dev/null
++++ b/rpm-5.4.15-impose-memlimit-on-32-bit-to-adjust-number-of-threads.patch
+@@ -0,0 +1,51 @@
++From f6cf19eb7420cf65efce617b01f07fb56ee0bcdd Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
++Date: Tue, 13 Oct 2015 01:48:44 +0200
++Subject: [PATCH] impose memory limit on 32 bit archs to avoid exceeding
++ memory address space when using multithreaded xz
++ compression
++
++---
++ ...mit-on-32-bit-to-adjust-number-of-threads.patch | 31 ++++++++++++++++++++++
++ create mode 100644 rpm-5.4.15-impose-memlimit-on-32-bit-to-adjust-number-of-threads.patch
++
++diff --git a/rpm-5.4.15-impose-memlimit-on-32-bit-to-adjust-number-of-threads.patch b/rpm-5.4.15-impose-memlimit-on-32-bit-to-adjust-number-of-threads.patch
++new file mode 100644
++index 0000000..e294962
++--- /dev/null
+++++ b/rpm-5.4.15-impose-memlimit-on-32-bit-to-adjust-number-of-threads.patch
++@@ -0,0 +1,31 @@
+++--- rpm-5.4.15/rpmio/xzdio.c.thread_memlimit~	2015-10-13 01:41:01.678353234 +0200
++++++ rpm-5.4.15/rpmio/xzdio.c	2015-10-13 01:41:06.567163341 +0200
+++@@ -73,6 +73,28 @@ static XZFILE *xzopen_internal(const cha
+++     int threads = rpmExpandNumeric("%{_xz_threads}");
+++     uint64_t mem_limit = rpmExpandNumeric("%{_xz_memlimit}");
+++
++++#if __WORDSIZE == 32
++++    /* In 32 bit environment, required memory easily exceeds memory address
++++     * space limit if compressing using multiple threads.
++++     * By setting a memory limit, liblzma will automatically adjust number
++++     * of threads to avoid exceeding memory.
++++     */
++++    if (threads && !mem_limit) {
++++	struct utsname u;
++++
++++	mem_limit = (SIZE_MAX>>1) + (SIZE_MAX>>29);
++++	/* While a 32 bit linux kernel will have an address limit of 3GiB
++++	 * for processes (which is why set the memory limit to 2.5GiB as a safety
++++	 * margin), 64 bit kernels will have a limit of 4GiB for 32 bit binaries.
++++	 * Therefore the memory limit should be higher if running on a 64 bit
++++	 * kernel, so we increase it to 3,5GiB.
++++	 */
++++	uname(&u);
++++	if (strstr(u.machine, "64"))
++++	    mem_limit += (SIZE_MAX>>30);
++++    }
++++#endif
++++
+++     for (; *mode != '\0'; mode++) {
+++ 	if (*mode == 'w')
+++ 	    encoding = 1;
++-- 
++1.7.11.3
++
+diff --git a/rpm.spec b/rpm.spec
+index cf759bd..00c3de4 100644
+--- a/rpm.spec
++++ b/rpm.spec
+@@ -75,7 +75,7 @@ Summary:	The RPM package management system
+ Name:		rpm
+ Epoch:		1
+ Version:	%{libver}.%{minorver}
+-Release:	%{?prereldate:0.%{prereldate}.}41
++Release:	%{?prereldate:0.%{prereldate}.}42
+ License:	LGPLv2.1+
+ Group:		System/Configuration/Packaging
+ URL:		http://rpm5.org/
+@@ -663,6 +663,7 @@ Patch327:	rpm-5.4.15-libarchive-3.2.0-insecure-cpio.patch
+ Patch328:	rpm-5.4.15-mdkversion-for-omlx3.patch
+ # Fix build
+ Patch329:	rpm-5.4.15-clang-4.0.1.patch
++Patch330:	rpm-5.4.15-impose-memlimit-on-32-bit-to-adjust-number-of-threads.patch
+ 
+ BuildRequires:	autoconf >= 2.57
+ BuildRequires:	bzip2-devel
+@@ -1208,6 +1209,7 @@ rm macros/cmake
+ %patch327 -p1 -b .libarchive_cpio
+ %patch328 -p1 -b .mkdv~
+ %patch329 -p1 -b .build~
++%patch330 -p1 -b .threads_memlimit~
+ # Misnamed aclocal.m4
+ rm neon/acinclude.m4
+ 
+-- 
+2.10.2
+
