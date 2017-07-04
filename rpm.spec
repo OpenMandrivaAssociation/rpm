@@ -477,7 +477,7 @@ Patch193:	rpm-5.4.10-fix-memalloc-realloc-to-0.patch
 #  OK/NOTFOUND/FAIL for success/non-fatal/fatal errors. Abusing "notfound"
 #  for warning result is ugly but differentiating it from the other
 #  cases allows callers to ignore SCRIPT_ERROR if they choose to
-#  implement stop and start. 
+#  implement stop and start.
 # status: ready
 Patch194:	rpm-5.4.10-implement-start-and-stop-callbacks.patch
 #From ff0ece3f6be58c8c28a766bdee5ed36daf1727b1 Mon Sep 17 00:00:00 2001
@@ -1211,6 +1211,16 @@ rm macros/cmake
 # Misnamed aclocal.m4
 rm neon/acinclude.m4
 
+# go back to gcc due
+# https://issues.openmandriva.org/show_bug.cgi?id=1921
+# exist
+# enabled 5 july 2017
+%ifarch %arm
+sed -i 's!/usr/bin/clang -E!@CPP@!g' macros/macros.rpmbuild.in
+sed -i 's!/usr/bin/clang++!@CXX@!g' macros/macros.rpmbuild.in
+sed -i 's!/usr/bin/clang!@CC@!g' macros/macros.rpmbuild.in
+%endif
+
 #required by P55, P80, P81, P94..
 ./autogen.sh
 
@@ -1434,7 +1444,7 @@ mv %{buildroot}%{_bindir}/rpm %{buildroot}/bin/rpm
 for i in platform/*macros; do
     install -m644 $i -D %{buildroot}%{_usrlibrpm}/platform/$(echo `basename $i`|sed -e 's#\.#/#g')
 done
- 
+
 install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/legacy_compat.macros
 install -m755 %{SOURCE6} -D %{buildroot}%{_rpmhome}/git-repository--after-tarball
 install -m755 %{SOURCE7} -D %{buildroot}%{_rpmhome}/git-repository--apply-patch
