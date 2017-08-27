@@ -75,7 +75,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}41
+Release:	%{?prereldate:0.%{prereldate}.}42
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -713,7 +713,7 @@ BuildRequires:	%{bdb}-utils
 BuildRequires:	perl-devel
 %endif
 %if %{with python}
-BuildRequires:	pkgconfig(python) = 2.7
+BuildRequires:	pkgconfig(python2)
 %endif
 %if %{with js}
 BuildRequires:	pkgconfig(mozjs185)
@@ -831,11 +831,11 @@ Requires:	rpm = %{EVRD}
 Requires:	spec-helper >= 0.31.12
 Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.2
 %if %{without bootstrap}
-Requires:	python-rpm = %{EVRD}
+Requires:	python2-rpm = %{EVRD}
 %if "%{distepoch}" < "2015.0"
 Requires:	python-pkg-resources
 BuildRequires:	python-pkg-resources
-%define	py2_platsitedir	%py_platsitedir
+%define	python2_sitearch	%py_platsitedir
 %else
 Requires:	python2-pkg-resources
 Requires:	python-pkg-resources
@@ -861,16 +861,19 @@ This package contains scripts and executable programs that are used to
 build packages using RPM.
 
 %if %{with python}
-%package -n	python-rpm
+%package -n	python2-rpm
 Summary:	Python bindings for apps which will manipulate RPM packages
 Group:		Development/Python
+# To keep dependencies from breaking...
+Obsoletes:	python-rpm < %{EVRD}
+Provides:	python-rpm = %{EVRD}
 
-%description -n	python-rpm
+%description -n	python2-rpm
 The rpm-python package contains a module which permits applications
 written in the Python programming language to use the interface
 supplied by RPM (RPM Package Manager) libraries.
 
-This package should be installed if you want to develop Python
+This package should be installed if you want to develop Python 2
 programs that will manipulate RPM packages and databases.
 %endif
 
@@ -1414,8 +1417,8 @@ EOF
 
 # Get rid of unpackaged files
 # XXX: is there any of these we might want to keep?
-for f in %{py2_platsitedir}/poptmodule.a %{py2_platsitedir}/_rpmmodule.a \
-	%{py2_platsitedir}/rpm/*.a %{_rpmhome}/*.a %{_rpmhome}/lib/*.a\
+for f in %{python2_sitearch}/poptmodule.a %{python2_sitearch}/_rpmmodule.a \
+	%{python2_sitearch}/rpm/*.a %{_rpmhome}/*.a %{_rpmhome}/lib/*.a\
 	%{_rpmhome}/{Specfile.pm,cpanflute2,cpanflute,sql.prov,sql.req,tcl.req} \
 	%{_rpmhome}/{config.site,cross-build,rpmdiff.cgi} \
 	%{_rpmhome}/trpm %{_bindir}/rpmdiff; do
@@ -1672,13 +1675,13 @@ rm -rf \
 %endif
 
 %if %{with python}
-%files -n python-rpm
+%files -n python2-rpm
 %if %{with embed}
 %{_rpmhome}/lib/rpmpython.so
 %endif
-%dir %{py2_platsitedir}/rpm
-%{py2_platsitedir}/rpm/*.py
-%{py2_platsitedir}/rpm/*.so
+%dir %{python2_sitearch}/rpm
+%{python2_sitearch}/rpm/*.py
+%{python2_sitearch}/rpm/*.so
 %endif
 
 %if %{with ruby}
