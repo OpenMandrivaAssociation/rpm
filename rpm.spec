@@ -663,6 +663,7 @@ Patch327:	rpm-5.4.15-libarchive-3.2.0-insecure-cpio.patch
 Patch328:	rpm-5.4.15-mdkversion-for-omlx3.patch
 # Fix build
 Patch329:	rpm-5.4.15-clang-4.0.1.patch
+Patch330:	rpm-5.4.15-impose-memlimit-on-32-bit-to-adjust-number-of-threads.patch
 
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bzip2-devel
@@ -1211,6 +1212,7 @@ rm macros/cmake
 %patch327 -p1 -b .libarchive_cpio
 %patch328 -p1 -b .mkdv~
 %patch329 -p1 -b .build~
+%patch330 -p1 -b .threads_memlimit~
 # Misnamed aclocal.m4
 rm neon/acinclude.m4
 
