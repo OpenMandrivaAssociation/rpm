@@ -1219,11 +1219,11 @@ rm neon/acinclude.m4
 # https://issues.openmandriva.org/show_bug.cgi?id=1921
 # exist
 # disabled 10.10.2016
-#% ifarch %arm
-#sed -i 's!/usr/bin/clang -E!@CPP@!g' macros/macros.rpmbuild.in
-#sed -i 's!/usr/bin/clang++!@CXX@!g' macros/macros.rpmbuild.in
-#sed -i 's!/usr/bin/clang!@CC@!g' macros/macros.rpmbuild.in
-#% endif
+%ifarch %arm
+sed -i 's!/usr/bin/clang -E!@CPP@!g' macros/macros.rpmbuild.in
+sed -i 's!/usr/bin/clang++!@CXX@!g' macros/macros.rpmbuild.in
+sed -i 's!/usr/bin/clang!@CC@!g' macros/macros.rpmbuild.in
+%endif
 
 #required by P55, P80, P81, P94..
 ./autogen.sh

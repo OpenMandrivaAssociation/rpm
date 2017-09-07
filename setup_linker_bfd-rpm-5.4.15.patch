@@ -2,15 +2,6 @@ diff --git a/macros/mandriva.in b/macros/mandriva.in
 index 7fa54b2..4dd6f42 100644
 --- a/macros/mandriva.in
 +++ b/macros/mandriva.in
-@@ -46,7 +46,7 @@
-
- # Dynamic EVRD tags macro for use with versioned provides/requires in place of
- # '%{version}-%{release}', ie. to automatically add distepoch or epoch if present
--%EVRD			%{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}%{?distepoch::%{distepoch}}}
-+%EVRD			%{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}%{?distepoch::%{distepoch}}}
-
- %rename() \
- Obsoletes:	%{1} < %{?2}%{!?2:%{EVRD}} \
 @@ -372,6 +372,12 @@ GCONF_CONFIG_SOURCE=`%{_gconftool_bin} --get-default-source` %{_gconftool_bin} -
    fi ;} \
    %{nil}
