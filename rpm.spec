@@ -3,52 +3,52 @@
 %endif
 
 %define python_version 2.7
-%define	_target_vendor	mandriva
+%define	_target_vendor mandriva
 
-%bcond_with	bootstrap
-%bcond_with	debug
-%bcond_without	ossp_uuid
-%bcond_without	augeas
+%bcond_with bootstrap
+%bcond_with debug
+%bcond_without ossp_uuid
+%bcond_without augeas
 # As of clang 3.7, gcc 5.1, binutils 2.25.51, LTO on i586
 # is buggy and causes numerous compiler crashes.
 # Let's avoid it for now.
 %ifarch %{ix86}
-%bcond_with	lto
+%bcond_with lto
 %else
-%bcond_without	lto
+%bcond_without lto
 %endif
 
 #XXX: this macro is a bit awkward, better can be done!
 %if %{with bootstrap}
-%bcond_with	perl
-%bcond_with	python
-%bcond_with	tcl
-%bcond_with	squirrel
-%bcond_with	embed
-%bcond_with	docs
-%bcond_with	sqlite
+%bcond_with perl
+%bcond_with python
+%bcond_with tcl
+%bcond_with squirrel
+%bcond_with embed
+%bcond_with docs
+%bcond_with sqlite
 %else
-%bcond_without	perl
-%bcond_without	python
-%bcond_without	tcl
-%bcond_without	squirrel
-%bcond_without	embed
+%bcond_without perl
+%bcond_without python
+%bcond_without tcl
+%bcond_without squirrel
+%bcond_without embed
 # disabled due to issues with texlive packages ~always being out of sync with
 # synthesis..
-%bcond_with	docs
+%bcond_with docs
 # use what's in berkeley db
-%bcond_with	sqlite
+%bcond_with sqlite
 %endif
 
-%bcond_with	notyet
+%bcond_with notyet
 %if %{with notyet}
-%bcond_without	xar
-%bcond_without	ruby
-%bcond_without	js
+%bcond_without xar
+%bcond_without ruby
+%bcond_without js
 %else
-%bcond_with	xar
-%bcond_with	ruby
-%bcond_with	js
+%bcond_with xar
+%bcond_with ruby
+%bcond_with js
 %endif
 
 %if %{with debug}
@@ -63,7 +63,7 @@
 %define	bdb		db52
 
 %define	libver		5.4
-%define	minorver	15
+%define	minorver	17
 %define	srcver		%{libver}.%{minorver}
 #define	prereldate	20110712
 
@@ -75,13 +75,13 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}42
+Release:	%{?prereldate:0.%{prereldate}.}1
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
 # snapshot from rpm-5_4 branch: 'cvs -d :pserver:anonymous@rpm5.org:/cvs co -r rpm-5_4 rpm'
 # tarball generated with './devtool tarball.xz'
-Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}-%{srcver}.tar.gz
+Source0:	ftp://ftp.jbj.org/pub/rpm-%{libver}.x/%{name}.omacoagulate-%{srcver}.tar.gz
 #Source1:	bootstrap.spec
 # These are a bit dated with a lot of redundant macros and many of them no
 # of use at all anymore! Should ideally just contain the macros different
@@ -669,7 +669,7 @@ BuildRequires:	bzip2-devel
 BuildRequires:	automake >= 1.8
 BuildRequires:	elfutils-devel >= 0.154
 BuildRequires:	sed >= 4.0.3B
-BuildRequires:	beecrypt-devel >= 4.2.1-8
+BuildRequires:	tomcrypt-devel >= 1.17
 BuildRequires:	ed
 BuildRequires:	gettext-devel
 BuildRequires:	byacc
@@ -945,6 +945,9 @@ pushd platform
 # breaks on arm?!?!
 %{_target_platform}-ar x %{SOURCE3}
 popd
+
+# KILL OLD PATCHES
+%if 0
 %patch111 -p1 -b .script_macros~
 # These patches has been commited hastily upstream for review,
 # keeping them around here for now untill finished...
@@ -1205,6 +1208,9 @@ rm macros/cmake
 %patch323 -p1 -b .mono~
 %patch324 -p1 -b .ld_clang
 %patch325 -p1 -b .pkgconfigdeps~
+%endif
+# KILL OLD PATCHES
+
 %ifarch %armx x86_64
 %patch326 -p1 -b .mfpu_neon
 %endif
@@ -1254,6 +1260,9 @@ LDFLAGS="-fopenmp" \
 		--enable-shared \
 		--enable-static \
 		--with-pic \
+		--enable-build-pic \
+		--enable-build-pie \
+		--enable-build-lto \
 %if %{with debug}
 		--enable-debug \
 		--with-valgrind \
@@ -1314,8 +1323,8 @@ LDFLAGS="-fopenmp" \
 		--with-syck=external \
 		--with-file=external \
 		--with-path-magic=%{_datadir}/misc/magic.mgc \
-		--with-beecrypt=external \
-		--with-usecrypto=beecrypt \
+		--with-tomcrypt=external \
+		--with-usecrypto=tomcrypt \
 		--with-keyutils=external \
 		--with-neon=external \
 		--with-acl \
