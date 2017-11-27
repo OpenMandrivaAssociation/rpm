@@ -1208,12 +1208,13 @@ rm macros/cmake
 %patch323 -p1 -b .mono~
 %patch324 -p1 -b .ld_clang
 %patch325 -p1 -b .pkgconfigdeps~
-%endif
-# KILL OLD PATCHES
 
 %ifarch %armx x86_64
 %patch326 -p1 -b .mfpu_neon
 %endif
+%endif
+# KILL OLD PATCHES
+
 %patch327 -p1 -b .libarchive_cpio
 %patch328 -p1 -b .mkdv~
 %patch329 -p1 -b .build~
