@@ -1217,7 +1217,8 @@ rm macros/cmake
 
 # applied patch327 -p1 -b .libarchive_cpio
 # applied patch328 -p1 -b .mkdv~
-%patch329 -p1 -b .build~
+# needs a rediff ?? patch329 -p1 -b .build~
+
 # Misnamed aclocal.m4
 rm neon/acinclude.m4
 
