@@ -1215,7 +1215,7 @@ rm macros/cmake
 %endif
 # KILL OLD PATCHES
 
-%patch327 -p1 -b .libarchive_cpio
+# applied patch327 -p1 -b .libarchive_cpio
 %patch328 -p1 -b .mkdv~
 %patch329 -p1 -b .build~
 # Misnamed aclocal.m4
