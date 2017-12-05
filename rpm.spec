@@ -2,6 +2,7 @@
 %define _xz_threads 0
 %endif
 
+%define _disable_rebuild_configure 1
 %define python_version 2.7
 %define	_target_vendor mandriva
 
@@ -1347,6 +1348,7 @@ LDFLAGS="-fopenmp" \
 %if 0
 # TODO: needs to be fixed properly for automatic detection in internal lua build
 %endif
+		--with-uuid=system \
 		--with-uuid=%{_libdir}:%{_includedir}/ossp-uuid \
 %else
 		--without-uuid \
