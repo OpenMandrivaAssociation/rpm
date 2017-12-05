@@ -10,6 +10,8 @@
 %bcond_with debug
 %bcond_without ossp_uuid
 %bcond_without augeas
+%bcond_with perl
+%bcond_with embed
 # As of clang 3.7, gcc 5.1, binutils 2.25.51, LTO on i586
 # is buggy and causes numerous compiler crashes.
 # Let's avoid it for now.
