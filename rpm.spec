@@ -1233,7 +1233,7 @@ sed -i 's!/usr/bin/clang!@CC@!g' macros/macros.rpmbuild.in
 %endif
 
 #required by P55, P80, P81, P94..
-./autogen.sh
+# nope ./autogen.sh
 
 # (proyvind): hack around to force static linking against liblzma because of
 # it's unstable multithreading API & ABI
