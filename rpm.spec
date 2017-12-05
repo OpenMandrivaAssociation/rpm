@@ -1238,7 +1238,7 @@ sed -i 's!/usr/bin/clang!@CC@!g' macros/macros.rpmbuild.in
 
 # (proyvind): hack around to force static linking against liblzma because of
 # it's unstable multithreading API & ABI
-sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
+# sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 
 %build
 # (tpg) these are needed to enable FLTO
