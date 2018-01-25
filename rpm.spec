@@ -75,7 +75,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}42
+Release:	%{?prereldate:0.%{prereldate}.}43
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -750,7 +750,7 @@ BuildRequires:	gcc
 Requires:	bsdcpio
 Requires:	gawk
 Requires:	coreutils
-Requires:	update-alternatives
+Requires:	chkconfig >= 1.10
 Requires:	%{bdb}_recover
 Suggests:	%{bdb}-utils
 Requires:	%{libname} = %{EVRD}
