@@ -1,0 +1,27 @@
+diff --git a/installplatform b/installplatform
+index ebade42..48d1b02 100755
+--- a/installplatform
++++ b/installplatform
+@@ -102,8 +102,20 @@ for ARCH in noarch `grep ^arch_canon $RPMRC | cut -d: -f2`; do
+ 	CANONARCH=arm
+ 	CANONCOLOR=0
+ 	;;
+-    arm*)
+-	ISANAME=`echo ${ARCH} | sed "s/^\([^-]*\)-.*/\1/"`
++    arm*b)
++	ISANAME=armeb
++	ISABITS=32
++	CANONARCH=arm
++	CANONCOLOR=0
++	;;
++    arm)
++	ISANAME=armel
++	ISABITS=32
++	CANONARCH=arm
++	CANONCOLOR=0
++	;;
++    arm*l)
++	ISANAME=armel
+ 	ISABITS=32
+ 	CANONARCH=arm
+ 	CANONCOLOR=0

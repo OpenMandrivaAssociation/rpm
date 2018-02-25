@@ -1,0 +1,43 @@
+From 5df71bf008ed8284245a4134909c2769e75adcf2 Mon Sep 17 00:00:00 2001
+From: Neal Gompa <ngompa13@gmail.com>
+Date: Wed, 3 Jan 2018 18:00:31 -0500
+Subject: [PATCH] HACK: Detect and disable DistEpoch in EVR comparisons
+
+---
+ lib/rpmds.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/lib/rpmds.c b/lib/rpmds.c
+index 823c722e8..c832bdf17 100644
+--- a/lib/rpmds.c
++++ b/lib/rpmds.c
+@@ -1,6 +1,9 @@
+ /** \ingroup rpmdep
+  * \file lib/rpmds.c
+  */
++#include <stdio.h>
++#include <string.h>
++
+ #include "system.h"
+ 
+ #include <rpm/rpmtypes.h>
+@@ -1058,6 +1061,16 @@ static inline int rpmdsCompareEVR(const char *AEVR, uint32_t AFlags,
+     int sense = 0;
+     int result = 0;
+ 
++    /* HACK: Detect and disable DistEpoch */
++    char *aDistEpoch = strrchr(aEVR, ':');
++    char *bDistEpoch = strrchr(bEVR, ':');
++
++    if (aDistEpoch && (strstr(aDistEpoch, "-") == 0))
++        *aDistEpoch = '\0';
++    if (bDistEpoch && (strstr(bDistEpoch, "-") == 0))
++        *bDistEpoch = '\0';
++
++
+     parseEVR(aEVR, &aE, &aV, &aR);
+     parseEVR(bEVR, &bE, &bV, &bR);
+ 
+-- 
+2.13.5
+

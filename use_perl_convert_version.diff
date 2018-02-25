@@ -1,0 +1,40 @@
+commit aa90328c785b709a23239fe8d718e2c609374cb4
+Author: Jérôme Quelin <jquelin@mandriva.org>
+Date:   Tue Jul 7 17:06:14 2009 +0000
+
+    making sure automatic provides & requires for perl package are using the
+    new macro %perl_convert_version
+    cf http://lists.mandriva.com/maintainers/2009-06/msg00050.php
+
+diff --git a/scripts/perl.prov b/scripts/perl.prov
+index b366f64..18739c4 100755
+--- a/scripts/perl.prov
++++ b/scripts/perl.prov
+@@ -72,7 +72,10 @@ foreach $module (sort keys %require) {
+     # operators. Also I will need to change the processing of the
+     # $RPM_* variable when I upgrade.
+ 
+-    print "perl($module) = $require{$module}\n";
++    my $v = qx{ rpm --eval '%perl_convert_version $require{$module}' };
++    my $vv = $v; chomp($vv);
++    $vv or $v = $require{$module}; # fix "Invalid version format (alpha without decimal) at -e line 7." for perl-Software-License
++    print "perl($module) = $v\n";
+   }
+ }
+ 
+diff --git a/scripts/perl.req b/scripts/perl.req
+index 2a4a320..3f85193 100755
+--- a/scripts/perl.req
++++ b/scripts/perl.req
+@@ -64,7 +64,10 @@ foreach $module (sort keys %require) {
+     # operators. Also I will need to change the processing of the
+     # $RPM_* variable when I upgrade.
+ 
+-    print "perl($module) >= $require{$module}\n";
++    my $v = qx{ rpm --eval '%perl_convert_version $require{$module}' };
++    my $vv = $v; chomp($vv);
++    $vv or $v = $require{$module};
++    print "perl($module) >= $v\n";
+   }
+ }
+ 

@@ -1,0 +1,85 @@
+From 2249cf4507545a1f73c52941b32d063ba72edb35 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Wed, 12 Aug 2015 02:10:31 +0200
+Subject: [PATCH] Add support for passing multiple names to find-lang.sh
+
+Avoids having to run find-lang.sh for each name and append the file lists
+produced later. As this makes use of bash specific array functionality,
+change the interpreter to bash explicitly.
+---
+ scripts/find-lang.sh | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/find-lang.sh b/scripts/find-lang.sh
+index 1081c4bb5..fdca18ec4 100755
+--- a/scripts/find-lang.sh
++++ b/scripts/find-lang.sh
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ #findlang - automagically generate list of language specific files
+ #for inclusion in an rpm spec file.
+ #This does assume that the *.mo files are under .../locale/...
+@@ -46,7 +46,7 @@ fi
+ shift
+ 
+ if [ -z "$1" ] ; then usage
+-else NAME=$1
++else NAMES[0]=$1
+ fi
+ shift
+ 
+@@ -57,10 +57,9 @@ QT=#
+ MAN=#
+ HTML=#
+ MO=
+-MO_NAME=$NAME.lang
++MO_NAME=${NAMES[0]}.lang
+ ALL_NAME=#
+ NO_ALL_NAME=
+-
+ while test $# -gt 0 ; do
+     case "${1}" in
+ 	--with-gnome )
+@@ -97,19 +96,28 @@ while test $# -gt 0 ; do
+ 		shift
+ 		;;
+ 	* )
++		if [ $MO_NAME != ${NAMES[$#]}.lang ]; then
++		    NAMES[${#NAMES[@]}]=$MO_NAME
++		fi
+ 		MO_NAME=${1}
+ 		shift
+ 		;;
+     esac
+ done    
+ 
++if [ -f $MO_NAME ]; then
++    rm $MO_NAME
++fi
++
++for NAME in ${NAMES[@]}; do
++
+ find "$TOP_DIR" -type f -o -type l|sed '
+ s:'"$TOP_DIR"'::
+ '"$ALL_NAME$MO"'s:\(.*/locale/\)\([^/_]\+\)\(.*\.mo$\):%lang(\2) \1\2\3:
+ '"$NO_ALL_NAME$MO"'s:\(.*/locale/\)\([^/_]\+\)\(.*/'"$NAME"'\.mo$\):%lang(\2) \1\2\3:
+ s:^\([^%].*\)::
+ s:%lang(C) ::
+-/^$/d' > $MO_NAME
++/^$/d' >> $MO_NAME
+ 
+ find "$TOP_DIR" -type d|sed '
+ s:'"$TOP_DIR"'::
+@@ -252,6 +260,8 @@ s:^\([^%].*\)::
+ s:%lang(C) ::
+ /^$/d' >> $MO_NAME
+ 
++done # for NAME in ${NAMES[@]}
++
+ if ! grep -q / $MO_NAME; then
+ 	echo "No translations found for ${NAME} in ${TOP_DIR}"
+ 	exit 1
+-- 
+2.14.3
+

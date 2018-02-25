@@ -1,0 +1,30 @@
+From e6effe3c91b66e822db571d3129e49164ddc45ba Mon Sep 17 00:00:00 2001
+From: Panu Matilainen <pmatilai@redhat.com>
+Date: Wed, 13 Dec 2017 12:26:24 +0200
+Subject: [PATCH] Fix file lists getting fed to file triggers multiple times
+ (#370)
+
+A prefix can have arbitrary number of matches within a given header,
+but each header should be fed into the file list iteration just once.
+Otherwise we end up feeding the same file list over and over to the
+scriptlet - hundreds of megs or gigs of waste in worser cases.
+---
+ lib/rpmtriggers.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/rpmtriggers.c b/lib/rpmtriggers.c
+index 7dd7c035d..c379dfe68 100644
+--- a/lib/rpmtriggers.c
++++ b/lib/rpmtriggers.c
+@@ -327,6 +327,8 @@ static const char *matchFilesNext(matchFilesIter mfi)
+ 						RPMDBI_DIRNAMES, mfi->pfx, 0);
+ 
+ 	    rpmdbFilterIterator(mfi->pi, mfi->tranPkgs, 0);
++	    /* Only walk through each header with matches once */
++	    rpmdbUniqIterator(mfi->pi);
+ 
+ 	} while (fx >= 0);
+ 
+-- 
+2.15.1
+

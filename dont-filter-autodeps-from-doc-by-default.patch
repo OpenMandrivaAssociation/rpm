@@ -1,0 +1,14 @@
+diff -up ./macros.in.tv ./macros.in
+--- ./macros.in.tv	2017-10-02 13:09:42.490078701 +0200
++++ ./macros.in	2017-10-02 13:10:19.368751721 +0200
+@@ -231,8 +231,8 @@ package or when debugging this package.\
+ # Their purpouse is to set up global filtering for all packages. If you need
+ # to set up specific filtering for your package use %__requires_exclude_from
+ # and %__provides_exclude_from instead.
+-%__global_requires_exclude_from		%{?_docdir:%{_docdir}}
+-%__global_provides_exclude_from		%{?_docdir:%{_docdir}}
++#__global_requires_exclude_from		%{?_docdir:%{_docdir}}
++#__global_provides_exclude_from		%{?_docdir:%{_docdir}}
+ 
+ #	The path to the gzip executable (legacy, use %{__gzip} instead).
+ %_gzipbin		%{__gzip}

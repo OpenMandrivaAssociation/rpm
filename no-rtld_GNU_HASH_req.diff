@@ -1,0 +1,18 @@
+diff -up ./tools/elfdeps.c.tv ./tools/elfdeps.c
+--- ./tools/elfdeps.c.tv	2014-09-10 13:58:13.681984864 +0200
++++ ./tools/elfdeps.c	2014-09-10 13:58:15.114984823 +0200
+@@ -306,14 +306,6 @@ static int processFile(const char *fn, i
+     }
+ 
+     /*
+-     * For DSOs which use the .gnu_hash section and don't have a .hash
+-     * section, we need to ensure that we have a new enough glibc.
+-     */
+-    if (ei->isExec && ei->gotGNUHASH && !ei->gotHASH && !soname_only) {
+-	argvAdd(&ei->requires, "rtld(GNU_HASH)");
+-    }
+-
+-    /*
+      * For DSOs, add DT_SONAME as provide. If its missing, we can fake
+      * it from the basename if requested. The bizarre looking DT_DEBUG
+      * check is used to avoid adding basename provides for PIE executables.

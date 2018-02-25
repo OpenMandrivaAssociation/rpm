@@ -1,0 +1,55 @@
+mdv/mga's changes:
+- [2011-07-14] add a EXCLUDE_FROM_FULL_STRIP environment variable so that we
+  can exclude files from being completely stripped, but for their debugging symbols
+- [2010-03-09] allow for only stripping files without creating debug
+  package contents by setting DISABLE_DEBUG environment variable
+- [2010-03-23] really check that the debug directory we want to search through
+  exists, not only the parent
+
+--- ./scripts/find-debuginfo.sh.4000	2012-07-31 13:11:54.750803552 +0000
++++ ./scripts/find-debuginfo.sh	2012-07-31 13:12:29.900871788 +0000
+@@ -232,8 +232,9 @@ strip_to_debug()
+   application/x-sharedlib*) g=-g ;;
+   application/x-executable*) g=-g ;;
+   esac
+-  eu-strip --remove-comment $r $g ${keep_remove_args} -f "$1" "$2" || exit
+-  chmod 444 "$1" || exit
++  [ -n "$EXCLUDE_FULL_REGEXP" ] && grep -E -q "$EXCLUDE_FULL_REGEXP" <<< "$2" && g=-g
++  eu-strip --remove-comment $r $g ${keep_remove_args} $([ -n "$DISABLE_DEBUG" ] || echo -f "$1") "$2" || exit
++  [ -n "$DISABLE_DEBUG" ] || chmod 444 "$1" || exit
+ }
+ 
+ add_minidebug()
+@@ -340,6 +341,12 @@ while read nlinks inum f; do
+   echo "$nlinks $inum $f" >>"$temp/primary"
+ done
+ 
++[[ -n "$EXCLUDE_FROM_STRIP" ]] && \
++EXCLUDE_REGEXP=`perl -e 'print "(", join("|", @ARGV), ")"' $EXCLUDE_FROM_STRIP`
++[[ -n "$EXCLUDE_FROM_FULL_STRIP" ]] && \
++EXCLUDE_FULL_REGEXP=`perl -e 'print "(", join("|", @ARGV), ")"' $EXCLUDE_FROM_FULL_STRIP`
++
++echo $EXCLUDE_REGEXP
+ # Strip ELF binaries
+ do_file()
+ {
+@@ -356,6 +357,10 @@
+ {
+   local nlinks=$1 inum=$2 f=$3 id link linked
+ 
++  [[ -n "$EXCLUDE_REGEXP" ]] && grep -E -q "$EXCLUDE_REGEXP" <<< "$f" && \
++  return
++  [ -n "$DISABLE_DEBUG" ] && strip_to_debug "" "$f" && return
++
+   get_debugfn "$f"
+   [ -f "${debugfn}" ] && return
+ 
+@@ -551,7 +561,7 @@ fi
+ 
+ if [ -d "${RPM_BUILD_ROOT}/usr/lib" -o -d "${RPM_BUILD_ROOT}/usr/src" ]; then
+   ((nout > 0)) ||
+-  test ! -d "${RPM_BUILD_ROOT}/usr/lib" ||
++  test ! -d "${RPM_BUILD_ROOT}/usr/lib/debug" ||
+   (cd "${RPM_BUILD_ROOT}/usr/lib"; find debug -type d) |
+   sed 's,^,%dir /usr/lib/,' >> "$LISTFILE"
+ 

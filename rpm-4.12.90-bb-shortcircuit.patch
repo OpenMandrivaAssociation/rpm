@@ -1,0 +1,16 @@
+--- a/rpmbuild.c~	2011-07-15 10:17:57.000000000 +0200
++++ b/rpmbuild.c	2011-11-17 02:30:18.695875754 +0100
+@@ -635,11 +635,11 @@
+     case 'i':
+ 	ba->buildAmount |= RPMBUILD_INSTALL;
+ 	ba->buildAmount |= RPMBUILD_CHECK;
+-	if ((buildChar == 'i') && shortCircuit)
++	if (/*(buildChar == 'i') && */ shortCircuit)
+ 	    break;
+     case 'c':
+ 	ba->buildAmount |= RPMBUILD_BUILD;
+-	if ((buildChar == 'c') && shortCircuit)
++	if (/*(buildChar == 'c') && */ shortCircuit)
+ 	    break;
+     case 'p':
+ 	ba->buildAmount |= RPMBUILD_PREP;

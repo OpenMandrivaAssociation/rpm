@@ -1,0 +1,15 @@
+--- a/plugins/systemd_inhibit.c	2016-12-29 16:19:55.019557662 +0000
++++ b/plugins/systemd_inhibit.c	2016-12-29 16:19:32.378870286 +0000
+@@ -62,10 +62,8 @@
+ {
+     struct stat st;
+ 
+-    if (lstat("/run/systemd/system/", &st) == 0) {
+-        if (S_ISDIR(st.st_mode)) {
+-            return RPMRC_OK;
+-        }
++    if (lstat("/run/systemd/seats/seat0", &st) == 0) {
++        return RPMRC_OK;
+     }
+ 
+     return RPMRC_NOTFOUND;

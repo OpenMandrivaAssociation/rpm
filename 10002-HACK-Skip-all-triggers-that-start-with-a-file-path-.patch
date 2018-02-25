@@ -1,0 +1,28 @@
+From dda79186a3d32cd55bfad82457ef6685a294a10c Mon Sep 17 00:00:00 2001
+From: Neal Gompa <ngompa13@gmail.com>
+Date: Thu, 4 Jan 2018 14:41:12 -0500
+Subject: [PATCH] HACK: Skip all triggers that start with a file path, as
+ they're invalid
+
+---
+ lib/psm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/lib/psm.c b/lib/psm.c
+index 2c6c9c550..57956b663 100644
+--- a/lib/psm.c
++++ b/lib/psm.c
+@@ -297,6 +297,10 @@ static rpmRC handleOneTrigger(rpmts ts, rpmte te, rpmsenseFlags sense,
+  	if (!rstreq(rpmdsN(trigger), sourceName))
+ 	    continue;
+ 
++	/* HACK: Skip all triggers that start with a file path, as they're invalid */
++	if (*rpmdsN(trigger) == '/')
++	    continue;
++
+ 	/* XXX Trigger on any provided dependency, not just the package NEVR */
+ 	if (!rpmdsAnyMatchesDep(sourceH, trigger, 1))
+ 	    continue;
+-- 
+2.13.5
+

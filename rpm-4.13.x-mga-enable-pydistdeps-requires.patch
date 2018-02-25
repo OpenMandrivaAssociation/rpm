@@ -1,0 +1,10 @@
+diff --git a/fileattrs/python.attr b/fileattrs/python.attr
+index a7381d6..3c1915a 100644
+--- a/fileattrs/python.attr
++++ b/fileattrs/python.attr
+@@ -1,4 +1,4 @@
+ %__python_provides	%{_rpmconfigdir}/pythondistdeps.py --provides --majorver-provides
+-%__python_requires	%{_rpmconfigdir}/pythondeps.sh --requires
++%__python_requires	%{_rpmconfigdir}/pythondistdeps.py --requires
+ %__python_path	^((/usr/lib(64)?/python[[:digit:]]\\.[[:digit:]]/.*))|(%{_bindir}/python[[:digit:]]\\.[[:digit:]]))$
+ %__python_magic		[Pp]ython.*(executable|byte-compiled)

@@ -1,0 +1,26 @@
+From 5e35e6dc43710ea9cd228c0231eb96463b81187f Mon Sep 17 00:00:00 2001
+From: unknown author <cooker@mandrivalinux.org>
+Date: Mon, 5 Jan 2009 13:29:57 +0000
+Subject: [PATCH 09/36] rpmqv ghost
+
+---
+ lib/poptQV.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/lib/poptQV.c b/lib/poptQV.c
+index 548c64a..5cc9d3d 100644
+--- a/lib/poptQV.c
++++ b/lib/poptQV.c
+@@ -202,6 +202,9 @@ struct poptOption rpmQueryPoptTable[] =
+ 	N_("list files in package"), NULL },
+ 
+  /* Duplicate file attr flags from packages into command line options. */
++ { "ghost", '\0', POPT_BIT_CLR|POPT_ARGFLAG_DOC_HIDDEN,
++	&rpmQVKArgs.qva_fflags, RPMFILE_GHOST,
++        N_("include %%ghost files"), NULL },
+  { "noghost", '\0', POPT_BIT_SET|POPT_ARGFLAG_DOC_HIDDEN,
+ 	&rpmQVKArgs.qva_fflags, RPMFILE_GHOST,
+         N_("skip %%ghost files"), NULL },
+-- 
+1.6.4.4
+

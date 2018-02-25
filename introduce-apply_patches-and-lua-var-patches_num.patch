@@ -1,0 +1,64 @@
+diff --git a/build/spec.c b/build/spec.c
+index d0bf9ff..fe0c6d0 100644
+--- a/build/spec.c
++++ b/build/spec.c
+@@ -243,6 +243,10 @@
+     rpmluaDelVar(lua, "sources");
+     rpmluaPushTable(lua, "patches");
+     rpmluaPushTable(lua, "sources");
++    rpmluaPushTable(lua, "patches_num");
++    rpmluaPushTable(lua, "sources_num");
++    rpmluaPop(lua);
++    rpmluaPop(lua);
+     rpmluaPop(lua);
+     rpmluaPop(lua);
+     }
+diff --git a/macros.in b/macros.in
+index dd5207a..39bb583 100644
+--- a/macros.in
++++ b/macros.in
+@@ -965,6 +965,13 @@ done \
+ %patches %{lua: for i, p in ipairs(patches) do print(p.." ") end}
+ %sources %{lua: for i, s in ipairs(sources) do print(s.." ") end}
+ 
++# default patch command:
++%_patch %__patch
++
++%apply_patches \
++  echo "warning: %%apply_patches is deprecated, try %%autopatch -p[01] instead" 1>&2\
++  %{lua: keys = {}; for i, p in ipairs(patches) do print(rpm.expand("%{_patch} -s -p1 -b --suffix " .. string.format(".%04d", patches_num[p]) .. " --fuzz=%{_default_patch_fuzz} -i " .. p .. "\\n")) end }
++
+ #------------------------------------------------------------------------------
+ # Useful perl macros (from Artur Frysiak <wiget@t17.ds.pwr.wroc.pl>)
+ #
+diff --git a/build/parsePreamble.c b/build/parsePreamble.c
+index 9c5dabb..55c35df 100644
+--- a/build/parsePreamble.c
++++ b/build/parsePreamble.c
+@@ -309,6 +309,7 @@
+ 	free(buf);
+ #ifdef WITH_LUA
+ 	{
++	  {
+ 	    rpmlua lua = NULL; /* global state */
+ 	    const char * what = (flag & RPMBUILD_ISPATCH) ? "patches" : "sources";
+ 	    rpmluaPushTable(lua, what);
+@@ -318,6 +319,18 @@
+ 	    rpmluaSetVar(lua, var);
+ 	    rpmluavFree(var);
+ 	    rpmluaPop(lua);
++	  }
++	  {
++	    rpmlua lua = NULL; /* global state */
++	    const char * what = (flag & RPMBUILD_ISPATCH) ? "patches_num" : "sources_num";
++	    rpmluaPushTable(lua, what);
++	    rpmluav var = rpmluavNew();
++	    rpmluavSetKey(var, RPMLUAV_STRING, body);
++	    rpmluavSetValueNum(var, num);
++	    rpmluaSetVar(lua, var);
++	    rpmluavFree(var);
++	    rpmluaPop(lua);
++	  }
+ 	}
+ #endif
+ 	free(body);

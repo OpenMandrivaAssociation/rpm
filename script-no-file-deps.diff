@@ -1,0 +1,16 @@
+--- a/scripts/script.req	2014-09-23 14:43:24.191929373 +0200
++++ b/scripts/script.req	2014-09-23 14:56:18.375898758 +0200
+@@ -37,7 +39,12 @@
+ 		   arg=`head -n 1 $filename | grep '^#!' | sed -e 's/^\#\![   ]*//' | cut -d" " -f2`
+ 		   INTERP="`which $arg 2>/dev/null || echo $INTERP`"
+ 	    fi
+-	    echo $INTERP
++	    PKG=$(LC_ALL=C rpm -qf --qf '%{name}' $INTERP 2>/dev/null |grep -v "is not owned by any package")
++	    if [ -n "$PKG" ]; then
++		    echo $PKG
++	    else
++		    echo $INTERP
++	    fi
+     fi
+     #!/usr/bin/env /foo/bar
+     sed -n -e '1s:^#![[:space:]]*[^[:space:]]*/bin/env[[:space:]]\{1,\}\(/[^[:space:]]\{1,\}\):\1:p' "$filename"

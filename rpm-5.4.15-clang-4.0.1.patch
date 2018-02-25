@@ -1,7 +1,0 @@
---- rpm-5.4.15/rpmio/rpmjni.cc.omv~	2017-06-05 21:48:51.677335667 +0200
-+++ rpm-5.4.15/rpmio/rpmjni.cc	2017-06-05 21:49:50.120943619 +0200
-@@ -1,3 +1,4 @@
-+#include <cstdlib>
- #include "system.h"
- #include <rpmlog.h>
- #include <rpmmacro.h>
