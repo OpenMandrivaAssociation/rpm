@@ -255,9 +255,10 @@ Requires(postun):	rpm-helper
 Conflicts:	rpm < %epoch:%version-%release
 
 # Weakly depend on stuff that used to be in main rpm package
-Recommends:	rpm-plugin-syslog
-Recommends:	rpm-plugin-ima
-Recommends:	rpm-plugin-systemd-inhibit
+# Note: after rpm is updated in buildroot, change to Recommends
+Suggests:	rpm-plugin-syslog
+Suggests:	rpm-plugin-ima
+Suggests:	rpm-plugin-systemd-inhibit
 
 %description
 The RPM Package Manager (RPM) is a powerful command line driven
@@ -455,7 +456,8 @@ nice/ionice priorities. Should not be used on systemd systems.
 %endif # with plugins
 
 %prep
-%autosetup -n %{name}-%{srcver} 1} -p1
+%setup -q -n %{name}-%{srcver}
+%apply_patches
 
 %build
 %define _disable_ld_no_undefined 1
@@ -566,7 +568,7 @@ fi
 %define	rpmattr		%attr(0755, rpm, rpm)
 
 %files -f %{name}.lang
-%license COPYING
+%doc COPYING
 %doc doc/manual/[a-z]*
 %attr(0755,rpm,rpm) %{_bindir}/rpm
 %attr(0755, rpm, rpm) %{_bindir}/rpm2cpio
@@ -761,7 +763,7 @@ fi
 %{_includedir}/%{name}/
 
 %files apidocs
-%license COPYING
+%doc COPYING
 %doc doc/librpm/html/*
 
 %files cron
