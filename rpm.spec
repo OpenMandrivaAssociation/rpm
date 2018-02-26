@@ -1,11 +1,11 @@
 # WARNING: This package is synced with Fedora and Mageia
 
-%define lib64arches	x86_64 
+%define lib64arches x86_64
 
 %ifarch %lib64arches
-    %define _lib lib64
+%define _lib lib64
 %else
-    %define _lib lib
+%define _lib lib
 %endif
 
 %define _prefix /usr
@@ -78,18 +78,18 @@ Source1:	macros.filter
 #
 
 # gnupg2 comes installed by default, avoid need to drag in gnupg too
-Patch4: rpm-4.8.1-use-gpg2.patch
+Patch4:		rpm-4.8.1-use-gpg2.patch
 
 # Patches already upstream:
-Patch100: 0001-Don-t-assume-per-user-groups-in-test-suite.patch
+Patch100:	0001-Don-t-assume-per-user-groups-in-test-suite.patch
 
 # These are not yet upstream
-Patch906: rpm-4.7.1-geode-i686.patch
+Patch906:	rpm-4.7.1-geode-i686.patch
 # Probably to be upstreamed in slightly different form
-Patch907: rpm-4.13.90-ldflags.patch
+Patch907:	rpm-4.13.90-ldflags.patch
 
 # Enable pythondistdeps generator
-Patch908: rpm-4.13.x-pythondistdeps-fileattr.patch
+Patch908:	rpm-4.13.x-pythondistdeps-fileattr.patch
 
 #
 # End of FC patches
@@ -98,9 +98,9 @@ Patch908: rpm-4.13.x-pythondistdeps-fileattr.patch
 #
 # Upstream patches not carried by FC:
 #
-Patch1000: 0001-Add-support-for-passing-multiple-names-to-find-lang..patch
-Patch1001: 0001-Fix-not-all-transfiletriggerpostun-triggers-executin.patch
-Patch1002: 0001-Fix-file-lists-getting-fed-to-file-triggers-multiple.patch
+Patch1000:	0001-Add-support-for-passing-multiple-names-to-find-lang..patch
+Patch1001:	0001-Fix-not-all-transfiletriggerpostun-triggers-executin.patch
+Patch1002:	0001-Fix-file-lists-getting-fed-to-file-triggers-multiple.patch
 
 #
 # Mageia patches
@@ -113,97 +113,97 @@ Patch70:	rpm-4.12.90-bb-shortcircuit.patch
 
 # don't conflict for doc files
 # (to be able to install lib*-devel together with lib64*-devel even if they have conflicting manpages)
-Patch83: rpm-4.12.0-no-doc-conflicts.patch
+Patch83:	rpm-4.12.0-no-doc-conflicts.patch
 
 # Fix http://qa.mandriva.com/show_bug.cgi?id=19392
 # (is this working??)
-Patch84: rpm-4.4.2.2-rpmqv-ghost.patch
+Patch84:	rpm-4.4.2.2-rpmqv-ghost.patch
 
 # [Dec 2008] macrofiles from rpmrc does not overrides MACROFILES anymore
 # Upstream 4.11 will have /usr/lib/rpm/macros.d:
-Patch144: rpm-4.9.0-read-macros_d-dot-macros.patch
+Patch144:	rpm-4.9.0-read-macros_d-dot-macros.patch
 
 # without this patch, "#%%define foo bar" is surprisingly equivalent to "%%define foo bar"
 # with this patch, "#%%define foo bar" is a fatal error
 # Bug still valid => Send upstream for review.
-Patch145: rpm-forbid-badly-commented-define-in-spec.patch
+Patch145:	rpm-forbid-badly-commented-define-in-spec.patch
 
 # (nb: see the patch for more info about this issue)
 #Patch151: rpm-4.6.0-rc1-protect-against-non-robust-futex.patch
 
 # Introduce (deprecated) %%apply_patches:
 # (To be dropped once all pkgs are converted to %%auto_setup)
-Patch157: rpm-4.10.1-introduce-_after_setup-which-is-called-after-setup.patch
-Patch159: introduce-apply_patches-and-lua-var-patches_num.patch
+Patch157:	rpm-4.10.1-introduce-_after_setup-which-is-called-after-setup.patch
+Patch159:	introduce-apply_patches-and-lua-var-patches_num.patch
 
 #
 # Merge mageia's perl.prov improvements back into upstream:
 #
 # making sure automatic provides & requires for perl package are using the new
 # macro %%perl_convert_version:
-Patch162: use_perl_convert_version.diff
+Patch162:	use_perl_convert_version.diff
 
 #
 # Merge mageia's find-requires.sh improvements back into upstream:
 #
 # (tv) output perl-base requires instead of /usr/bin/perl with internal generator:
 # (ngompa) This patch can be dropped once we switch fully over to dnf
-Patch170: script-perl-base.diff
+Patch170:	script-perl-base.diff
 # (tv) do not emit requires for /bin/sh (required by glibc) or interpreters for which
 # we have custom
-Patch172: script-filtering.diff
+Patch172:	script-filtering.diff
 # (tv) "resolve" /bin/env foo interpreter to actual path, rather than generating
 # dependencies on coreutils, should trim off ~800 dependencies more
-Patch173: script-env.diff
+Patch173:	script-env.diff
 # (tv) output pkgconfig requires instead of /usr/bin/pkgconfig with internal generator:
 # (ngompa) This patch can be dropped once we switch fully over to dnf
-Patch174: pkgconfig.diff
+Patch174:	pkgconfig.diff
 # (tv) no not emit "rtld(GNU_HASH)" requires as we've support for it since mga1:
 # (saves ~5K packages' dependency in synthesis)
-Patch175: no-rtld_GNU_HASH_req.diff
+Patch175:	no-rtld_GNU_HASH_req.diff
 # (tv) replace file deps by requires on packages (when interp is installed):
 # (ngompa) This patch can be dropped once we switch fully over to dnf
-Patch176: script-no-file-deps.diff
+Patch176:	script-no-file-deps.diff
 # (tv) replace file deps by requires on packages (common cases for !BRed interp):
 # (ngompa) This patch can be dropped once we switch fully over to dnf
-Patch177: script-no-file-deps2.diff
+Patch177:	script-no-file-deps2.diff
 # (pt) generate ELF provides for libraries, not only for executables
-Patch180: elf_libs_req.diff 
+Patch180:	elf_libs_req.diff 
 # [Suse]add --assumeexec option for previous patch:
-Patch181: assumeexec.diff 
+Patch181:	assumeexec.diff 
 # (Martin Whitaker) disable the systemd-inhibit plugin when systemd-logind is not running (mga#20016):
-Patch182: systemd-inhibit-requires-logind.patch
+Patch182:	systemd-inhibit-requires-logind.patch
 
 # (tv) Commit 816c7cf3fdae5c45de02a42a2245549778e2ca80 defaults to ignoring autodeps from docfile,
 # which break perl autodeps from *META*:
 Patch200: dont-filter-autodeps-from-doc-by-default.patch
 
 # Various arch enabling:
-Patch3003: rpm_arm_mips_isa_macros.patch
+Patch3003:	rpm_arm_mips_isa_macros.patch
 
 # (ngompa) enable pythondistdeps requires
-Patch3500: rpm-4.13.x-mga-enable-pydistdeps-requires.patch
+Patch3500:	rpm-4.13.x-mga-enable-pydistdeps-requires.patch
 
 
 # Mageia patches that are easier to rediff on top of FC patches:
 #---------------------------------------------------------------
 # (tv) merge mga stuff from rpm-setup:
 # (for spec-helper)
-Patch4000: rpm-4.10.0-find-debuginfo__mga-cfg.diff
+Patch4000:	rpm-4.10.0-find-debuginfo__mga-cfg.diff
 
 # OpenMandriva patches for transitioning from RPM5
 #-------------------------------------------------
-Patch10001: 10001-HACK-Detect-and-disable-DistEpoch-in-EVR-comparison.patch
-Patch10002: 10002-HACK-Skip-all-triggers-that-start-with-a-file-path-.patch
+Patch10001:	10001-HACK-Detect-and-disable-DistEpoch-in-EVR-comparison.patch
+Patch10002:	10002-HACK-Skip-all-triggers-that-start-with-a-file-path-.patch
 
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD
 # SourceLicense: (GPLv2+ and LGPLv2+ with exceptions) and BSD 
-License: GPLv2+
+License:	GPLv2+
 
 BuildRequires:	autoconf
 BuildRequires:	pkgconfig(zlib)
-BuildRequires:  bzip2-devel
+BuildRequires:	pkgconfig(bzip2)
 BuildRequires:	pkgconfig(liblzma) >= 5
 BuildRequires:	automake
 BuildRequires:	doxygen
@@ -212,52 +212,52 @@ BuildRequires:	libbeecrypt-devel
 BuildRequires:	binutils-devel
 BuildRequires:	ed
 BuildRequires:	gettext-devel
-BuildRequires:  db5.3-devel
+BuildRequires:	db5.3-devel
 %if %{with plugins}
-BuildRequires:  pkgconfig(dbus-1)
+BuildRequires:	pkgconfig(dbus-1)
 %endif
-BuildRequires:  pkgconfig(neon)
+BuildRequires:	pkgconfig(neon)
 BuildRequires:	pkgconfig(popt)
 BuildRequires:	pkgconfig(nss)
 BuildRequires:	magic-devel
-BuildRequires:  rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
-BuildRequires:  readline-devel
+BuildRequires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
+BuildRequires:	readline-devel
 BuildRequires:	pkgconfig(ncurses)
-BuildRequires:  pkgconfig(libssl)
-BuildRequires:  pkgconfig(lua) >= 5.2.3-3.mga5
-BuildRequires:  pkgconfig(libcap)
-BuildRequires:  libacl-devel
-BuildRequires:  pkgconfig(libarchive)
-BuildRequires:  pkgconfig(python)
-BuildRequires:  pkgconfig(python3)
+BuildRequires:	pkgconfig(libssl)
+BuildRequires:	pkgconfig(lua) >= 5.2.3
+BuildRequires:	pkgconfig(libcap)
+BuildRequires:	libacl-devel
+BuildRequires:	pkgconfig(libarchive)
+BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python3)
 # for testsuite:
-BuildRequires: eatmydata
+BuildRequires:	eatmydata
 %if %{with check}
-BuildRequires: fakechroot
-BuildRequires: gnupg2
+BuildRequires:	fakechroot
+BuildRequires:	gnupg2
 %endif
 
 Requires:	bzip2 >= 0.9.0c-2
 Requires:	xz
 Requires:	cpio
 Requires:	gawk
-Requires:	mktemp
-Requires:	setup >= 2.2.0-8
+Requires:	coreutils
+Requires:	setup >= 2.9.0
 Requires:	rpm-%{_real_vendor}-setup >= 1.85
 Requires:	chkconfig
 Requires:	%librpmname = %epoch:%version-%release
-%define         git_url        http://rpm.org/git/rpm.git
-Requires(pre):		rpm-helper
-Requires(pre):		coreutils
+%define git_url http://rpm.org/git/rpm.git
+Requires(pre):	rpm-helper
+Requires(pre):	coreutils
 Requires(postun):	rpm-helper
 
 # This is a completely different implementation of RPM, replacing rpm5
-Conflicts: rpm < %epoch:%version-%release
+Conflicts:	rpm < %epoch:%version-%release
 
 # Weakly depend on stuff that used to be in main rpm package
-Recommends: rpm-plugin-syslog
-Recommends: rpm-plugin-ima
-Recommends: rpm-plugin-systemd-inhibit
+Recommends:	rpm-plugin-syslog
+Recommends:	rpm-plugin-ima
+Recommends:	rpm-plugin-systemd-inhibit
 
 %description
 The RPM Package Manager (RPM) is a powerful command line driven
@@ -266,44 +266,43 @@ verifying, querying, and updating software packages.  Each software
 package consists of an archive of files along with information about
 the package like its version, a description, etc.
 
-%package -n %librpmname
-Summary:  Libraries for manipulating RPM packages
-Group:	  System/Libraries
-License: GPLv2+ and LGPLv2+ with exceptions
-Provides: librpm = %version-%release
-Provides: rpm-libs = %version-%release
+%package -n %{librpmname}
+Summary:	Libraries for manipulating RPM packages
+Group:		System/Libraries
+License:	GPLv2+ and LGPLv2+ with exceptions
+Provides:	librpm = %version-%release
+Provides:	rpm-libs = %version-%release
 # librpm5 is gone...
-Obsoletes: %{mklibname rpm 5.4}
+Obsoletes:	%{mklibname rpm 5.4}
 
-
-%description -n %librpmname
+%description -n %{librpmname}
 This package contains the RPM shared libraries.
 
-%package   -n %librpmbuild
-Summary:   Libraries for building and signing RPM packages
-Group:     System/Libraries
-License: GPLv2+ and LGPLv2+ with exceptions
-Obsoletes: rpm-build-libs < %{version}-%{release}
-Provides: rpm-build-libs%{_isa} = %{version}-%{release}
+%package -n %{librpmbuild}
+Summary:	Libraries for building and signing RPM packages
+Group:		System/Libraries
+License:	GPLv2+ and LGPLv2+ with exceptions
+Obsoletes:	rpm-build-libs < %{version}-%{release}
+Provides:	rpm-build-libs%{_isa} = %{version}-%{release}
 
-%description -n %librpmbuild
+%description -n %{librpmbuild}
 This package contains the RPM shared libraries for building and signing
 packages.
 
-%package -n %librpmnamedevel
+%package -n %{librpmnamedevel}
 Summary:	Development files for applications which will manipulate RPM packages
 Group:		Development/C
-License: GPLv2+ and LGPLv2+ with exceptions
+License:	GPLv2+ and LGPLv2+ with exceptions
 Requires:	rpm = %epoch:%{version}-%{release}
 Provides:	librpm-devel = %version-%release
-Provides:   	rpm-devel = %version-%release
-Requires:       %librpmname = %epoch:%version-%release
-Requires:       %librpmbuild = %epoch:%version-%release
-Requires:       %librpmsign = %epoch:%version-%release
+Provides:	rpm-devel = %version-%release
+Requires:	%librpmname = %epoch:%version-%release
+Requires:	%librpmbuild = %epoch:%version-%release
+Requires:	%librpmsign = %epoch:%version-%release
 # We don't provide this anymore...
-Obsoletes:      %{mklibname -d -s rpm} < 2:4.14-0
+Obsoletes:	%{mklibname -d -s rpm} < 2:4.14-0
 
-%description -n %librpmnamedevel
+%description -n %{librpmnamedevel}
 This package contains the RPM C library and header files.  These
 development files will simplify the process of writing programs that
 manipulate RPM packages and databases. These files are intended to
@@ -314,12 +313,12 @@ to function.
 This package should be installed if you want to develop programs that
 will manipulate RPM packages and databases.
 
-%package  -n %librpmsign
-Summary:  Libraries for building and signing RPM packages
-Group:    System/Libraries
-License: GPLv2+ and LGPLv2+ with exceptions
+%package  -n %{librpmsign}
+Summary:	Libraries for building and signing RPM packages
+Group:		System/Libraries
+License:	GPLv2+ and LGPLv2+ with exceptions
 
-%description -n %librpmsign
+%description -n %{librpmsign}
 This package contains the RPM shared libraries for building and signing
 packages.
 
@@ -339,7 +338,7 @@ Requires:	unzip
 Requires:	elfutils >= 0.167-2
 Requires:	perl(CPAN::Meta) >= 2.112.150
 Requires:	perl(ExtUtils::MakeMaker) >= 6.570_700
-Requires:       perl(YAML::Tiny)
+Requires:	perl(YAML::Tiny)
 Requires:	rpm = %epoch:%{version}-%{release}
 Requires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 Requires:	%librpmbuild = %epoch:%version-%release
@@ -352,8 +351,8 @@ The rpm-build package contains the scripts and executable programs
 that are used to build packages using the RPM Package Manager.
 
 %package sign
-Summary: Package signing support
-Group:   System/Base
+Summary:	Package signing support
+Group:		System/Base
 
 %description sign
 This package contains support for digitally signing RPM packages.
@@ -387,23 +386,23 @@ This package should be installed if you want to develop Python 3
 programs that will manipulate RPM packages and databases.
 
 %package apidocs
-Summary: API documentation for RPM libraries
-Group:   Documentation
-BuildArch: noarch
+Summary:	API documentation for RPM libraries
+Group:		Documentation
+BuildArch:	noarch
 
 %description apidocs
 This package contains API documentation for developing applications
 that will manipulate RPM packages and databases.
 
-%package cron
-Summary: Create daily logs of installed packages
-Group: System/Base
-BuildArch: noarch
-Requires: crontabs
-Requires: logrotate
-Requires: rpm = %{epoch}:%{version}-%{release}
+%package	cron
+Summary:	Create daily logs of installed packages
+Group:		System/Base
+BuildArch:	noarch
+Requires:	crontabs
+Requires:	logrotate
+Requires:	rpm = %{epoch}:%{version}-%{release}
 # Split out from rpm package
-Conflicts: rpm < 1:4.13.0.1-9
+Conflicts:	rpm < 1:4.13.0.1-9
 
 %description cron
 This package contains a cron job which creates daily logs of installed
@@ -411,41 +410,41 @@ packages on a system.
 
 %if %{with plugins}
 %package plugin-syslog
-Summary: Rpm plugin for syslog functionality
-Group: System/Base
-Requires: %{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
+Summary:	Rpm plugin for syslog functionality
+Group:		System/Base
+Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
 # Split out from rpm package
-Conflicts: rpm < 1:4.13.0.1-9
+Conflicts:	rpm < 1:4.13.0.1-9
 
 %description plugin-syslog
 This plugin exports RPM actions to the system log.
 
 %package plugin-systemd-inhibit
-Summary: Rpm plugin for systemd inhibit functionality
-Group: System/Base
-Requires: %{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
+Summary:	Rpm plugin for systemd inhibit functionality
+Group:		System/Base
+Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
 # Split out from rpm package
-Conflicts: rpm < 1:4.13.0.1-9
+Conflicts:	rpm < 1:4.13.0.1-9
 
 %description plugin-systemd-inhibit
 This plugin blocks systemd from entering idle, sleep or shutdown while an rpm
 transaction is running using the systemd-inhibit mechanism.
 
 %package plugin-ima
-Summary: Rpm plugin for IMA file signatures
-Group: System/Base
-Requires: %{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
+Summary:	Rpm plugin for IMA file signatures
+Group:		System/Base
+Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
 # Split out from rpm package
-Conflicts: rpm < 1:4.13.0.1-9
+Conflicts:	rpm < 1:4.13.0.1-9
 
 %description plugin-ima
 This plugin adds support for enforcing and verifying IMA file signatures
 in an rpm.
 
 %package plugin-prioreset
-Summary: Rpm plugin for resetting scriptlet priorities for SysV init
-Group: System/Base
-Requires: %{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
+Summary:	Rpm plugin for resetting scriptlet priorities for SysV init
+Group:		System/Base
+Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description plugin-prioreset
 %{summary}
@@ -485,22 +484,22 @@ autoreconf -i -f
     --enable-python \
     --with-crypto=openssl
 
-%make_build
-pushd python
+%make
+cd python
 %py2_build
 %py3_build
-popd
+cd ..
 
 %install
-%make_install
+%makeinstall_std
 
 # We need to build with --enable-python for the self-test suite, but we
 # actually package the bindings built with setup.py (#531543#c26)
 rm -rf $RPM_BUILD_ROOT/%{python_sitearch}
-pushd python
+cd python
 %py2_install
 %py3_install
-popd
+cd ..
 
 # Save list of packages through cron
 mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/cron.daily
@@ -766,5 +765,5 @@ fi
 %doc doc/librpm/html/*
 
 %files cron
-%config(noreplace)	/etc/cron.daily/rpm
-%config(noreplace)	/etc/logrotate.d/rpm
+%config(noreplace) /etc/cron.daily/rpm
+%config(noreplace) /etc/logrotate.d/rpm
