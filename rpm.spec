@@ -242,9 +242,9 @@ BuildRequires:	libacl-devel
 BuildRequires:	pkgconfig(libarchive)
 BuildRequires:	pkgconfig(python2)
 BuildRequires:	pkgconfig(python3)
+%if %{with check}
 # for testsuite:
 BuildRequires:	eatmydata
-%if %{with check}
 BuildRequires:	fakechroot
 BuildRequires:	gnupg2
 %endif
