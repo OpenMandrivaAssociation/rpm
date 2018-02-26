@@ -49,7 +49,8 @@
 %define __find_provides %{rpmhome}/%{_real_vendor}/find-provides
 
 # run internal testsuite?
-%bcond_without check
+# TODO: Enable by default once rpm5 transition hack patches are dropped
+%bcond_with check
 # build with plugins?
 %bcond_without plugins
 # build with new db format
