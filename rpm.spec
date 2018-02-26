@@ -33,6 +33,18 @@
 %define pyver %(python -V 2>&1 | cut -f2 -d" " | cut -f1,2 -d".")
 %endif
 
+# If they aren't provided by a system installed macro, define them
+%{!?__python2: %global __python2 /usr/bin/python2}
+%{!?__python3: %global __python3 /usr/bin/python3}
+
+%{!?py2_build: %global py2_build CFLAGS="%{optflags}" %{__python2} setup.py build}
+%{!?py2_install: %global py2_install %{__python2} setup.py install -O1 --skip-build --root %{buildroot}}
+%{!?py3_build: %global py3_build CFLAGS="%{optflags}" %{__python3} setup.py build}
+%{!?py3_install: %global py3_install %{__python3} setup.py install -O1 --skip-build --root %{buildroot}}
+
+%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
+%{!?python3_sitearch: %global python3_sitearch %(%{__python3} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
+
 %define __find_requires %{rpmhome}/%{_real_vendor}/find-requires %{?buildroot:%{buildroot}} %{?_target_cpu:%{_target_cpu}}
 %define __find_provides %{rpmhome}/%{_real_vendor}/find-provides
 
@@ -224,11 +236,11 @@ BuildRequires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup
 BuildRequires:	readline-devel
 BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	pkgconfig(libssl)
-BuildRequires:	pkgconfig(lua) >= 5.2.3
+BuildRequires:	pkgconfig(lua) >= 5.3
 BuildRequires:	pkgconfig(libcap)
 BuildRequires:	libacl-devel
 BuildRequires:	pkgconfig(libarchive)
-BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python2)
 BuildRequires:	pkgconfig(python3)
 # for testsuite:
 BuildRequires:	eatmydata
