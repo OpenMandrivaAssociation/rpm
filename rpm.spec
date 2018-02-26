@@ -59,7 +59,7 @@
 %global librpmsign      %mklibname rpmsign %{libmajor}
 %global librpmbuild     %mklibname rpmbuild %{libmajor}
 
-%global rpmsetup_version 1.34
+%global rpmsetup_version 0.1.2
 
 Summary:	The RPM package management system
 Name:		rpm
@@ -212,7 +212,7 @@ BuildRequires:	libbeecrypt-devel
 BuildRequires:	binutils-devel
 BuildRequires:	ed
 BuildRequires:	gettext-devel
-BuildRequires:	db5.3-devel
+BuildRequires:	db62-devel
 %if %{with plugins}
 BuildRequires:	pkgconfig(dbus-1)
 %endif
@@ -243,7 +243,7 @@ Requires:	cpio
 Requires:	gawk
 Requires:	coreutils
 Requires:	setup >= 2.9.0
-Requires:	rpm-%{_real_vendor}-setup >= 1.85
+Requires:	rpm-%{_real_vendor}-setup >= %{rpmsetup_version}
 Requires:	chkconfig
 Requires:	%librpmname = %epoch:%version-%release
 %define git_url http://rpm.org/git/rpm.git
@@ -402,8 +402,8 @@ BuildArch:	noarch
 Requires:	crontabs
 Requires:	logrotate
 Requires:	rpm = %{epoch}:%{version}-%{release}
-# Split out from rpm package
-Conflicts:	rpm < 1:4.13.0.1-9
+# Incompatible with rpm5
+Conflicts:	rpm < 2:4.14.0-0
 
 %description cron
 This package contains a cron job which creates daily logs of installed
@@ -414,8 +414,8 @@ packages on a system.
 Summary:	Rpm plugin for syslog functionality
 Group:		System/Base
 Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
-# Split out from rpm package
-Conflicts:	rpm < 1:4.13.0.1-9
+# Incompatible with rpm5
+Conflicts:	rpm < 2:4.14.0-0
 
 %description plugin-syslog
 This plugin exports RPM actions to the system log.
@@ -424,8 +424,8 @@ This plugin exports RPM actions to the system log.
 Summary:	Rpm plugin for systemd inhibit functionality
 Group:		System/Base
 Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
-# Split out from rpm package
-Conflicts:	rpm < 1:4.13.0.1-9
+# Incompatible with rpm5
+Conflicts:	rpm < 2:4.14.0-0
 
 %description plugin-systemd-inhibit
 This plugin blocks systemd from entering idle, sleep or shutdown while an rpm
@@ -435,8 +435,8 @@ transaction is running using the systemd-inhibit mechanism.
 Summary:	Rpm plugin for IMA file signatures
 Group:		System/Base
 Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
-# Split out from rpm package
-Conflicts:	rpm < 1:4.13.0.1-9
+# Incompatible with rpm5
+Conflicts:	rpm < 2:4.14.0-0
 
 %description plugin-ima
 This plugin adds support for enforcing and verifying IMA file signatures
@@ -465,8 +465,8 @@ nice/ionice priorities. Should not be used on systemd systems.
 %if %with debug
 RPM_OPT_FLAGS=-g
 %endif
-CPPFLAGS="$CPPFLAGS `pkg-config --cflags nss`"
-CFLAGS="$RPM_OPT_FLAGS"
+CPPFLAGS="$CPPFLAGS `pkg-config --cflags nss` -DLUA_COMPAT_APIINTCASTS"
+CFLAGS="$RPM_OPT_FLAGS -DLUA_COMPAT_APIINTCASTS"
 LDFLAGS="$LDFLAGS %{?__global_ldflags}"
 export CPPFLAGS CFLAGS LDFLAGS
 
