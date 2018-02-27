@@ -159,27 +159,6 @@ Patch162:	use_perl_convert_version.diff
 #
 # Merge mageia's find-requires.sh improvements back into upstream:
 #
-# (tv) output perl-base requires instead of /usr/bin/perl with internal generator:
-# (ngompa) This patch can be dropped once we switch fully over to dnf
-Patch170:	script-perl-base.diff
-# (tv) do not emit requires for /bin/sh (required by glibc) or interpreters for which
-# we have custom
-Patch172:	script-filtering.diff
-# (tv) "resolve" /bin/env foo interpreter to actual path, rather than generating
-# dependencies on coreutils, should trim off ~800 dependencies more
-Patch173:	script-env.diff
-# (tv) output pkgconfig requires instead of /usr/bin/pkgconfig with internal generator:
-# (ngompa) This patch can be dropped once we switch fully over to dnf
-Patch174:	pkgconfig.diff
-# (tv) no not emit "rtld(GNU_HASH)" requires as we've support for it since mga1:
-# (saves ~5K packages' dependency in synthesis)
-Patch175:	no-rtld_GNU_HASH_req.diff
-# (tv) replace file deps by requires on packages (when interp is installed):
-# (ngompa) This patch can be dropped once we switch fully over to dnf
-Patch176:	script-no-file-deps.diff
-# (tv) replace file deps by requires on packages (common cases for !BRed interp):
-# (ngompa) This patch can be dropped once we switch fully over to dnf
-Patch177:	script-no-file-deps2.diff
 # (pt) generate ELF provides for libraries, not only for executables
 Patch180:	elf_libs_req.diff 
 # [Suse]add --assumeexec option for previous patch:
