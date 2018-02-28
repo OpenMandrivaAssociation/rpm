@@ -234,7 +234,7 @@ Requires:	xz
 Requires:	cpio
 Requires:	gawk
 Requires:	coreutils
-Requires:	setup >= 2.9.0
+Requires:	setup >= 2.8.9
 Requires:	rpm-%{_real_vendor}-setup >= %{rpmsetup_version}
 Requires:	chkconfig
 Requires:	%librpmname = %epoch:%version-%release
