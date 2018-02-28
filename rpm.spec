@@ -266,7 +266,7 @@ License:	GPLv2+ and LGPLv2+ with exceptions
 Provides:	librpm = %version-%release
 Provides:	rpm-libs = %version-%release
 # librpm5 is gone...
-Obsoletes:	%{mklibname rpm 5.4}
+Obsoletes:	%{_lib}rpm5.4
 
 %description -n %{librpmname}
 This package contains the RPM shared libraries.
@@ -293,7 +293,7 @@ Requires:	%librpmname = %epoch:%version-%release
 Requires:	%librpmbuild = %epoch:%version-%release
 Requires:	%librpmsign = %epoch:%version-%release
 # We don't provide this anymore...
-Obsoletes:	%{mklibname -d -s rpm} < 2:4.14-0
+Obsoletes:	%{_lib}rpm-static-devel < 2:4.14-0
 
 %description -n %{librpmnamedevel}
 This package contains the RPM C library and header files.  These
@@ -354,8 +354,6 @@ This package contains support for digitally signing RPM packages.
 Summary:	Python 2 bindings for apps which will manipulate RPM packages
 Group:		Development/Python
 Requires:	rpm = %epoch:%{version}-%{release}
-Provides:	python-%{name} = %epoch:%{version}-%{release}
-Obsoletes:	python-%{name} < %epoch:%{version}-%{release}
 
 %description -n python2-%{name}
 The python2-rpm package contains a module that permits applications
@@ -365,13 +363,14 @@ supplied by RPM Package Manager libraries.
 This package should be installed if you want to develop Python 2
 programs that will manipulate RPM packages and databases.
 
-%package -n python3-%{name}
+%package -n python-%{name}
 Summary:	Python 3 bindings for apps which will manipulate RPM packages
 Group:		Development/Python
 Requires:	rpm = %epoch:%{version}-%{release}
+Obsoletes:	python-%{name} < %epoch:%{version}-%{release}
 
-%description -n python3-%{name}
-The python3-rpm package contains a module that permits applications
+%description -n python-%{name}
+The python-rpm package contains a module that permits applications
 written in the Python programming language to use the interface
 supplied by RPM Package Manager libraries.
 
@@ -709,7 +708,7 @@ fi
 %{python2_sitearch}/%{name}/
 %{python2_sitearch}/%{name}-%{version}*.egg-info
 
-%files -n python3-%{name}
+%files -n python-%{name}
 %{python3_sitearch}/%{name}/
 %{python3_sitearch}/%{name}-%{version}*.egg-info
 
