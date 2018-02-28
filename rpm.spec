@@ -336,7 +336,7 @@ Requires:	rpm = %epoch:%{version}-%{release}
 Requires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 Requires:	%librpmbuild = %epoch:%version-%release
 # For pythondistdeps generator
-Requires:	python-setuptools
+Requires:	python-pkg-resources
 Conflicts:	rpm-build < %epoch:%{version}-%{release}
 
 %description build
