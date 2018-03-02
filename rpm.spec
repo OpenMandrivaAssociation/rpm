@@ -114,6 +114,7 @@ Patch908:	rpm-4.13.x-pythondistdeps-fileattr.patch
 Patch1000:	0001-Add-support-for-passing-multiple-names-to-find-lang..patch
 Patch1001:	0001-Fix-not-all-transfiletriggerpostun-triggers-executin.patch
 Patch1002:	0001-Fix-file-lists-getting-fed-to-file-triggers-multiple.patch
+Patch1003:	0001-Don-t-require-signature-header-to-be-in-single-conti.patch
 
 #
 # Mageia patches
