@@ -85,7 +85,7 @@ Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
 # extracted from http://pkgs.fedoraproject.org/cgit/redhat-rpm-config.git/plain/macros:
 Source1:	macros.filter
-
+Source2:	rpm.rpmlintrc
 #
 # Fedora patches
 #
