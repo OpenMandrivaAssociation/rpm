@@ -77,7 +77,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		2
-Version:        %{rpmver}
+Version:	%{rpmver}
 # Note the "0.X" at the end! It's not yet ready for building!
 Release:	%{?snapver:0.%{snapver}.}0.1
 Group:		System/Configuration/Packaging
@@ -106,7 +106,7 @@ Patch908:	rpm-4.13.x-pythondistdeps-fileattr.patch
 
 #
 # End of FC patches
-# 
+#
 
 #
 # Upstream patches not carried by FC:
@@ -246,7 +246,7 @@ Requires:	coreutils
 Requires:	setup >= 2.8.9
 Requires:	rpm-%{_real_vendor}-setup >= %{rpmsetup_version}
 Requires:	chkconfig
-Requires:	%librpmname = %{epoch}:%{version}-%{release}
+Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
 %define git_url http://rpm.org/git/rpm.git
 Requires(pre):	rpm-helper
 Requires(pre):	coreutils
@@ -298,9 +298,9 @@ License:	GPLv2+ and LGPLv2+ with exceptions
 Requires:	rpm = %{epoch}:%{version}-%{release}
 Provides:	librpm-devel = %{version}-%{release}
 Provides:	rpm-devel = %{version}-%{release}
-Requires:	%librpmname = %{epoch}:%{version}-%{release}
-Requires:	%librpmbuild = %{epoch}:%{version}-%{release}
-Requires:	%librpmsign = %{epoch}:%{version}-%{release}
+Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
+Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
+Requires:	%{librpmsign} = %{epoch}:%{version}-%{release}
 # We don't provide this anymore...
 Obsoletes:	%{_lib}rpm-static-devel < 2:4.14-0
 
@@ -343,7 +343,7 @@ Requires:	perl(ExtUtils::MakeMaker) >= 6.570_700
 Requires:	perl(YAML::Tiny)
 Requires:	rpm = %{epoch}:%{version}-%{release}
 Requires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
-Requires:	%librpmbuild = %{epoch}:%{version}-%{release}
+Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
 # For pythondistdeps generator
 Requires:	python-pkg-resources
 Conflicts:	rpm-build < %{epoch}:%{version}-%{release}
@@ -465,7 +465,7 @@ nice/ionice priorities. Should not be used on systemd systems.
 %if %with debug
 RPM_OPT_FLAGS=-g
 %endif
-CPPFLAGS="$CPPFLAGS `pkg-config --cflags nss` -DLUA_COMPAT_APIINTCASTS"
+CPPFLAGS="$CPPFLAGS $(pkg-config --cflags nss) -DLUA_COMPAT_APIINTCASTS"
 CFLAGS="$RPM_OPT_FLAGS -DLUA_COMPAT_APIINTCASTS"
 LDFLAGS="$LDFLAGS %{?__global_ldflags}"
 export CPPFLAGS CFLAGS LDFLAGS
@@ -490,7 +490,7 @@ autoreconf -i -f
 cd python
 %py2_build
 %py3_build
-cd ..
+cd -
 
 %install
 %makeinstall_std
@@ -501,7 +501,7 @@ rm -rf $RPM_BUILD_ROOT/%{python_sitearch}
 cd python
 %py2_install
 %py3_install
-cd ..
+cd -
 
 # Save list of packages through cron
 mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/cron.daily
@@ -527,10 +527,10 @@ rm -f doc-copy/Makefile*
 
 mkdir -p $RPM_BUILD_ROOT/var/spool/repackage
 
-mkdir -p %buildroot%rpmhome/macros.d
-install %SOURCE1 %buildroot%rpmhome/macros.d
-mkdir -p %buildroot%_sysconfdir/rpm/macros.d
-cat > %buildroot%_sysconfdir/rpm/macros <<EOF
+mkdir -p %{buildroot}%{rpmhome}/macros.d
+install %{SOURCE1} %{buildroot}%{rpmhome}/macros.d
+mkdir -p %{buildroot}%{_sysconfdir}/rpm/macros.d
+cat > %{buildroot}%{_sysconfdir}/rpm/macros <<EOF
 # Put your own system macros here
 # usually contains 
 
@@ -556,7 +556,6 @@ eatmydata make check || cat tests/rpmtests.log
 rm -rf /usr/lib/rpm/*-mandrake-*
 rm -rf /usr/lib/rpm/*-%{_real_vendor}-*
 
-
 %post
 if [ ! -f /var/lib/rpm/Packages ]; then
     /bin/rpm --initdb
@@ -565,7 +564,7 @@ fi
 %postun
 /usr/share/rpm-helper/del-user rpm $1 rpm
 
-%define rpmattr		%attr(0755, rpm, rpm)
+%define rpmattr %attr(0755, rpm, rpm)
 
 %files -f %{name}.lang
 %doc COPYING
@@ -597,8 +596,8 @@ fi
 %attr(0755, rpm, rpm) %{rpmhome}/elfdeps
 %attr(0755, rpm, rpm) %{rpmhome}/script.req
 
-%rpmattr	%{rpmhome}/rpm2cpio.sh
-%rpmattr	%{rpmhome}/tgpg
+%rpmattr %{rpmhome}/rpm2cpio.sh
+%rpmattr %{rpmhome}/tgpg
 
 %dir %attr(   -, rpm, rpm) %{rpmhome}/fileattrs
 %attr(0644, rpm, rpm) %{rpmhome}/fileattrs/*.attr
@@ -619,27 +618,27 @@ fi
 %lang(ru) %{_mandir}/ru/man[18]/*.[18]*
 %lang(sk) %{_mandir}/sk/man[18]/*.[18]*
 
-%attr(0755, rpm, rpm)	%dir %_localstatedir/lib/rpm
+%attr(0755, rpm, rpm) %dir %_localstatedir/lib/rpm
 
-%define	rpmdbattr %attr(0644, rpm, rpm) %verify(not md5 size mtime) %ghost %config(missingok,noreplace)
+%define rpmdbattr %attr(0644, rpm, rpm) %verify(not md5 size mtime) %ghost %config(missingok,noreplace)
 
-%rpmdbattr	/var/lib/rpm/Basenames
-%rpmdbattr	/var/lib/rpm/Conflictname
-%rpmdbattr	/var/lib/rpm/__db.0*
-%rpmdbattr	/var/lib/rpm/Dirnames
-%rpmdbattr	/var/lib/rpm/Group
-%rpmdbattr	/var/lib/rpm/Installtid
-%rpmdbattr	/var/lib/rpm/Name
-%rpmdbattr	/var/lib/rpm/Obsoletename
-%rpmdbattr	/var/lib/rpm/Packages
-%rpmdbattr	/var/lib/rpm/Providename
-%rpmdbattr	/var/lib/rpm/Provideversion
-%rpmdbattr	/var/lib/rpm/Removetid
-%rpmdbattr	/var/lib/rpm/Requirename
-%rpmdbattr	/var/lib/rpm/Requireversion
-%rpmdbattr	/var/lib/rpm/Sha1header
-%rpmdbattr	/var/lib/rpm/Sigmd5
-%rpmdbattr	/var/lib/rpm/Triggername
+%rpmdbattr /var/lib/rpm/Basenames
+%rpmdbattr /var/lib/rpm/Conflictname
+%rpmdbattr /var/lib/rpm/__db.0*
+%rpmdbattr /var/lib/rpm/Dirnames
+%rpmdbattr /var/lib/rpm/Group
+%rpmdbattr /var/lib/rpm/Installtid
+%rpmdbattr /var/lib/rpm/Name
+%rpmdbattr /var/lib/rpm/Obsoletename
+%rpmdbattr /var/lib/rpm/Packages
+%rpmdbattr /var/lib/rpm/Providename
+%rpmdbattr /var/lib/rpm/Provideversion
+%rpmdbattr /var/lib/rpm/Removetid
+%rpmdbattr /var/lib/rpm/Requirename
+%rpmdbattr /var/lib/rpm/Requireversion
+%rpmdbattr /var/lib/rpm/Sha1header
+%rpmdbattr /var/lib/rpm/Sigmd5
+%rpmdbattr /var/lib/rpm/Triggername
 
 %files -n %librpmname
 %{_libdir}/librpm.so.%{libmajor}
@@ -673,37 +672,34 @@ fi
 
 %files build
 %doc doc-copy/*
-%rpmattr	%{_bindir}/rpmbuild
-%rpmattr        %{_bindir}/rpmspec
-%rpmattr	%{_prefix}/lib/rpm/brp-*
-%rpmattr	%{_prefix}/lib/rpm/check-files
-%rpmattr	%{_prefix}/lib/rpm/debugedit
-%rpmattr	%{_prefix}/lib/rpm/sepdebugcrcfix
-%rpmattr	%{_prefix}/lib/rpm/*.prov 
-%rpmattr	%{_prefix}/lib/rpm/find-debuginfo.sh
-%rpmattr	%{_prefix}/lib/rpm/find-lang.sh
-%rpmattr	%{_prefix}/lib/rpm/find-provides
-%rpmattr	%{_prefix}/lib/rpm/find-requires
-%rpmattr	%{_prefix}/lib/rpm/perl.req
-
-%rpmattr	%{_prefix}/lib/rpm/check-buildroot
-%rpmattr	%{_prefix}/lib/rpm/check-prereqs
-%rpmattr	%{_prefix}/lib/rpm/check-rpaths
-%rpmattr	%{_prefix}/lib/rpm/check-rpaths-worker
-%rpmattr	%{_prefix}/lib/rpm/libtooldeps.sh
-%rpmattr	%{_prefix}/lib/rpm/macros.perl
-%rpmattr	%{_prefix}/lib/rpm/macros.php
-%rpmattr	%{_prefix}/lib/rpm/macros.python
-%rpmattr	%{_prefix}/lib/rpm/mono-find-provides
-%rpmattr	%{_prefix}/lib/rpm/mono-find-requires
-%rpmattr	%{_prefix}/lib/rpm/ocaml-find-provides.sh
-%rpmattr	%{_prefix}/lib/rpm/ocaml-find-requires.sh
-%rpmattr	%{_prefix}/lib/rpm/pkgconfigdeps.sh
-%rpmattr	%{_prefix}/lib/rpm/pythondeps.sh
-%rpmattr	%{_prefix}/lib/rpm/pythondistdeps.py*
-
-%rpmattr	%{_prefix}/lib/rpm/rpmdeps
-
+%rpmattr %{_bindir}/rpmbuild
+%rpmattr %{_bindir}/rpmspec
+%rpmattr %{_prefix}/lib/rpm/brp-*
+%rpmattr %{_prefix}/lib/rpm/check-files
+%rpmattr %{_prefix}/lib/rpm/debugedit
+%rpmattr %{_prefix}/lib/rpm/sepdebugcrcfix
+%rpmattr %{_prefix}/lib/rpm/*.prov 
+%rpmattr %{_prefix}/lib/rpm/find-debuginfo.sh
+%rpmattr %{_prefix}/lib/rpm/find-lang.sh
+%rpmattr %{_prefix}/lib/rpm/find-provides
+%rpmattr %{_prefix}/lib/rpm/find-requires
+%rpmattr %{_prefix}/lib/rpm/perl.req
+%rpmattr %{_prefix}/lib/rpm/check-buildroot
+%rpmattr %{_prefix}/lib/rpm/check-prereqs
+%rpmattr %{_prefix}/lib/rpm/check-rpaths
+%rpmattr %{_prefix}/lib/rpm/check-rpaths-worker
+%rpmattr %{_prefix}/lib/rpm/libtooldeps.sh
+%rpmattr %{_prefix}/lib/rpm/macros.perl
+%rpmattr %{_prefix}/lib/rpm/macros.php
+%rpmattr %{_prefix}/lib/rpm/macros.python
+%rpmattr %{_prefix}/lib/rpm/mono-find-provides
+%rpmattr %{_prefix}/lib/rpm/mono-find-requires
+%rpmattr %{_prefix}/lib/rpm/ocaml-find-provides.sh
+%rpmattr %{_prefix}/lib/rpm/ocaml-find-requires.sh
+%rpmattr %{_prefix}/lib/rpm/pkgconfigdeps.sh
+%rpmattr %{_prefix}/lib/rpm/pythondeps.sh
+%rpmattr %{_prefix}/lib/rpm/pythondistdeps.py*
+%rpmattr %{_prefix}/lib/rpm/rpmdeps
 
 %{_mandir}/man8/rpmbuild.8*
 %{_mandir}/man8/rpmdeps.8*
