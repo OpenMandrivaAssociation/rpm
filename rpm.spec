@@ -285,7 +285,7 @@ Summary:	Libraries for building and signing RPM packages
 Group:		System/Libraries
 License:	GPLv2+ and LGPLv2+ with exceptions
 Obsoletes:	rpm-build-libs < %{version}-%{release}
-Provides:	rpm-build-libs%{_isa} = %{version}-%{release}
+Provides:	rpm-build-libs%{?_isa} = %{version}-%{release}
 
 %description -n %{librpmbuild}
 This package contains the RPM shared libraries for building and signing
