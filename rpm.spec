@@ -9,13 +9,13 @@
 %endif
 
 %define _prefix /usr
-%define _libdir %_prefix/%_lib
-%define _bindir %_prefix/bin
+%define _libdir %{_prefix}/%{_lib}
+%define _bindir %{_prefix}/bin
 %define _sysconfdir /etc
 %define _datadir /usr/share
-%define _defaultdocdir %_datadir/doc
+%define _defaultdocdir %{_datadir}/doc
 %define _localstatedir /var
-%define _infodir %_datadir/info
+%define _infodir %{_datadir}/info
 
 %if %{?mklibname:0}%{?!mklibname:1}
 %define mklibname(ds)  %{_lib}%{1}%{?2:%{2}}%{?3:_%{3}}%{-s:-static}%{-d:-devel}
@@ -209,7 +209,7 @@ BuildRequires:	pkgconfig(liblzma) >= 5
 BuildRequires:	automake
 BuildRequires:	doxygen
 BuildRequires:	elfutils-devel
-BuildRequires:	libbeecrypt-devel
+BuildRequires:	beecrypt-devel
 BuildRequires:	binutils-devel
 BuildRequires:	ed
 BuildRequires:	gettext-devel
@@ -227,7 +227,7 @@ BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	pkgconfig(libssl)
 BuildRequires:	pkgconfig(lua) >= 5.3
 BuildRequires:	pkgconfig(libcap)
-BuildRequires:	libacl-devel
+BuildRequires:	acl-devel
 BuildRequires:	pkgconfig(libarchive)
 BuildRequires:	pkgconfig(python2)
 BuildRequires:	pkgconfig(python3)
@@ -246,14 +246,14 @@ Requires:	coreutils
 Requires:	setup >= 2.8.9
 Requires:	rpm-%{_real_vendor}-setup >= %{rpmsetup_version}
 Requires:	chkconfig
-Requires:	%librpmname = %epoch:%version-%release
+Requires:	%librpmname = %{epoch}:%{version}-%{release}
 %define git_url http://rpm.org/git/rpm.git
 Requires(pre):	rpm-helper
 Requires(pre):	coreutils
 Requires(postun):	rpm-helper
 
 # This is a completely different implementation of RPM, replacing rpm5
-Conflicts:	rpm < %epoch:%version-%release
+Conflicts:	rpm < %{epoch}:%{version}-%{release}
 
 # Weakly depend on stuff that used to be in main rpm package
 # Note: after rpm is updated in buildroot, change to Recommends
@@ -272,8 +272,8 @@ the package like its version, a description, etc.
 Summary:	Libraries for manipulating RPM packages
 Group:		System/Libraries
 License:	GPLv2+ and LGPLv2+ with exceptions
-Provides:	librpm = %version-%release
-Provides:	rpm-libs = %version-%release
+Provides:	librpm = %{version}-%{release}
+Provides:	rpm-libs = %{version}-%{release}
 # librpm5 is gone...
 Obsoletes:	%{_lib}rpm5.4
 
@@ -295,12 +295,12 @@ packages.
 Summary:	Development files for applications which will manipulate RPM packages
 Group:		Development/C
 License:	GPLv2+ and LGPLv2+ with exceptions
-Requires:	rpm = %epoch:%{version}-%{release}
-Provides:	librpm-devel = %version-%release
-Provides:	rpm-devel = %version-%release
-Requires:	%librpmname = %epoch:%version-%release
-Requires:	%librpmbuild = %epoch:%version-%release
-Requires:	%librpmsign = %epoch:%version-%release
+Requires:	rpm = %{epoch}:%{version}-%{release}
+Provides:	librpm-devel = %{version}-%{release}
+Provides:	rpm-devel = %{version}-%{release}
+Requires:	%librpmname = %{epoch}:%{version}-%{release}
+Requires:	%librpmbuild = %{epoch}:%{version}-%{release}
+Requires:	%librpmsign = %{epoch}:%{version}-%{release}
 # We don't provide this anymore...
 Obsoletes:	%{_lib}rpm-static-devel < 2:4.14-0
 
@@ -341,12 +341,12 @@ Requires:	elfutils >= 0.167-2
 Requires:	perl(CPAN::Meta) >= 2.112.150
 Requires:	perl(ExtUtils::MakeMaker) >= 6.570_700
 Requires:	perl(YAML::Tiny)
-Requires:	rpm = %epoch:%{version}-%{release}
+Requires:	rpm = %{epoch}:%{version}-%{release}
 Requires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
-Requires:	%librpmbuild = %epoch:%version-%release
+Requires:	%librpmbuild = %{epoch}:%{version}-%{release}
 # For pythondistdeps generator
 Requires:	python-pkg-resources
-Conflicts:	rpm-build < %epoch:%{version}-%{release}
+Conflicts:	rpm-build < %{epoch}:%{version}-%{release}
 
 %description build
 The rpm-build package contains the scripts and executable programs
@@ -362,7 +362,7 @@ This package contains support for digitally signing RPM packages.
 %package -n python2-%{name}
 Summary:	Python 2 bindings for apps which will manipulate RPM packages
 Group:		Development/Python
-Requires:	rpm = %epoch:%{version}-%{release}
+Requires:	rpm = %{epoch}:%{version}-%{release}
 
 %description -n python2-%{name}
 The python2-rpm package contains a module that permits applications
@@ -375,8 +375,8 @@ programs that will manipulate RPM packages and databases.
 %package -n python-%{name}
 Summary:	Python 3 bindings for apps which will manipulate RPM packages
 Group:		Development/Python
-Requires:	rpm = %epoch:%{version}-%{release}
-Obsoletes:	python-%{name} < %epoch:%{version}-%{release}
+Requires:	rpm = %{epoch}:%{version}-%{release}
+Obsoletes:	python-%{name} < %{epoch}:%{version}-%{release}
 
 %description -n python-%{name}
 The python-rpm package contains a module that permits applications
@@ -565,7 +565,7 @@ fi
 %postun
 /usr/share/rpm-helper/del-user rpm $1 rpm
 
-%define	rpmattr		%attr(0755, rpm, rpm)
+%define rpmattr		%attr(0755, rpm, rpm)
 
 %files -f %{name}.lang
 %doc COPYING
