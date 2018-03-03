@@ -329,12 +329,14 @@ Summary:	Scripts and executable programs used to build packages
 Group:		System/Configuration/Packaging
 Requires:	autoconf
 Requires:	automake
+Requires:	clang
 Requires:	file
 # We need cputoolize & amd64-* alias to x86_64-* in config.sub
 Requires:	libtool-base
 Requires:	patch
+Requires:	diffutils
 Requires:	make
-Requires:	tar
+Requires:	tar >= 3.3.2
 Requires:	unzip
 # Versioned requirement for Patch 400
 Requires:	elfutils >= 0.167-2
@@ -346,6 +348,10 @@ Requires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_vers
 Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
 # For pythondistdeps generator
 Requires:	python-pkg-resources
+# (tpg) enable this after switch to rpm4
+# Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.32
+Requires:	spec-helper >= 0.31.12
+Requires:	pkgconfig
 Conflicts:	rpm-build < %{epoch}:%{version}-%{release}
 
 %description build
