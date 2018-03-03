@@ -184,6 +184,14 @@ Patch3500:	rpm-4.13.x-mga-enable-pydistdeps-requires.patch
 # (for spec-helper)
 Patch4000:	rpm-4.10.0-find-debuginfo__mga-cfg.diff
 
+#
+# OpenMandriva patches
+#
+
+# Enable usage of %disttag for DistTag tag
+Patch5000:	rpm-4.14.x-omv-disttag-macro.patch
+
+
 # OpenMandriva patches for transitioning from RPM5
 #-------------------------------------------------
 Patch10001:	10001-HACK-Detect-and-disable-DistEpoch-in-EVR-comparison.patch
