@@ -1,3 +1,16 @@
 addFilter('rpm\..*: standard-dir-owned-by-package (\(.*\) |)/var/lib/rpm')
 # For multiarch-dispatch.h
 addFilter('rpm\..*: devel-file-in-non-devel-package (\(.*\) |)/usr/include/multiarch-dispatch.h')
+
+# (tpg) these can be removed after rpm5->rpm4 switch is done
+# rpm.x86_64: E: standard-dir-owned-by-package (Badness: 50) /var/lib/rpm
+addFilter('E: standard-dir-owned-by-package')
+# lib64rpm-devel.x86_64: E: no-dependency-on (Badness: 1) lib64rpm-devel/lib64rpm-devel-libs/liblib64rpm-devel
+# rpm-plugin-ima.x86_64: E: no-dependency-on (Badness: 1) locales-ima
+addFilter('E: no-dependency-on')
+# rpm-cron.noarch: E: incoherent-logrotate-file (Badness: 1) /etc/logrotate.d/rpm
+addFilter('E: incoherent-logrotate-file')
+# rpm-build.x86_64: E: explicit-lib-dependency (Badness: 1) libtool-base
+addFilter('E: explicit-lib-dependency')
+# rpm-cron.noarch: E: executable-marked-as-config-file (Badness: 1) /etc/cron.daily/rpm
+addFilter('E: executable-marked-as-config-file')
