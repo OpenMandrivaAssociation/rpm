@@ -79,7 +79,7 @@ Name:		rpm
 Epoch:		2
 Version:	%{rpmver}
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.4
+Release:	%{?snapver:0.%{snapver}.}0.5
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -370,7 +370,8 @@ Requires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_vers
 Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
 # For pythondistdeps generator
 Requires:	python-pkg-resources
-Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.32
+# Drop until urpmi->dnf transition is complete
+#Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.32
 Requires:	spec-helper >= 0.31.12
 Requires:	pkgconf
 Conflicts:	rpm-build < %{epoch}:%{version}-%{release}
