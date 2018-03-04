@@ -79,7 +79,7 @@ Name:		rpm
 Epoch:		2
 Version:	%{rpmver}
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.3
+Release:	%{?snapver:0.%{snapver}.}0.4
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -190,6 +190,9 @@ Patch4000:	rpm-4.10.0-find-debuginfo__mga-cfg.diff
 
 # Enable usage of %disttag for DistTag tag
 Patch5000:	rpm-4.14.x-omv-disttag-macro.patch
+# Support OpenMandriva's variant of legacy pythonegg deps, and enable legacy provides
+Patch5001:	rpm-4.14.x-omv-pythonXegg-legacy-deps.patch
+Patch5002:	rpm-4.14.x-omv-keep-legacy-provides.patch
 
 
 # OpenMandriva patches for transitioning from RPM5

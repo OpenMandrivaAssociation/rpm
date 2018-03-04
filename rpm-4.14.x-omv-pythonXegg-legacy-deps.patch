@@ -1,0 +1,43 @@
+From 252447b5b11ab07a5ea3cd0409aeb80270269cd4 Mon Sep 17 00:00:00 2001
+From: Neal Gompa <ngompa13@gmail.com>
+Date: Sat, 13 Jan 2018 10:02:03 -0500
+Subject: [PATCH] Use OpenMandriva's variant of legacy pythonegg dependencies
+
+The upstream dependency generator supports generating legacy pythonegg
+dependencies in the form used by Mageia Linux. However, OpenMandriva Lx
+uses a different variant.
+---
+ scripts/pythondistdeps.py | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/pythondistdeps.py b/scripts/pythondistdeps.py
+index 2abb59f49..becb1c25b 100755
+--- a/scripts/pythondistdeps.py
++++ b/scripts/pythondistdeps.py
+@@ -141,7 +141,10 @@ for f in files:
+                 if pymajor_name not in py_deps:
+                     py_deps[pymajor_name] = []
+             if legacy or legacy_Provides:
+-                legacy_name = 'pythonegg({})({})'.format(pyver_major, dist.key)
++                if pyver_major == '2':
++                    legacy_name = 'pythonegg({})'.format(dist.key)
++                else:
++                    legacy_name = 'python{}egg({})'.format(pyver_major, dist.key)
+                 if legacy_name not in py_deps:
+                     py_deps[legacy_name] = []
+             if dist.version:
+@@ -177,7 +180,10 @@ for f in files:
+             # add requires/recommends based on egg/dist metadata
+             for dep in deps:
+                 if legacy:
+-                    name = 'pythonegg({})({})'.format(pyver_major, dep.key)
++                    if pyver_major == '2':
++                        name = 'pythonegg({})'.format(dist.key)
++                    else:
++                        name = 'python{}egg({})'.format(pyver_major, dist.key)
+                 else:
+                     if PyMajorVer_Deps:
+                         name = 'python{}dist({})'.format(pyver_major, dep.key)
+-- 
+2.15.1
+
