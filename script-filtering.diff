@@ -1,0 +1,29 @@
+--- ./scripts/script.req	2014-09-10 14:15:28.016954963 +0200
++++ ./scripts/script.req	2014-09-10 14:14:58.614955813 +0200
+@@ -13,6 +13,8 @@
+ 	fi
+ }
+ 
++BLACKLIST="bin/(bash|libsafe|libfakeroot|ocamlrun|perl|python|ruby|sh)" 
++
+ # TODO: handle "#!/usr/bin/env foo" somehow
+ while read filename; do
+     # common cases 
+@@ -19,6 +19,17 @@
+     INTERP=$(sed -n -e '1s:^#![[:space:]]*\(/[^[:space:]]\{1,\}\).*:\1:p' "$filename")
+     if echo $INTERP|grep bin/perl >/dev/null; then
+ 	    ouput_perl_base
++    elif  echo $INTERP|grep -E "$BLACKLIST" >/dev/null; then
++	    # drop automatically generated dependencies on interpreters we either don't
++	    #  need dependencies on or that we have other dedicated dependency generators
++	    #  for making them duplicate, reducing ~5K packages' dependencies at
++	    #  next rebuild.
++	    # - sh: we really don't need to add these dependencies as they're required by
++	    # glibc and therefore guaranteed to be satisfied
++	    # - perl/python/ruby: we already have dedicated dependency generators for these
++	    # - ocamlrun: we already have ocaml(runtime) for these
++	    # - libsafe|libfakeroot: historically filtered
++	    :
+     else
+ 	    echo $INTERP
+     fi

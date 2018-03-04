@@ -1,0 +1,11 @@
+--- ./scripts/pkgconfigdeps.sh	2014-09-09 15:39:08.000000000 +0200
++++ ./scripts/pkgconfigdeps.sh	2014-09-10 11:35:04.336816704 +0200
+@@ -41,7 +41,7 @@
+     case "${filename}" in
+     *.pc)
+ 	i="`expr $i + 1`"
+-	[ $i -eq 1 ] && echo "$pkgconfig"
++	[ $i -eq 1 ] && echo "pkgconfig"
+ 	DIR="`dirname ${filename}`"
+ 	export PKG_CONFIG_PATH="$DIR:$DIR/../../share/pkgconfig"
+ 	$pkgconfig --print-requires --print-requires-private "$filename" 2> /dev/null | while read n r v ; do

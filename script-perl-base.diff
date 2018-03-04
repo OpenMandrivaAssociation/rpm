@@ -1,0 +1,31 @@
+--- ./scripts/script.req	2014-08-27 16:56:04.000000000 +0200
++++ ./scripts/script.req	2014-09-09 10:04:01.121011006 +0200
+@@ -1,9 +1,27 @@
+ #!/bin/sh
+ 
++ouput_perl_base()
++{
++	perlEV=`rpm -q --qf '%{EPOCH}:%{VERSION}\n' perl-base`
++	if [ $? != 0 ]; then
++	       unset perlEV
++	fi
++
++	dep=`echo "perl-base >= $perlEV"`
++	if [[ -n $dep ]]; then
++	    echo $dep
++	fi
++}
++
+ # TODO: handle "#!/usr/bin/env foo" somehow
+ while read filename; do
+     # common cases 
+-    sed -n -e '1s:^#![[:space:]]*\(/[^[:space:]]\{1,\}\).*:\1:p' "$filename"
++    INTERP=$(sed -n -e '1s:^#![[:space:]]*\(/[^[:space:]]\{1,\}\).*:\1:p' "$filename")
++    if echo $INTERP|grep bin/perl >/dev/null; then
++	    ouput_perl_base
++    else
++	    echo $INTERP
++    fi
+     #!/usr/bin/env /foo/bar
+     sed -n -e '1s:^#![[:space:]]*[^[:space:]]*/bin/env[[:space:]]\{1,\}\(/[^[:space:]]\{1,\}\):\1:p' "$filename"
+ done

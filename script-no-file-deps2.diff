@@ -1,0 +1,21 @@
+--- ./scripts/script.req.tv2	2015-08-28 05:04:54.252419908 -0400
++++ ./scripts/script.req	2015-08-28 05:06:08.221383229 -0400
+@@ -43,6 +43,18 @@
+ 	    if [ -n "$PKG" ]; then
+ 		    echo $PKG
+ 	    else
++		    case $INTERP in
++		    # special cases for interpreters not in basesystem & not always BR or that rely on alternatives:
++		    */csh) echo tcsh ;;
++		    */expect) echo expect ;;
++		    */fontforge) echo fontforge ;;
++		    */lua) echo lua ;;
++		    */node) echo nodejs ;;
++		    */php) echo php-cli ;;
++		    */wish) echo tk ;;
++		    # default case:
++		    *) echo $INTERP;;
++		    esac
+ 		    echo $INTERP
+ 	    fi
+     fi
