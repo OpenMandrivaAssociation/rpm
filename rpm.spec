@@ -76,7 +76,7 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Epoch:		2
+Epoch:		3
 Version:	%{rpmver}
 # Note the "0.X" at the end! It's not yet ready for building!
 Release:	%{?snapver:0.%{snapver}.}0.1
@@ -203,6 +203,7 @@ Patch10002:	10002-HACK-Skip-all-triggers-that-start-with-a-file-path-.patch
 License:	GPLv2+
 
 BuildRequires:	autoconf
+BuildRequires:	pkgconf
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(bzip2)
 BuildRequires:	pkgconfig(liblzma) >= 5
@@ -351,7 +352,7 @@ Requires:	python-pkg-resources
 # (tpg) enable this after switch to rpm4
 # Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.32
 Requires:	spec-helper >= 0.31.12
-Requires:	pkgconfig
+Requires:	pkgconf
 Conflicts:	rpm-build < %{epoch}:%{version}-%{release}
 
 %description build
