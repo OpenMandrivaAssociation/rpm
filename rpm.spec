@@ -79,7 +79,7 @@ Name:		rpm
 Epoch:		2
 Version:	%{rpmver}
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.5
+Release:	%{?snapver:0.%{snapver}.}0.6
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -523,6 +523,9 @@ cd -
 %install
 %makeinstall_std
 
+# Add legacy symlink to rpm...
+ln -sr %{buildroot}/%{_bindir}/rpm %{buildroot}/bin/rpm
+
 # We need to build with --enable-python for the self-test suite, but we
 # actually package the bindings built with setup.py (#531543#c26)
 rm -rf $RPM_BUILD_ROOT/%{python_sitearch}
@@ -597,6 +600,7 @@ fi
 %files -f %{name}.lang
 %doc COPYING
 %doc doc/manual/[a-z]*
+%attr(-,rpm,rpm) /bin/rpm
 %attr(0755,rpm,rpm) %{_bindir}/rpm
 %attr(0755, rpm, rpm) %{_bindir}/rpm2cpio
 %attr(0755, rpm, rpm) %{_bindir}/rpm2archive
