@@ -524,7 +524,7 @@ cd -
 %makeinstall_std
 
 # Add legacy symlink to rpm...
-mkdir -p %{buildroot}/bin/rpm
+mkdir -p %{buildroot}/bin
 ln -sr %{buildroot}/%{_bindir}/rpm %{buildroot}/bin/rpm
 
 # We need to build with --enable-python for the self-test suite, but we
