@@ -1,6 +1,6 @@
 # WARNING: This package is synced with Fedora and Mageia
 
-%define lib64arches x86_64
+%define lib64arches x86_64 aarch64
 
 %ifarch %lib64arches
 %define _lib lib64
@@ -79,7 +79,7 @@ Name:		rpm
 Epoch:		2
 Version:	%{rpmver}
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.6
+Release:	%{?snapver:0.%{snapver}.}0.7
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
