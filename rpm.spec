@@ -524,6 +524,7 @@ cd -
 %makeinstall_std
 
 # Add legacy symlink to rpm...
+mkdir -p %{buildroot}/bin/rpm
 ln -sr %{buildroot}/%{_bindir}/rpm %{buildroot}/bin/rpm
 
 # We need to build with --enable-python for the self-test suite, but we
@@ -563,7 +564,7 @@ install %{SOURCE1} %{buildroot}%{rpmhome}/macros.d
 mkdir -p %{buildroot}%{_sysconfdir}/rpm/macros.d
 cat > %{buildroot}%{_sysconfdir}/rpm/macros <<EOF
 # Put your own system macros here
-# usually contains 
+# usually contains
 
 # Set this one according your locales
 # %%_install_langs
