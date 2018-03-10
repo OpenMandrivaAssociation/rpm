@@ -373,7 +373,11 @@ Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
 # For pythondistdeps generator
 Requires:	python-pkg-resources
 # Drop until urpmi->dnf transition is complete
-#Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.32
+%ifarch %{ix86} x86_64
+Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.32
+Requires:	dwz
+Requires:	openmandriva-repos-pkgprefs
+%endif
 Requires:	spec-helper >= 0.31.12
 Requires:	pkgconf
 Conflicts:	rpm-build < %{epoch}:%{version}-%{release}
