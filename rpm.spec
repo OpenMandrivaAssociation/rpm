@@ -224,10 +224,12 @@ Patch10002:	10002-HACK-Skip-all-triggers-that-start-with-a-file-path-.patch
 License:	GPLv2+
 
 BuildRequires:	autoconf
+BuildRequires:	bison
 BuildRequires:	pkgconf
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(bzip2)
 BuildRequires:	pkgconfig(liblzma) >= 5
+BuildRequires:	pkgconfig(libzstd)
 BuildRequires:	automake
 BuildRequires:	doxygen
 BuildRequires:	elfutils-devel
