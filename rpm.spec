@@ -212,6 +212,8 @@ Patch5001:	rpm-4.14.x-omv-pythonXegg-legacy-deps.patch
 Patch5002:	rpm-4.14.x-omv-keep-legacy-provides.patch
 # For now, use legacy requires
 Patch5003:	rpm-4.14.x-omv-use-legacy-requires.patch
+# Add support for %%optional
+Patch5004:	rpm-4.14.0-optional.patch
 
 
 # OpenMandriva patches for transitioning from RPM5
