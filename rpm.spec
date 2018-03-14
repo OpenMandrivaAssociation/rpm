@@ -62,7 +62,6 @@
 #       of rpm is supported anyway, per architecture
 %define rpmhome /usr/lib/rpm
 
-%global rpmver 4.14.0
 #global snapver rc2
 %global srcver %{version}%{?snapver:-%{snapver}}
 %global srcdir %{?snapver:testing}%{!?snapver:%{name}-%(v=%{version}; echo ${v%.*}.x)}
@@ -77,9 +76,9 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		2
-Version:	%{rpmver}
+Version:	4.14.0
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.8
+Release:	%{?snapver:0.%{snapver}.}0.9
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -579,6 +578,54 @@ cat > %{buildroot}%{_sysconfdir}/rpm/macros <<EOF
 
 EOF
 
+# Fix up and add platform targets
+cd %{buildroot}%{rpmhome}/platform
+
+# There's a difference between *-linux and *-linux-gnux32... So got to add %%{_gnu} to target_platform
+sed -i -e 's,^%%_target_platform.*,&%%{_gnu},' *-linux/macros
+
+# We don't target pre-eabi ARM...
+sed -i -e 's,-gnu,-gnueabi,g' arm*-linux/macros
+
+# Add x32 ABI...
+cp -a x86_64-linux x32-linux
+sed -i -e 's,-gnu,-gnux32,g' x32-linux/macros
+
+# Add RISC-V...
+cp -a i686-linux riscv32-linux
+sed -i -e 's,i386,riscv32,g;s, -march=i686,,g;s,x86,riscv,g' riscv32-linux/macros
+cp -a x86_64-linux riscv64-linux
+sed -i -e 's,x86_64,riscv64,g;s,x86,riscv,g' riscv64-linux/macros
+
+# Add ARMv8 (aarch64 in 32-bit mode)
+cp -a armv7hnl-linux armv8hnl-linux
+sed -i -e 's,v7,v8,g' armv8hnl-linux/macros
+cp -a armv7l-linux armv8l-linux
+sed -i -e 's,v7,v8,g' armv8l-linux/macros
+
+# Let's create some crosscompile targets for MUSL based systems...
+for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 x32 riscv32 riscv64; do
+	cp -a $arch-linux $arch-linuxmusl
+	sed -i -e 's,-gnu,-musl,g' $arch-linuxmusl/macros
+	# FIXME this is not very nice... It's a workaround for
+	# not being able to set _target_os in platform macros
+	sed -i -e 's,%%{_target_os},linux,g' $arch-linuxmusl/macros
+done
+
+# We may want to crosscompile to Android as well...
+# Different targets here because Android doesn't use ARM32 hardfloat ABIs
+for arch in aarch64 armv7l armv8l i686 x86_64 riscv32 riscv64; do
+	cp -a $arch-linux $arch-android
+	sed -i -e 's,-gnu,-android,g' $arch-android/macros
+	# FIXME this is not very nice... It's a workaround for
+	# not being able to set _target_os in platform macros
+	sed -i -e 's,%%{_target_os},linux,g' $arch-android/macros
+done
+# FIXME this is not very nice... It's a workaround for
+# not being able to set _target_cpu in platform macros
+sed -i -e 's,%%{_target_cpu},x86_64,g' x32-*/macros
+cd -
+
 %find_lang %{name}
 
 find $RPM_BUILD_ROOT -name "*.la"|xargs rm -f
@@ -757,6 +804,7 @@ fi
 %files -n python-%{name}
 %{python3_sitearch}/%{name}/
 %{python3_sitearch}/%{name}-%{version}*.egg-info
+%exclude %{rpmhome}/__pycache__
 
 %files -n %librpmnamedevel
 %{_libdir}/librp*[a-z].so
