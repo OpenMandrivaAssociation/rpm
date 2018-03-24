@@ -1,15 +1,15 @@
-diff -up rpm-4.14.0/build/files.c.omv~ rpm-4.14.0/build/files.c
---- rpm-4.14.0/build/files.c.omv~	2018-03-14 21:51:32.078929855 +0100
-+++ rpm-4.14.0/build/files.c	2018-03-14 21:54:42.998798137 +0100
-@@ -857,6 +857,7 @@ static VFA_t const virtualAttrs[] = {
-     { "%license",	RPMFILE_LICENSE },
+diff -up rpm-4.14.1/build/files.c.5004 rpm-4.14.1/build/files.c
+--- rpm-4.14.1/build/files.c.5004	2018-01-16 09:06:56.474740606 +0000
++++ rpm-4.14.1/build/files.c	2018-03-24 19:53:37.180349696 +0000
+@@ -858,6 +858,7 @@ static VFA_t const virtualAttrs[] = {
      { "%pubkey",	RPMFILE_PUBKEY },
      { "%missingok",	RPMFILE_MISSINGOK },
+     { "%artifact",	RPMFILE_ARTIFACT },
 +    { "%optional",	RPMFILE_OPTIONAL },
      { NULL, 0 }
  };
  
-@@ -1384,7 +1385,7 @@ static rpmRC addFile(FileList fl, const
+@@ -1385,7 +1386,7 @@ static rpmRC addFile(FileList fl, const
  	    int lvl = RPMLOG_ERR;
  	    const char *msg = fl->cur.isDir ? _("Directory not found: %s\n") :
  					      _("File not found: %s\n");
@@ -18,7 +18,7 @@ diff -up rpm-4.14.0/build/files.c.omv~ rpm-4.14.0/build/files.c
  		lvl = RPMLOG_WARNING;
  		rc = RPMRC_OK;
  	    }
-@@ -2335,6 +2336,8 @@ static void processSpecialDir(rpmSpec sp
+@@ -2341,6 +2342,8 @@ static void processSpecialDir(rpmSpec sp
  		free(newfile);
  	    }
  	    argvFree(globFiles);
@@ -27,15 +27,14 @@ diff -up rpm-4.14.0/build/files.c.omv~ rpm-4.14.0/build/files.c
  	} else {
  	    rpmlog(RPMLOG_ERR, _("File not found by glob: %s\n"), eorigfile);
  	    fl->processingFailed = 1;
-diff -up rpm-4.14.0/lib/rpmfiles.h.omv~ rpm-4.14.0/lib/rpmfiles.h
---- rpm-4.14.0/lib/rpmfiles.h.omv~	2018-03-14 21:55:08.980192257 +0100
-+++ rpm-4.14.0/lib/rpmfiles.h	2018-03-14 21:55:33.315562108 +0100
-@@ -60,6 +60,7 @@ enum rpmfileAttrs_e {
-     RPMFILE_README	= (1 <<  8),	/*!< from %%readme */
+diff -up rpm-4.14.1/lib/rpmfiles.h.5004 rpm-4.14.1/lib/rpmfiles.h
+--- rpm-4.14.1/lib/rpmfiles.h.5004	2018-03-24 19:53:19.196032815 +0000
++++ rpm-4.14.1/lib/rpmfiles.h	2018-03-24 19:54:17.317055338 +0000
+@@ -61,6 +61,7 @@ enum rpmfileAttrs_e {
      /* bits 9-10 unused */
      RPMFILE_PUBKEY	= (1 << 11),	/*!< from %%pubkey */
-+    RPMFILE_OPTIONAL	= (1 << 12),	/*!< from %%optional */
+     RPMFILE_ARTIFACT	= (1 << 12),	/*!< from %%artifact */
++    RPMFILE_OPTIONAL	= (1 << 13),	/*!< from %%optional */
  };
  
  typedef rpmFlags rpmfileAttrs;
-diff -up rpm-4.14.0/lib/rpmlib.h.omv~ rpm-4.14.0/lib/rpmlib.h

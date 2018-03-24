@@ -1,5 +1,11 @@
 # WARNING: This package is synced with Fedora and Mageia
 
+%ifos linux
+# Get rid of any -gnu/-gnueabi suffix for platform names
+# to get traditional directory names
+%define _target_platform %{_target_cpu}-%{_vendor}-linux
+%endif
+
 %define lib64arches x86_64 aarch64
 
 %ifarch %lib64arches
@@ -64,7 +70,7 @@
 
 #global snapver rc2
 %global srcver %{version}%{?snapver:-%{snapver}}
-%global srcdir %{?snapver:testing}%{!?snapver:%{name}-%(v=%{version}; echo ${v%.*}.x)}
+%define srcdir %{?snapver:testing}%{!?snapver:%{name}-%(v=%{version}; echo ${v%.*}.x)}
 %global libmajor	8
 %global librpmname      %mklibname rpm  %{libmajor}
 %global librpmnamedevel %mklibname -d rpm
@@ -76,7 +82,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		2
-Version:	4.14.0
+Version:	4.14.1
 # Note the "0.X" at the end! It's not yet ready for building!
 Release:	%{?snapver:0.%{snapver}.}0.10
 Group:		System/Configuration/Packaging
@@ -91,9 +97,6 @@ Source2:	rpm.rpmlintrc
 
 # gnupg2 comes installed by default, avoid need to drag in gnupg too
 Patch4:		rpm-4.8.1-use-gpg2.patch
-
-# Patches already upstream:
-Patch100:	0001-Don-t-assume-per-user-groups-in-test-suite.patch
 
 # These are not yet upstream
 Patch906:	rpm-4.7.1-geode-i686.patch
@@ -110,10 +113,6 @@ Patch908:	rpm-4.13.x-pythondistdeps-fileattr.patch
 #
 # Upstream patches not carried by FC:
 #
-Patch1000:	0001-Add-support-for-passing-multiple-names-to-find-lang..patch
-Patch1001:	0001-Fix-not-all-transfiletriggerpostun-triggers-executin.patch
-Patch1002:	0001-Fix-file-lists-getting-fed-to-file-triggers-multiple.patch
-Patch1003:	0001-Don-t-require-signature-header-to-be-in-single-conti.patch
 
 #
 # Mageia patches
@@ -214,6 +213,9 @@ Patch5002:	rpm-4.14.x-omv-keep-legacy-provides.patch
 Patch5003:	rpm-4.14.x-omv-use-legacy-requires.patch
 # Add support for %%optional
 Patch5004:	rpm-4.14.0-optional.patch
+# Default to keeping a patch backup file for gendiff
+# and follow file naming conventions
+Patch5005:	rpm-4.14.1-patch-gendiff.patch
 
 
 # OpenMandriva patches for transitioning from RPM5
@@ -789,6 +791,7 @@ fi
 %rpmattr %{_prefix}/lib/rpm/pkgconfigdeps.sh
 %rpmattr %{_prefix}/lib/rpm/pythondeps.sh
 %rpmattr %{_prefix}/lib/rpm/pythondistdeps.py*
+%rpmattr %{_prefix}/lib/rpm/python-macro-helper
 %rpmattr %{_prefix}/lib/rpm/rpmdeps
 
 %{_mandir}/man8/rpmbuild.8*

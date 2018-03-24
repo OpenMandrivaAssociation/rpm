@@ -1,0 +1,30 @@
+diff -up rpm-4.14.1/macros.in.bero rpm-4.14.1/macros.in
+--- rpm-4.14.1/macros.in.bero	2018-03-24 19:56:49.191713667 +0000
++++ rpm-4.14.1/macros.in	2018-03-24 19:59:12.666217396 +0000
+@@ -1064,7 +1064,7 @@ package or when debugging this package.\
+ 
+ %apply_patches \
+   echo "warning: %%apply_patches is deprecated, try %%autopatch -p[01] instead" 1>&2\
+-  %{lua: keys = {}; for i, p in ipairs(patches) do print(rpm.expand("%{_patch} -s -p1 -b --suffix " .. string.format(".%04d", patches_num[p]) .. " --fuzz=%{_default_patch_fuzz} -i " .. p .. "\\n")) end }
++  %{lua: keys = {}; for i, p in ipairs(patches) do print(rpm.expand("%{_patch} -s -p1 -b --suffix " .. string.format(".%04d~", patches_num[p]) .. " --fuzz=%{_default_patch_fuzz} -i " .. p .. "\\n")) end }
+ 
+ #------------------------------------------------------------------------------
+ # Useful perl macros (from Artur Frysiak <wiget@t17.ds.pwr.wroc.pl>)
+@@ -1179,7 +1179,7 @@ package or when debugging this package.\
+ # Macros for further automated spec %setup and patch application
+ 
+ # default to plain patch
+-%__scm patch
++%__scm gendiff
+ # meh, figure something saner
+ %__scm_username rpm-build
+ %__scm_usermail <rpm-build>
+@@ -1193,7 +1193,7 @@ package or when debugging this package.\
+ # Plain patch with backups for gendiff
+ %__scm_setup_gendiff(q) %{nil}
+ %__scm_apply_gendiff(qp:m:)\
+-%{__patch} %{-p:-p%{-p*}} %{-q:-s} --fuzz=%{_default_patch_fuzz} %{_default_patch_flags} -b --suffix ".%{2}"
++%{__patch} %{-p:-p%{-p*}} %{-q:-s} --fuzz=%{_default_patch_fuzz} %{_default_patch_flags} -b --suffix ".%{2}~"
+ 
+ # Mercurial (aka hg)
+ %__scm_setup_hg(q)\
