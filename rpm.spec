@@ -84,7 +84,7 @@ Name:		rpm
 Epoch:		2
 Version:	4.14.1
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.10
+Release:	%{?snapver:0.%{snapver}.}0.11
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -216,6 +216,8 @@ Patch5004:	rpm-4.14.0-optional.patch
 # Default to keeping a patch backup file for gendiff
 # and follow file naming conventions
 Patch5005:	rpm-4.14.1-patch-gendiff.patch
+# https://github.com/rpm-software-management/rpm/pull/421
+Patch5006:	rpm-fix-division-by-zero.patch
 
 
 # OpenMandriva patches for transitioning from RPM5
