@@ -32,9 +32,9 @@ index 2abb59f49..becb1c25b 100755
                  if legacy:
 -                    name = 'pythonegg({})({})'.format(pyver_major, dep.key)
 +                    if pyver_major == '2':
-+                        name = 'pythonegg({})'.format(dist.key)
++                        name = 'pythonegg({})'.format(dep.key)
 +                    else:
-+                        name = 'python{}egg({})'.format(pyver_major, dist.key)
++                        name = 'python{}egg({})'.format(pyver_major, dep.key)
                  else:
                      if PyMajorVer_Deps:
                          name = 'python{}dist({})'.format(pyver_major, dep.key)
