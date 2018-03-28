@@ -84,7 +84,7 @@ Name:		rpm
 Epoch:		2
 Version:	4.14.1
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.12
+Release:	%{?snapver:0.%{snapver}.}0.13
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -371,9 +371,12 @@ Requires:	tar >= 3.3.2
 Requires:	unzip
 # Versioned requirement for Patch 400
 Requires:	elfutils >= 0.167-2
-Requires:	perl(CPAN::Meta) >= 2.112.150
-Requires:	perl(ExtUtils::MakeMaker) >= 6.570_700
-Requires:	perl(YAML::Tiny)
+# FIXME inherited from Mageia, which in turn inherited them from Mandriva
+# Nobody knows why -- but probably it's urpmi? Let's see if anything breaks
+# without those deps...
+#Requires:	perl(CPAN::Meta) >= 2.112.150
+#Requires:	perl(ExtUtils::MakeMaker) >= 6.570_700
+#Requires:	perl(YAML::Tiny)
 Requires:	rpm = %{epoch}:%{version}-%{release}
 Requires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
