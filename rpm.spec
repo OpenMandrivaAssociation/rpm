@@ -84,7 +84,7 @@ Name:		rpm
 Epoch:		2
 Version:	4.14.1
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.14
+Release:	%{?snapver:0.%{snapver}.}0.15
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -186,22 +186,39 @@ Patch4000:	rpm-4.10.0-find-debuginfo__mga-cfg.diff
 # OpenMandriva patches
 #
 
+#
+# Upstream patches not carried by Fedora or Mageia
+#
+
 # Enable usage of %disttag for DistTag tag
-Patch5000:	rpm-4.14.x-omv-disttag-macro.patch
-# Support OpenMandriva's variant of legacy pythonegg deps, and enable legacy provides
-Patch5001:	rpm-4.14.x-omv-pythonXegg-legacy-deps.patch
-Patch5002:	rpm-4.14.x-omv-keep-legacy-provides.patch
-# For now, use legacy requires
-Patch5003:	rpm-4.14.x-omv-use-legacy-requires.patch
+# From: https://github.com/rpm-software-management/rpm/commit/6ba887683b4bf9712be00a3d5dcaa890bfce47c1
+Patch5000:	rpm-4.14.x-disttag-macro.patch
+
+#
+# Patches proposed upstream
+#
+
 # Add support for %%optional
-Patch5004:	rpm-4.14.0-optional.patch
+# From: https://github.com/rpm-software-management/rpm/pull/417
+Patch5001:	rpm-4.14.0-optional.patch
+# https://github.com/rpm-software-management/rpm/pull/421
+Patch5002:	rpm-fix-division-by-zero.patch
+# Add armv8 support
+# From: https://github.com/rpm-software-management/rpm/pull/425
+Patch5003:	rpm-4.14.x-armv8-arches.patch
+
+#
+# OpenMandriva specific patches
+#
+
+# Support OpenMandriva's variant of legacy pythonegg deps, and enable legacy provides
+Patch6001:	rpm-4.14.x-omv-pythonXegg-legacy-deps.patch
+Patch6002:	rpm-4.14.x-omv-keep-legacy-provides.patch
+# For now, use legacy requires
+Patch6003:	rpm-4.14.x-omv-use-legacy-requires.patch
 # Default to keeping a patch backup file for gendiff
 # and follow file naming conventions
-Patch5005:	rpm-4.14.1-patch-gendiff.patch
-# https://github.com/rpm-software-management/rpm/pull/421
-Patch5006:	rpm-fix-division-by-zero.patch
-# Add armv8 support
-Patch5007:	https://github.com/rpm-software-management/rpm/pull/425/commits/3a7ff9a9cc95ea330650f3345757c06f2e76b922.patch
+Patch6004:	rpm-4.14.x-omv-patch-gendiff.patch
 
 # OpenMandriva patches for transitioning from RPM5
 #-------------------------------------------------
