@@ -43,9 +43,9 @@
 %{!?__python2: %global __python2 /usr/bin/python2}
 %{!?__python3: %global __python3 /usr/bin/python3}
 
-%{!?py2_build: %global py2_build CFLAGS="%{optflags}" %{__python2} setup.py build}
+%{!?py2_build: %global py2_build LDSHARED="%{__cc} -pthread -shared %{optflags}" CFLAGS="%{optflags}" %{__python2} setup.py build}
 %{!?py2_install: %global py2_install %{__python2} setup.py install -O1 --skip-build --root %{buildroot}}
-%{!?py3_build: %global py3_build CFLAGS="%{optflags}" %{__python3} setup.py build}
+%{!?py3_build: %global py3_build LDSHARED="%{__cc} -pthread -shared %{optflags}" CFLAGS="%{optflags}" %{__python3} setup.py build}
 %{!?py3_install: %global py3_install %{__python3} setup.py install -O1 --skip-build --root %{buildroot}}
 
 %{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
