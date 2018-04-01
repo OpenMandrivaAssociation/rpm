@@ -84,7 +84,7 @@ Name:		rpm
 Epoch:		2
 Version:	4.14.1
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.13
+Release:	%{?snapver:0.%{snapver}.}0.14
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -218,7 +218,8 @@ Patch5004:	rpm-4.14.0-optional.patch
 Patch5005:	rpm-4.14.1-patch-gendiff.patch
 # https://github.com/rpm-software-management/rpm/pull/421
 Patch5006:	rpm-fix-division-by-zero.patch
-
+# Add armv8 support
+Patch5007:	https://github.com/rpm-software-management/rpm/pull/425/commits/3a7ff9a9cc95ea330650f3345757c06f2e76b922.patch
 
 # OpenMandriva patches for transitioning from RPM5
 #-------------------------------------------------
@@ -594,7 +595,8 @@ cd %{buildroot}%{rpmhome}/platform
 sed -i -e 's,^%%_target_platform.*,&%%{_gnu},' *-linux/macros
 
 # We don't target pre-eabi ARM...
-sed -i -e 's,-gnu,-gnueabi,g' arm*-linux/macros
+sed -i -e 's,-gnu$,-gnueabi,g' arm*-linux/macros
+sed -i -e 's,-gnueabi$,-gnueabihf,g' arm*h*-linux/macros
 
 # Add x32 ABI...
 cp -a x86_64-linux x32-linux
