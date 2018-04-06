@@ -82,7 +82,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		1
 Version:	%{libver}.%{minorver}
-Release:	%{?prereldate:0.%{prereldate}.}41
+Release:	%{?prereldate:0.%{prereldate}.}42
 License:	LGPLv2.1+
 Group:		System/Configuration/Packaging
 URL:		http://rpm5.org/
@@ -114,6 +114,7 @@ Source4:	legacy_compat.macros
 Source5:	RPMBDB-0.1.tar.xz
 Source6:	git-repository--after-tarball
 Source7:	git-repository--apply-patch
+Source8:	rpm4_compat.macros
 # TODO: make conditional & disabled through macro by default (enable for legacy compatibility)
 # status: to be removed later
 Patch2:		rpm-5.4.9-non-pre-scripts-dont-fail.patch
@@ -1453,6 +1454,7 @@ for i in platform/*macros; do
 done
 
 install -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/legacy_compat.macros
+install -m644 %{SOURCE8} -D %{buildroot}%{_sysconfdir}/%{name}/macros.d/rpm4_compat.macros
 install -m755 %{SOURCE6} -D %{buildroot}%{_rpmhome}/git-repository--after-tarball
 install -m755 %{SOURCE7} -D %{buildroot}%{_rpmhome}/git-repository--apply-patch
 

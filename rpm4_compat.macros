@@ -1,0 +1,5 @@
+# compat macros for rpm4
+
+%make_build %make
+%make_install %makeinstall_std
+%autopatch %apply_patches
