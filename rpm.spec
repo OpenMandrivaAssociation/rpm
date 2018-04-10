@@ -206,6 +206,9 @@ Patch5002:	rpm-fix-division-by-zero.patch
 # Add armv8 support
 # From: https://github.com/rpm-software-management/rpm/pull/425
 Patch5003:	rpm-4.14.x-armv8-arches.patch
+# Improved %arm macro
+# https://github.com/rpm-software-management/rpm/pull/428
+Patch5004:	rpm-armmacro.patch
 
 #
 # OpenMandriva specific patches

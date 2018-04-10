@@ -1,0 +1,21 @@
+commit 1702e6025f80f1adeaebfcfd1676ba569f863343
+Author: Bernhard Rosenkränzer <bero@lindev.ch>
+Date:   Tue Apr 10 20:22:48 2018 +0200
+
+    Fix %arm macro to include newer processor types
+    
+    Signed-off-by: Bernhard Rosenkränzer <bero@lindev.ch>
+
+diff --git a/macros.in b/macros.in
+index 87966a9b7..40accd0ed 100644
+--- a/macros.in
++++ b/macros.in
+@@ -1106,7 +1106,7 @@ package or when debugging this package.\
+ 
+ #------------------------------------------------------------------------------
+ # arch macro for all supported ARM processors
+-%arm	armv3l armv4b armv4l armv4tl armv5tl armv5tel armv5tejl armv6l armv6hl armv7l armv7hl armv7hnl
++%arm	armv3l armv4b armv4l armv4tl armv5tl armv5tel armv5tejl armv6l armv6hl armv7l armv7hl armv7hnl armv8l armv8hl armv8hnl armv8hcnl
+ 
+ #------------------------------------------------------------------------------
+ # arch macro for 32-bit MIPS processors
