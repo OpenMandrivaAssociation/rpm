@@ -84,7 +84,7 @@ Name:		rpm
 Epoch:		2
 Version:	4.14.1
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.15
+Release:	%{?snapver:0.%{snapver}.}0.16
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -277,13 +277,10 @@ Requires:	xz
 Requires:	cpio
 Requires:	gawk
 Requires:	coreutils
-Requires:	setup >= 2.8.9
+Requires:	setup >= 2.9.1
 Requires:	rpm-%{_real_vendor}-setup >= %{rpmsetup_version}
-Requires:	chkconfig
 Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
 %define git_url http://rpm.org/git/rpm.git
-Requires(pre):	rpm-helper
-Requires(pre):	coreutils
 Requires(postun):	rpm-helper
 
 # This is a completely different implementation of RPM, replacing rpm5
@@ -641,7 +638,7 @@ cd -
 
 %find_lang %{name}
 
-find $RPM_BUILD_ROOT -name "*.la"|xargs rm -f
+find $RPM_BUILD_ROOT -name "*.la" -delete
 
 %if %{with check}
 %check
@@ -650,19 +647,17 @@ find $RPM_BUILD_ROOT -name "*.la"|xargs rm -f
 eatmydata make check || cat tests/rpmtests.log
 %endif
 
-%pre
-/usr/share/rpm-helper/add-user rpm $1 rpm /var/lib/rpm /bin/false
+%post -p <lua>
+pkgs = posix.stat("/var/lib/rpm/Packages")
+if not pkgs then
+    os.execute("/bin/rpm --initdb")
+end
 
-rm -rf /usr/lib/rpm/*-mandrake-*
-rm -rf /usr/lib/rpm/*-%{_real_vendor}-*
+%triggerun -- rpm < 1:5.4.15-45
+rm -rf /usr/lib/rpm/*-mandrake-* ||:
+rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 
-%post
-if [ ! -f /var/lib/rpm/Packages ]; then
-    /bin/rpm --initdb
-fi
 
-%postun
-/usr/share/rpm-helper/del-user rpm $1 rpm
 
 %define rpmattr %attr(0755, rpm, rpm)
 
