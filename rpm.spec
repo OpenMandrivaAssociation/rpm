@@ -84,7 +84,7 @@ Name:		rpm
 Epoch:		2
 Version:	4.14.1
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.16
+Release:	%{?snapver:0.%{snapver}.}0.17
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -281,7 +281,6 @@ Requires:	setup >= 2.9.1
 Requires:	rpm-%{_real_vendor}-setup >= %{rpmsetup_version}
 Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
 %define git_url http://rpm.org/git/rpm.git
-Requires(postun):	rpm-helper
 
 # This is a completely different implementation of RPM, replacing rpm5
 Conflicts:	rpm < %{epoch}:%{version}-%{release}
