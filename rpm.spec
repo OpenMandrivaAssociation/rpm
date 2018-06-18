@@ -84,7 +84,7 @@ Name:		rpm
 Epoch:		2
 Version:	4.14.1
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.17
+Release:	%{?snapver:0.%{snapver}.}0.18
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -209,6 +209,8 @@ Patch5003:	rpm-4.14.x-armv8-arches.patch
 # Improved %arm macro
 # https://github.com/rpm-software-management/rpm/pull/428
 Patch5004:	rpm-armmacro.patch
+# Add znver1 as an x86_64 superset
+Patch5005:	rpm-4.14.1-znver1-arch.patch
 
 #
 # OpenMandriva specific patches
@@ -328,6 +330,7 @@ License:	GPLv2+ and LGPLv2+ with exceptions
 Requires:	rpm = %{epoch}:%{version}-%{release}
 Provides:	librpm-devel = %{version}-%{release}
 Provides:	rpm-devel = %{version}-%{release}
+Requires:	pkgconfig(popt)
 Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
 Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
 Requires:	%{librpmsign} = %{epoch}:%{version}-%{release}

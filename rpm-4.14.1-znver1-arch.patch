@@ -1,0 +1,51 @@
+diff -up rpm-4.14.1/rpmrc.in.omv~ rpm-4.14.1/rpmrc.in
+--- rpm-4.14.1/rpmrc.in.omv~	2018-06-18 14:53:42.701114429 +0200
++++ rpm-4.14.1/rpmrc.in	2018-06-18 15:00:58.560090412 +0200
+@@ -22,6 +22,7 @@ optflags: athlon -O2 -g -march=athlon
+ optflags: geode -Os -g -m32 -march=geode
+ optflags: ia64 -O2 -g
+ optflags: x86_64 -O2 -g
++optflags: znver1 -O2 -g -march=znver1 -mtune=znver1
+ optflags: amd64 -O2 -g
+ optflags: ia32e -O2 -g
+ 
+@@ -149,6 +150,7 @@ archcolor: s390x 2
+ archcolor: ia64 2
+ 
+ archcolor: x86_64 2
++archcolor: znver1 2
+ 
+ archcolor: sh3 1
+ archcolor: sh4 1
+@@ -169,6 +171,7 @@ arch_canon:	i586:	i586	1
+ arch_canon:	i486:	i486	1
+ arch_canon:	i386:	i386	1
+ arch_canon:	x86_64:	x86_64	1
++arch_canon:	znver1:	znver1	1
+ arch_canon:	amd64:	amd64	1
+ arch_canon:	ia32e:	ia32e	1
+ arch_canon:	em64t:	em64t	1
+@@ -384,6 +387,7 @@ buildarchtranslate: ia64: ia64
+ buildarchtranslate: x86_64: x86_64
+ buildarchtranslate: amd64: x86_64
+ buildarchtranslate: ia32e: x86_64
++buildarchtranslate: znver1: znver1
+ 
+ buildarchtranslate: sh3: sh3
+ buildarchtranslate: sh4: sh4
+@@ -498,6 +502,7 @@ arch_compat: ia64: noarch
+ arch_compat: x86_64: amd64 em64t athlon noarch
+ arch_compat: amd64: x86_64 em64t athlon noarch
+ arch_compat: ia32e: x86_64 em64t athlon noarch
++arch_compat: znver1: znver1 amd64 x86_64 em64t noarch
+ 
+ arch_compat: sh3: noarch
+ arch_compat: sh4: noarch
+@@ -636,6 +641,7 @@ buildarch_compat: ia64: noarch
+ buildarch_compat: x86_64: noarch
+ buildarch_compat: amd64: x86_64
+ buildarch_compat: ia32e: x86_64
++buildarch_compat: znver1: x86_64
+ 
+ buildarch_compat: sh3: noarch
+ buildarch_compat: sh4: noarch
