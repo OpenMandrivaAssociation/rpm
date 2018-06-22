@@ -84,7 +84,7 @@ Name:		rpm
 Epoch:		2
 Version:	4.14.1
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.18
+Release:	%{?snapver:0.%{snapver}.}0.19
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -615,8 +615,15 @@ sed -i -e 's,v7,v8,g' armv8hnl-linux/macros
 cp -a armv7l-linux armv8l-linux
 sed -i -e 's,v7,v8,g' armv8l-linux/macros
 
+# Add ZNVER1 (Ryzen/EPYC)
+cp -a x86_64-linux znver1-linux
+# Overriding %_target_cpu doesn't seem to work, so we set %_target_platform
+sed -i -e 's,%%{_target_cpu}-%%{_vendor},x86_64-%%{_vendor},g' znver1-linux/macros
+sed -i -e '/^%%_target_platform/i%%_target_cpu		x86_64' znver1-linux/macros
+sed -i -e '/^%%optflags/d' znver1-linux/macros
+
 # Let's create some crosscompile targets for MUSL based systems...
-for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 x32 riscv32 riscv64; do
+for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 znver1 x32 riscv32 riscv64; do
 	cp -a $arch-linux $arch-linuxmusl
 	sed -i -e 's,-gnu,-musl,g' $arch-linuxmusl/macros
 	# FIXME this is not very nice... It's a workaround for
@@ -626,7 +633,7 @@ done
 
 # We may want to crosscompile to Android as well...
 # Different targets here because Android doesn't use ARM32 hardfloat ABIs
-for arch in aarch64 armv7l armv8l i686 x86_64 riscv32 riscv64; do
+for arch in aarch64 armv7l armv8l i686 x86_64 znver1 riscv32 riscv64; do
 	cp -a $arch-linux $arch-android
 	sed -i -e 's,-gnu,-android,g' $arch-android/macros
 	# FIXME this is not very nice... It's a workaround for
