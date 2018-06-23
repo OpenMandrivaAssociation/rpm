@@ -1,15 +1,87 @@
-diff -up rpm-4.14.1/rpmrc.in.omv~ rpm-4.14.1/rpmrc.in
---- rpm-4.14.1/rpmrc.in.omv~	2018-06-18 14:53:42.701114429 +0200
-+++ rpm-4.14.1/rpmrc.in	2018-06-18 15:00:58.560090412 +0200
-@@ -22,6 +22,7 @@ optflags: athlon -O2 -g -march=athlon
+diff -up rpm-4.14.1/lib/rpmrc.c.5006~ rpm-4.14.1/lib/rpmrc.c
+--- rpm-4.14.1/lib/rpmrc.c.5006~	2018-06-24 00:38:18.954450932 +0200
++++ rpm-4.14.1/lib/rpmrc.c	2018-06-24 00:38:18.955450932 +0200
+@@ -737,6 +737,16 @@ exit:
+ }
+ 
+ 
++#	if defined(__linux__) && defined(__x86_64__)
++static inline void cpuid(uint32_t op, uint32_t *eax, uint32_t *ebx, uint32_t *ecx, uint32_t *edx)
++{
++    asm volatile (
++	"cpuid\n"
++    : "=a" (*eax), "=b" (*ebx), "=c" (*ecx), "=d" (*edx)
++    : "a" (op));
++}
++#	endif
++
+ #	if defined(__linux__) && defined(__i386__)
+ #include <setjmp.h>
+ #include <signal.h>
+@@ -950,6 +960,25 @@ static int is_geode(void)
+ }
+ #endif
+ 
++#if defined(__linux__) && (defined(__i386__) || defined(__x86_64__))
++static int is_ryzen() {
++    uint32_t eax, ebx, ecx, edx;
++    char vendor[13];
++    int family;
++    vendor[12]=0;
++    cpuid(0, &eax, &ebx, &ecx, &edx);
++    memcpy(vendor, &ebx, sizeof(ebx));
++    memcpy(vendor+4, &edx, sizeof(edx));
++    memcpy(vendor+8, &ecx, sizeof(ecx));
++    if (!rstreqn(vendor, "AuthenticAMD", 12))
++        return 0;
++    cpuid(1, &eax, &ebx, &ecx, &edx);
++    family = (eax>>8)&0xf;
++    if(family == 0xf)
++        family += (eax>>20)&0x7f;
++    return family >= 0x17;
++}
++#endif
+ 
+ #if defined(__linux__)
+ #ifndef AT_HWCAP2 /* glibc < 2.18 */
+@@ -1286,7 +1315,9 @@ static void defaultMachine(rpmrcCtx ctx,
+ 	{
+ 	    char mclass = (char) (RPMClass() | '0');
+ 
+-	    if ((mclass == '6' && is_athlon()) || mclass == '7')
++	    if(is_ryzen())
++                strcpy(un.machine, "znver1_32");
++	    else if ((mclass == '6' && is_athlon()) || mclass == '7')
+ 	    	strcpy(un.machine, "athlon");
+ 	    else if (is_pentium4())
+ 		strcpy(un.machine, "pentium4");
+@@ -1299,6 +1330,11 @@ static void defaultMachine(rpmrcCtx ctx,
+ 	}
+ #	endif
+ 
++#	if defined(__linux__) && defined(__x86_64__)
++        if (is_ryzen())
++             strcpy(un.machine, "znver1");
++#	endif
++
+ 	/* the uname() result goes through the arch_canon table */
+ 	canon = lookupInCanonTable(un.machine,
+ 			   ctx->tables[RPM_MACHTABLE_INSTARCH].canons,
+diff -up rpm-4.14.1/rpmrc.in.5006~ rpm-4.14.1/rpmrc.in
+--- rpm-4.14.1/rpmrc.in.5006~	2018-06-24 00:38:18.951450932 +0200
++++ rpm-4.14.1/rpmrc.in	2018-06-24 00:45:46.594467625 +0200
+@@ -20,8 +20,10 @@ optflags: pentium3 -O2 -g -march=pentium
+ optflags: pentium4 -O2 -g -march=pentium4
+ optflags: athlon -O2 -g -march=athlon
  optflags: geode -Os -g -m32 -march=geode
++optflags: znver1_32 -O2 -g -march=znver1 -mtune=znver1 -mfpmath=sse
  optflags: ia64 -O2 -g
  optflags: x86_64 -O2 -g
 +optflags: znver1 -O2 -g -march=znver1 -mtune=znver1
  optflags: amd64 -O2 -g
  optflags: ia32e -O2 -g
  
-@@ -149,6 +150,7 @@ archcolor: s390x 2
+@@ -149,6 +151,7 @@ archcolor: s390x 2
  archcolor: ia64 2
  
  archcolor: x86_64 2
@@ -17,23 +89,41 @@ diff -up rpm-4.14.1/rpmrc.in.omv~ rpm-4.14.1/rpmrc.in
  
  archcolor: sh3 1
  archcolor: sh4 1
-@@ -169,6 +171,7 @@ arch_canon:	i586:	i586	1
+@@ -168,7 +171,9 @@ arch_canon:	i686:	i686	1
+ arch_canon:	i586:	i586	1
  arch_canon:	i486:	i486	1
  arch_canon:	i386:	i386	1
++arch_canon:	znver1_32:	znver1_32	1
  arch_canon:	x86_64:	x86_64	1
 +arch_canon:	znver1:	znver1	1
  arch_canon:	amd64:	amd64	1
  arch_canon:	ia32e:	ia32e	1
  arch_canon:	em64t:	em64t	1
-@@ -384,6 +387,7 @@ buildarchtranslate: ia64: ia64
+@@ -302,6 +307,7 @@ buildarchtranslate: osfmach3_i586: i386
+ buildarchtranslate: osfmach3_i486: i386
+ buildarchtranslate: osfmach3_i386: i386
+ 
++buildarchtranslate: znver1_32: i386
+ buildarchtranslate: athlon: i386
+ buildarchtranslate: geode: i386
+ buildarchtranslate: pentium4: i386
+@@ -384,6 +390,7 @@ buildarchtranslate: ia64: ia64
  buildarchtranslate: x86_64: x86_64
  buildarchtranslate: amd64: x86_64
  buildarchtranslate: ia32e: x86_64
-+buildarchtranslate: znver1: znver1
++buildarchtranslate: znver1: x86_64
  
  buildarchtranslate: sh3: sh3
  buildarchtranslate: sh4: sh4
-@@ -498,6 +502,7 @@ arch_compat: ia64: noarch
+@@ -404,6 +411,7 @@ arch_compat: alphaev56: alphaev5
+ arch_compat: alphaev5: alpha
+ arch_compat: alpha: axp noarch
+ 
++arch_compat: znver1_32: athlon geode pentium4 pentium3 i686 i586 i486 i386 noarch
+ arch_compat: athlon: i686
+ arch_compat: geode: i686
+ arch_compat: pentium4: pentium3
+@@ -498,6 +506,7 @@ arch_compat: ia64: noarch
  arch_compat: x86_64: amd64 em64t athlon noarch
  arch_compat: amd64: x86_64 em64t athlon noarch
  arch_compat: ia32e: x86_64 em64t athlon noarch
@@ -41,7 +131,15 @@ diff -up rpm-4.14.1/rpmrc.in.omv~ rpm-4.14.1/rpmrc.in
  
  arch_compat: sh3: noarch
  arch_compat: sh4: noarch
-@@ -636,6 +641,7 @@ buildarch_compat: ia64: noarch
+@@ -544,6 +553,7 @@ buildarch_compat: aarch64: noarch
+ buildarch_compat: riscv: noarch
+ buildarch_compat: riscv64: noarch
+ 
++buildarch_compat: znver1_32: athlon geode pentium4 pentium3 i686 i586 i486 i386 noarch
+ buildarch_compat: athlon: i686
+ buildarch_compat: geode: i586
+ buildarch_compat: pentium4: pentium3
+@@ -636,6 +646,7 @@ buildarch_compat: ia64: noarch
  buildarch_compat: x86_64: noarch
  buildarch_compat: amd64: x86_64
  buildarch_compat: ia32e: x86_64

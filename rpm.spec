@@ -84,7 +84,7 @@ Name:		rpm
 Epoch:		2
 Version:	4.14.1
 # Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.19
+Release:	%{?snapver:0.%{snapver}.}0.20
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -209,10 +209,10 @@ Patch5003:	rpm-4.14.x-armv8-arches.patch
 # Improved %arm macro
 # https://github.com/rpm-software-management/rpm/pull/428
 Patch5004:	rpm-armmacro.patch
-# Add znver1 as an x86_64 superset
-Patch5005:	rpm-4.14.1-znver1-arch.patch
 # ARM subarchitecture detection
-Patch5006:	rpm-arm-detection.patch
+Patch5005:	rpm-arm-detection.patch
+# Add znver1 as an x86_64 superset
+Patch5006:	rpm-4.14.1-znver1-arch.patch
 
 #
 # OpenMandriva specific patches
@@ -623,6 +623,12 @@ cp -a x86_64-linux znver1-linux
 sed -i -e 's,%%{_target_cpu}-%%{_vendor},x86_64-%%{_vendor},g' znver1-linux/macros
 sed -i -e '/^%%_target_platform/i%%_target_cpu		x86_64' znver1-linux/macros
 sed -i -e '/^%%optflags/d' znver1-linux/macros
+# And ZNVER1 in 32-bit mode...
+cp -a athlon-linux znver1_32-linux
+# Overriding %_target_cpu doesn't seem to work, so we set %_target_platform
+sed -i -e 's,%%{_target_cpu}-%%{_vendor},i686-%%{_vendor},g' znver1_32-linux/macros
+sed -i -e '/^%%_target_platform/i%%_target_cpu		i686' znver1_32-linux/macros
+sed -i -e '/^%%optflags/d' znver1_32-linux/macros
 
 # Let's create some crosscompile targets for MUSL based systems...
 for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 znver1 x32 riscv32 riscv64; do
