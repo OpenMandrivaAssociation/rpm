@@ -211,6 +211,8 @@ Patch5003:	rpm-4.14.x-armv8-arches.patch
 Patch5004:	rpm-armmacro.patch
 # Add znver1 as an x86_64 superset
 Patch5005:	rpm-4.14.1-znver1-arch.patch
+# ARM subarchitecture detection
+Patch5006:	rpm-arm-detection.patch
 
 #
 # OpenMandriva specific patches
