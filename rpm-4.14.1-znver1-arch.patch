@@ -147,3 +147,44 @@ diff -up rpm-4.14.1/rpmrc.in.5006~ rpm-4.14.1/rpmrc.in
  
  buildarch_compat: sh3: noarch
  buildarch_compat: sh4: noarch
+diff -up rpm-4.14.1/macros.in.omv~ rpm-4.14.1/macros.in
+--- rpm-4.14.1/macros.in.omv~	2018-06-24 07:32:19.272377232 +0200
++++ rpm-4.14.1/macros.in	2018-06-24 07:35:50.323385102 +0200
+@@ -1109,13 +1109,21 @@ package or when debugging this package.\
+ #   rpm can use regular expressions against target platforms in macro
+ #   conditionals.
+ #
+-%ix86   i386 i486 i586 i686 pentium3 pentium4 athlon geode
++%ix86   i386 i486 i586 i686 pentium3 pentium4 athlon geode znver1_32
+ 
+ #------------------------------------------------------------------------------
+-# arch macro for all supported ARM processors
++# arch macro for all supported x86_64 processors
++%x86_64	x86_64 znver1 amd64 em64t
++
++#------------------------------------------------------------------------------
++# arch macro for all supported 32-bit ARM processors
+ %arm	armv3l armv4b armv4l armv4tl armv5tl armv5tel armv5tejl armv6l armv6hl armv7l armv7hl armv7hnl armv8l armv8hl armv8hnl armv8hcnl
+ 
+ #------------------------------------------------------------------------------
++# arch macro for all supported 64-bit ARM processors
++%aarch64	aarch64
++
++#------------------------------------------------------------------------------
+ # arch macro for 32-bit MIPS processors
+ %mips32	mips mipsel mipsr6 mipsr6el
+ 
+@@ -1147,6 +1155,13 @@ package or when debugging this package.\
+ # arch macro for all supported PowerPC 64 processors
+ %power64	ppc64 ppc64p7 ppc64le
+ 
++#------------------------------------------------------------------------------
++# arch macro for all supported RISC-V processors
++%riscv32	riscv32
++%riscv64	riscv64
++%riscv128	riscv128
++%riscv		%{riscv32} %{riscv64} %{riscv128}
++
+ #------------------------------------------------------------------------
+ # Use in %install to generate locale specific file lists. For example,
+ #
