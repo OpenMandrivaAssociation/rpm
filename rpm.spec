@@ -656,7 +656,9 @@ sed -i -e 's,%%{_target_cpu},x86_64,g' x32-*/macros
 # compile for it...
 cp -a x86_64-linux x86_64-mingw32
 cp -a i686-linux i686-mingw32
-sed -i -e 's,openmandriva,w64,g;s,linux,mingw32,g;s,-gnu,%%{nil},g' *-mingw32/macros
+sed -i -e 's,linux,mingw32,g;s,-gnu,%%{nil},g' *-mingw32/macros
+sed -i -e 's,openmandriva,w64,g' x86_64-mingw32/macros
+sed -i -e 's,openmandriva,w32,g' i686-mingw32/macros
 cd -
 
 %find_lang %{name}
