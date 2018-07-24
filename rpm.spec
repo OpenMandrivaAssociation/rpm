@@ -83,8 +83,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		2
 Version:	4.14.1
-# Note the "0.X" at the end! It's not yet ready for building!
-Release:	%{?snapver:0.%{snapver}.}0.21
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -651,6 +650,13 @@ done
 # FIXME this is not very nice... It's a workaround for
 # not being able to set _target_cpu in platform macros
 sed -i -e 's,%%{_target_cpu},x86_64,g' x32-*/macros
+
+# And let's not force developers of cross-platform applications
+# to keep a copy of Windoze around just because they want to
+# compile for it...
+cp -a x86_64-linux x86_64-mingw32
+cp -a i686-linux i686-mingw32
+sed -i -e 's,openmandriva,w64,g;s,linux,mingw32,g;s,-gnu,%%{nil},g' *-mingw32/macros
 cd -
 
 %find_lang %{name}
