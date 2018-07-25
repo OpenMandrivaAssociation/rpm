@@ -3,7 +3,15 @@
 %ifos linux
 # Get rid of any -gnu/-gnueabi suffix for platform names
 # to get traditional directory names
+%ifarch %{x86_64}
+%define _target_platform x86_64-%{_vendor}-linux
+%else
+%ifarch %{aarch64}
+%define _target_platform aarch64-%{_vendor}-linux
+%else
 %define _target_platform %{_target_cpu}-%{_vendor}-linux
+%endif
+%endif
 %endif
 
 %define lib64arches x86_64 aarch64
