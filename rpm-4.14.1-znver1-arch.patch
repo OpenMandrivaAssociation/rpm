@@ -103,7 +103,7 @@ diff -up rpm-4.14.1/rpmrc.in.5006~ rpm-4.14.1/rpmrc.in
  buildarchtranslate: osfmach3_i486: i386
  buildarchtranslate: osfmach3_i386: i386
  
-+buildarchtranslate: znver1_32: i386
++buildarchtranslate: znver1_32: znver1_32
  buildarchtranslate: athlon: i386
  buildarchtranslate: geode: i386
  buildarchtranslate: pentium4: i386
@@ -111,7 +111,7 @@ diff -up rpm-4.14.1/rpmrc.in.5006~ rpm-4.14.1/rpmrc.in
  buildarchtranslate: x86_64: x86_64
  buildarchtranslate: amd64: x86_64
  buildarchtranslate: ia32e: x86_64
-+buildarchtranslate: znver1: x86_64
++buildarchtranslate: znver1: znver1
  
  buildarchtranslate: sh3: sh3
  buildarchtranslate: sh4: sh4
@@ -119,7 +119,7 @@ diff -up rpm-4.14.1/rpmrc.in.5006~ rpm-4.14.1/rpmrc.in
  arch_compat: alphaev5: alpha
  arch_compat: alpha: axp noarch
  
-+arch_compat: znver1_32: athlon geode pentium4 pentium3 i686 i586 i486 i386 noarch
++arch_compat: znver1_32: znver1_32 athlon geode pentium4 pentium3 i686 i586 i486 i386 noarch
  arch_compat: athlon: i686
  arch_compat: geode: i686
  arch_compat: pentium4: pentium3
@@ -135,7 +135,7 @@ diff -up rpm-4.14.1/rpmrc.in.5006~ rpm-4.14.1/rpmrc.in
  buildarch_compat: riscv: noarch
  buildarch_compat: riscv64: noarch
  
-+buildarch_compat: znver1_32: athlon geode pentium4 pentium3 i686 i586 i486 i386 noarch
++buildarch_compat: znver1_32: znver1_32 athlon geode pentium4 pentium3 i686 i586 i486 i386 noarch
  buildarch_compat: athlon: i686
  buildarch_compat: geode: i586
  buildarch_compat: pentium4: pentium3
@@ -143,7 +143,7 @@ diff -up rpm-4.14.1/rpmrc.in.5006~ rpm-4.14.1/rpmrc.in
  buildarch_compat: x86_64: noarch
  buildarch_compat: amd64: x86_64
  buildarch_compat: ia32e: x86_64
-+buildarch_compat: znver1: x86_64
++buildarch_compat: znver1: znver1 x86_64
  
  buildarch_compat: sh3: noarch
  buildarch_compat: sh4: noarch

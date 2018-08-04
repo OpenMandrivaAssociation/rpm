@@ -76,7 +76,7 @@
 #       of rpm is supported anyway, per architecture
 %define rpmhome /usr/lib/rpm
 
-#global snapver rc2
+%global snapver rc1
 %global srcver %{version}%{?snapver:-%{snapver}}
 %define srcdir %{?snapver:testing}%{!?snapver:%{name}-%(v=%{version}; echo ${v%.*}.x)}
 %global libmajor	8
@@ -90,8 +90,8 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		2
-Version:	4.14.1
-Release:	%{?snapver:0.%{snapver}.}1
+Version:	4.14.2
+Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -197,10 +197,6 @@ Patch4000:	rpm-4.10.0-find-debuginfo__mga-cfg.diff
 # Upstream patches not carried by Fedora or Mageia
 #
 
-# Enable usage of %disttag for DistTag tag
-# From: https://github.com/rpm-software-management/rpm/commit/6ba887683b4bf9712be00a3d5dcaa890bfce47c1
-Patch5000:	rpm-4.14.x-disttag-macro.patch
-
 #
 # Patches proposed upstream
 #
@@ -208,8 +204,6 @@ Patch5000:	rpm-4.14.x-disttag-macro.patch
 # Add support for %%optional
 # From: https://github.com/rpm-software-management/rpm/pull/417
 Patch5001:	rpm-4.14.0-optional.patch
-# https://github.com/rpm-software-management/rpm/pull/421
-Patch5002:	rpm-fix-division-by-zero.patch
 # Add armv8 support
 # From: https://github.com/rpm-software-management/rpm/pull/425
 Patch5003:	rpm-4.14.x-armv8-arches.patch

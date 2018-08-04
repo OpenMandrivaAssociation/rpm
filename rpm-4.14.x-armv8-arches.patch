@@ -52,7 +52,7 @@ index d3452ddf7..a3ad17a3a 100644
  buildarchtranslate: armv7hl: armv7hl
  buildarchtranslate: armv7hnl: armv7hnl
 +buildarchtranslate: armv8l: armv8l
-+buildarchtranslate: armv8hl: armv8hnl
++buildarchtranslate: armv8hl: armv8hl
 +buildarchtranslate: armv8hnl: armv8hnl
 +buildarchtranslate: armv8hcnl: armv8hcnl
  
