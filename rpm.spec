@@ -76,7 +76,7 @@
 #       of rpm is supported anyway, per architecture
 %define rpmhome /usr/lib/rpm
 
-%global snapver rc1
+%global snapver rc2
 %global srcver %{version}%{?snapver:-%{snapver}}
 %define srcdir %{?snapver:testing}%{!?snapver:%{name}-%(v=%{version}; echo ${v%.*}.x)}
 %global libmajor	8
