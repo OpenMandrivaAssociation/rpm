@@ -91,7 +91,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		2
 Version:	4.14.2
-Release:	%{?snapver:0.%{snapver}.}2
+Release:	%{?snapver:0.%{snapver}.}3
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -227,6 +227,8 @@ Patch6003:	rpm-4.14.x-omv-use-legacy-requires.patch
 # Default to keeping a patch backup file for gendiff
 # and follow file naming conventions
 Patch6004:	rpm-4.14.x-omv-patch-gendiff.patch
+# Default to i686 targets on 32bit i686+ machines
+Patch6005:	rpm-4.14-i386-to-i686.patch
 
 # OpenMandriva patches for transitioning from RPM5
 #-------------------------------------------------

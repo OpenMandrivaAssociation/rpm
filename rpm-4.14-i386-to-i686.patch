@@ -1,0 +1,22 @@
+diff -up rpm-4.14.2-rc2/rpmrc.in.omv~ rpm-4.14.2-rc2/rpmrc.in
+--- rpm-4.14.2-rc2/rpmrc.in.omv~	2018-08-12 19:42:41.390801518 +0000
++++ rpm-4.14.2-rc2/rpmrc.in	2018-08-12 19:43:24.323092040 +0000
+@@ -308,12 +308,12 @@ buildarchtranslate: osfmach3_i486: i386
+ buildarchtranslate: osfmach3_i386: i386
+ 
+ buildarchtranslate: znver1_32: znver1_32
+-buildarchtranslate: athlon: i386
+-buildarchtranslate: geode: i386
+-buildarchtranslate: pentium4: i386
+-buildarchtranslate: pentium3: i386
+-buildarchtranslate: i686: i386
+-buildarchtranslate: i586: i386
++buildarchtranslate: athlon: i686
++buildarchtranslate: geode: i686
++buildarchtranslate: pentium4: i686
++buildarchtranslate: pentium3: i686
++buildarchtranslate: i686: i686
++buildarchtranslate: i586: i586
+ buildarchtranslate: i486: i386
+ buildarchtranslate: i386: i386
+ 
