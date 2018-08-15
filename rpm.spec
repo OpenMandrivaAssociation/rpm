@@ -14,7 +14,7 @@
 %endif
 %endif
 
-%define lib64arches x86_64 aarch64
+%define lib64arches %{x86_64} %{aarch64}
 
 %ifarch %lib64arches
 %define _lib lib64
@@ -91,7 +91,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		2
 Version:	4.14.2
-Release:	%{?snapver:0.%{snapver}.}4
+Release:	%{?snapver:0.%{snapver}.}5
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
