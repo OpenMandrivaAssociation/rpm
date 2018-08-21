@@ -76,9 +76,14 @@
 #       of rpm is supported anyway, per architecture
 %define rpmhome /usr/lib/rpm
 
-%global snapver rc2
+%global snapver %{nil}
+%if "%{snapver}" != ""
 %global srcver %{version}%{?snapver:-%{snapver}}
 %define srcdir %{?snapver:testing}%{!?snapver:%{name}-%(v=%{version}; echo ${v%.*}.x)}
+%else
+%global srcver %{version}
+%define srcdir %{name}-%(v=%{version}; echo ${v%.*}.x)
+%endif
 %global libmajor	8
 %global librpmname      %mklibname rpm  %{libmajor}
 %global librpmnamedevel %mklibname -d rpm
@@ -91,7 +96,11 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		2
 Version:	4.14.2
-Release:	%{?snapver:0.%{snapver}.}5
+%if "%{snapver}" != ""
+Release:	%{?snapver:0.%{snapver}.}1
+%else
+Release:	1
+%endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
