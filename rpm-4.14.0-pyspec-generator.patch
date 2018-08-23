@@ -1,0 +1,664 @@
+From 0972525da755018c649595ed19be5c6f0e18ff1a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Fri, 21 Apr 2017 02:07:30 +0200
+Subject: [PATCH 01/13] move doRpminterp() at end of macros to try expand
+
+---
+ rpmio/macro.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/rpmio/macro.c b/rpmio/macro.c
+index 449812742..0b10ef64a 100644
+--- a/rpmio/macro.c
++++ b/rpmio/macro.c
+@@ -1200,11 +1200,6 @@ expandMacro(MacroBuf mb, const char *src, size_t slen)
+ 	    continue;
+ 	}
+ 
+-	if (f[fn] == ':' && doRpminterp(mb, f, fn, g, gn) != RPMRC_NOTFOUND) {
+-	    s = se;
+-	    continue;
+-	}
+-
+ 	/* XXX necessary but clunky */
+ 	if (STREQ("basename", f, fn) ||
+ 	    STREQ("dirname", f, fn) ||
+@@ -1226,6 +1221,11 @@ expandMacro(MacroBuf mb, const char *src, size_t slen)
+ 	    continue;
+ 	}
+ 
++	if (f[fn] == ':' && doRpminterp(mb, f, fn, g, gn) != RPMRC_NOTFOUND) {
++	    s = se;
++	    continue;
++	}
++
+ 	/* Expand defined macros */
+ 	mep = findEntry(mb->mc, f, fn, NULL);
+ 	me = (mep ? *mep : NULL);
+-- 
+2.13.6
+
+
+From 35b50053a115715af51632b4b8e79e5d9d5175fb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Fri, 21 Apr 2017 02:10:33 +0200
+Subject: [PATCH 02/13] indent
+
+---
+ rpmio/rpminterp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/rpmio/rpminterp.c b/rpmio/rpminterp.c
+index 2527d5af8..8dddcef44 100644
+--- a/rpmio/rpminterp.c
++++ b/rpmio/rpminterp.c
+@@ -12,8 +12,8 @@
+ int _rpminterp_debug = 0;
+ 
+ struct rpminterp_handle_s {
+-	rpminterp interp;
+-	void *h;
++    rpminterp interp;
++    void *h;
+ };
+ 
+ static void rpminterpFree(int argc, void *p) {
+-- 
+2.13.6
+
+
+From 956d5b0c4c19b3a232e9634798b1e6504956d36a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Fri, 21 Apr 2017 03:27:00 +0200
+Subject: [PATCH 03/13] strip stray newline
+
+---
+ rpmio/rpminterp.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/rpmio/rpminterp.c b/rpmio/rpminterp.c
+index 8dddcef44..69bde3938 100644
+--- a/rpmio/rpminterp.c
++++ b/rpmio/rpminterp.c
+@@ -25,7 +25,6 @@ static void rpminterpFree(int argc, void *p) {
+ 	rpmlog(RPMLOG_WARNING, "Error closing rpminterp \"%s\": %s", handle->interp->name, dlerror());
+ 
+     free(handle);
+-
+ }
+ 
+ rpminterp rpminterpLoad(const char* name, const char *modpath) {
+-- 
+2.13.6
+
+
+From 7466267f86e8a258117c2f1911434b03693159fb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Fri, 21 Apr 2017 03:31:53 +0200
+Subject: [PATCH 04/13] override section more easily without passing keyword
+ args to pyspec()
+
+---
+ python/rpm/generate.py | 88 +++++++++++++++++++++++++++-----------------------
+ 1 file changed, 48 insertions(+), 40 deletions(-)
+
+diff --git a/python/rpm/generate.py b/python/rpm/generate.py
+index 0900a25b3..b203eaa7a 100644
+--- a/python/rpm/generate.py
++++ b/python/rpm/generate.py
+@@ -126,11 +126,11 @@ class _bdist_rpm(bdist_rpm):
+             'check': None,
+             'pre' : None,
+             'post' : None,
+-            'preun' :  None,
++            'preun' : None,
+             'postun' : None,
+     }
+ 
+-    def _make_spec_file(self, url, description, changelog):
++    def _make_spec_file(self, url, description, changelog, _specfile, first):
+         """Generate the text of an RPM spec file and return it as a
+         list of strings (one per line).
+         """
+@@ -254,17 +254,17 @@ class _bdist_rpm(bdist_rpm):
+ 
+         descr = self.distribution.get_long_description().strip().split("\n")
+         if descr[0] == "UNKNOWN":
+-            if description and not rpm.expandMacro("%{?__firstpass}"):
++            if description and first:
+                 rpm.expandMacro(
+                 "%{warn:Warning: Metadata lacks long_description used for %%description\n"
+                 "falling back to short description used for summary tag.\n"
+                 "You might wanna disable auto-generated description with description=False\n"
+                 "and specify it yourself.\n}")
+             descr[0] = self.distribution.get_description().strip()
+-        elif not description and not rpm.expandMacro("%{?__firstpass}"):
++        elif not description and first:
+             rpm.expandMacro(
+                 "%{warn:Warning: Not using long_description for %%description despite "
+-                "being provided by metadata.\n}")
++                "provided by metadata.\n}")
+ 
+         if descr[0][-1] != ".":
+             descr[0] += "."
+@@ -288,7 +288,7 @@ class _bdist_rpm(bdist_rpm):
+         # are just text that we drop in as-is.  Hmmm.
+ 
+ 
+-        if not rpm.expandMacro("%{?__firstpass}"):
++        if first:
+             if 'test_suite' in self.distribution.__dict__ and self.distribution.test_suite:
+                 self.script_options["check"] = "%{__python} setup.py test"
+ 
+@@ -299,9 +299,10 @@ class _bdist_rpm(bdist_rpm):
+                     smp += "128"
+                 self.script_options["build"] = self.script_options["build"].replace("build ", "build %s "% smp)
+ 
+-            autopatch = rpm.expandMacro("%autopatch").lstrip().rstrip().replace("\n\n", "\n")
+-            if autopatch:
+-                self.script_options["prep"] += "\n" + autopatch
++            if _specfile:
++                autopatch = rpm.expandMacro("%autopatch").strip().replace("\n\n", "\n")
++                if autopatch:
++                    self.script_options["prep"] += "\n" + autopatch
+ 
+         for script in ('prep', 'build', 'install', 'check', 'pre', 'post', 'preun', 'postun'):
+             # Insert contents of file referred to, if no file is referred to
+@@ -377,15 +378,20 @@ class _bdist_rpm(bdist_rpm):
+         return spec_file
+ 
+ def pyspec(module, version=_tag('version', None), release=_tag('release', '1'),
+-        suffix=None, python=rpm.expandMacro("%{__python}"), description=True,
+-        prep=True, build=True, install=True, check=True, files=True, changelog=False):
+-    filename, version, url, md5_digest = _pypi_source_url(module, version, suffix)
++        suffix=None, python=rpm.expandMacro("%{__python}"), changelog=False):
++    # if no %_specfile macro, we're not parsing a spec file
++    _specfile = rpm.expandMacro("%{?_specfile}")
++    # interpreter macro gets expanded twice in preamble, bug..?
++    first = _specfile and not rpm.expandMacro("%{?__firstpassed}")
++    if first:
++        rpm.addMacro("__firstpassed", "1")
+ 
++    filename, version, url, md5_digest = _pypi_source_url(module, version, suffix)
+     _builddir = rpm.expandMacro("%{_builddir}")
+     os.chdir(_builddir)
+     builddir = "%s-%s" % (module, version)
+ 
+-    if not rpm.expandMacro("%{?__firstpass}"):
++    if first:
+         if os.path.exists(builddir):
+             rmtree(builddir)
+ 
+@@ -422,7 +428,7 @@ def pyspec(module, version=_tag('version', None), release=_tag('release', '1'),
+     os.chdir(builddir)
+ 
+     sys.path.append(os.path.join(_builddir,builddir))
+-    sys.argv = [rpm.expandMacro("%{__python}"), "setup.py"]
++    sys.argv = [python, "setup.py"]
+     try:
+         dist = distutils.core.run_setup(sys.argv[1], stop_after="config")
+     except RuntimeError:
+@@ -452,6 +458,15 @@ def pyspec(module, version=_tag('version', None), release=_tag('release', '1'),
+                         egginfo = text
+                         break
+ 
++    description = True
++    if _specfile:
++        f = open(_specfile, "r")
++        orig_specfile = f.readlines()
++        f.close()
++        for line in orig_specfile:
++            if line.strip() == "%description":
++                description = False
++
+     distmeta = distutils.dist.DistributionMetadata(path=egginfo)
+     distmeta.keywords = {"name" : module, "version" : version}
+     dist.version = version
+@@ -470,45 +485,38 @@ def pyspec(module, version=_tag('version', None), release=_tag('release', '1'),
+     specdist.finalize_options()
+     specdist.finalize_package_data()
+     specdist.distribution = dist
+-    specfile = specdist._make_spec_file(url, description=description, changelog=changelog)
++    specfile = "\n".join(specdist._make_spec_file(url, description, changelog, _specfile, first))
++
++    if _specfile:
++        for line in orig_specfile:
++            line = line.strip()
++            if line == "%prep":
++                specfile = specfile.replace("\n%%prep\n%s\n" % specdist.script_options["prep"], "")
++            elif line == "%build":
++                specfile = specfile.replace("\n%%build\n%s\n" % specdist.script_options["build"], "")
++            elif line == "%install":
++                specfile = specfile.replace("\n%%install\n%s\n" % specdist.script_options["install"], "")
++            elif line == "%check" and specdist.script_options["check"]:
++                specfile = specfile.replace("\n%%check\n%s\n" % specdist.script_options["check"], "")
++            elif line == "%files":
++                specfile = specfile.replace("\n%%files\n%s" % str("\n".join(specdist.files)), "")
+ 
+-    lines = "\n".join(specfile)
+     tmp = NamedTemporaryFile(mode="w", suffix=".spec", prefix=module, dir=rpm.expandMacro("%{_tmppath}"), delete=True)
+-    tmp.write(lines)
++    tmp.write(specfile)
+     tmp.flush()
+ 
+-    rpm.addMacro("__firstpass", "1")
+-
+     spec = rpm.spec(tmp.name)
+     tmp.close()
+     output = ""
++
+     parsed = spec.parsed
+ 
+-    # XXX: %_specfile would make it possible to automatically detect without
+-    #      having to pass individual arguments for each section...
+-    if not description:
++    if _specfile and not description:
+         parsed = parsed.replace("\n%%description\n%s\n" % str("\n".join(specdist.description)),"")
+ 
+-    if not prep:
+-        parsed = parsed.replace("\n%%prep\n%s\n" % rpm.expandMacro(specdist.script_options["prep"]), "")
+-
+-    if not build:
+-        parsed = parsed.replace("\n%%build\n%s\n" % rpm.expandMacro(specdist.script_options["build"]), "")
+-
+-    if not install:
+-        parsed = parsed.replace("\n%%install\n%s\n" % rpm.expandMacro(specdist.script_options["install"]), "")
+-
+-    if not check:
+-        if specdist.script_options["check"]:
+-            parsed = parsed.replace("\n%%check\n%s\n" % rpm.expandMacro(specdist.script_options["check"]), "")
+-
+-    if not files:
+-        parsed = parsed.replace("\n%%files\n%s" % rpm.expandMacro(str("\n".join(specdist.files))), "")
+-
+-    lines = parsed.split("\n")
+     emptyheader = True
+     preamble = True
+-    for line in lines:
++    for line in parsed.split("\n"):
+         if emptyheader:
+             if len(line) > 0:
+                 emptyheader = False
+-- 
+2.13.6
+
+
+From 7942a7af20e21082ba4024923712433414c37ee3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Fri, 21 Apr 2017 03:34:50 +0200
+Subject: [PATCH 05/13] add a buildrequires keyword argument to pyspec() for
+ disabling automatic
+
+---
+ python/rpm/generate.py | 33 ++++++++++++++++++---------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
+
+diff --git a/python/rpm/generate.py b/python/rpm/generate.py
+index b203eaa7a..95f9fea88 100644
+--- a/python/rpm/generate.py
++++ b/python/rpm/generate.py
+@@ -130,7 +130,7 @@ class _bdist_rpm(bdist_rpm):
+             'postun' : None,
+     }
+ 
+-    def _make_spec_file(self, url, description, changelog, _specfile, first):
++    def _make_spec_file(self, url, description, changelog, buildrequires, _specfile, first):
+         """Generate the text of an RPM spec file and return it as a
+         list of strings (one per line).
+         """
+@@ -239,18 +239,20 @@ class _bdist_rpm(bdist_rpm):
+                 spec_file.append('%s: %s' % (field, val))
+ 
+         build_requires = []
+-        if self.distribution.has_ext_modules():
+-            build_requires.append('python-devel')
+-        # Ugly, but should mostly work... :p
+-        if 'setuptools' in str(self.distribution.__dict__) or 'setuptools' in str(sdist.__dict__):
+-            build_requires.append('python-setuptools')
+-        if build_requires:
+-            spec_file.append('BuildRequires:\t' +
+-                             " ".join(build_requires))
+-
+-        if self.build_requires:
+-            spec_file.append('BuildRequires:\t' +
+-                             " ".join(self.build_requires))
++        if buildrequires:
++            if self.distribution.has_ext_modules():
++                build_requires.append('python-devel')
++            # Ugly, but should mostly work... :p
++            if 'setuptools' in str(self.distribution.__dict__) or \
++                    'setuptools' in str(sdist.__dict__):
++                build_requires.append('python-setuptools')
++            if build_requires:
++                spec_file.append('BuildRequires:\t' +
++                                 " ".join(build_requires))
++
++            if self.build_requires:
++                spec_file.append('BuildRequires:\t' +
++                                 " ".join(self.build_requires))
+ 
+         descr = self.distribution.get_long_description().strip().split("\n")
+         if descr[0] == "UNKNOWN":
+@@ -378,7 +380,8 @@ class _bdist_rpm(bdist_rpm):
+         return spec_file
+ 
+ def pyspec(module, version=_tag('version', None), release=_tag('release', '1'),
+-        suffix=None, python=rpm.expandMacro("%{__python}"), changelog=False):
++        suffix=None, python=rpm.expandMacro("%{__python}"), buildrequires=True,
++        changelog=False):
+     # if no %_specfile macro, we're not parsing a spec file
+     _specfile = rpm.expandMacro("%{?_specfile}")
+     # interpreter macro gets expanded twice in preamble, bug..?
+@@ -485,7 +488,7 @@ def pyspec(module, version=_tag('version', None), release=_tag('release', '1'),
+     specdist.finalize_options()
+     specdist.finalize_package_data()
+     specdist.distribution = dist
+-    specfile = "\n".join(specdist._make_spec_file(url, description, changelog, _specfile, first))
++    specfile = "\n".join(specdist._make_spec_file(url, description, changelog, buildrequires, _specfile, first))
+ 
+     if _specfile:
+         for line in orig_specfile:
+-- 
+2.13.6
+
+
+From 028a397296dfb2345b9b5af36d8550b05a1df208 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Fri, 21 Apr 2017 03:39:25 +0200
+Subject: [PATCH 06/13] replace python-devel with
+ pkgconfig(python-%{python_version})
+
+---
+ python/rpm/generate.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/python/rpm/generate.py b/python/rpm/generate.py
+index 95f9fea88..7571b3fe4 100644
+--- a/python/rpm/generate.py
++++ b/python/rpm/generate.py
+@@ -241,7 +241,7 @@ class _bdist_rpm(bdist_rpm):
+         build_requires = []
+         if buildrequires:
+             if self.distribution.has_ext_modules():
+-                build_requires.append('python-devel')
++                build_requires.append('pkgconfig(python-%{python_version})')
+             # Ugly, but should mostly work... :p
+             if 'setuptools' in str(self.distribution.__dict__) or \
+                     'setuptools' in str(sdist.__dict__):
+-- 
+2.13.6
+
+
+From 37d261352e82b8b7373ef2d83160430094816aa4 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Fri, 21 Apr 2017 03:55:07 +0200
+Subject: [PATCH 07/13] fix py3k encoding
+
+---
+ python/rpm/generate.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/python/rpm/generate.py b/python/rpm/generate.py
+index 7571b3fe4..aab3fbbfc 100644
+--- a/python/rpm/generate.py
++++ b/python/rpm/generate.py
+@@ -454,7 +454,7 @@ def pyspec(module, version=_tag('version', None), release=_tag('release', '1'),
+ 
+     egginfo = "PKG-INFO"
+     if rc == 0:
+-        for line in output.split("\n"):
++        for line in output.decode().split("\n"):
+             if ".egg-info/PKG-INFO" in line:
+                 for text in line.split():
+                     if os.path.exists(text):
+-- 
+2.13.6
+
+
+From 48e155ef5b49922a11947f8bae9a7a7d7d292704 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Mon, 24 Apr 2017 19:36:08 +0200
+Subject: [PATCH 08/13] default to -p1 for %autopatch, allow to override by
+ defining %pnum
+
+---
+ python/rpm/generate.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/python/rpm/generate.py b/python/rpm/generate.py
+index aab3fbbfc..818ea1824 100644
+--- a/python/rpm/generate.py
++++ b/python/rpm/generate.py
+@@ -302,7 +302,7 @@ class _bdist_rpm(bdist_rpm):
+                 self.script_options["build"] = self.script_options["build"].replace("build ", "build %s "% smp)
+ 
+             if _specfile:
+-                autopatch = rpm.expandMacro("%autopatch").strip().replace("\n\n", "\n")
++                autopatch = rpm.expandMacro("%autopatch %{?pnum:-p%{pnum}}%{!?pnum:-p1}").strip().replace("\n\n", "\n")
+                 if autopatch:
+                     self.script_options["prep"] += "\n" + autopatch
+ 
+-- 
+2.13.6
+
+
+From ebedf658e578b6d7c9dde499b0e012056a182bcc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Tue, 25 Apr 2017 18:38:39 +0200
+Subject: [PATCH 09/13] update copyright
+
+generator is actually derived from bdist_rpm5.py back in 2010
+---
+ python/rpm/generate.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/python/rpm/generate.py b/python/rpm/generate.py
+index 818ea1824..22177909d 100644
+--- a/python/rpm/generate.py
++++ b/python/rpm/generate.py
+@@ -1,6 +1,6 @@
+ # -*- coding: utf-8 -*-
+ #
+-# Copyright 2016-2017 Per Øyvind Karlsen <proyvind@moondrake.org>
++# Copyright 2010-2017 Per Øyvind Karlsen <proyvind@moondrake.org>
+ #
+ # This program is free software. It may be redistributed and/or modified under
+ # the terms of the LGPL version 2.1 (or later).
+-- 
+2.13.6
+
+
+From e3a5563537a00821c490fc69461f35ee16c9cddb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Wed, 26 Apr 2017 15:39:47 +0200
+Subject: [PATCH 10/13] use %_urlhelper
+
+---
+ python/rpm/generate.py | 51 +++++++++++++++++++++++---------------------------
+ 1 file changed, 23 insertions(+), 28 deletions(-)
+
+diff --git a/python/rpm/generate.py b/python/rpm/generate.py
+index 818ea1824..22959a680 100644
+--- a/python/rpm/generate.py
++++ b/python/rpm/generate.py
+@@ -27,22 +27,10 @@ import textwrap
+ import hashlib
+ 
+ import json
+-try:
+-    from urllib.request import urlopen
+-    from urllib.error import HTTPError, URLError
+-except ImportError:
+-    from urllib2 import urlopen, HTTPError, URLError
+ 
+ def _show_warning(message, category=Warning, filename=None, lineno=0, file=None, line=None):
+     return
+ 
+-import json
+-try:
+-    from urllib.request import urlopen
+-    from urllib.error import HTTPError, URLError
+-except ImportError:
+-    from urllib2 import urlopen, HTTPError, URLError
+-
+ _definedTags = {}
+ 
+ def _tag(tagname, value):
+@@ -55,6 +43,18 @@ def _tag(tagname, value):
+             _definedTags[tagname] = False
+     return value
+ 
++def _urlhelper(url, filename=None):
++    if not filename:
++        filename = "-"
++
++    urlhelper = "%s %s %s" % (rpm.expandMacro("%{_urlhelper}"), filename, url)
++    download = Popen(urlhelper.split(), stdout=PIPE, stderr=PIPE)
++    out, err = download.communicate()
++    rc = download.wait()
++    if rc:
++        rpm.log(rpm.RPMLOG_ERR, "Download failed\n%s\nrc %d out: %s err: %s\n" % (urlhelper, rc, out, err))
++    return (rc, out, err)
++
+ def _pypi_source_url(pkg_name, version=None, suffix=None):
+     """
+     Get package filename, version and download url.
+@@ -69,7 +69,8 @@ def _pypi_source_url(pkg_name, version=None, suffix=None):
+     full_pkg_name = None
+     md5_digest = None
+     try:
+-        pkg_json = json.loads(urlopen(metadata_url).read().decode())
++        rc, out, err = _urlhelper(metadata_url)
++        pkg_json = json.loads(out.decode())
+         if not version:
+             version = pkg_json['info']['version']
+         release = pkg_json['releases'][version]
+@@ -399,26 +400,20 @@ def pyspec(module, version=_tag('version', None), release=_tag('release', '1'),
+             rmtree(builddir)
+ 
+         filepath = rpm.expandMacro("%{_sourcedir}/" + filename)
+-        blocksize = 65536
+-        md5 = hashlib.md5()
+-        if not (os.path.exists(filepath) and os.path.isfile(filepath) and os.stat(filepath).st_size != 0):
+-            download = urlopen(url)
+-            f = open(filepath, "wb")
+-            buf = download.read(blocksize)
+-            while len(buf) > 0:
+-                md5.update(buf)
+-                f.write(buf)
+-                buf = download.read(blocksize)
+-            f.close()
+-        elif md5_digest:
++        if not (os.path.exists(filepath) and os.path.isfile(filepath) \
++                and os.stat(filepath).st_size != 0):
++            rc, out, err = _urlhelper(url, filepath)
++        if md5_digest:
++            blocksize = 65536
++            md5 = hashlib.md5()
+             f = open(filepath, "rb")
+             buf = f.read(blocksize)
+             while len(buf) > 0:
+                 md5.update(buf)
+                 buf = f.read(blocksize)
+-
+-        if md5_digest != md5.hexdigest():
+-            raise Exception("MD5 Sums do not match. Wanted: '%s' Got: '%s'" % (md5_digest, md5.hexdigest()))
++            f.close()
++            if md5_digest != md5.hexdigest():
++                raise Exception("MD5 Sums do not match. Wanted: '%s' Got: '%s'" % (md5_digest, md5.hexdigest()))
+ 
+         uncompress = Popen(rpm.expandMacro("%{uncompress: " + filepath + "}").split(), stdout=PIPE)
+         if filepath.endswith("zip"):
+-- 
+2.13.6
+
+
+From 664eb08881a126e795e9880d32c74c0380186b7d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Wed, 26 Apr 2017 17:02:56 +0200
+Subject: [PATCH 11/13] use description tag from header to replace to ensure we
+ get it right
+
+---
+ python/rpm/generate.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/python/rpm/generate.py b/python/rpm/generate.py
+index 22959a680..1c55b8c89 100644
+--- a/python/rpm/generate.py
++++ b/python/rpm/generate.py
+@@ -510,7 +510,7 @@ def pyspec(module, version=_tag('version', None), release=_tag('release', '1'),
+     parsed = spec.parsed
+ 
+     if _specfile and not description:
+-        parsed = parsed.replace("\n%%description\n%s\n" % str("\n".join(specdist.description)),"")
++        parsed = parsed.replace("\n%%description\n%s\n" % spec.sourceHeader[rpm.RPMTAG_DESCRIPTION], "")
+ 
+     emptyheader = True
+     preamble = True
+-- 
+2.13.6
+
+
+From a4ffc3e8c15ca9cca71821ff2e0e496d2a1b3514 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Wed, 26 Apr 2017 17:10:34 +0200
+Subject: [PATCH 12/13] workaround lines with first character '#' being treated
+ as comment
+
+---
+ python/rpm/generate.py | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/python/rpm/generate.py b/python/rpm/generate.py
+index 1c55b8c89..a9448266a 100644
+--- a/python/rpm/generate.py
++++ b/python/rpm/generate.py
+@@ -273,6 +273,15 @@ class _bdist_rpm(bdist_rpm):
+             descr[0] += "."
+ 
+         for i in range(0,len(descr)):
++            # no way of escaping comments in %description, so we add a '\' in
++            # front of, despite that it not actually escapes, but rather
++            # just prefixes, ie. '\#', best compromise to come up with for now....
++            if descr[i].lstrip().startswith("#"):
++                idx = descr[i].index("#")
++                if idx == 0:
++                    descr[i] = "\\"+descr[i]
++                else:
++                    descr[i] = descr[i][0:idx-1] + "\\" + descr[i][idx:]
+             descr[i] = textwrap.fill(descr[i], 79)
+ 
+         self.description = descr
+-- 
+2.13.6
+
+
+From ad582b3c77a81d8235f27759a28d5048e79c6179 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Wed, 26 Apr 2017 17:19:13 +0200
+Subject: [PATCH 13/13] workaround license files defined as doc files
+
+---
+ python/rpm/generate.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/python/rpm/generate.py b/python/rpm/generate.py
+index f7469ac88..2461bde3f 100644
+--- a/python/rpm/generate.py
++++ b/python/rpm/generate.py
+@@ -331,7 +331,10 @@ class _bdist_rpm(bdist_rpm):
+         for license_file in self.license_files:
+             self.files.append('%license ' + license_file)
+         for doc_file in self.doc_files:
+-            self.files.append('%doc ' + doc_file)
++            if doc_file in license_names and doc_file not in self.license_files:
++                self.files.append('%license ' + doc_file)
++            else:
++                self.files.append('%doc ' + doc_file)
+ 
+         if self.distribution.has_ext_modules():
+             site_pkgs = '%{python_sitearch}'
+-- 
+2.13.6
+

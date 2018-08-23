@@ -1,0 +1,25 @@
+From f7e848cb3f4884aba548c6138927723420cdae68 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen?= <proyvind@moondrake.org>
+Date: Wed, 19 Apr 2017 23:42:49 +0200
+Subject: [PATCH] set a %_specfile macro during build, holding full path to
+ spec file
+
+---
+ build/parseSpec.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/build/parseSpec.c b/build/parseSpec.c
+index 2928e8578..1a074c555 100644
+--- a/build/parseSpec.c
++++ b/build/parseSpec.c
+@@ -769,6 +769,7 @@ static rpmSpec parseSpec(const char *specFile, rpmSpecFlags flags,
+     } else {
+ 	spec->buildRoot = rpmGetPath("%{?buildroot:%{buildroot}}", NULL);
+     }
++    rpmPushMacro(NULL, "_specfile", NULL, spec->specFile, RMIL_SPEC);
+     rpmPushMacro(NULL, "_docdir", NULL, "%{_defaultdocdir}", RMIL_SPEC);
+     rpmPushMacro(NULL, "_licensedir", NULL, "%{_defaultlicensedir}", RMIL_SPEC);
+     spec->recursing = recursing;
+-- 
+2.13.6
+

@@ -245,6 +245,11 @@ Patch10001:	10001-HACK-Detect-and-disable-DistEpoch-in-EVR-comparison.patch
 Patch10002:	10002-HACK-Skip-all-triggers-that-start-with-a-file-path-.patch
 
 
+# functionality in rpm5.org, missing from rpm.org
+Patch10100:	0001-set-a-_specfile-macro-during-build-holding-full-path.patch
+Patch10101:	rpm-4.14.0-rpminterp-support.patch
+Patch10102:	rpm-4.14.0-pyspec-generator.patch
+
 # Partially GPL/LGPL dual-licensed and some bits with BSD
 # SourceLicense: (GPLv2+ and LGPLv2+ with exceptions) and BSD 
 License:	GPLv2+
@@ -275,7 +280,7 @@ BuildRequires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup
 BuildRequires:	readline-devel
 BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	pkgconfig(libssl)
-BuildRequires:	pkgconfig(lua) >= 5.3
+#BuildRequires:	pkgconfig(lua) >= 5.3
 BuildRequires:	pkgconfig(libcap)
 BuildRequires:	acl-devel
 BuildRequires:	pkgconfig(libarchive)
