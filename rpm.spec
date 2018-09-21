@@ -1245,8 +1245,8 @@ sed -e 's#-llzma#-Wl,-Bstatic,-llzma,-Bdynamic#g' -i configure
 export CC=gcc
 export CXX=g++
 export LD=ld
-export CFLAGS="$CFLAGS"
-export CXXFLAGS="$CXXFLAGS"
+export CFLAGS="$CFLAGS -D_GLIBCXX_INCLUDE_NEXT_C_HEADERS"
+export CXXFLAGS="$CXXFLAGS  -D_GLIBCXX_INCLUDE_NEXT_C_HEADERS"
 export __PYTHON=%{_bindir}/python2
 export CONFIGFILES=""
 # this should really have been fixed by P240, but for some reason this no
