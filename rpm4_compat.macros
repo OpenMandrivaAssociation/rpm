@@ -3,3 +3,4 @@
 %make_build %make
 %make_install %makeinstall_std
 %autopatch %apply_patches
+%x86_64 x86_64
