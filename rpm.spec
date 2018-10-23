@@ -95,11 +95,11 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		2
-Version:	4.14.2
+Version:	4.14.2.1
 %if "%{snapver}" != ""
 Release:	%{?snapver:0.%{snapver}.}1
 %else
-Release:	3
+Release:	1
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
