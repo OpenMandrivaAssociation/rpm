@@ -239,11 +239,6 @@ Patch6004:	rpm-4.14.x-omv-patch-gendiff.patch
 # Default to i686 targets on 32bit i686+ machines
 Patch6005:	rpm-4.14-i386-to-i686.patch
 
-# OpenMandriva patches for transitioning from RPM5
-#-------------------------------------------------
-Patch10001:	10001-HACK-Detect-and-disable-DistEpoch-in-EVR-comparison.patch
-Patch10002:	10002-HACK-Skip-all-triggers-that-start-with-a-file-path-.patch
-
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD
 # SourceLicense: (GPLv2+ and LGPLv2+ with exceptions) and BSD 
