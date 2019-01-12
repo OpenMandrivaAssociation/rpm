@@ -99,7 +99,7 @@ Version:	4.14.2.1
 %if "%{snapver}" != ""
 Release:	%{?snapver:0.%{snapver}.}1
 %else
-Release:	3
+Release:	4
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -231,8 +231,6 @@ Patch5006:	rpm-4.14.1-znver1-arch.patch
 # Support OpenMandriva's variant of legacy pythonegg deps, and enable legacy provides
 Patch6001:	rpm-4.14.x-omv-pythonXegg-legacy-deps.patch
 Patch6002:	rpm-4.14.x-omv-keep-legacy-provides.patch
-# For now, use legacy requires
-Patch6003:	rpm-4.14.x-omv-use-legacy-requires.patch
 # Default to keeping a patch backup file for gendiff
 # and follow file naming conventions
 Patch6004:	rpm-4.14.x-omv-patch-gendiff.patch

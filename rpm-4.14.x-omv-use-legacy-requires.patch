@@ -1,8 +1,0 @@
---- rpm-4.14.0/fileattrs/python.attr.omvlegacyreq	2018-03-11 20:33:12.738471038 +0000
-+++ rpm-4.14.0/fileattrs/python.attr	2018-03-11 20:35:12.503238473 +0000
-@@ -1,4 +1,4 @@
- %__python_provides	%{_rpmconfigdir}/pythondistdeps.py --provides --majorver-provides --legacy-provides
--%__python_requires	%{_rpmconfigdir}/pythondistdeps.py --requires
-+%__python_requires	%{_rpmconfigdir}/pythondistdeps.py --requires --legacy
- %__python_path	^((/usr/lib(64)?/python[[:digit:]]\\.[[:digit:]]/.*))|(%{_bindir}/python[[:digit:]]\\.[[:digit:]]))$
- %__python_magic		[Pp]ython.*(executable|byte-compiled)
