@@ -99,7 +99,7 @@ Version:	4.14.2.1
 %if "%{snapver}" != ""
 Release:	%{?snapver:0.%{snapver}.}1
 %else
-Release:	5
+Release:	6
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -392,7 +392,7 @@ Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
 # For pythondistdeps generator
 Requires:	python-pkg-resources
 # Drop until urpmi->dnf transition is complete
-%ifarch %{ix86} x86_64
+%ifarch %{ix86} %{x86_64}
 Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.32
 Requires:	dwz
 Requires:	openmandriva-repos-pkgprefs
@@ -511,8 +511,7 @@ nice/ionice priorities. Should not be used on systemd systems.
 %endif # with plugins
 
 %prep
-%setup -q -n %{name}-%{srcver}
-%apply_patches
+%autosetup -q -n %{name}-%{srcver} -p1
 
 %build
 %define _disable_ld_no_undefined 1
@@ -541,14 +540,14 @@ autoreconf -i -f
     --enable-python \
     --with-crypto=openssl
 
-%make
+%make_build
 cd python
 %py2_build
 %py3_build
 cd -
 
 %install
-%makeinstall_std
+%make_install
 
 # Add legacy symlink to rpm...
 mkdir -p %{buildroot}/bin
@@ -689,8 +688,6 @@ end
 %triggerun -- rpm < 1:5.4.15-45
 rm -rf /usr/lib/rpm/*-mandrake-* ||:
 rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
-
-
 
 %define rpmattr %attr(0755, rpm, rpm)
 
