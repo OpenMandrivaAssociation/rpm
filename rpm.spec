@@ -511,7 +511,7 @@ nice/ionice priorities. Should not be used on systemd systems.
 %endif # with plugins
 
 %prep
-%autosetup -q -n %{name}-%{srcver} -p1
+%autosetup -n %{name}-%{srcver} -p1
 
 %build
 %define _disable_ld_no_undefined 1
