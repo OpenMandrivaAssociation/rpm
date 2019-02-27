@@ -99,7 +99,7 @@ Version:	4.14.2.1
 %if "%{snapver}" != ""
 Release:	%{?snapver:0.%{snapver}.}1
 %else
-Release:	6
+Release:	7
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -236,6 +236,12 @@ Patch6002:	rpm-4.14.x-omv-keep-legacy-provides.patch
 Patch6004:	rpm-4.14.x-omv-patch-gendiff.patch
 # Default to i686 targets on 32bit i686+ machines
 Patch6005:	rpm-4.14-i386-to-i686.patch
+# Put build ID files into debug packages to save some space and FS cluttering
+# on normal systems. The problem FC tried to solve by putting the build ID
+# files into the main package (coinstallability of 32 and 64 bit package)
+# doesn't apply to us because we name 32 bit library packages differently
+# from 64 bit lib packages -- coinstallable anyway because of different names.
+Patch6006:	rpm-4.14.2.1-build-id-in-debug-packages.patch
 
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD
