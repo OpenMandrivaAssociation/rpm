@@ -375,7 +375,9 @@ Summary:	Scripts and executable programs used to build packages
 Group:		System/Configuration/Packaging
 Requires:	autoconf
 Requires:	automake
+%ifnarch riscv64
 Requires:	clang
+%endif
 Requires:	file
 # We need cputoolize & amd64-* alias to x86_64-* in config.sub
 Requires:	libtool-base
