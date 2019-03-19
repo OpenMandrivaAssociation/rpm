@@ -286,6 +286,9 @@ BuildRequires:	eatmydata
 BuildRequires:	fakechroot
 BuildRequires:	gnupg2
 %endif
+%ifarch riscv64
+BuildRequires:	atomic-devel
+%endif
 
 Requires:	bzip2 >= 0.9.0c-2
 Requires:	xz
