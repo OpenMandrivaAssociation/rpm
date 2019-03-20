@@ -1,0 +1,13 @@
+diff --git a/rpmrc.in b/rpmrc.in
+index 1e257e6..c1914de 100644
+--- a/rpmrc.in
++++ b/rpmrc.in
+@@ -106,7 +106,7 @@ optflags: sh4a -O2 -g -mieee
+ 
+ optflags: aarch64 -O2 -g
+ 
+-optflags: riscv64 -O2 -g
++optflags: riscv64 -O2 -g -march=rv64imafdc -mabi=lp64d
+ 
+ #############################################################
+ # Architecture colors

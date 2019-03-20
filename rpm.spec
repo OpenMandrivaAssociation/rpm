@@ -99,7 +99,7 @@ Version:	4.14.2.1
 %if "%{snapver}" != ""
 Release:	%{?snapver:0.%{snapver}.}1
 %else
-Release:	7
+Release:	8
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -242,6 +242,7 @@ Patch6005:	rpm-4.14-i386-to-i686.patch
 # doesn't apply to us because we name 32 bit library packages differently
 # from 64 bit lib packages -- coinstallable anyway because of different names.
 Patch6006:	rpm-4.14.2.1-build-id-in-debug-packages.patch
+Patch6007:	riscv64-optflags.patch
 
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD
