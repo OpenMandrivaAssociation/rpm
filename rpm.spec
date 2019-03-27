@@ -258,10 +258,8 @@ BuildRequires:	pkgconfig(liblzma) >= 5
 BuildRequires:	pkgconfig(libzstd)
 BuildRequires:	automake
 BuildRequires:	doxygen
-BuildRequires:	elfutils-devel
-BuildRequires:	beecrypt-devel
+BuildRequires:	pkgconfig(libelf)
 BuildRequires:	binutils-devel
-BuildRequires:	ed
 BuildRequires:	gettext-devel
 BuildRequires:	db-devel >= 18.1
 %if %{with plugins}
@@ -269,7 +267,6 @@ BuildRequires:	pkgconfig(dbus-1)
 %endif
 BuildRequires:	pkgconfig(neon)
 BuildRequires:	pkgconfig(popt)
-BuildRequires:	pkgconfig(nss)
 BuildRequires:	magic-devel
 BuildRequires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 BuildRequires:	readline-devel
