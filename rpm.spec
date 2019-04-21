@@ -256,6 +256,7 @@ BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(bzip2)
 BuildRequires:	pkgconfig(liblzma) >= 5
 BuildRequires:	pkgconfig(libzstd)
+BuildRequires:	pkgconfig(nss)
 BuildRequires:	automake
 BuildRequires:	doxygen
 BuildRequires:	pkgconfig(libelf)
