@@ -410,6 +410,7 @@ Requires:	spec-helper >= 0.31.12
 Requires:	pkgconf
 Requires:	systemd-macros
 Requires:	go-srpm-macros
+Requires:	rpm-helper
 Conflicts:	rpm-build < %{epoch}:%{version}-%{release}
 
 %description build
