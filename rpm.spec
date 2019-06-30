@@ -377,6 +377,9 @@ Summary:	Scripts and executable programs used to build packages
 Group:		System/Configuration/Packaging
 Requires:	autoconf
 Requires:	automake
+%ifarch %{riscv}
+Requires:	atomic-devel
+%endif
 %ifnarch riscv64
 Requires:	clang
 %endif
