@@ -68,6 +68,9 @@
 %bcond_without plugins
 # build with new db format
 %bcond_with ndb
+# build with openmp support?
+## TODO: Enable by default once mock+ABF are fixed
+%bcond_with openmp
 
 # Define directory which holds rpm config files, and some binaries actually
 # NOTE: it remains */lib even on lib64 platforms as only one version
@@ -97,7 +100,7 @@ Version:	4.15.1
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	1
+Release:	2
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -514,9 +517,7 @@ autoreconf -i -f
     --with-cap \
     --with-acl \
     %{?with_ndb: --with-ndb} \
-%ifarch riscv64
-    --disable-openmp \
-%endif
+    %{!?with_openmp: --disable-openmp} \
     --enable-python \
     --with-crypto=openssl
 
