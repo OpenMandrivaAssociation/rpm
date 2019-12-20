@@ -1,0 +1,29 @@
+From d8d1da567caeb7ff7e1f90a2a80beba21aa2d996 Mon Sep 17 00:00:00 2001
+From: Gordon Messmer <gordon.messmer@gmail.com>
+Date: Fri, 20 Dec 2019 11:57:02 -0800
+Subject: [PATCH] scripts/pythondistdeps: Only print rich dep list when
+ required to.
+
+---
+ scripts/pythondistdeps.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/pythondistdeps.py b/scripts/pythondistdeps.py
+index 4628265a8..8671cdccf 100755
+--- a/scripts/pythondistdeps.py
++++ b/scripts/pythondistdeps.py
+@@ -269,7 +269,10 @@ for name in names:
+                 spec_list.append('{n} >= {v} with {n} < {vnext}'.format(n=name, v=spec[1], vnext=next_ver))
+             else:
+                 spec_list.append('{} {} {}'.format(name, spec[0], spec[1]))
+-        print('(%s)' % ' with '.join(spec_list))
++        if len(spec_list) == 1:
++            print(spec_list[0])
++        else:
++            print('({})'.format(' with '.join(spec_list)))
+     else:
+         # Print out unversioned provides, requires, recommends, conflicts
+         print(name)
+-- 
+2.21.0
+

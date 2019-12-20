@@ -100,7 +100,7 @@ Version:	4.15.1
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	2
+Release:	3
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -204,6 +204,7 @@ Patch1002:	0002-scripts-pythondistdeps-Use-rich-deps-for-semanticall.patch
 Patch1003:	0003-scripts-pythondistdeps-Handle-compatible-release-ope.patch
 Patch1004:	0004-scripts-pythondistdeps-Handle-version-ending-with.patch
 Patch1005:	0005-scripts-pythondistdeps-Only-add-setuptools-requireme.patch
+Patch1006:	0006-scripts-pythondistdeps-Only-print-rich-dep-list-when.patch
 
 #
 # Patches proposed upstream
