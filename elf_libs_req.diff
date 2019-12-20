@@ -3,9 +3,9 @@
 @@ -8,6 +8,6 @@ fattrsdir = $(rpmconfigdir)/fileattrs
  fattrs_DATA = \
  	debuginfo.attr desktop.attr elf.attr font.attr libtool.attr metainfo.attr \
- 	perl.attr perllib.attr pkgconfig.attr python.attr ocaml.attr script.attr \
--	mono.attr
-+	mono.attr elflib.attr
+ 	perl.attr perllib.attr pkgconfig.attr python.attr pythondist.attr ocaml.attr \
+-	script.attr
++	script.attr elflib.attr
  
  EXTRA_DIST = $(fattrs_DATA)
 --- ./fileattrs/elf.attr.orig	2012-11-07 12:55:24.000000000 +0000

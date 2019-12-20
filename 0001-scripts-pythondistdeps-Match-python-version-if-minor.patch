@@ -1,0 +1,27 @@
+From 5f88b9c31697a1b1302a5745ff9789f93732eb5c Mon Sep 17 00:00:00 2001
+From: Gordon Messmer <gordon.messmer@gmail.com>
+Date: Sat, 23 Nov 2019 15:03:44 -0800
+Subject: [PATCH 1/5] scripts/pythondistdeps: Match python version if minor has
+ multiple digits.
+
+(cherry picked from commit 54b5004cda39c2d1da78a0d8b8689cc6683bc9b6)
+---
+ scripts/pythondistdeps.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/pythondistdeps.py b/scripts/pythondistdeps.py
+index 3c24e9c38..5897992ec 100755
+--- a/scripts/pythondistdeps.py
++++ b/scripts/pythondistdeps.py
+@@ -116,7 +116,7 @@ for f in files:
+             # Try to parse the Python version from the path the metadata
+             # resides at (e.g. /usr/lib/pythonX.Y/site-packages/...)
+             import re
+-            res = re.search(r"/python(?P<pyver>\d+\.\d)/", path_item)
++            res = re.search(r"/python(?P<pyver>\d+\.\d+)/", path_item)
+             if res:
+                 dist.py_version = res.group('pyver')
+             else:
+-- 
+2.21.0
+

@@ -1,0 +1,31 @@
+From 31a67e5e9708bf6ebda7d48759064ab8c74c550b Mon Sep 17 00:00:00 2001
+From: Gordon Messmer <gordon.messmer@gmail.com>
+Date: Mon, 9 Dec 2019 12:22:28 -0800
+Subject: [PATCH 5/5] scripts/pythondistdeps: Only add setuptools requirement
+ for egg-info packages.
+
+(cherry picked from commit 82971c6dea008ddf4a2efc61c3c7e349a58e9687)
+---
+ scripts/pythondistdeps.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/pythondistdeps.py b/scripts/pythondistdeps.py
+index 89c9a6183..4628265a8 100755
+--- a/scripts/pythondistdeps.py
++++ b/scripts/pythondistdeps.py
+@@ -178,8 +178,10 @@ for f in files:
+                             depsextras.remove(dep)
+                 deps = depsextras
+             # console_scripts/gui_scripts entry points need pkg_resources from setuptools
+-            if (dist.get_entry_map('console_scripts') or
+-                    dist.get_entry_map('gui_scripts')):
++            if ((dist.get_entry_map('console_scripts') or
++                     dist.get_entry_map('gui_scripts')) and
++                    (lower.endswith('.egg') or
++                     lower.endswith('.egg-info'))):
+                 # stick them first so any more specific requirement overrides it
+                 deps.insert(0, Requirement.parse('setuptools'))
+             # add requires/recommends based on egg/dist metadata
+-- 
+2.21.0
+

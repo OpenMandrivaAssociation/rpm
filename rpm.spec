@@ -1,5 +1,8 @@
 # WARNING: This package is synced with Fedora and Mageia
 
+# (ngompa): This is primarily for the znver1 patch, as it's a pain to rediff...
+%global _default_patch_fuzz 2
+
 %ifos linux
 # Get rid of any -gnu/-gnueabi suffix for platform names
 # to get traditional directory names
@@ -48,28 +51,23 @@
 %endif
 
 # If they aren't provided by a system installed macro, define them
-%{!?__python2: %global __python2 /usr/bin/python2}
 %{!?__python3: %global __python3 /usr/bin/python3}
 
-%{!?py2_build: %global py2_build LDSHARED="%{__cc} -pthread -shared %{optflags}" CFLAGS="%{optflags}" %{__python2} setup.py build}
-%{!?py2_install: %global py2_install %{__python2} setup.py install -O1 --skip-build --root %{buildroot}}
 %{!?py3_build: %global py3_build LDSHARED="%{__cc} -pthread -shared %{optflags}" CFLAGS="%{optflags}" %{__python3} setup.py build}
 %{!?py3_install: %global py3_install %{__python3} setup.py install -O1 --skip-build --root %{buildroot}}
 
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 %{!?python3_sitearch: %global python3_sitearch %(%{__python3} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 
 %define __find_requires %{rpmhome}/%{_real_vendor}/find-requires %{?buildroot:%{buildroot}} %{?_target_cpu:%{_target_cpu}}
 %define __find_provides %{rpmhome}/%{_real_vendor}/find-provides
 
 # run internal testsuite?
-# TODO: Enable by default once rpm5 transition hack patches are dropped
+## TODO: Enable by default once tests exec failures are fixed
 %bcond_with check
 # build with plugins?
 %bcond_without plugins
 # build with new db format
 %bcond_with ndb
-%bcond_with debug
 
 # Define directory which holds rpm config files, and some binaries actually
 # NOTE: it remains */lib even on lib64 platforms as only one version
@@ -84,22 +82,22 @@
 %global srcver %{version}
 %define srcdir %{name}-%(v=%{version}; echo ${v%.*}.x)
 %endif
-%global libmajor	8
+%global libmajor	9
 %global librpmname      %mklibname rpm  %{libmajor}
 %global librpmnamedevel %mklibname -d rpm
 %global librpmsign      %mklibname rpmsign %{libmajor}
 %global librpmbuild     %mklibname rpmbuild %{libmajor}
 
-%global rpmsetup_version 0.1.2
+%global rpmsetup_version 0.4.0
 
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		2
-Version:	4.14.2.1
+Version:	4.15.1
 %if "%{snapver}" != ""
-Release:	%{?snapver:0.%{snapver}.}1
+Release:	0.%{snapver}.1
 %else
-Release:	12
+Release:	1
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -111,16 +109,15 @@ Source2:	rpm.rpmlintrc
 # Fedora patches
 #
 
-# gnupg2 comes installed by default, avoid need to drag in gnupg too
-Patch4:		rpm-4.8.1-use-gpg2.patch
+# https://github.com/rpm-software-management/rpm/pull/473
+Patch6:	0001-find-debuginfo.sh-decompress-DWARF-compressed-ELF-se.patch
 
 # These are not yet upstream
 Patch906:	rpm-4.7.1-geode-i686.patch
 # Probably to be upstreamed in slightly different form
-Patch907:	rpm-4.13.90-ldflags.patch
+Patch907:	rpm-4.15.x-ldflags.patch
 
-# Enable pythondistdeps generator
-Patch908:	rpm-4.13.x-pythondistdeps-fileattr.patch
+Patch912:	0001-Revert-Improve-ARM-detection.patch
 
 #
 # End of FC patches
@@ -137,7 +134,7 @@ Patch908:	rpm-4.13.x-pythondistdeps-fileattr.patch
 # In original rpm, -bb --short-circuit does not work and run all stage
 # From popular request, we allow to do this
 # http://qa.mandriva.com/show_bug.cgi?id=15896
-Patch70:	rpm-4.12.90-bb-shortcircuit.patch
+Patch70:	rpm-4.15.0-bb-shortcircuit.patch
 
 # don't conflict for doc files
 # (to be able to install lib*-devel together with lib64*-devel even if they have conflicting manpages)
@@ -145,7 +142,7 @@ Patch83:	rpm-4.12.0-no-doc-conflicts.patch
 
 # Fix http://qa.mandriva.com/show_bug.cgi?id=19392
 # (is this working??)
-Patch84:	rpm-4.4.2.2-rpmqv-ghost.patch
+Patch84:	rpm-4.15.0-rpmqv-ghost.patch
 
 # [Dec 2008] macrofiles from rpmrc does not overrides MACROFILES anymore
 # Upstream 4.11 will have /usr/lib/rpm/macros.d:
@@ -159,11 +156,6 @@ Patch145:	rpm-forbid-badly-commented-define-in-spec.patch
 # (nb: see the patch for more info about this issue)
 #Patch151: rpm-4.6.0-rc1-protect-against-non-robust-futex.patch
 
-# Introduce (deprecated) %%apply_patches:
-# (To be dropped once all pkgs are converted to %%auto_setup)
-Patch157:	rpm-4.10.1-introduce-_after_setup-which-is-called-after-setup.patch
-Patch159:	introduce-apply_patches-and-lua-var-patches_num.patch
-
 #
 # Merge mageia's perl.prov improvements back into upstream:
 #
@@ -175,28 +167,25 @@ Patch162:	use_perl_convert_version.diff
 # Merge mageia's find-requires.sh improvements back into upstream:
 #
 # (pt) generate ELF provides for libraries, not only for executables
-Patch180:	elf_libs_req.diff 
+Patch180:	elf_libs_req.diff
 # [Suse]add --assumeexec option for previous patch:
-Patch181:	assumeexec.diff 
+Patch181:	assumeexec.diff
 # (Martin Whitaker) disable the systemd-inhibit plugin when systemd-logind is not running (mga#20016):
 Patch182:	systemd-inhibit-requires-logind.patch
 
 # (tv) Commit 816c7cf3fdae5c45de02a42a2245549778e2ca80 defaults to ignoring autodeps from docfile,
 # which break perl autodeps from *META*:
-Patch200: dont-filter-autodeps-from-doc-by-default.patch
+Patch200:	dont-filter-autodeps-from-doc-by-default.patch
 
 # Various arch enabling:
 Patch3003:	rpm_arm_mips_isa_macros.patch
-
-# (ngompa) enable pythondistdeps requires
-Patch3500:	rpm-4.13.x-mga-enable-pydistdeps-requires.patch
 
 
 # Mageia patches that are easier to rediff on top of FC patches:
 #---------------------------------------------------------------
 # (tv) merge mga stuff from rpm-setup:
 # (for spec-helper)
-Patch4000:	rpm-4.10.0-find-debuginfo__mga-cfg.diff
+Patch4000:	rpm-4.15.0-find-debuginfo__mga-cfg.diff
 
 #
 # OpenMandriva patches
@@ -206,47 +195,41 @@ Patch4000:	rpm-4.10.0-find-debuginfo__mga-cfg.diff
 # Upstream patches not carried by Fedora or Mageia
 #
 
+# Improvements to pythondistdeps generator
+Patch1001:	0001-scripts-pythondistdeps-Match-python-version-if-minor.patch
+Patch1002:	0002-scripts-pythondistdeps-Use-rich-deps-for-semanticall.patch
+Patch1003:	0003-scripts-pythondistdeps-Handle-compatible-release-ope.patch
+Patch1004:	0004-scripts-pythondistdeps-Handle-version-ending-with.patch
+Patch1005:	0005-scripts-pythondistdeps-Only-add-setuptools-requireme.patch
+
 #
 # Patches proposed upstream
 #
 
 # Add support for %%optional
 # From: https://github.com/rpm-software-management/rpm/pull/417
-Patch5001:	rpm-4.14.0-optional.patch
-# Add armv8 support
-# From: https://github.com/rpm-software-management/rpm/pull/425
-Patch5003:	rpm-4.14.x-armv8-arches.patch
-# Improved %arm macro
-# https://github.com/rpm-software-management/rpm/pull/428
-Patch5004:	rpm-armmacro.patch
-# ARM subarchitecture detection
-Patch5005:	rpm-arm-detection.patch
+Patch5001:	rpm-4.15.x-omv-optional-filelist-tag.patch
 # Add znver1 as an x86_64 superset
-Patch5006:	rpm-4.14.1-znver1-arch.patch
+Patch5006:	rpm-4.15.x-omv-znver1-arch.patch
+# Clarify ARM architecture macro and add aarch64 macro
+Patch5007:	rpm-4.15.x-omv-clarify-arm-macro.patch
+# Add RISC-V architecture macros
+Patch5008:	rpm-4.15.x-omv-riscv-arch-macro.patch
 
 #
 # OpenMandriva specific patches
 #
 
-# Support OpenMandriva's variant of legacy pythonegg deps, and enable legacy provides
-Patch6001:	rpm-4.14.x-omv-pythonXegg-legacy-deps.patch
-Patch6002:	rpm-4.14.x-omv-keep-legacy-provides.patch
 # Default to keeping a patch backup file for gendiff
 # and follow file naming conventions
-Patch6004:	rpm-4.14.x-omv-patch-gendiff.patch
+Patch6004:	rpm-4.15.x-omv-patch-gendiff.patch
 # Default to i686 targets on 32bit i686+ machines
-Patch6005:	rpm-4.14-i386-to-i686.patch
-# Put build ID files into debug packages to save some space and FS cluttering
-# on normal systems. The problem FC tried to solve by putting the build ID
-# files into the main package (coinstallability of 32 and 64 bit package)
-# doesn't apply to us because we name 32 bit library packages differently
-# from 64 bit lib packages -- coinstallable anyway because of different names.
-Patch6006:	rpm-4.14.2.1-build-id-in-debug-packages.patch
+Patch6005:	rpm-4.14-omv-i386-to-i686.patch
 Patch6007:	riscv64-optflags.patch
 
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD
-# SourceLicense: (GPLv2+ and LGPLv2+ with exceptions) and BSD 
+# SourceLicense: (GPLv2+ and LGPLv2+ with exceptions) and BSD
 License:	GPLv2+
 
 BuildRequires:	autoconf
@@ -256,7 +239,6 @@ BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(bzip2)
 BuildRequires:	pkgconfig(liblzma) >= 5
 BuildRequires:	pkgconfig(libzstd)
-BuildRequires:	pkgconfig(nss)
 BuildRequires:	automake
 BuildRequires:	doxygen
 BuildRequires:	pkgconfig(libelf)
@@ -277,7 +259,6 @@ BuildRequires:	pkgconfig(lua) >= 5.3
 BuildRequires:	pkgconfig(libcap)
 BuildRequires:	acl-devel
 BuildRequires:	pkgconfig(libarchive) >= 3.4.0
-BuildRequires:	pkgconfig(python2)
 BuildRequires:	pkgconfig(python3)
 %if %{with check}
 # for testsuite:
@@ -297,16 +278,14 @@ Requires:	coreutils
 Requires:	setup >= 2.9.1
 Requires:	rpm-%{_real_vendor}-setup >= %{rpmsetup_version}
 Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
-%define git_url http://rpm.org/git/rpm.git
 
 # This is a completely different implementation of RPM, replacing rpm5
 Conflicts:	rpm < %{epoch}:%{version}-%{release}
 
 # Weakly depend on stuff that used to be in main rpm package
-# Note: after rpm is updated in buildroot, change to Recommends
-Suggests:	rpm-plugin-syslog
-Suggests:	rpm-plugin-ima
-Suggests:	rpm-plugin-systemd-inhibit
+Recommends:	rpm-plugin-syslog
+Recommends:	rpm-plugin-ima
+Recommends:	rpm-plugin-systemd-inhibit
 
 %description
 The RPM Package Manager (RPM) is a powerful command line driven
@@ -428,24 +407,13 @@ Group:		System/Base
 %description sign
 This package contains support for digitally signing RPM packages.
 
-%package -n python2-%{name}
-Summary:	Python 2 bindings for apps which will manipulate RPM packages
-Group:		Development/Python
-Requires:	rpm = %{epoch}:%{version}-%{release}
-
-%description -n python2-%{name}
-The python2-rpm package contains a module that permits applications
-written in the Python programming language to use the interface
-supplied by RPM Package Manager libraries.
-
-This package should be installed if you want to develop Python 2
-programs that will manipulate RPM packages and databases.
-
 %package -n python-%{name}
 Summary:	Python 3 bindings for apps which will manipulate RPM packages
 Group:		Development/Python
 Requires:	rpm = %{epoch}:%{version}-%{release}
 Obsoletes:	python-%{name} < %{epoch}:%{version}-%{release}
+# Python 2 subpackage is gone
+Obsoletes:	python2-%{name} < 2:4.15.1-0
 
 %description -n python-%{name}
 The python-rpm package contains a module that permits applications
@@ -515,6 +483,8 @@ in an rpm.
 Summary:	Rpm plugin for resetting scriptlet priorities for SysV init
 Group:		System/Base
 Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
+# Incompatible with rpm5
+Conflicts:	rpm < 2:4.14.0-0
 
 %description plugin-prioreset
 %{summary}
@@ -530,13 +500,7 @@ nice/ionice priorities. Should not be used on systemd systems.
 %build
 %define _disable_ld_no_undefined 1
 
-%if %with debug
-RPM_OPT_FLAGS=-g
-%endif
-CPPFLAGS="$CPPFLAGS $(pkg-config --cflags nss) -DLUA_COMPAT_APIINTCASTS"
-CFLAGS="$RPM_OPT_FLAGS -DLUA_COMPAT_APIINTCASTS"
-LDFLAGS="$LDFLAGS %{?__global_ldflags}"
-export CPPFLAGS CFLAGS LDFLAGS
+%set_build_flags
 
 autoreconf -i -f
 
@@ -544,19 +508,20 @@ autoreconf -i -f
     --localstatedir=%{_var} \
     --sharedstatedir=%{_var}/lib \
     --with-vendor=%{_real_vendor} \
-    %{?_with_debug} \
     --with-external-db \
     --with-lua \
     --without-selinux \
     --with-cap \
     --with-acl \
     %{?with_ndb: --with-ndb} \
+%ifarch riscv64
+    --disable-openmp \
+%endif
     --enable-python \
     --with-crypto=openssl
 
 %make_build
 cd python
-%py2_build
 %py3_build
 cd -
 
@@ -571,7 +536,6 @@ ln -sr %{buildroot}/%{_bindir}/rpm %{buildroot}/bin/rpm
 # actually package the bindings built with setup.py (#531543#c26)
 rm -rf $RPM_BUILD_ROOT/%{python_sitearch}
 cd python
-%py2_install
 %py3_install
 cd -
 
@@ -688,9 +652,8 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
 
 %if %{with check}
 %check
-# We ignore tests for now due to _debugsource_packages breaking tests
-# https://github.com/rpm-software-management/rpm/issues/277
-eatmydata make check || cat tests/rpmtests.log
+# https://github.com/rpm-software-management/rpm/issues/741
+eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %endif
 
 %post -p <lua>
@@ -818,7 +781,7 @@ rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 %rpmattr %{_prefix}/lib/rpm/check-files
 %rpmattr %{_prefix}/lib/rpm/debugedit
 %rpmattr %{_prefix}/lib/rpm/sepdebugcrcfix
-%rpmattr %{_prefix}/lib/rpm/*.prov 
+%rpmattr %{_prefix}/lib/rpm/*.prov
 %rpmattr %{_prefix}/lib/rpm/find-debuginfo.sh
 %rpmattr %{_prefix}/lib/rpm/find-lang.sh
 %rpmattr %{_prefix}/lib/rpm/find-provides
@@ -829,17 +792,12 @@ rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 %rpmattr %{_prefix}/lib/rpm/check-rpaths
 %rpmattr %{_prefix}/lib/rpm/check-rpaths-worker
 %rpmattr %{_prefix}/lib/rpm/libtooldeps.sh
-%rpmattr %{_prefix}/lib/rpm/macros.perl
-%rpmattr %{_prefix}/lib/rpm/macros.php
-%rpmattr %{_prefix}/lib/rpm/macros.python
-%rpmattr %{_prefix}/lib/rpm/mono-find-provides
-%rpmattr %{_prefix}/lib/rpm/mono-find-requires
 %rpmattr %{_prefix}/lib/rpm/ocaml-find-provides.sh
 %rpmattr %{_prefix}/lib/rpm/ocaml-find-requires.sh
 %rpmattr %{_prefix}/lib/rpm/pkgconfigdeps.sh
 %rpmattr %{_prefix}/lib/rpm/pythondeps.sh
 %rpmattr %{_prefix}/lib/rpm/pythondistdeps.py*
-%rpmattr %{_prefix}/lib/rpm/python-macro-helper
+%exclude %{_prefix}/lib/rpm/__pycache__
 %rpmattr %{_prefix}/lib/rpm/rpmdeps
 
 %{_mandir}/man8/rpmbuild.8*
@@ -850,14 +808,9 @@ rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 %{_bindir}/rpmsign
 %{_mandir}/man8/rpmsign.8*
 
-%files -n python2-%{name}
-%{python2_sitearch}/%{name}/
-%{python2_sitearch}/%{name}-%{version}*.egg-info
-
 %files -n python-%{name}
 %{python3_sitearch}/%{name}/
 %{python3_sitearch}/%{name}-%{version}*.egg-info
-%exclude %{rpmhome}/__pycache__
 
 %files -n %librpmnamedevel
 %{_libdir}/librp*[a-z].so

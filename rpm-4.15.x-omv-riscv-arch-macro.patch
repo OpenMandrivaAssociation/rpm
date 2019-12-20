@@ -1,0 +1,30 @@
+From dfc6f4a4f40f407660645b4a72a337e9b69ede0e Mon Sep 17 00:00:00 2001
+From: Neal Gompa <ngompa13@gmail.com>
+Date: Thu, 19 Dec 2019 23:56:13 -0500
+Subject: [PATCH] Add architecture macro for all RISC-V processors
+
+---
+ macros.in | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/macros.in b/macros.in
+index 80c9e4dad..f1ae7f8c1 100644
+--- a/macros.in
++++ b/macros.in
+@@ -1157,6 +1157,13 @@ package or when debugging this package.\
+ # arch macro for all supported PowerPC 64 processors
+ %power64	ppc64 ppc64p7 ppc64le
+ 
++#------------------------------------------------------------------------------
++# arch macro for all supported RISC-V processors
++%riscv32	riscv32
++%riscv64	riscv64
++%riscv128	riscv128
++%riscv		%{riscv32} %{riscv64} %{riscv128}
++
+ #------------------------------------------------------------------------
+ # Use in %install to generate locale specific file lists. For example,
+ #
+-- 
+2.23.0
+
