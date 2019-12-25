@@ -35,11 +35,11 @@ diff --git a/build/files.c b/build/files.c
 index 6dfd801c8..7cf0d59a3 100644
 --- a/build/files.c
 +++ b/build/files.c
-@@ -629,6 +629,7 @@ exit:
- static VFA_t const configAttrs[] = {
-     { "missingok",	RPMFILE_MISSINGOK },
-     { "noreplace",	RPMFILE_NOREPLACE },
-+    { "optional",	RPMFILE_OPTIONAL },
+@@ -858,6 +858,7 @@ static VFA_t const virtualAttrs[] = {
+     { "%pubkey",	RPMFILE_PUBKEY },
+     { "%missingok",	RPMFILE_MISSINGOK },
+     { "%artifact",	RPMFILE_ARTIFACT },
++    { "%optional",	RPMFILE_OPTIONAL },
      { NULL, 0 }
  };
  

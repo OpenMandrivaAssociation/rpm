@@ -100,7 +100,7 @@ Version:	4.15.1
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	3
+Release:	4
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -451,6 +451,15 @@ This package contains a cron job which creates daily logs of installed
 packages on a system.
 
 %if %{with plugins}
+%package plugin-audit
+Summary:	Rpm plugin for libaudit support
+Group:		Development/Tools
+Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
+BuildRequires:	pkgconfig(audit)
+
+%description plugin-audit
+Rpm plugin for libaudit support
+
 %package plugin-syslog
 Summary:	Rpm plugin for syslog functionality
 Group:		System/Base
@@ -752,6 +761,9 @@ rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 %{_libdir}/librpmio.so.%{libmajor}.*
 %if %{with plugins}
 %dir %{_libdir}/rpm-plugins
+
+%files plugin-audit
+%{_libdir}/rpm-plugins/audit.so
 
 %files plugin-syslog
 %{_libdir}/rpm-plugins/syslog.so
