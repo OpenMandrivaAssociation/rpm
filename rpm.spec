@@ -100,7 +100,7 @@ Version:	4.15.1
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	4
+Release:	5
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -249,9 +249,6 @@ BuildRequires:	pkgconfig(libelf)
 BuildRequires:	binutils-devel
 BuildRequires:	gettext-devel
 BuildRequires:	db-devel >= 18.1
-%if %{with plugins}
-BuildRequires:	pkgconfig(dbus-1)
-%endif
 BuildRequires:	pkgconfig(neon)
 BuildRequires:	pkgconfig(popt)
 BuildRequires:	magic-devel
@@ -287,6 +284,7 @@ Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
 Conflicts:	rpm < %{epoch}:%{version}-%{release}
 
 # Weakly depend on stuff that used to be in main rpm package
+Recommends:	rpm-plugin-audit
 Recommends:	rpm-plugin-syslog
 Recommends:	rpm-plugin-ima
 Recommends:	rpm-plugin-systemd-inhibit
@@ -452,10 +450,12 @@ packages on a system.
 
 %if %{with plugins}
 %package plugin-audit
-Summary:	Rpm plugin for libaudit support
-Group:		Development/Tools
-Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
+Summary:	Rpm plugin for logging audit events on package operations
+Group:		System/Base
 BuildRequires:	pkgconfig(audit)
+Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
+# Incompatible with rpm5
+Conflicts:	rpm < 2:4.14.0-0
 
 %description plugin-audit
 Rpm plugin for libaudit support
@@ -473,6 +473,7 @@ This plugin exports RPM actions to the system log.
 %package plugin-systemd-inhibit
 Summary:	Rpm plugin for systemd inhibit functionality
 Group:		System/Base
+BuildRequires:	pkgconfig(dbus-1)
 Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
 # Incompatible with rpm5
 Conflicts:	rpm < 2:4.14.0-0
