@@ -205,6 +205,7 @@ Patch1003:	0003-scripts-pythondistdeps-Handle-compatible-release-ope.patch
 Patch1004:	0004-scripts-pythondistdeps-Handle-version-ending-with.patch
 Patch1005:	0005-scripts-pythondistdeps-Only-add-setuptools-requireme.patch
 Patch1006:	0006-scripts-pythondistdeps-Only-print-rich-dep-list-when.patch
+Patch1007:	0007-Python-dist-deps-Put-bounded-requirements-into-paren.patch
 
 #
 # Patches proposed upstream
