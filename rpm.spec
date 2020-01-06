@@ -100,7 +100,7 @@ Version:	4.15.1
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	5
+Release:	6
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -114,6 +114,9 @@ Source2:	rpm.rpmlintrc
 
 # https://github.com/rpm-software-management/rpm/pull/473
 Patch6:	0001-find-debuginfo.sh-decompress-DWARF-compressed-ELF-se.patch
+
+# https://github.com/rpm-software-management/rpm/pull/997
+Patch7:		https://github.com/rpm-software-management/rpm/pull/997/commits/4976a071b41ce71a281e9f28a7904172a3a24c85.patch
 
 # These are not yet upstream
 Patch906:	rpm-4.7.1-geode-i686.patch

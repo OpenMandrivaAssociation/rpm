@@ -1,0 +1,39 @@
+From 4976a071b41ce71a281e9f28a7904172a3a24c85 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@lindev.ch>
+Date: Mon, 6 Jan 2020 21:42:46 +0100
+Subject: [PATCH] brp-compress: Handle zstd compressed man/info pages
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Handle zstd compressed man/info pages in brp-compress
+
+Signed-off-by: Bernhard Rosenkränzer <bero@lindev.ch>
+---
+ scripts/brp-compress | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/brp-compress b/scripts/brp-compress
+index e6b69a9e4..789720504 100755
+--- a/scripts/brp-compress
++++ b/scripts/brp-compress
+@@ -25,6 +25,7 @@ do
+ 	 *.gz|*.Z)    gunzip  -f $f; b=`echo $f | sed -e 's/\.\(gz\|Z\)$//'`;;
+ 	 *.bz2)       bunzip2 -f $f; b=`echo $f | sed -e 's/\.bz2$//'`;;
+ 	 *.xz|*.lzma) unxz    -f $f; b=`echo $f | sed -e 's/\.\(xz\|lzma\)$//'`;;
++	 *.zst|*.zstd) unzstd -f --rm $f; b=`echo $f | sed -e 's/\.\(zst\|zstd\)$//'`;;
+ 	 *) b=$f;;
+ 	esac
+ 
+@@ -47,9 +48,9 @@ do
+ 
+     for f in `find $d -type l`
+     do
+-	l=`ls -l $f | sed -e 's/.* -> //' -e 's/\.\(gz\|Z\|bz2\|xz\|lzma\)$//'`
++	l=`ls -l $f | sed -e 's/.* -> //' -e 's/\.\(gz\|Z\|bz2\|xz\|lzma\|zst\|zstd\)$//'`
+ 	rm -f $f
+-	b=`echo $f | sed -e 's/\.\(gz\|Z\|bz2\|xz\|lzma\)$//'`
++	b=`echo $f | sed -e 's/\.\(gz\|Z\|bz2\|xz\|lzma\|zst\|zstd\)$//'`
+ 	ln -sf $l$COMPRESS_EXT $b$COMPRESS_EXT
+     done
+ done
