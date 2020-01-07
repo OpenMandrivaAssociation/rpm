@@ -100,7 +100,7 @@ Version:	4.15.1
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	6
+Release:	7
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -277,6 +277,7 @@ BuildRequires:	atomic-devel
 
 Requires:	bzip2 >= 0.9.0c-2
 Requires:	xz
+Requires:	zstd
 Requires:	cpio
 Requires:	gawk
 Requires:	coreutils
