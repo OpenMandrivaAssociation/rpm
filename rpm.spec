@@ -100,7 +100,7 @@ Version:	4.15.1
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	7
+Release:	8
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -234,6 +234,7 @@ Patch6004:	rpm-4.15.x-omv-patch-gendiff.patch
 # Default to i686 targets on 32bit i686+ machines
 Patch6005:	rpm-4.14-omv-i386-to-i686.patch
 Patch6007:	riscv64-optflags.patch
+Patch6008:	rpm-4.15.x-rosa-dont-require-contiguous-sighdr.patch
 
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD

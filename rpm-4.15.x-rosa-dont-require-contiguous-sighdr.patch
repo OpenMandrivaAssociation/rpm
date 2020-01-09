@@ -1,0 +1,28 @@
+From da7e0b659da77814b7adad09f70c00bd2b2a4b79 Mon Sep 17 00:00:00 2001
+From: Panu Matilainen <pmatilai@redhat.com>
+Date: Thu, 9 Jan 2020 10:24:39 +0200
+Subject: [PATCH] Don't require signature header to be in single contiguous
+ region part II
+
+The generic case was reported in #270 and fixed quite a while ago in
+commit 34c2ba3c6a80a778cdf2e42a9193b3264e08e1b3, but signing uses a
+different code path and require the same treatment.
+
+Fixes: #1002
+---
+ lib/signature.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/signature.c b/lib/signature.c
+index 6f04962e8..21f04c7f2 100644
+--- a/lib/signature.c
++++ b/lib/signature.c
+@@ -65,7 +65,7 @@ rpmRC rpmReadSignature(FD_t fd, Header * sighp, char ** msg)
+     if (sighp)
+ 	*sighp = NULL;
+ 
+-    if (hdrblobRead(fd, 1, 1, RPMTAG_HEADERSIGNATURES, &blob, &buf) != RPMRC_OK)
++    if (hdrblobRead(fd, 1, 0, RPMTAG_HEADERSIGNATURES, &blob, &buf) != RPMRC_OK)
+ 	goto exit;
+     
+     /* OK, blob looks sane, load the header. */
