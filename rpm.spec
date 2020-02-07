@@ -100,7 +100,7 @@ Version:	4.15.1
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	8
+Release:	9
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -367,9 +367,7 @@ Requires:	automake
 %ifarch %{riscv}
 Requires:	atomic-devel
 %endif
-%ifnarch riscv64
 Requires:	clang
-%endif
 Requires:	file
 # We need cputoolize & amd64-* alias to x86_64-* in config.sub
 Requires:	libtool-base
@@ -519,6 +517,12 @@ nice/ionice priorities. Should not be used on systemd systems.
 
 %build
 %define _disable_ld_no_undefined 1
+
+%ifarch %{riscv}
+# Temporary hardcode, to change defaults on RISC-V
+export CC=%{_bindir}/clang
+export CXX=%{_bindir}/clang++
+%endif
 
 %set_build_flags
 
