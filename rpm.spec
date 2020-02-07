@@ -274,6 +274,7 @@ BuildRequires:	gnupg2
 %endif
 %ifarch riscv64
 BuildRequires:	atomic-devel
+BuildRequires:	clang
 %endif
 
 Requires:	bzip2 >= 0.9.0c-2
