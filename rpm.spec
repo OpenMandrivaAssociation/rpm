@@ -100,7 +100,7 @@ Version:	4.15.1
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	9
+Release:	10
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -515,6 +515,10 @@ nice/ionice priorities. Should not be used on systemd systems.
 
 %prep
 %autosetup -n %{name}-%{srcver} -p1
+
+# Get rid of _python_bytecompile_extra
+# https://fedoraproject.org/wiki/Changes/No_more_automagic_Python_bytecompilation
+sed -i -e '/^%%_python_bytecompile_extra/d' platform.in
 
 %build
 %define _disable_ld_no_undefined 1
