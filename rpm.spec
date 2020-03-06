@@ -321,7 +321,6 @@ Group:		System/Libraries
 License:	GPLv2+ and LGPLv2+ with exceptions
 Obsoletes:	rpm-build-libs < %{version}-%{release}
 Provides:	rpm-build-libs%{?_isa} = %{version}-%{release}
-Provides:	perl-generators = %{version}-%{release}
 
 %description -n %{librpmbuild}
 This package contains the RPM shared libraries for building and signing
@@ -364,6 +363,7 @@ packages.
 %package build
 Summary:	Scripts and executable programs used to build packages
 Group:		System/Configuration/Packaging
+Provides:	perl-generators = %{version}-%{release}
 Requires:	autoconf
 Requires:	automake
 %ifarch %{riscv}
