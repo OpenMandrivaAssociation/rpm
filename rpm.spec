@@ -100,7 +100,7 @@ Version:	4.15.1
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	10
+Release:	11
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -235,6 +235,14 @@ Patch6004:	rpm-4.15.x-omv-patch-gendiff.patch
 Patch6005:	rpm-4.14-omv-i386-to-i686.patch
 Patch6007:	riscv64-optflags.patch
 Patch6008:	rpm-4.15.x-rosa-dont-require-contiguous-sighdr.patch
+# Run the debuginfo generator after, not before, other postprocessing scripts
+# have run.
+# This is important to make sure spec-helper's fix_file_permissions (which
+# makes sure library files are executable) is run before find-debuginfo
+# (which only looks at executable files) decides what files (not) to split.
+# This shrinks OpenJDK by 400 MB -- and certainly can't hurt other packages
+# that install libraries with odd permissions.
+Patch6009:	rpm-4.15.1-macros-run-debuginfo-after-other-scripts.patch
 
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD

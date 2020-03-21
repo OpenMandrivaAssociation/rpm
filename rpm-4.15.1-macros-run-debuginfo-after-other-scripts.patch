@@ -1,0 +1,14 @@
+diff -up rpm-4.15.1/macros.in.omv~ rpm-4.15.1/macros.in
+--- rpm-4.15.1/macros.in.omv~	2020-03-21 18:43:07.903658575 +0100
++++ rpm-4.15.1/macros.in	2020-03-21 18:43:26.366587952 +0100
+@@ -888,9 +888,9 @@ package or when debugging this package.\
+ %__spec_install_pre	%{___build_pre}
+ %__spec_install_body	%{___build_body}
+ %__spec_install_post\
+-%{?__debug_package:%{__debug_install_post}}\
+ %{__arch_install_post}\
+ %{__os_install_post}\
++%{?__debug_package:%{__debug_install_post}}\
+ %{nil}
+ %__spec_install_template	#!%{__spec_install_shell}\
+ %{__spec_install_pre}\
