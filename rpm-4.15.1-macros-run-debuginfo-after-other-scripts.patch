@@ -12,3 +12,17 @@ diff -up rpm-4.15.1/macros.in.omv~ rpm-4.15.1/macros.in
  %{nil}
  %__spec_install_template	#!%{__spec_install_shell}\
  %{__spec_install_pre}\
+diff -up rpm-4.15.1/platform.in.omv~ rpm-4.15.1/platform.in
+--- rpm-4.15.1/platform.in.omv~	2020-03-21 21:27:45.706262429 +0100
++++ rpm-4.15.1/platform.in	2020-03-21 21:27:51.232191342 +0100
+@@ -92,9 +92,9 @@
+ %{nil}
+ 
+ %__spec_install_post\
+-    %{?__debug_package:%{__debug_install_post}}\
+     %{__arch_install_post}\
+     %{__os_install_post}\
++    %{?__debug_package:%{__debug_install_post}}\
+ %{nil}
+ 
+ @apple@#---------------------------------------------------------------------

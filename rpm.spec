@@ -100,7 +100,7 @@ Version:	4.15.1
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	11
+Release:	12
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
