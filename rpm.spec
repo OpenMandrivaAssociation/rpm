@@ -100,7 +100,7 @@ Version:	4.15.1
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	12
+Release:	13
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -679,7 +679,12 @@ cp -a x86_64-linux x86_64-mingw32
 cp -a i686-linux i686-mingw32
 sed -i -e 's,linux,mingw32,g;s,-gnu,%%{nil},g' *-mingw32/macros
 sed -i -e 's,openmandriva,w64,g' x86_64-mingw32/macros
-sed -i -e 's,openmandriva,w32,g' i686-mingw32/macros
+# Not a typo -- it's weird, but the correct triplet for
+# Windoze 32 is actually i686-w64-mingw32, not the more
+# logical i686-w32-mingw32. The -w32- vs -w64- seems to
+# be only about telling the difference between the
+# original mingw32 and its 64-bit capable fork.
+sed -i -e 's,openmandriva,w64,g' i686-mingw32/macros
 cd -
 
 %find_lang %{name}
