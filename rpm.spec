@@ -98,7 +98,7 @@ Name:		rpm
 Epoch:		2
 Version:	4.16.0
 %if "%{snapver}" != ""
-Release:	0.%{snapver}.1
+Release:	0.%{snapver}.2
 %else
 Release:	1
 %endif
@@ -664,6 +664,14 @@ for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 znver1 x32 riscv32 ris
 	# FIXME this is not very nice... It's a workaround for
 	# not being able to set _target_os in platform macros
 	sed -i -e 's,%%{_target_os},linux,g' $arch-linuxmusl/macros
+done
+# ... And for uClibc based systems
+for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 znver1 x32 riscv32 riscv64; do
+	cp -a $arch-linux $arch-linuxuclibc
+	sed -i -e 's,-gnu,-uclibc,g' $arch-linuxuclibc/macros
+	# FIXME this is not very nice... It's a workaround for
+	# not being able to set _target_os in platform macros
+	sed -i -e 's,%%{_target_os},linux,g' $arch-linuxuclibc/macros
 done
 
 # We may want to crosscompile to Android as well...
