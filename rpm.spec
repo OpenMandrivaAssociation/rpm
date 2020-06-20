@@ -77,7 +77,7 @@
 #       of rpm is supported anyway, per architecture
 %define rpmhome /usr/lib/rpm
 
-%global snapver %{nil}
+%global snapver beta1
 %if "%{snapver}" != ""
 %global srcver %{version}%{?snapver:-%{snapver}}
 %define srcdir %{?snapver:testing}%{!?snapver:%{name}-%(v=%{version}; echo ${v%.*}.x)}
@@ -96,11 +96,11 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		2
-Version:	4.15.1
+Version:	4.16.0
 %if "%{snapver}" != ""
 Release:	0.%{snapver}.1
 %else
-Release:	13
+Release:	1
 %endif
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -108,22 +108,23 @@ Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
 # extracted from http://pkgs.fedoraproject.org/cgit/redhat-rpm-config.git/plain/macros:
 Source1:	macros.filter
 Source2:	rpm.rpmlintrc
+Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.service
 #
 # Fedora patches
 #
-
 # https://github.com/rpm-software-management/rpm/pull/473
 Patch6:	0001-find-debuginfo.sh-decompress-DWARF-compressed-ELF-se.patch
-
-# https://github.com/rpm-software-management/rpm/pull/997
-Patch7:		https://github.com/rpm-software-management/rpm/pull/997/commits/4976a071b41ce71a281e9f28a7904172a3a24c85.patch
+Patch100: https://src.fedoraproject.org/rpms/rpm/raw/master/f/0001-Don-t-auto-enable-IO-flushing-on-non-rotational-disk.patch
+Patch101: https://src.fedoraproject.org/rpms/rpm/raw/master/f/0001-metainfo.attr-Fix-execution-of-the-generator.patch
+Patch102: https://src.fedoraproject.org/rpms/rpm/raw/master/f/0001-Fix-completely-broken-prefix-search-on-sqlite-backen.patch
 
 # These are not yet upstream
-Patch906:	rpm-4.7.1-geode-i686.patch
+Patch906:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.7.1-geode-i686.patch
 # Probably to be upstreamed in slightly different form
-Patch907:	rpm-4.15.x-ldflags.patch
+Patch907:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.15.x-ldflags.patch
 
-Patch912:	0001-Revert-Improve-ARM-detection.patch
+# We disagree...
+#Patch912:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/0001-Revert-Improve-ARM-detection.patch
 
 #
 # End of FC patches
@@ -201,15 +202,6 @@ Patch4000:	rpm-4.15.0-find-debuginfo__mga-cfg.diff
 # Upstream patches not carried by Fedora or Mageia
 #
 
-# Improvements to pythondistdeps generator
-Patch1001:	0001-scripts-pythondistdeps-Match-python-version-if-minor.patch
-Patch1002:	0002-scripts-pythondistdeps-Use-rich-deps-for-semanticall.patch
-Patch1003:	0003-scripts-pythondistdeps-Handle-compatible-release-ope.patch
-Patch1004:	0004-scripts-pythondistdeps-Handle-version-ending-with.patch
-Patch1005:	0005-scripts-pythondistdeps-Only-add-setuptools-requireme.patch
-Patch1006:	0006-scripts-pythondistdeps-Only-print-rich-dep-list-when.patch
-Patch1007:	0007-Python-dist-deps-Put-bounded-requirements-into-paren.patch
-
 #
 # Patches proposed upstream
 #
@@ -219,22 +211,21 @@ Patch1007:	0007-Python-dist-deps-Put-bounded-requirements-into-paren.patch
 Patch5001:	rpm-4.15.x-omv-optional-filelist-tag.patch
 # Add znver1 as an x86_64 superset
 Patch5006:	rpm-4.15.x-omv-znver1-arch.patch
-# Clarify ARM architecture macro and add aarch64 macro
-Patch5007:	rpm-4.15.x-omv-clarify-arm-macro.patch
-# Add RISC-V architecture macros
-Patch5008:	rpm-4.15.x-omv-riscv-arch-macro.patch
+# Add old aarch64 macro (finally added, but renamed to arm64, upstream in 4.16)
+Patch5007:	rpm-4.16.0-aarch64-macro.patch
 
 #
 # OpenMandriva specific patches
 #
 
+# Default to sqlite rpmdb
+Patch6000:	rpm-4.16.0-beta1-db-backend-sqlite.patch
 # Default to keeping a patch backup file for gendiff
 # and follow file naming conventions
 Patch6004:	rpm-4.15.x-omv-patch-gendiff.patch
 # Default to i686 targets on 32bit i686+ machines
 Patch6005:	rpm-4.14-omv-i386-to-i686.patch
 Patch6007:	riscv64-optflags.patch
-Patch6008:	rpm-4.15.x-rosa-dont-require-contiguous-sighdr.patch
 # Run the debuginfo generator after, not before, other postprocessing scripts
 # have run.
 # This is important to make sure spec-helper's fix_file_permissions (which
@@ -274,6 +265,7 @@ BuildRequires:	pkgconfig(libcap)
 BuildRequires:	acl-devel
 BuildRequires:	pkgconfig(libarchive) >= 3.4.0
 BuildRequires:	pkgconfig(python3)
+BuildRequires:	pkgconfig(sqlite3)
 %if %{with check}
 # for testsuite:
 BuildRequires:	eatmydata
@@ -542,9 +534,14 @@ export CXX=%{_bindir}/clang++
 
 autoreconf -i -f
 
+# FIXME enable-bdb is to keep old rpmdb going until rpm --rebuilddb
+# has been run.
+# Switching to disable-bdb (possibly enable-bdb-ro to fix old boxes
+# manually) is better.
 %configure \
     --localstatedir=%{_var} \
     --sharedstatedir=%{_var}/lib \
+    --with-archive \
     --with-vendor=%{_real_vendor} \
     --with-external-db \
     --with-lua \
@@ -553,6 +550,9 @@ autoreconf -i -f
     --with-acl \
     %{?with_ndb: --with-ndb} \
     %{!?with_openmp: --disable-openmp} \
+    --enable-zstd \
+    --enable-bdb \
+    --enable-sqlite \
     --enable-python \
     --with-crypto=openssl
 
@@ -564,6 +564,10 @@ cd -
 %install
 %make_install
 
+# We build --without-selinux, so we don't need the
+# man page either
+rm -f %{buildroot}%{_mandir}/man8/rpm-plugin-selinux.8*
+
 # Add legacy symlink to rpm...
 mkdir -p %{buildroot}/bin
 ln -sr %{buildroot}/%{_bindir}/rpm %{buildroot}/bin/rpm
@@ -574,6 +578,9 @@ rm -rf $RPM_BUILD_ROOT/%{python_sitearch}
 cd python
 %py3_install
 cd -
+
+mkdir -p "%{buildroot}%{_unitdir}"
+install -m 644 %{S:10} %{buildroot}%{_unitdir}/
 
 # Save list of packages through cron
 mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/cron.daily
@@ -587,7 +594,7 @@ for dbi in \
 	Basenames Conflictname Dirnames Group Installtid Name Obsoletename \
 	Packages Providename Requirename Triggername Sha1header Sigmd5 \
 	__db.001 __db.002 __db.003 __db.004 __db.005 __db.006 __db.007 \
-	__db.008 __db.009
+	__db.008 __db.009 rpmdb.sqlite rpmdb.sqlite-shm rpmdb.sqlite-wal
 do
     touch $RPM_BUILD_ROOT/var/lib/rpm/$dbi
 done
@@ -698,14 +705,25 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %endif
 
 %post -p <lua>
-pkgs = posix.stat("/var/lib/rpm/Packages")
+pkgs = posix.stat("/var/lib/rpm/rpmdb.sqlite")
+oldpkgs = posix.stat("/var/lib/rpm/Packages")
 if not pkgs then
-    os.execute("/bin/rpm --initdb")
+    if oldpkgs then
+        f = io.open("/var/lib/rpm/.rebuilddb", "w")
+        f:close()
+    else
+        os.execute("/bin/rpm --initdb")
+    end
 end
 
 %triggerun -- rpm < 1:5.4.15-45
 rm -rf /usr/lib/rpm/*-mandrake-* ||:
 rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
+
+%triggerun -- rpm < 4.16.0-0
+if [ -x /usr/bin/systemctl ]; then
+	systemctl enable rpmdb-rebuild ||:
+fi
 
 %define rpmattr %attr(0755, rpm, rpm)
 
@@ -723,13 +741,13 @@ rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 %{_bindir}/rpmquery
 %{_bindir}/rpmverify
 
+%{_unitdir}/rpmdb-rebuild.service
+
 %dir %{_localstatedir}/spool/repackage
 %dir %{rpmhome}
 %dir /etc/rpm
 %config(noreplace) /etc/rpm/macros
 %dir /etc/rpm/macros.d
-%attr(0755, rpm, rpm) %{rpmhome}/config.guess
-%attr(0755, rpm, rpm) %{rpmhome}/config.sub
 %attr(0755, rpm, rpm) %{rpmhome}/rpmdb_*
 %attr(0644, rpm, rpm) %{rpmhome}/macros
 %rpmhome/macros.d
@@ -754,6 +772,8 @@ rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 %{_mandir}/man8/rpmkeys.8*
 %{_mandir}/man8/rpm2cpio.8*
 %{_mandir}/man8/rpm-misc.8*
+%{_mandir}/man8/rpm2archive.8*
+%{_mandir}/man8/rpm-plugins.8*
 %{_mandir}/man1/*.1*
 %lang(fr) %{_mandir}/fr/man[18]/*.[18]*
 %lang(ja) %{_mandir}/ja/man[18]/*.[18]*
@@ -784,6 +804,10 @@ rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 %rpmdbattr /var/lib/rpm/Sigmd5
 %rpmdbattr /var/lib/rpm/Triggername
 
+%rpmdbattr /var/lib/rpm/rpmdb.sqlite
+%rpmdbattr /var/lib/rpm/rpmdb.sqlite-shm
+%rpmdbattr /var/lib/rpm/rpmdb.sqlite-wal
+
 %files -n %librpmname
 %{_libdir}/librpm.so.%{libmajor}
 %{_libdir}/librpm.so.%{libmajor}.*
@@ -794,9 +818,11 @@ rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 
 %files plugin-audit
 %{_libdir}/rpm-plugins/audit.so
+%{_mandir}/man8/rpm-plugin-audit.8*
 
 %files plugin-syslog
 %{_libdir}/rpm-plugins/syslog.so
+%{_mandir}/man8/rpm-plugin-syslog.8*
 
 %files plugin-systemd-inhibit
 %{_libdir}/rpm-plugins/systemd_inhibit.so
@@ -804,9 +830,11 @@ rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 
 %files plugin-ima
 %{_libdir}/rpm-plugins/ima.so
+%{_mandir}/man8/rpm-plugin-ima.8*
 
 %files plugin-prioreset
 %{_libdir}/rpm-plugins/prioreset.so
+%{_mandir}/man8/rpm-plugin-prioreset.8*
 %endif # with plugins
 
 %files -n %librpmbuild
@@ -836,12 +864,9 @@ rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 %rpmattr %{_prefix}/lib/rpm/check-rpaths
 %rpmattr %{_prefix}/lib/rpm/check-rpaths-worker
 %rpmattr %{_prefix}/lib/rpm/libtooldeps.sh
-%rpmattr %{_prefix}/lib/rpm/ocaml-find-provides.sh
-%rpmattr %{_prefix}/lib/rpm/ocaml-find-requires.sh
+%rpmattr %{_prefix}/lib/rpm/ocamldeps.sh
 %rpmattr %{_prefix}/lib/rpm/pkgconfigdeps.sh
-%rpmattr %{_prefix}/lib/rpm/pythondeps.sh
 %rpmattr %{_prefix}/lib/rpm/pythondistdeps.py*
-%exclude %{_prefix}/lib/rpm/__pycache__
 %rpmattr %{_prefix}/lib/rpm/rpmdeps
 
 %{_mandir}/man8/rpmbuild.8*

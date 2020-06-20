@@ -1,0 +1,27 @@
+From 2ac60753c90ba4579b13425064e3df3d1421d61e Mon Sep 17 00:00:00 2001
+Message-Id: <2ac60753c90ba4579b13425064e3df3d1421d61e.1591606680.git.pmatilai@redhat.com>
+From: Igor Raits <i.gnatenko.brain@gmail.com>
+Date: Sun, 7 Jun 2020 14:31:19 +0200
+Subject: [PATCH] metainfo.attr: Fix execution of the generator
+
+Somehow it wasn't noticed before.
+
+Fixes: 9464926456125dacb8046767f1fe4235471986e9
+Signed-off-by: Igor Raits <i.gnatenko.brain@gmail.com>
+---
+ fileattrs/metainfo.attr | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fileattrs/metainfo.attr b/fileattrs/metainfo.attr
+index 1a2c3d544..d0819dabe 100644
+--- a/fileattrs/metainfo.attr
++++ b/fileattrs/metainfo.attr
+@@ -1,4 +1,4 @@
+-%__metainfo_provides %{lua:
++%__metainfo_provides() %{lua:
+   print("metainfo()\\n")
+   print(string.format("metainfo(%s)\\n", rpm.expand("%{basename:%1}")))
+ }
+-- 
+2.26.2
+

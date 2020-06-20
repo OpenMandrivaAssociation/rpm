@@ -1,0 +1,14 @@
+diff -up rpm-4.16.0-beta1/macros.in.19~ rpm-4.16.0-beta1/macros.in
+--- rpm-4.16.0-beta1/macros.in.19~	2020-06-20 18:08:45.009162208 +0200
++++ rpm-4.16.0-beta1/macros.in	2020-06-20 18:10:50.143591007 +0200
+@@ -1144,6 +1144,10 @@ package or when debugging this package.\
+ %arm64	aarch64
+ 
+ #------------------------------------------------------------------------------
++# arch macro for all supported 64-bit ARM processors (legacy, use %%arm64 instead)
++%aarch64	%{arm64}
++
++#------------------------------------------------------------------------------
+ # arch macro for 32-bit MIPS processors
+ %mips32	mips mipsel mipsr6 mipsr6el
+ 

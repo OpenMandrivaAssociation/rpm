@@ -1,0 +1,114 @@
+From cc897d03255e2a5aa672c40c043ca3fde88b8480 Mon Sep 17 00:00:00 2001
+Message-Id: <cc897d03255e2a5aa672c40c043ca3fde88b8480.1591774714.git.pmatilai@redhat.com>
+From: Panu Matilainen <pmatilai@redhat.com>
+Date: Wed, 10 Jun 2020 10:33:06 +0300
+Subject: [PATCH] Fix completely broken prefix search on sqlite backend
+
+The prefix search was so wrong it's a small miracle it ever did anything
+at all. What have I been thinking? Well, I do remember thinking this
+prefix stuff looks kinda fishy but then it seems to work so...
+
+The prefix search belongs to the keyed iterator fetch case of course,
+not the case where we're otherwise iterating over all keys.
+
+Fixes: #1260
+---
+ lib/backend/sqlite.c | 51 +++++++++++++++++++++++---------------------
+ 1 file changed, 27 insertions(+), 24 deletions(-)
+
+diff --git a/lib/backend/sqlite.c b/lib/backend/sqlite.c
+index 8520838df..ee9c62706 100644
+--- a/lib/backend/sqlite.c
++++ b/lib/backend/sqlite.c
+@@ -548,13 +548,24 @@ static unsigned int sqlite_pkgdbKey(dbiIndex dbi, dbiCursor dbc)
+     return sqlite3_column_int(dbc->stmt, 0);
+ }
+ 
+-static rpmRC sqlite_idxdbByKey(dbiIndex dbi, dbiCursor dbc, const char *keyp, size_t keylen, dbiIndexSet *set)
++static rpmRC sqlite_idxdbByKey(dbiIndex dbi, dbiCursor dbc,
++			    const char *keyp, size_t keylen, int searchType,
++			    dbiIndexSet *set)
+ {
+-    int rc = dbiCursorPrep(dbc, "SELECT hnum, idx FROM '%q' WHERE key=?",
++    int rc = RPMRC_NOTFOUND;
++
++    if (searchType == DBC_PREFIX_SEARCH) {
++	rc = dbiCursorPrep(dbc, "SELECT hnum, idx FROM '%q' "
++				"WHERE MATCH(key,'%q',%d) "
++				"ORDER BY key",
++				dbi->dbi_file, keyp, keylen);
++    } else {
++	rc = dbiCursorPrep(dbc, "SELECT hnum, idx FROM '%q' WHERE key=?",
+ 			dbi->dbi_file);
++	if (!rc)
++	    rc = dbiCursorBindIdx(dbc, keyp, keylen, NULL);
++    }
+ 
+-    if (!rc)
+-	rc = dbiCursorBindIdx(dbc, keyp, keylen, NULL);
+ 
+     if (!rc) {
+ 	while ((rc = sqlite3_step(dbc->stmt)) == SQLITE_ROW) {
+@@ -576,21 +587,13 @@ static rpmRC sqlite_idxdbByKey(dbiIndex dbi, dbiCursor dbc, const char *keyp, si
+     return rc;
+ }
+ 
+-static rpmRC sqlite_idxdbIter(dbiIndex dbi, dbiCursor dbc, const char *keyp, size_t keylen, dbiIndexSet *set, int searchType)
++static rpmRC sqlite_idxdbIter(dbiIndex dbi, dbiCursor dbc, dbiIndexSet *set)
+ {
+     int rc = RPMRC_OK;
+ 
+     if (dbc->stmt == NULL) {
+-	if (searchType == DBC_PREFIX_SEARCH) {
+-	    rc = dbiCursorPrep(dbc, "SELECT DISTINCT key FROM '%q' "
+-				    "WHERE MATCH(key,'%q',%d) "
+-				    "ORDER BY key",
+-				    dbi->dbi_file, keyp, keylen);
+-	} else {
+-	    rc = dbiCursorPrep(dbc, "SELECT DISTINCT key FROM '%q' "
+-				    "ORDER BY key",
++	rc = dbiCursorPrep(dbc, "SELECT DISTINCT key FROM '%q' ORDER BY key",
+ 				dbi->dbi_file);
+-	}
+ 	if (set)
+ 	    dbc->subc = dbiCursorInit(dbi, 0);
+     }
+@@ -605,14 +608,14 @@ static rpmRC sqlite_idxdbIter(dbiIndex dbi, dbiCursor dbc, const char *keyp, siz
+ 	    dbc->key = sqlite3_column_blob(dbc->stmt, 0);
+ 	}
+ 	dbc->keylen = sqlite3_column_bytes(dbc->stmt, 0);
+-	if (set)
+-	    rc = sqlite_idxdbByKey(dbi, dbc->subc, dbc->key, dbc->keylen, set);
+-	rc = RPMRC_OK;
+-    } else if (rc == SQLITE_DONE) {
+-	if (searchType == DBC_PREFIX_SEARCH && (*set))
++	if (dbc->subc) {
++	    rc = sqlite_idxdbByKey(dbi, dbc->subc, dbc->key, dbc->keylen,
++				    DBC_NORMAL_SEARCH, set);
++	} else {
+ 	    rc = RPMRC_OK;
+-	else
+-	    rc = RPMRC_NOTFOUND;
++	}
++    } else if (rc == SQLITE_DONE) {
++	rc = RPMRC_NOTFOUND;
+     } else {
+ 	rc = dbiCursorResult(dbc);
+     }
+@@ -623,10 +626,10 @@ static rpmRC sqlite_idxdbIter(dbiIndex dbi, dbiCursor dbc, const char *keyp, siz
+ static rpmRC sqlite_idxdbGet(dbiIndex dbi, dbiCursor dbc, const char *keyp, size_t keylen, dbiIndexSet *set, int searchType)
+ {
+     int rc;
+-    if (keyp && searchType != DBC_PREFIX_SEARCH) {
+-	rc = sqlite_idxdbByKey(dbi, dbc, keyp, keylen, set);
++    if (keyp) {
++	rc = sqlite_idxdbByKey(dbi, dbc, keyp, keylen, searchType, set);
+     } else {
+-	rc = sqlite_idxdbIter(dbi, dbc, keyp, keylen, set, searchType);
++	rc = sqlite_idxdbIter(dbi, dbc, set);
+     }
+ 
+     return rc;
+-- 
+2.26.2
+
