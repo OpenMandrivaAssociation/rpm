@@ -68,9 +68,6 @@
 %bcond_without plugins
 # build with new db format
 %bcond_with ndb
-# build with openmp support?
-## TODO: Enable by default once mock+ABF are fixed
-%bcond_with openmp
 
 # Define directory which holds rpm config files, and some binaries actually
 # NOTE: it remains */lib even on lib64 platforms as only one version
@@ -98,7 +95,7 @@ Name:		rpm
 Epoch:		2
 Version:	4.16.0
 %if "%{snapver}" != ""
-Release:	0.%{snapver}.2
+Release:	0.%{snapver}.3
 %else
 Release:	1
 %endif
@@ -211,21 +208,23 @@ Patch4000:	rpm-4.15.0-find-debuginfo__mga-cfg.diff
 Patch5001:	rpm-4.15.x-omv-optional-filelist-tag.patch
 # Add znver1 as an x86_64 superset
 Patch5006:	rpm-4.15.x-omv-znver1-arch.patch
-# Add old aarch64 macro (finally added, but renamed to arm64, upstream in 4.16)
-Patch5007:	rpm-4.16.0-aarch64-macro.patch
+# Fix parallel package archive creation on clang
+# From: https://github.com/rpm-software-management/rpm/pull/1264
+Patch5008:	rpm-4.16.x-fix-data-race-in-packageBinaries-function.patch
 
 #
 # OpenMandriva specific patches
 #
 
 # Default to sqlite rpmdb
-Patch6000:	rpm-4.16.0-beta1-db-backend-sqlite.patch
+Patch6000:	rpm-4.16.0-omv-db-backend-sqlite.patch
 # Default to keeping a patch backup file for gendiff
 # and follow file naming conventions
 Patch6004:	rpm-4.15.x-omv-patch-gendiff.patch
 # Default to i686 targets on 32bit i686+ machines
 Patch6005:	rpm-4.14-omv-i386-to-i686.patch
-Patch6007:	riscv64-optflags.patch
+# Add old aarch64 macro (finally added, but renamed to arm64, upstream in 4.16)
+Patch6008:	rpm-4.16.0-omv-aarch64-macro.patch
 # Run the debuginfo generator after, not before, other postprocessing scripts
 # have run.
 # This is important to make sure spec-helper's fix_file_permissions (which
@@ -233,7 +232,7 @@ Patch6007:	riscv64-optflags.patch
 # (which only looks at executable files) decides what files (not) to split.
 # This shrinks OpenJDK by 400 MB -- and certainly can't hurt other packages
 # that install libraries with odd permissions.
-Patch6009:	rpm-4.15.1-macros-run-debuginfo-after-other-scripts.patch
+Patch6009:	rpm-4.15.1-omv-macros-run-debuginfo-after-other-scripts.patch
 
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD
@@ -259,7 +258,7 @@ BuildRequires:	magic-devel
 BuildRequires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 BuildRequires:	readline-devel
 BuildRequires:	pkgconfig(ncurses)
-BuildRequires:	pkgconfig(libssl)
+BuildRequires:	pkgconfig(libgcrypt)
 BuildRequires:	pkgconfig(lua) >= 5.3
 BuildRequires:	pkgconfig(libcap)
 BuildRequires:	acl-devel
@@ -288,7 +287,7 @@ Requires:	rpm-%{_real_vendor}-setup >= %{rpmsetup_version}
 Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
 
 # This is a completely different implementation of RPM, replacing rpm5
-Conflicts:	rpm < %{epoch}:%{version}-%{release}
+Conflicts:	rpm < 2:4.14.0-0
 
 # Weakly depend on stuff that used to be in main rpm package
 Recommends:	rpm-plugin-audit
@@ -364,6 +363,8 @@ packages.
 Summary:	Scripts and executable programs used to build packages
 Group:		System/Configuration/Packaging
 Provides:	perl-generators = %{version}-%{release}
+Provides:	python-rpm-generators = %{version}-%{release}
+Provides:	python3-rpm-generators = %{version}-%{release}
 Requires:	autoconf
 Requires:	automake
 %ifarch %{riscv}
@@ -380,23 +381,11 @@ Requires:	tar >= 3.3.2
 Requires:	unzip
 # Versioned requirement for Patch 400
 Requires:	elfutils >= 0.167-2
-# FIXME inherited from Mageia, which in turn inherited them from Mandriva
-# Nobody knows why -- but probably it's urpmi? Let's see if anything breaks
-# without those deps...
-#Requires:	perl(CPAN::Meta) >= 2.112.150
-#Requires:	perl(ExtUtils::MakeMaker) >= 6.570_700
-#Requires:	perl(YAML::Tiny)
 Requires:	rpm = %{epoch}:%{version}-%{release}
 Requires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
 # For pythondistdeps generator
 Requires:	python-pkg-resources
-# Drop until urpmi->dnf transition is complete
-%ifarch %{ix86} %{x86_64}
-Requires:	rpmlint-%{_target_vendor}-policy >= 0.3.32
-Requires:	dwz
-Requires:	openmandriva-repos-pkgprefs
-%endif
 Requires:	spec-helper >= 0.31.12
 Requires:	pkgconf
 Requires:	systemd-macros
@@ -534,10 +523,7 @@ export CXX=%{_bindir}/clang++
 
 autoreconf -i -f
 
-# FIXME enable-bdb is to keep old rpmdb going until rpm --rebuilddb
-# has been run.
-# Switching to disable-bdb (possibly enable-bdb-ro to fix old boxes
-# manually) is better.
+# TODO: Remove --enable-bdb once rpm 4.16 is GA and released in stable OMV release
 %configure \
     --localstatedir=%{_var} \
     --sharedstatedir=%{_var}/lib \
@@ -549,12 +535,12 @@ autoreconf -i -f
     --with-cap \
     --with-acl \
     %{?with_ndb: --with-ndb} \
-    %{!?with_openmp: --disable-openmp} \
     --enable-zstd \
     --enable-bdb \
+    --enable-bdb-ro \
     --enable-sqlite \
     --enable-python \
-    --with-crypto=openssl
+    --with-crypto=libgcrypt
 
 %make_build
 cd python
