@@ -74,7 +74,7 @@
 #       of rpm is supported anyway, per architecture
 %define rpmhome /usr/lib/rpm
 
-%global snapver beta1
+%global snapver beta3
 %if "%{snapver}" != ""
 %global srcver %{version}%{?snapver:-%{snapver}}
 %define srcdir %{?snapver:testing}%{!?snapver:%{name}-%(v=%{version}; echo ${v%.*}.x)}
@@ -111,9 +111,6 @@ Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.serv
 #
 # https://github.com/rpm-software-management/rpm/pull/473
 Patch6:	0001-find-debuginfo.sh-decompress-DWARF-compressed-ELF-se.patch
-Patch100: https://src.fedoraproject.org/rpms/rpm/raw/master/f/0001-Don-t-auto-enable-IO-flushing-on-non-rotational-disk.patch
-Patch101: https://src.fedoraproject.org/rpms/rpm/raw/master/f/0001-metainfo.attr-Fix-execution-of-the-generator.patch
-Patch102: https://src.fedoraproject.org/rpms/rpm/raw/master/f/0001-Fix-completely-broken-prefix-search-on-sqlite-backen.patch
 
 # These are not yet upstream
 Patch906:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.7.1-geode-i686.patch
@@ -208,9 +205,6 @@ Patch4000:	rpm-4.15.0-find-debuginfo__mga-cfg.diff
 Patch5001:	rpm-4.15.x-omv-optional-filelist-tag.patch
 # Add znver1 as an x86_64 superset
 Patch5006:	rpm-4.15.x-omv-znver1-arch.patch
-# Fix parallel package archive creation on clang
-# From: https://github.com/rpm-software-management/rpm/pull/1264
-Patch5008:	rpm-4.16.x-fix-data-race-in-packageBinaries-function.patch
 
 #
 # OpenMandriva specific patches
