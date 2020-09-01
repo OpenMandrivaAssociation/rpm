@@ -74,7 +74,7 @@
 #       of rpm is supported anyway, per architecture
 %define rpmhome /usr/lib/rpm
 
-%global snapver beta3
+%global snapver rc1
 %if "%{snapver}" != ""
 %global srcver %{version}%{?snapver:-%{snapver}}
 %define srcdir %{?snapver:testing}%{!?snapver:%{name}-%(v=%{version}; echo ${v%.*}.x)}
@@ -95,7 +95,7 @@ Name:		rpm
 Epoch:		2
 Version:	4.16.0
 %if "%{snapver}" != ""
-Release:	0.%{snapver}.3
+Release:	0.%{snapver}.1
 %else
 Release:	1
 %endif
