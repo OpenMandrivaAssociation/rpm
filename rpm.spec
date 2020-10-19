@@ -7,7 +7,7 @@
 # and will fail before python-rpm (part of rpm...) is built with the
 # correct version of python. (This hits e.g. when updating python to
 # a new major version)
-%bcond_without bootstrap
+%bcond_with bootstrap
 %if %{with bootstrap}
 %define _build_pkgcheck /bin/true
 %define _build_pkgcheck_set /bin/true
@@ -103,7 +103,7 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Epoch:		2
+Epoch:		3
 Version:	4.16.0
 Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
