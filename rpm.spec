@@ -3,6 +3,17 @@
 # (ngompa): This is primarily for the znver1 patch, as it's a pain to rediff...
 %global _default_patch_fuzz 2
 
+# Disable rpmlint checks while bootstrapping: rpmlint needs python-rpm,
+# and will fail before python-rpm (part of rpm...) is built with the
+# correct version of python. (This hits e.g. when updating python to
+# a new major version)
+%bcond_without bootstrap
+%if %{with bootstrap}
+%define _build_pkgcheck /bin/true
+%define _build_pkgcheck_set /bin/true
+%define _build_pkgcheck_srpm /bin/true
+%endif
+
 %ifos linux
 # Get rid of any -gnu/-gnueabi suffix for platform names
 # to get traditional directory names
@@ -94,7 +105,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		2
 Version:	4.16.0
-Release:	%{?snapver:0.%{snapver}.}1
+Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
