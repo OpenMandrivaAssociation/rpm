@@ -103,7 +103,7 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Epoch:		3
+Epoch:		4
 Version:	4.16.0
 Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
@@ -645,7 +645,7 @@ sed -i -e '/^%%_target_platform/i%%_target_cpu		i686' znver1_32-linux/macros
 sed -i -e '/^%%optflags/d' znver1_32-linux/macros
 
 # Let's create some crosscompile targets for MUSL based systems...
-for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 znver1 x32 riscv32 riscv64; do
+for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 znver1 x32 riscv32 riscv64 ppc64 ppc64le; do
 	cp -a $arch-linux $arch-linuxmusl
 	sed -i -e 's,-gnu,-musl,g' $arch-linuxmusl/macros
 	# FIXME this is not very nice... It's a workaround for
@@ -653,7 +653,7 @@ for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 znver1 x32 riscv32 ris
 	sed -i -e 's,%%{_target_os},linux,g' $arch-linuxmusl/macros
 done
 # ... And for uClibc based systems
-for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 znver1 x32 riscv32 riscv64; do
+for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 znver1 x32 riscv32 riscv64 ppc64 ppc64le; do
 	cp -a $arch-linux $arch-linuxuclibc
 	sed -i -e 's,-gnu,-uclibc,g' $arch-linuxuclibc/macros
 	# FIXME this is not very nice... It's a workaround for
