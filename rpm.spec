@@ -88,10 +88,10 @@
 #global snapver rc1
 %if "%{snapver}" != ""
 %global srcver %{version}%{?snapver:-%{snapver}}
-%define srcdir %{?snapver:testing}%{!?snapver:%{name}-%(v=%{version}; echo ${v%.*}.x)}
+%define srcdir %{?snapver:testing}%{!?snapver:%{name}-%(echo %{version} |cut -d. -f1-2).x}
 %else
 %global srcver %{version}
-%define srcdir %{name}-%(v=%{version}; echo ${v%.*}.x)
+%define srcdir %{name}-%(echo %{version} |cut -d. -f1-2).x
 %endif
 %global libmajor	9
 %global librpmname      %mklibname rpm  %{libmajor}
@@ -104,7 +104,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
-Version:	4.16.1
+Version:	4.16.1.2
 Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
