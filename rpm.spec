@@ -619,17 +619,13 @@ sed -i -e 's,-gnueabi$,-gnueabihf,g' arm*h*-linux/macros
 cp -a x86_64-linux x32-linux
 sed -i -e 's,-gnu,-gnux32,g' x32-linux/macros
 
-# Add RISC-V...
+# Add RISC-V 32...
 cp -a i686-linux riscv32-linux
 sed -i -e 's,i386,riscv32,g;s, -march=i686,,g;s,x86,riscv,g' riscv32-linux/macros
-cp -a x86_64-linux riscv64-linux
-sed -i -e 's,x86_64,riscv64,g;s,x86,riscv,g' riscv64-linux/macros
 
 # Add ARMv8 (aarch64 in 32-bit mode)
 cp -a armv7hnl-linux armv8hnl-linux
 sed -i -e 's,v7,v8,g' armv8hnl-linux/macros
-cp -a armv7l-linux armv8l-linux
-sed -i -e 's,v7,v8,g' armv8l-linux/macros
 
 # Add ZNVER1 (Ryzen/EPYC)
 cp -a x86_64-linux znver1-linux
@@ -686,7 +682,7 @@ sed -i -e 's,openmandriva,w64,g' x86_64-mingw32/macros aarch64-mingw32/macros
 # logical i686-w32-mingw32. The -w32- vs -w64- seems to
 # be only about telling the difference between the
 # original mingw32 and its 64-bit capable fork.
-sed -i -e 's,openmandriva,w64,g' i686-mingw32/macros armv7hnl-mingw32
+sed -i -e 's,openmandriva,w64,g' i686-mingw32/macros armv7hnl-mingw32/macros
 cd -
 
 %find_lang %{name}
