@@ -105,7 +105,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
 Version:	4.16.1.2
-Release:	%{?snapver:0.%{snapver}.}1
+Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -674,19 +674,19 @@ done
 # not being able to set _target_cpu in platform macros
 sed -i -e 's,%%{_target_cpu},x86_64,g' x32-*/macros
 
-# And let's not force developers of cross-platform applications
-# to keep a copy of Windoze around just because they want to
-# compile for it...
+# Windoze crosscompiler support, needed for improved wine
 cp -a x86_64-linux x86_64-mingw32
 cp -a i686-linux i686-mingw32
+cp -a aarch64-linux aarch64-mingw32
+cp -a armv7hnl-linux armv7hnl-mingw32
 sed -i -e 's,linux,mingw32,g;s,-gnu,%%{nil},g' *-mingw32/macros
-sed -i -e 's,openmandriva,w64,g' x86_64-mingw32/macros
+sed -i -e 's,openmandriva,w64,g' x86_64-mingw32/macros aarch64-mingw32/macros
 # Not a typo -- it's weird, but the correct triplet for
 # Windoze 32 is actually i686-w64-mingw32, not the more
 # logical i686-w32-mingw32. The -w32- vs -w64- seems to
 # be only about telling the difference between the
 # original mingw32 and its 64-bit capable fork.
-sed -i -e 's,openmandriva,w64,g' i686-mingw32/macros
+sed -i -e 's,openmandriva,w64,g' i686-mingw32/macros armv7hnl-mingw32
 cd -
 
 %find_lang %{name}
