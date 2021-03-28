@@ -104,7 +104,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
-Version:	4.16.1.2
+Version:	4.16.1.3
 Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
