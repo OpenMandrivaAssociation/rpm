@@ -1,3 +1,6 @@
+# Temporary workaround until debuginfo is fixed
+%define debug_package %{nil}
+
 # WARNING: This package is synced with Fedora and Mageia
 
 # (ngompa): This is primarily for the znver1 patch, as it's a pain to rediff...
