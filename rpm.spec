@@ -553,8 +553,9 @@ cd -
 %make_install
 
 # Upstream debugedit is better than rpm's copy
-rm -f %{buildroot}%{_usrlibrpm}/{debugedit,find-debuginfo.sh}
+rm -f %{buildroot}%{_usrlibrpm}/{debugedit,sepdebugcrcfix,find-debuginfo.sh}
 ln -s ../../bin/debugedit %{buildroot}%{_usrlibrpm}/
+ln -s ../../bin/sepdebugcrcfix %{buildroot}%{_usrlibrpm}/
 ln -s ../../bin/find-debuginfo.sh %{buildroot}%{_usrlibrpm}/
 
 # We build --without-selinux, so we don't need the
@@ -848,10 +849,10 @@ fi
 %rpmattr %{_bindir}/rpmspec
 %rpmattr %{_prefix}/lib/rpm/brp-*
 %rpmattr %{_prefix}/lib/rpm/check-files
-%rpmattr %{_prefix}/lib/rpm/debugedit
-%rpmattr %{_prefix}/lib/rpm/sepdebugcrcfix
+%{_prefix}/lib/rpm/debugedit
+%{_prefix}/lib/rpm/sepdebugcrcfix
 %rpmattr %{_prefix}/lib/rpm/*.prov
-%rpmattr %{_prefix}/lib/rpm/find-debuginfo.sh
+%{_prefix}/lib/rpm/find-debuginfo.sh
 %rpmattr %{_prefix}/lib/rpm/find-lang.sh
 %rpmattr %{_prefix}/lib/rpm/find-provides
 %rpmattr %{_prefix}/lib/rpm/find-requires
