@@ -1,6 +1,3 @@
-# Temporary workaround until debuginfo is fixed
-%define debug_package %{nil}
-
 # WARNING: This package is synced with Fedora and Mageia
 
 # (ngompa): This is primarily for the znver1 patch, as it's a pain to rediff...
@@ -108,7 +105,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
 Version:	4.16.1.3
-Release:	%{?snapver:0.%{snapver}.}3
+Release:	%{?snapver:0.%{snapver}.}4
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -289,7 +286,6 @@ Requires:	coreutils
 Requires:	setup >= 2.9.1
 Requires:	rpm-%{_real_vendor}-setup >= %{rpmsetup_version}
 Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
-Requires:	debugedit
 
 # This is a completely different implementation of RPM, replacing rpm5
 Conflicts:	rpm < 2:4.14.0-0
@@ -372,6 +368,7 @@ Provides:	python-rpm-generators = %{version}-%{release}
 Provides:	python3-rpm-generators = %{version}-%{release}
 Requires:	autoconf
 Requires:	automake
+Requires:	debugedit
 %ifarch %{riscv}
 Requires:	atomic-devel
 %endif
