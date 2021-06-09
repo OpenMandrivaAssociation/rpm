@@ -105,7 +105,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
 Version:	4.16.1.3
-Release:	%{?snapver:0.%{snapver}.}4
+Release:	%{?snapver:0.%{snapver}.}5
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -276,7 +276,6 @@ BuildRequires:	gnupg2
 BuildRequires:	atomic-devel
 BuildRequires:	clang
 %endif
-
 Requires:	bzip2 >= 0.9.0c-2
 Requires:	xz
 Requires:	zstd
@@ -291,10 +290,10 @@ Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
 Conflicts:	rpm < 2:4.14.0-0
 
 # Weakly depend on stuff that used to be in main rpm package
-Recommends:	rpm-plugin-audit
 Recommends:	rpm-plugin-syslog
 Recommends:	rpm-plugin-ima
 Recommends:	rpm-plugin-systemd-inhibit
+Obsoletes:	rpm-plugin-audit
 
 %description
 The RPM Package Manager (RPM) is a powerful command line driven
@@ -446,17 +445,6 @@ This package contains a cron job which creates daily logs of installed
 packages on a system.
 
 %if %{with plugins}
-%package plugin-audit
-Summary:	Rpm plugin for logging audit events on package operations
-Group:		System/Base
-BuildRequires:	pkgconfig(audit)
-Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
-# Incompatible with rpm5
-Conflicts:	rpm < 2:4.14.0-0
-
-%description plugin-audit
-Rpm plugin for libaudit support
-
 %package plugin-syslog
 Summary:	Rpm plugin for syslog functionality
 Group:		System/Base
@@ -498,7 +486,7 @@ Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
 Conflicts:	rpm < 2:4.14.0-0
 
 %description plugin-prioreset
-%{summary}
+%{summary}.
 
 Useful on legacy SysV init systems if you run rpm transactions with
 nice/ionice priorities. Should not be used on systemd systems.
@@ -536,6 +524,7 @@ autoreconf -i -f
     --without-selinux \
     --with-cap \
     --with-acl \
+    --without-audit \
     %{?with_ndb: --with-ndb} \
     --enable-zstd \
     --enable-bdb \
@@ -707,10 +696,10 @@ pkgs = posix.stat("/var/lib/rpm/rpmdb.sqlite")
 oldpkgs = posix.stat("/var/lib/rpm/Packages")
 if not pkgs then
     if oldpkgs then
-        f = io.open("/var/lib/rpm/.rebuilddb", "w")
-        f:close()
+	f = io.open("/var/lib/rpm/.rebuilddb", "w")
+	f:close()
     else
-        os.execute("/bin/rpm --initdb")
+	os.execute("/bin/rpm --initdb")
     end
 end
 
@@ -720,7 +709,7 @@ rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 
 %triggerun -- rpm < 4.16.0-0
 if [ -x /usr/bin/systemctl ]; then
-	systemctl enable rpmdb-rebuild ||:
+    systemctl enable rpmdb-rebuild ||:
 fi
 
 %define rpmattr %attr(0755, rpm, rpm)
@@ -806,17 +795,13 @@ fi
 %rpmdbattr /var/lib/rpm/rpmdb.sqlite-shm
 %rpmdbattr /var/lib/rpm/rpmdb.sqlite-wal
 
-%files -n %librpmname
+%files -n %{librpmname}
 %{_libdir}/librpm.so.%{libmajor}
 %{_libdir}/librpm.so.%{libmajor}.*
 %{_libdir}/librpmio.so.%{libmajor}
 %{_libdir}/librpmio.so.%{libmajor}.*
 %if %{with plugins}
 %dir %{_libdir}/rpm-plugins
-
-%files plugin-audit
-%{_libdir}/rpm-plugins/audit.so
-%{_mandir}/man8/rpm-plugin-audit.8*
 
 %files plugin-syslog
 %{_libdir}/rpm-plugins/syslog.so
