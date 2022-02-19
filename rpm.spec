@@ -7,7 +7,7 @@
 # and will fail before python-rpm (part of rpm...) is built with the
 # correct version of python. (This hits e.g. when updating python to
 # a new major version)
-%bcond_with bootstrap
+%bcond_without bootstrap
 %if %{with bootstrap}
 %define _build_pkgcheck /bin/true
 %define _build_pkgcheck_set /bin/true
