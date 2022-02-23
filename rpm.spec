@@ -104,20 +104,20 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
-Version:	4.16.1.3
-Release:	%{?snapver:0.%{snapver}.}7
+Version:	4.17.0
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
 # extracted from http://pkgs.fedoraproject.org/cgit/redhat-rpm-config.git/plain/macros:
 Source1:	macros.filter
 Source2:	rpm.rpmlintrc
+# Put python bits back to where they used to be for now
+Source5:	https://github.com/rpm-software-management/python-rpm-packaging/archive/refs/heads/main.tar.gz
 Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.service
 #
 # Fedora patches
 #
-# https://github.com/rpm-software-management/rpm/pull/473
-Patch6:	0001-find-debuginfo.sh-decompress-DWARF-compressed-ELF-se.patch
 
 # These are not yet upstream
 Patch906:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.7.1-geode-i686.patch
@@ -189,12 +189,6 @@ Patch200:	dont-filter-autodeps-from-doc-by-default.patch
 Patch3003:	rpm_arm_mips_isa_macros.patch
 
 
-# Mageia patches that are easier to rediff on top of FC patches:
-#---------------------------------------------------------------
-# (tv) merge mga stuff from rpm-setup:
-# (for spec-helper)
-Patch4000:	rpm-4.15.0-find-debuginfo__mga-cfg.diff
-
 #
 # OpenMandriva patches
 #
@@ -217,8 +211,6 @@ Patch5006:	rpm-4.15.x-omv-znver1-arch.patch
 # OpenMandriva specific patches
 #
 
-# Default to sqlite rpmdb
-Patch6000:	rpm-4.16.0-omv-db-backend-sqlite.patch
 # Default to keeping a patch backup file for gendiff
 # and follow file naming conventions
 Patch6004:	rpm-4.15.x-omv-patch-gendiff.patch
@@ -491,11 +483,28 @@ Conflicts:	rpm < 2:4.14.0-0
 Useful on legacy SysV init systems if you run rpm transactions with
 nice/ionice priorities. Should not be used on systemd systems.
 
+%package plugin-fsverity
+Summary:	Rpm plugin for fsverity functionality
+Group:		System/Base
+Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
+
+%description plugin-fsverity
+This plugin provides fsverity functionality to rpm
+
+%package plugin-dbus-announce
+Summary:	Rpm plugin for D-Bus announcements
+Group:		System/Base
+Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
+
+%description plugin-dbus-announce
+This plugin provides DBus functionality to rpm
 %endif # with plugins
 
 %prep
-%autosetup -n %{name}-%{srcver} -p1
+%autosetup -n %{name}-%{srcver} -p1 -a 5
 
+# Restore python packaging bits
+cat python-rpm-packaging-main/platform.in >>platform.in
 # Get rid of _python_bytecompile_extra
 # https://fedoraproject.org/wiki/Changes/No_more_automagic_Python_bytecompilation
 sed -i -e '/^%%_python_bytecompile_extra/d' platform.in
@@ -565,6 +574,11 @@ cd -
 mkdir -p "%{buildroot}%{_unitdir}"
 install -m 644 %{S:10} %{buildroot}%{_unitdir}/
 
+# Restore python packaging bits
+chmod 0755 python-rpm-packaging-main/scripts/*
+mv python-rpm-packaging-main/fileattrs/* %{buildroot}%{_usrlibrpm}/fileattrs
+mv python-rpm-packaging-main/scripts/* %{buildroot}%{_usrlibrpm}/
+
 # Save list of packages through cron
 mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/cron.daily
 install -m 755 scripts/rpm.daily ${RPM_BUILD_ROOT}%{_sysconfdir}/cron.daily/rpm
@@ -581,11 +595,6 @@ for dbi in \
 do
     touch $RPM_BUILD_ROOT/var/lib/rpm/$dbi
 done
-
-test -d doc-copy || mkdir doc-copy
-rm -rf doc-copy/*
-ln -f doc/manual/* doc-copy/
-rm -f doc-copy/Makefile*
 
 mkdir -p $RPM_BUILD_ROOT/var/spool/repackage
 
@@ -683,8 +692,6 @@ cd -
 
 %find_lang %{name}
 
-find $RPM_BUILD_ROOT -name "*.la" -delete
-
 %if %{with check}
 %check
 # https://github.com/rpm-software-management/rpm/issues/741
@@ -716,7 +723,6 @@ fi
 
 %files -f %{name}.lang
 %doc COPYING
-%doc doc/manual/[a-z]*
 %attr(-,rpm,rpm) /bin/rpm
 %attr(0755,rpm,rpm) %{_bindir}/rpm
 %attr(0755, rpm, rpm) %{_bindir}/rpm2cpio
@@ -729,6 +735,8 @@ fi
 %{_bindir}/rpmverify
 
 %{_unitdir}/rpmdb-rebuild.service
+
+%dir %{_libdir}/rpm-plugins
 
 %dir %{_localstatedir}/spool/repackage
 %dir %{rpmhome}
@@ -818,6 +826,14 @@ fi
 %files plugin-prioreset
 %{_libdir}/rpm-plugins/prioreset.so
 %{_mandir}/man8/rpm-plugin-prioreset.8*
+
+%files plugin-fsverity
+%{_libdir}/rpm-plugins/fsverity.so
+
+%files plugin-dbus-announce
+%{_sysconfdir}/dbus-1/system.d/org.rpm.conf
+%{_libdir}/rpm-plugins/dbus_announce.so
+%{_mandir}/man8/rpm-plugin-dbus-announce.8*
 %endif # with plugins
 
 %files -n %librpmbuild
@@ -829,7 +845,7 @@ fi
 %{_libdir}/librpmsign.so.%{libmajor}.*
 
 %files build
-%doc doc-copy/*
+%doc docs/manual
 %rpmattr %{_bindir}/rpmbuild
 %rpmattr %{_bindir}/rpmspec
 %rpmattr %{_prefix}/lib/rpm/brp-*
@@ -846,10 +862,9 @@ fi
 %rpmattr %{_prefix}/lib/rpm/check-prereqs
 %rpmattr %{_prefix}/lib/rpm/check-rpaths
 %rpmattr %{_prefix}/lib/rpm/check-rpaths-worker
-%rpmattr %{_prefix}/lib/rpm/libtooldeps.sh
 %rpmattr %{_prefix}/lib/rpm/ocamldeps.sh
 %rpmattr %{_prefix}/lib/rpm/pkgconfigdeps.sh
-%rpmattr %{_prefix}/lib/rpm/pythondistdeps.py*
+%rpmattr %{_prefix}/lib/rpm/pythondistdeps.py
 %rpmattr %{_prefix}/lib/rpm/rpmdeps
 
 %{_mandir}/man8/rpmbuild.8*
@@ -870,8 +885,8 @@ fi
 %{_includedir}/%{name}/
 
 %files apidocs
+%doc docs/librpm
 %doc COPYING
-%doc doc/librpm/html/*
 
 %files cron
 %config(noreplace) /etc/cron.daily/rpm
