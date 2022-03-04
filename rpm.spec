@@ -379,6 +379,7 @@ Requires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_vers
 Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
 # For pythondistdeps generator
 Requires:	python-pkg-resources
+Requires:	python-packaging
 Requires:	spec-helper >= 0.31.12
 Requires:	pkgconf
 Requires:	systemd-rpm-macros
@@ -404,6 +405,8 @@ Requires:	rpm = %{epoch}:%{version}-%{release}
 Obsoletes:	python-%{name} < %{epoch}:%{version}-%{release}
 # Python 2 subpackage is gone
 Obsoletes:	python2-%{name} < 2:4.15.1-0
+# For the dependency generator to work
+BuildRequires:	python-packaging
 
 %description -n python-%{name}
 The python-rpm package contains a module that permits applications
