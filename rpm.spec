@@ -692,6 +692,9 @@ cd -
 
 %find_lang %{name}
 
+### FIXME temporary hack to see why the python provides: generator fails in abf
+find %{buildroot} |/usr/lib/rpm/pythondistdeps.py --provides --majorver-provides
+
 %if %{with check}
 %check
 # https://github.com/rpm-software-management/rpm/issues/741
