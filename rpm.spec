@@ -105,7 +105,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
 Version:	4.17.0
-Release:	%{?snapver:0.%{snapver}.}3
+Release:	%{?snapver:0.%{snapver}.}4
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -134,6 +134,7 @@ Patch907:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.15.x-ldflags
 #
 # Upstream patches not carried by FC:
 #
+
 
 #
 # Mageia patches
@@ -196,6 +197,7 @@ Patch3003:	rpm_arm_mips_isa_macros.patch
 #
 # Upstream patches not carried by Fedora or Mageia
 #
+Patch0:		0000-Restore-scriptlet-arguments-passed-as-numbers-to-Lua.patch
 
 #
 # Patches proposed upstream
@@ -764,15 +766,15 @@ fi
 
 %attr(   -, rpm, rpm) %{rpmhome}/platform/
 
-%{_mandir}/man8/rpm.8*
-%{_mandir}/man8/rpmdb.8*
-%{_mandir}/man8/rpmgraph.8*
-%{_mandir}/man8/rpmkeys.8*
-%{_mandir}/man8/rpm2cpio.8*
-%{_mandir}/man8/rpm-misc.8*
-%{_mandir}/man8/rpm2archive.8*
-%{_mandir}/man8/rpm-plugins.8*
-%{_mandir}/man1/*.1*
+%doc %{_mandir}/man8/rpm.8*
+%doc %{_mandir}/man8/rpmdb.8*
+%doc %{_mandir}/man8/rpmgraph.8*
+%doc %{_mandir}/man8/rpmkeys.8*
+%doc %{_mandir}/man8/rpm2cpio.8*
+%doc %{_mandir}/man8/rpm-misc.8*
+%doc %{_mandir}/man8/rpm2archive.8*
+%doc %{_mandir}/man8/rpm-plugins.8*
+%doc %{_mandir}/man1/*.1*
 %lang(fr) %{_mandir}/fr/man[18]/*.[18]*
 %lang(ja) %{_mandir}/ja/man[18]/*.[18]*
 %lang(ko) %{_mandir}/ko/man[18]/*.[18]*
@@ -816,19 +818,19 @@ fi
 
 %files plugin-syslog
 %{_libdir}/rpm-plugins/syslog.so
-%{_mandir}/man8/rpm-plugin-syslog.8*
+%doc %{_mandir}/man8/rpm-plugin-syslog.8*
 
 %files plugin-systemd-inhibit
 %{_libdir}/rpm-plugins/systemd_inhibit.so
-%{_mandir}/man8/rpm-plugin-systemd-inhibit.8*
+%doc %{_mandir}/man8/rpm-plugin-systemd-inhibit.8*
 
 %files plugin-ima
 %{_libdir}/rpm-plugins/ima.so
-%{_mandir}/man8/rpm-plugin-ima.8*
+%doc %{_mandir}/man8/rpm-plugin-ima.8*
 
 %files plugin-prioreset
 %{_libdir}/rpm-plugins/prioreset.so
-%{_mandir}/man8/rpm-plugin-prioreset.8*
+%doc %{_mandir}/man8/rpm-plugin-prioreset.8*
 
 %files plugin-fsverity
 %{_libdir}/rpm-plugins/fsverity.so
@@ -836,7 +838,7 @@ fi
 %files plugin-dbus-announce
 %{_sysconfdir}/dbus-1/system.d/org.rpm.conf
 %{_libdir}/rpm-plugins/dbus_announce.so
-%{_mandir}/man8/rpm-plugin-dbus-announce.8*
+%doc %{_mandir}/man8/rpm-plugin-dbus-announce.8*
 %endif # with plugins
 
 %files -n %librpmbuild
@@ -870,13 +872,13 @@ fi
 %rpmattr %{_prefix}/lib/rpm/pythondistdeps.py
 %rpmattr %{_prefix}/lib/rpm/rpmdeps
 
-%{_mandir}/man8/rpmbuild.8*
-%{_mandir}/man8/rpmdeps.8*
-%{_mandir}/man8/rpmspec.8*
+%doc %{_mandir}/man8/rpmbuild.8*
+%doc %{_mandir}/man8/rpmdeps.8*
+%doc %{_mandir}/man8/rpmspec.8*
 
 %files sign
 %{_bindir}/rpmsign
-%{_mandir}/man8/rpmsign.8*
+%doc %{_mandir}/man8/rpmsign.8*
 
 %files -n python-%{name}
 %{python3_sitearch}/%{name}/

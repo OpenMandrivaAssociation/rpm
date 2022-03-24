@@ -1,0 +1,63 @@
+From fff65e34f0eed3c6b6f93e1284e7cbad32d90051 Mon Sep 17 00:00:00 2001
+From: Panu Matilainen <pmatilai@redhat.com>
+Date: Tue, 16 Nov 2021 12:34:39 +0200
+Subject: [PATCH] Restore scriptlet arguments passed as numbers to Lua
+ scriptlets
+
+Commit 717a3f7ecf0af7c453cd1bcb3f49b5ea4941817e changed Lua scriptlet
+arguments from numbers to strings, and claimed that Lua will handle
+this automatically so nobody will notice a thing. Not so, Lua only
+converts automatically when doing so is unambiguous, such as doing
+math. In comparison Lua cannot know which kind of comparison we want,
+and rightly refuses to convert. Thus, the commit broke any Lua
+scriptlets doing `if arg[2] > 1 then ... end` style comparisons.
+
+As the whole rpmluav variable API is gone now, we can't just revert
+the commit. Adding a preamble to the scriptlet to convert the args
+to numbers may be hackish, but its a far lesser evil than bringing the
+internal variable API back. Kudos to Michael Schroeder for the idea.
+
+Fixes: #1790
+---
+ lib/rpmscript.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/lib/rpmscript.c b/lib/rpmscript.c
+index 0bb924ba2..dbc7b0bbd 100644
+--- a/lib/rpmscript.c
++++ b/lib/rpmscript.c
+@@ -101,6 +101,7 @@ static rpmRC runLuaScript(rpmPlugins plugins, ARGV_const_t prefixes,
+ 		   ARGV_t * argvp, const char *script, int arg1, int arg2,
+ 		   scriptNextFileFunc nextFileFunc)
+ {
++    char *scriptbuf = NULL;
+     rpmRC rc = RPMRC_FAIL;
+     rpmlua lua = NULL; /* Global state. */
+     int cwd = -1;
+@@ -114,6 +115,15 @@ static rpmRC runLuaScript(rpmPlugins plugins, ARGV_const_t prefixes,
+     if (arg2 >= 0)
+ 	argvAddNum(argvp, arg2);
+ 
++    if (arg1 >= 0 || arg2 >= 0) {
++	/* Hack to convert arguments to numbers for backwards compat. Ugh. */
++	rstrscat(&scriptbuf,
++		arg1 >= 0 ? "arg[2] = tonumber(arg[2]);" : "",
++		arg2 >= 0 ? "arg[3] = tonumber(arg[3]);" : "",
++		script, NULL);
++        script = scriptbuf;
++    }
++
+     /* Lua scripts can change our cwd and umask, save and restore */
+     cwd = open(".", O_RDONLY);
+     if (cwd != -1) {
+@@ -138,6 +148,7 @@ static rpmRC runLuaScript(rpmPlugins plugins, ARGV_const_t prefixes,
+ 	close(cwd);
+ 	umask(oldmask);
+     }
++    free(scriptbuf);
+ 
+     return rc;
+ }
+-- 
+2.35.1
+
