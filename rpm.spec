@@ -105,7 +105,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
 Version:	4.17.0
-Release:	%{?snapver:0.%{snapver}.}4
+Release:	%{?snapver:0.%{snapver}.}5
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -526,7 +526,6 @@ export CXX=%{_bindir}/clang++
 
 autoreconf -i -f
 
-# TODO: Remove --enable-bdb once rpm 4.16 is GA and released in stable OMV release
 %configure \
     --localstatedir=%{_var} \
     --sharedstatedir=%{_var}/lib \
@@ -540,11 +539,11 @@ autoreconf -i -f
     --without-audit \
     %{?with_ndb: --with-ndb} \
     --enable-zstd \
-    --enable-bdb \
     --enable-bdb-ro \
     --enable-sqlite \
     --enable-python \
-    --with-crypto=libgcrypt
+    --with-crypto=libgcrypt \
+	--disable-openmp
 
 %make_build
 cd python
