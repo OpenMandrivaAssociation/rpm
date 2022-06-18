@@ -9,9 +9,9 @@
 # a new major version)
 %bcond_without bootstrap
 %if %{with bootstrap}
-%define _build_pkgcheck /bin/true
-%define _build_pkgcheck_set /bin/true
-%define _build_pkgcheck_srpm /bin/true
+%define _build_pkgcheck %{_bindir}/true
+%define _build_pkgcheck_set %{_bindir}/true
+%define _build_pkgcheck_srpm %{_bindir}/true
 %endif
 
 %ifos linux
@@ -105,7 +105,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
 Version:	4.17.0
-Release:	%{?snapver:0.%{snapver}.}5
+Release:	%{?snapver:0.%{snapver}.}6
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -228,6 +228,9 @@ Patch6008:	rpm-4.16.0-omv-aarch64-macro.patch
 # This shrinks OpenJDK by 400 MB -- and certainly can't hurt other packages
 # that install libraries with odd permissions.
 Patch6009:	rpm-4.15.1-omv-macros-run-debuginfo-after-other-scripts.patch
+# Make sure /bin/sh is replaced with %{_bindir}/sh during usrmerge
+# transition
+Patch6010:	rpm-4.17.0-usrmerge.patch
 
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD
@@ -563,10 +566,6 @@ ln -s ../../bin/find-debuginfo.sh %{buildroot}%{_usrlibrpm}/
 # man page either
 rm -f %{buildroot}%{_mandir}/man8/rpm-plugin-selinux.8*
 
-# Add legacy symlink to rpm...
-mkdir -p %{buildroot}/bin
-ln -sr %{buildroot}/%{_bindir}/rpm %{buildroot}/bin/rpm
-
 # We need to build with --enable-python for the self-test suite, but we
 # actually package the bindings built with setup.py (#531543#c26)
 rm -rf $RPM_BUILD_ROOT/%{python_sitearch}
@@ -709,7 +708,7 @@ if not pkgs then
 	f = io.open("/var/lib/rpm/.rebuilddb", "w")
 	f:close()
     else
-	os.execute("/bin/rpm --initdb")
+	os.execute("%{_bindir}/rpm --initdb")
     end
 end
 
@@ -718,7 +717,7 @@ rm -rf /usr/lib/rpm/*-mandrake-* ||:
 rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 
 %triggerun -- rpm < 4.16.0-0
-if [ -x /usr/bin/systemctl ]; then
+if [ -x %{_bindir}/systemctl ]; then
     systemctl enable rpmdb-rebuild ||:
 fi
 
@@ -726,7 +725,6 @@ fi
 
 %files -f %{name}.lang
 %doc COPYING
-%attr(-,rpm,rpm) /bin/rpm
 %attr(0755,rpm,rpm) %{_bindir}/rpm
 %attr(0755, rpm, rpm) %{_bindir}/rpm2cpio
 %attr(0755, rpm, rpm) %{_bindir}/rpm2archive
