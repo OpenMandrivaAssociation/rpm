@@ -1,6 +1,6 @@
-diff -up rpm-4.17.0/macros.in.omv~ rpm-4.17.0/macros.in
---- rpm-4.17.0/macros.in.omv~	2022-06-18 20:33:24.051343109 +0200
-+++ rpm-4.17.0/macros.in	2022-06-18 20:34:01.159572459 +0200
+diff -up rpm-4.17.0/macros.in.21~ rpm-4.17.0/macros.in
+--- rpm-4.17.0/macros.in.21~	2022-06-18 20:36:49.065610200 +0200
++++ rpm-4.17.0/macros.in	2022-06-18 20:49:46.707505319 +0200
 @@ -137,7 +137,7 @@
  %_builddir		%{_topdir}/BUILD
  
@@ -19,3 +19,13 @@ diff -up rpm-4.17.0/macros.in.omv~ rpm-4.17.0/macros.in
  %___build_args		-e
  %___build_cmd		%{?_sudo:%{_sudo} }%{?_remsh:%{_remsh} %{_remhost} }%{?_remsudo:%{_remsudo} }%{?_remchroot:%{_remchroot} %{_remroot} }%{___build_shell} %{___build_args}
  %___build_pre	\
+@@ -927,7 +927,7 @@ package or when debugging this package.\
+ %_prefix		@prefix@
+ %_exec_prefix		%{_prefix}
+ %_bindir		%{_exec_prefix}/bin
+-%_sbindir		%{_exec_prefix}/sbin
++%_sbindir		%{_bindir}
+ %_libexecdir		%{_exec_prefix}/libexec
+ %_datadir		%{_prefix}/share
+ %_sysconfdir		/etc
+diff -up rpm-4.17.0/platform.in.21~ rpm-4.17.0/platform.in

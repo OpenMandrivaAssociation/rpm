@@ -530,22 +530,23 @@ export CXX=%{_bindir}/clang++
 autoreconf -i -f
 
 %configure \
-    --localstatedir=%{_var} \
-    --sharedstatedir=%{_var}/lib \
-    --with-archive \
-    --with-vendor=%{_real_vendor} \
-    --with-external-db \
-    --with-lua \
-    --without-selinux \
-    --with-cap \
-    --with-acl \
-    --without-audit \
-    %{?with_ndb: --with-ndb} \
-    --enable-zstd \
-    --enable-bdb-ro \
-    --enable-sqlite \
-    --enable-python \
-    --with-crypto=libgcrypt \
+	--sbindir=%{_bindir} \
+	--localstatedir=%{_var} \
+	--sharedstatedir=%{_var}/lib \
+	--with-archive \
+	--with-vendor=%{_real_vendor} \
+	--with-external-db \
+	--with-lua \
+	--without-selinux \
+	--with-cap \
+	--with-acl \
+	--without-audit \
+	%{?with_ndb: --with-ndb} \
+	--enable-zstd \
+	--enable-bdb-ro \
+	--enable-sqlite \
+	--enable-python \
+	--with-crypto=libgcrypt \
 	--disable-openmp
 
 %make_build
