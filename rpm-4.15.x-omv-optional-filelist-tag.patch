@@ -63,8 +63,8 @@ index 6dfd801c8..7cf0d59a3 100644
  	    fl->processingFailed = 1;
 diff --git a/lib/rpmfiles.h b/lib/rpmfiles.h
 index 797b77bc8..bfead4909 100644
---- a/lib/rpmfiles.h
-+++ b/lib/rpmfiles.h
+--- a/include/rpm/rpmfiles.h
++++ b/include/rpm/rpmfiles.h
 @@ -60,6 +60,7 @@ enum rpmfileAttrs_e {
      /* bits 9-10 unused */
      RPMFILE_PUBKEY	= (1 << 11),	/*!< from %%pubkey */

@@ -1,20 +1,18 @@
---- a/rpmbuild.c~	2011-07-15 10:17:57.000000000 +0200
-+++ b/rpmbuild.c	2011-11-17 02:30:18.695875754 +0100
-@@ -633,7 +633,7 @@ int main(int argc, char *argv[])
+diff -up rpm-4.18.0-alpha2/rpmbuild.c.3~ rpm-4.18.0-alpha2/rpmbuild.c
+--- rpm-4.18.0-alpha2/rpmbuild.c.3~	2022-05-04 11:59:13.454484278 +0200
++++ rpm-4.18.0-alpha2/rpmbuild.c	2022-06-24 16:18:06.665014523 +0200
+@@ -653,12 +653,12 @@ int main(int argc, char *argv[])
      case 'i':
  	ba->buildAmount |= RPMBUILD_INSTALL;
  	ba->buildAmount |= RPMBUILD_CHECK;
 -	if ((buildChar == 'i') && shortCircuit)
 +	if (/*(buildChar == 'i') && */ shortCircuit)
  	    break;
+ 	/* fallthrough */
      case 'c':
  	ba->buildAmount |= RPMBUILD_BUILD;
-@@ -642,7 +642,7 @@ int main(int argc, char *argv[])
- 	    ba->buildAmount |= RPMBUILD_DUMPBUILDREQUIRES;
- 	    ba->buildAmount |= RPMBUILD_CHECKBUILDREQUIRES;
- 	}
 -	if ((buildChar == 'c') && shortCircuit)
-+	if (/*(buildChar == 'c') && */ shortCircuit)
++	if (/*(buildChar == 'c') &&*/ shortCircuit)
  	    break;
-     case 'p':
- 	ba->buildAmount |= RPMBUILD_PREP;
+ 	/* fallthrough */
+     case 'f':

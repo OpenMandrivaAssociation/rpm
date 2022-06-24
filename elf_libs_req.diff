@@ -1,28 +1,28 @@
-diff -up rpm-4.17.0/fileattrs/elf.attr.9~ rpm-4.17.0/fileattrs/elf.attr
---- rpm-4.17.0/fileattrs/elf.attr.9~	2022-02-23 20:03:37.576593860 +0100
-+++ rpm-4.17.0/fileattrs/elf.attr	2022-02-23 20:05:29.183104326 +0100
+diff -up rpm-4.18.0-alpha2/fileattrs/elf.attr.9~ rpm-4.18.0-alpha2/fileattrs/elf.attr
+--- rpm-4.18.0-alpha2/fileattrs/elf.attr.9~	2022-04-07 13:13:18.980517754 +0200
++++ rpm-4.18.0-alpha2/fileattrs/elf.attr	2022-06-24 16:18:50.949160278 +0200
 @@ -1,3 +1,4 @@
  %__elf_provides		%{_rpmconfigdir}/elfdeps --provides
  %__elf_requires		%{_rpmconfigdir}/elfdeps --requires
 -%__elf_magic		^(setuid,? )?(setgid,? )?(sticky )?ELF (32|64)-bit.*$
 +%__elf_magic		^(setuid,? )?(setgid,? )?(sticky )?ELF (32|64)-bit.*executable
 +%__elf_exclude_path	^/usr/lib/debug/
-diff -up rpm-4.17.0/fileattrs/elflib.attr.9~ rpm-4.17.0/fileattrs/elflib.attr
---- rpm-4.17.0/fileattrs/elflib.attr.9~	2022-02-23 20:03:37.576593860 +0100
-+++ rpm-4.17.0/fileattrs/elflib.attr	2022-02-23 20:03:37.576593860 +0100
+diff -up rpm-4.18.0-alpha2/fileattrs/elflib.attr.9~ rpm-4.18.0-alpha2/fileattrs/elflib.attr
+--- rpm-4.18.0-alpha2/fileattrs/elflib.attr.9~	2022-06-24 16:18:50.949160278 +0200
++++ rpm-4.18.0-alpha2/fileattrs/elflib.attr	2022-06-24 16:18:50.949160278 +0200
 @@ -0,0 +1,4 @@
 +%__elflib_provides	%{_rpmconfigdir}/elfdeps --assume-exec --provides %{?__filter_GLIBC_PRIVATE:--filter-private}
 +%__elflib_requires	%{_rpmconfigdir}/elfdeps --assume-exec --requires %{?__filter_GLIBC_PRIVATE:--filter-private}
 +%__elflib_magic		^(setuid )?(setgid )?(sticky )?ELF (32|64)-bit.*shared object
 +%__elflib_exclude_path	^/usr/lib/debug/
-diff -up rpm-4.17.0/fileattrs/Makefile.am.9~ rpm-4.17.0/fileattrs/Makefile.am
---- rpm-4.17.0/fileattrs/Makefile.am.9~	2022-02-23 20:03:37.576593860 +0100
-+++ rpm-4.17.0/fileattrs/Makefile.am	2022-02-23 20:04:43.567896902 +0100
+diff -up rpm-4.18.0-alpha2/fileattrs/Makefile.am.9~ rpm-4.18.0-alpha2/fileattrs/Makefile.am
+--- rpm-4.18.0-alpha2/fileattrs/Makefile.am.9~	2022-06-24 16:18:50.949160278 +0200
++++ rpm-4.18.0-alpha2/fileattrs/Makefile.am	2022-06-24 16:19:51.986357457 +0200
 @@ -8,6 +8,6 @@ fattrsdir = $(rpmconfigdir)/fileattrs
  fattrs_DATA = \
  	debuginfo.attr desktop.attr elf.attr font.attr metainfo.attr \
  	perl.attr perllib.attr pkgconfig.attr ocaml.attr \
--	script.attr
-+	script.attr elflib.attr
+-	rpm_macro.attr script.attr
++	rpm_macro.attr script.attr elflib.attr
  
  EXTRA_DIST = $(fattrs_DATA)

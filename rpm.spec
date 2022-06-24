@@ -85,7 +85,7 @@
 #       of rpm is supported anyway, per architecture
 %define rpmhome /usr/lib/rpm
 
-#global snapver rc1
+%global snapver alpha2
 %if "%{snapver}" != ""
 %global srcver %{version}%{?snapver:-%{snapver}}
 %define srcdir %{?snapver:testing}%{!?snapver:%{name}-%(echo %{version} |cut -d. -f1-2).x}
@@ -104,8 +104,8 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
-Version:	4.17.0
-Release:	%{?snapver:0.%{snapver}.}7
+Version:	4.18.0
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -197,7 +197,6 @@ Patch3003:	rpm_arm_mips_isa_macros.patch
 #
 # Upstream patches not carried by Fedora or Mageia
 #
-Patch0:		0000-Restore-scriptlet-arguments-passed-as-numbers-to-Lua.patch
 
 #
 # Patches proposed upstream
@@ -848,6 +847,9 @@ fi
 
 %files build
 %doc docs/manual
+%{_bindir}/rpmlua
+%{_prefix}/lib/rpm/rpm_macros_provides.sh
+%{_prefix}/lib/rpm/rpmuncompress
 %rpmattr %{_bindir}/rpmbuild
 %rpmattr %{_bindir}/rpmspec
 %rpmattr %{_prefix}/lib/rpm/brp-*
@@ -872,6 +874,7 @@ fi
 %doc %{_mandir}/man8/rpmbuild.8*
 %doc %{_mandir}/man8/rpmdeps.8*
 %doc %{_mandir}/man8/rpmspec.8*
+%doc %{_mandir}/man8/rpmlua.8*
 
 %files sign
 %{_bindir}/rpmsign
