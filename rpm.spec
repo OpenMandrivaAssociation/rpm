@@ -85,7 +85,7 @@
 #       of rpm is supported anyway, per architecture
 %define rpmhome /usr/lib/rpm
 
-%global snapver alpha2
+%global snapver beta1
 %if "%{snapver}" != ""
 %global srcver %{version}%{?snapver:-%{snapver}}
 %define srcdir %{?snapver:testing}%{!?snapver:%{name}-%(echo %{version} |cut -d. -f1-2).x}
@@ -105,7 +105,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
 Version:	4.18.0
-Release:	%{?snapver:0.%{snapver}.}2
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -201,7 +201,6 @@ Patch3003:	rpm_arm_mips_isa_macros.patch
 #
 # Patches proposed upstream
 #
-Patch4000:	https://github.com/rpm-software-management/rpm/pull/2108.patch
 
 # Add support for %%optional
 # From: https://github.com/rpm-software-management/rpm/pull/417
