@@ -272,12 +272,7 @@ BuildRequires:	gnupg2
 BuildRequires:	atomic-devel
 BuildRequires:	clang
 %endif
-Requires:	bzip2 >= 0.9.0c-2
-Requires:	xz
-Requires:	zstd
-Requires:	cpio
-Requires:	gawk
-Requires:	coreutils
+
 Requires:	setup >= 2.9.1
 Requires:	rpm-%{_real_vendor}-setup >= %{rpmsetup_version}
 Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
@@ -376,6 +371,13 @@ Requires:	diffutils
 Requires:	make
 Requires:	tar >= 3.3.2
 Requires:	unzip
+Requires:	pigz
+Requires:	pbzip2
+Requires:	xz
+Requires:	zstd
+Requires:	cpio
+Requires:	gawk
+Requires:	coreutils
 # Versioned requirement for Patch 400
 Requires:	elfutils >= 0.167-2
 Requires:	rpm = %{epoch}:%{version}-%{release}
