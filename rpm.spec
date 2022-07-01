@@ -93,11 +93,11 @@
 %global srcver %{version}
 %define srcdir %{name}-%(echo %{version} |cut -d. -f1-2).x
 %endif
-%global libmajor	9
-%global librpmname      %mklibname rpm  %{libmajor}
+%global libmajor 9
+%global librpmname %mklibname rpm  %{libmajor}
 %global librpmnamedevel %mklibname -d rpm
-%global librpmsign      %mklibname rpmsign %{libmajor}
-%global librpmbuild     %mklibname rpmbuild %{libmajor}
+%global librpmsign %mklibname rpmsign %{libmajor}
+%global librpmbuild %mklibname rpmbuild %{libmajor}
 
 %global rpmsetup_version 0.4.0
 
@@ -105,7 +105,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
 Version:	4.18.0
-Release:	%{?snapver:0.%{snapver}.}1
+Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -356,40 +356,10 @@ Group:		System/Configuration/Packaging
 Provides:	perl-generators = %{version}-%{release}
 Provides:	python-rpm-generators = %{version}-%{release}
 Provides:	python3-rpm-generators = %{version}-%{release}
-Requires:	autoconf
-Requires:	automake
-Requires:	debugedit
-%ifarch %{riscv}
-Requires:	atomic-devel
-%endif
-Requires:	clang
-Requires:	file
-# We need cputoolize & amd64-* alias to x86_64-* in config.sub
-Requires:	libtool-base
-Requires:	patch
-Requires:	diffutils
-Requires:	make
-Requires:	tar >= 3.3.2
-Requires:	unzip
-Requires:	pigz
-Requires:	pbzip2
-Requires:	xz
-Requires:	zstd
-Requires:	cpio
-Requires:	gawk
-Requires:	coreutils
-# Versioned requirement for Patch 400
-Requires:	elfutils >= 0.167-2
+# (tpg) requires are keep there
+Requires:	basesystem-build
 Requires:	rpm = %{epoch}:%{version}-%{release}
-Requires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
 Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
-# For pythondistdeps generator
-Requires:	python-pkg-resources
-Requires:	python-packaging
-Requires:	spec-helper >= 0.31.12
-Requires:	pkgconf
-Requires:	systemd-rpm-macros
-Requires:	go-srpm-macros
 Conflicts:	rpm-build < %{epoch}:%{version}-%{release}
 
 %description build
