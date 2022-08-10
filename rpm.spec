@@ -105,7 +105,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
 Version:	4.18.0
-Release:	%{?snapver:0.%{snapver}.}2
+Release:	%{?snapver:0.%{snapver}.}3
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -248,7 +248,15 @@ BuildRequires:	doxygen
 BuildRequires:	pkgconfig(libelf)
 BuildRequires:	binutils-devel
 BuildRequires:	gettext-devel
+# We don't need to worry about backwards compatibility
+# on arches that didn't get 4.3/5.0 releases -- so
+# db-devel is only needed for x86_64, znver1 and aarch64.
+# Any arches added after the move to sqlite don't need
+# support for reading old bdb rpmdb
+%define oldarches x86_64 znver1 aarch64
+%ifarch %{oldarches}
 BuildRequires:	db-devel >= 18.1
+%endif
 BuildRequires:	pkgconfig(neon)
 BuildRequires:	pkgconfig(popt)
 BuildRequires:	magic-devel
@@ -506,7 +514,12 @@ autoreconf -i -f
 	--sharedstatedir=%{_var}/lib \
 	--with-archive \
 	--with-vendor=%{_real_vendor} \
+%ifarch %{oldarches}
 	--with-external-db \
+	--enable-bdb-ro \
+%else
+	--disable-bdb-ro \
+%endif
 	--with-lua \
 	--without-selinux \
 	--with-cap \
@@ -514,7 +527,6 @@ autoreconf -i -f
 	--without-audit \
 	%{?with_ndb: --with-ndb} \
 	--enable-zstd \
-	--enable-bdb-ro \
 	--enable-sqlite \
 	--enable-python \
 	--with-crypto=libgcrypt \
