@@ -113,7 +113,7 @@ Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
 Source1:	macros.filter
 Source2:	rpm.rpmlintrc
 # Put python bits back to where they used to be for now
-Source5:	https://github.com/rpm-software-management/python-rpm-packaging/archive/refs/heads/main.tar.gz
+Source5:	https://github.com/rpm-software-management/python-rpm-packaging/archive/refs/heads/python-rpm-packaging-main.tar.gz
 Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.service
 #
 # Fedora patches
