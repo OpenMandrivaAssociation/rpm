@@ -115,6 +115,7 @@ Source2:	rpm.rpmlintrc
 # Put python bits back to where they used to be for now
 Source5:	https://github.com/rpm-software-management/python-rpm-packaging/archive/refs/heads/python-rpm-packaging-main.tar.gz
 Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.service
+
 #
 # Fedora patches
 #
@@ -197,6 +198,7 @@ Patch3003:	rpm_arm_mips_isa_macros.patch
 #
 # Upstream patches not carried by Fedora or Mageia
 #
+Patch4000:	https://github.com/rpm-software-management/rpm/commit/b960c0b43a080287a7c13533eeb2d9f288db1414.patch
 
 #
 # Patches proposed upstream
