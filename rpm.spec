@@ -867,11 +867,10 @@ end
 %doc %{_mandir}/man8/rpmsign.8*
 
 %files -n python-%{name}
-%{python3_sitearch}/rpm-%{rpmver}*.egg-info
+%{python3_sitearch}/rpm-*.egg-info
 %{python3_sitearch}/rpm/__init__.py
 %{python3_sitearch}/rpm/transaction.py
-7%{python3_sitearch}/rpm/_rpm.so
-%artifact %{python3_sitearch}/rpm/__pycache__/
+%{python3_sitearch}/rpm/_rpm.so
 
 %files -n %{librpmnamedevel}
 %{_libdir}/librp*[a-z].so
