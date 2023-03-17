@@ -248,7 +248,7 @@ BuildRequires:	pkgconfig(bzip2)
 BuildRequires:	pkgconfig(liblzma) >= 5
 BuildRequires:	pkgconfig(libzstd)
 BuildRequires:	automake
-BuildRequires:	doxygen
+BuildRequires:	openmp-devel
 BuildRequires:	pkgconfig(libelf)
 BuildRequires:	binutils-devel
 BuildRequires:	gettext-devel
@@ -534,7 +534,7 @@ autoreconf -i -f
 	--enable-sqlite \
 	--enable-python \
 	--with-crypto=libgcrypt \
-	--disable-openmp
+	--enable-openmp
 
 %make_build
 
