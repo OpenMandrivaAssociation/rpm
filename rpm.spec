@@ -44,6 +44,7 @@
 %define _defaultdocdir %{_datadir}/doc
 %define _localstatedir /var
 %define _infodir %{_datadir}/info
+%define rpmattr %attr(0755, rpm, rpm)
 
 %if %{?mklibname:0}%{?!mklibname:1}
 %define mklibname(ds)  %{_lib}%{1}%{?2:%{2}}%{?3:_%{3}}%{-s:-static}%{-d:-devel}
@@ -536,9 +537,6 @@ autoreconf -i -f
 	--disable-openmp
 
 %make_build
-cd python
-%py3_build
-cd -
 
 %install
 %make_install
@@ -552,13 +550,6 @@ ln -s ../../bin/find-debuginfo.sh %{buildroot}%{_usrlibrpm}/
 # We build --without-selinux, so we don't need the
 # man page either
 rm -f %{buildroot}%{_mandir}/man8/rpm-plugin-selinux.8*
-
-# We need to build with --enable-python for the self-test suite, but we
-# actually package the bindings built with setup.py (#531543#c26)
-rm -rf $RPM_BUILD_ROOT/%{python_sitearch}
-cd python
-%py3_install
-cd -
 
 mkdir -p "%{buildroot}%{_unitdir}"
 install -m 644 %{S:10} %{buildroot}%{_unitdir}/
@@ -687,7 +678,7 @@ cd -
 eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %endif
 
-%post -p <lua>
+%triggerun -p <lua> -- rpm < 4:4.18.1
 pkgs = posix.stat("/var/lib/rpm/rpmdb.sqlite")
 oldpkgs = posix.stat("/var/lib/rpm/Packages")
 if not pkgs then
@@ -703,12 +694,17 @@ end
 rm -rf /usr/lib/rpm/*-mandrake-* ||:
 rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
 
-%triggerun -- rpm < 4.16.0-0
+%triggerun -- rpm < 4:4.16.0-0
 if [ -x %{_bindir}/systemctl ]; then
     systemctl enable rpmdb-rebuild ||:
 fi
 
-%define rpmattr %attr(0755, rpm, rpm)
+%triggerun -p <lua> -- python-%{name} < 4:4.18.1
+path = "%{python_sitearch}/rpm-4.18.0-py3.10.egg-info"
+st = posix.stat(path)
+if st and st.type == "directory" then
+    os.execute("rm -rf " .. path)
+end
 
 %files -f %{name}.lang
 %doc COPYING
@@ -824,11 +820,11 @@ fi
 %doc %{_mandir}/man8/rpm-plugin-dbus-announce.8*
 %endif # with plugins
 
-%files -n %librpmbuild
+%files -n %{librpmbuild}
 %{_libdir}/librpmbuild.so.%{libmajor}
 %{_libdir}/librpmbuild.so.%{libmajor}.*
 
-%files -n %librpmsign
+%files -n %{librpmsign}
 %{_libdir}/librpmsign.so.%{libmajor}
 %{_libdir}/librpmsign.so.%{libmajor}.*
 
@@ -868,10 +864,13 @@ fi
 %doc %{_mandir}/man8/rpmsign.8*
 
 %files -n python-%{name}
-%{python3_sitearch}/%{name}/
-%{python3_sitearch}/%{name}-%{version}*.egg-info
+%{python3_sitearch}/rpm-%{rpmver}*.egg-info
+%{python3_sitearch}/rpm/__init__.py
+%{python3_sitearch}/rpm/transaction.py
+7%{python3_sitearch}/rpm/_rpm.so
+%artifact %{python3_sitearch}/rpm/__pycache__/
 
-%files -n %librpmnamedevel
+%files -n %{librpmnamedevel}
 %{_libdir}/librp*[a-z].so
 %{_libdir}/pkgconfig/%{name}.pc
 %{_includedir}/%{name}/
