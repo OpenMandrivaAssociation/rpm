@@ -125,6 +125,7 @@ Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.serv
 Patch906:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.7.1-geode-i686.patch
 # Probably to be upstreamed in slightly different form
 Patch907:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.15.x-ldflags.patch
+Patch908:	https://src.fedoraproject.org/rpms/rpm/raw/rawhide/f/rpm-4.18.x-revert-pandoc-cond.patch
 
 # We disagree...
 #Patch912:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/0001-Revert-Improve-ARM-detection.patch
@@ -187,6 +188,8 @@ Patch182:	systemd-inhibit-requires-logind.patch
 # (tv) Commit 816c7cf3fdae5c45de02a42a2245549778e2ca80 defaults to ignoring autodeps from docfile,
 # which break perl autodeps from *META*:
 Patch200:	dont-filter-autodeps-from-doc-by-default.patch
+
+Patch201:	rpm-4.18.0-dont-try-to-strip-firmware-files.patch
 
 # Various arch enabling:
 Patch3003:	rpm_arm_mips_isa_macros.patch

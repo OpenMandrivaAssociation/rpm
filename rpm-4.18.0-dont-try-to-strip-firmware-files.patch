@@ -1,0 +1,198 @@
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- ViewVC :: http://www.viewvc.org/ -->
+<head>
+<title>[packages] Log of /cauldron/rpm/current/SOURCES/rpm-4.18.0-dont-try-to-strip-firmware-files.patch</title>
+<meta name="generator" content="ViewVC 1.1.28" />
+<link rel="shortcut icon" href="/viewvc/images/favicon.ico" />
+<link rel="stylesheet" href="/viewvc/styles.css" type="text/css" />
+
+</head>
+<body>
+<div class="vc_navheader">
+<table><tr>
+<td><strong><a href="/"><span class="pathdiv">/</span></a><a href="/packages/">[packages]</a><span class="pathdiv">/</span><a href="/packages/cauldron/">cauldron</a><span class="pathdiv">/</span><a href="/packages/cauldron/rpm/">rpm</a><span class="pathdiv">/</span><a href="/packages/cauldron/rpm/current/">current</a><span class="pathdiv">/</span><a href="/packages/cauldron/rpm/current/SOURCES/">SOURCES</a><span class="pathdiv">/</span>rpm-4.18.0-dont-try-to-strip-firmware-files.patch</strong></td>
+<td style="text-align: right;"></td>
+</tr></table>
+</div>
+<div style="float: right; padding: 5px;"><a href"/" title="ViewVC Home"><img src="/viewvc/images/viewvc-logo.png" alt="ViewVC logotype" width="240" height="70" /></a></div>
+<h1>Log of /cauldron/rpm/current/SOURCES/rpm-4.18.0-dont-try-to-strip-firmware-files.patch</h1>
+
+<p style="margin:0;">
+
+<a href="/packages/cauldron/rpm/current/SOURCES/"><img src="/viewvc/images/back_small.png" class="vc_icon" alt="Parent Directory" /> Parent Directory</a>
+
+| <a href="/packages/cauldron/rpm/current/SOURCES/rpm-4.18.0-dont-try-to-strip-firmware-files.patch?view=log"><img src="/viewvc/images/log.png" class="vc_icon" alt="Revision Log" /> Revision Log</a>
+
+
+
+
+</p>
+
+<hr />
+<table class="auto">
+
+
+
+<tr>
+<td>Links to HEAD:</td>
+<td>
+(<a href="/packages/cauldron/rpm/current/SOURCES/rpm-4.18.0-dont-try-to-strip-firmware-files.patch?view=markup">view</a>)
+(<a href="/packages/cauldron/rpm/current/SOURCES/rpm-4.18.0-dont-try-to-strip-firmware-files.patch?view=co">download</a>)
+
+(<a href="/packages/cauldron/rpm/current/SOURCES/rpm-4.18.0-dont-try-to-strip-firmware-files.patch?view=annotate">annotate</a>)
+</td>
+</tr>
+
+
+
+<tr>
+<td>Sticky Revision:</td>
+<td><form method="get" action="/packages" style="display: inline">
+<div style="display: inline">
+<input type="hidden" name="orig_pathtype" value="FILE"/><input type="hidden" name="orig_view" value="log"/><input type="hidden" name="orig_path" value="cauldron/rpm/current/SOURCES/rpm-4.18.0-dont-try-to-strip-firmware-files.patch"/><input type="hidden" name="view" value="redirect_pathrev"/>
+
+<input type="text" name="pathrev" value="" size="6"/>
+
+<input type="submit" value="Set" />
+</div>
+</form>
+
+</td>
+</tr>
+</table>
+ 
+
+
+
+
+
+
+
+
+
+<div>
+<hr />
+
+<a name="rev1912555"></a>
+
+
+Revision <a href="/packages?view=revision&amp;revision=1912555"><strong>1912555</strong></a> -
+
+
+(<a href="/packages/cauldron/rpm/current/SOURCES/rpm-4.18.0-dont-try-to-strip-firmware-files.patch?revision=1912555&amp;view=markup">view</a>)
+
+
+(<a href="/packages/cauldron/rpm/current/SOURCES/rpm-4.18.0-dont-try-to-strip-firmware-files.patch?revision=1912555&amp;view=co">download</a>)
+
+(<a href="/packages/cauldron/rpm/current/SOURCES/rpm-4.18.0-dont-try-to-strip-firmware-files.patch?annotate=1912555">annotate</a>)
+
+
+
+- <a href="/packages/cauldron/rpm/current/SOURCES/rpm-4.18.0-dont-try-to-strip-firmware-files.patch?view=log&amp;r1=1912555&amp;log_pagestart=0">[select for diffs]</a>
+
+
+
+
+<br />
+
+Added
+
+<em>Tue Nov 29 12:31:15 2022 UTC</em>
+(3 months, 2 weeks ago)
+by <em>tmb</em>
+
+
+
+
+
+
+
+<br />File length: 709 byte(s)
+
+
+
+
+
+
+
+
+
+
+
+<pre class="vc_log">stop trying to strip firmware files
+</pre>
+</div>
+
+ 
+
+
+
+
+ <hr />
+<p><a name="diff"></a>
+This form allows you to request diffs between any two revisions of this file.
+For each of the two "sides" of the diff,
+
+enter a numeric revision.
+
+</p>
+<form method="get" action="/packages/cauldron/rpm/current/SOURCES/rpm-4.18.0-dont-try-to-strip-firmware-files.patch" id="diff_select">
+<table cellpadding="2" cellspacing="0" class="auto">
+<tr>
+<td>&nbsp;</td>
+<td>
+<input type="hidden" name="view" value="diff"/>
+Diffs between
+
+<input type="text" size="12" name="r1"
+value="1912555" />
+
+and
+
+<input type="text" size="12" name="r2" value="1912555" />
+
+</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>
+Type of Diff should be a
+<select name="diff_format" onchange="submit()">
+<option value="h" selected="selected">Colored Diff</option>
+<option value="l" >Long Colored Diff</option>
+<option value="f" >Full Colored Diff</option>
+<option value="u" >Unidiff</option>
+<option value="c" >Context Diff</option>
+<option value="s" >Side by Side</option>
+</select>
+<input type="submit" value=" Get Diffs " />
+</td>
+</tr>
+</table>
+</form>
+
+
+
+
+
+<hr />
+<table>
+<tr>
+<td>&nbsp;</td>
+<td style="text-align: right;"><strong><a href="/viewvc/help_log.html">ViewVC Help</a></strong></td>
+</tr>
+<tr>
+<td>Powered by <a href="http://viewvc.org/">ViewVC 1.1.28</a></td>
+<td style="text-align: right;">&nbsp;</td>
+</tr>
+</table>
+</body>
+</html>
+
+
