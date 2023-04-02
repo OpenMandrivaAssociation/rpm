@@ -505,10 +505,12 @@ sed -i -e '/^%%_python_bytecompile_extra/d' platform.in
 %build
 %define _disable_ld_no_undefined 1
 
+%if ! %{cross_compiling}
 %ifarch %{riscv}
 # Temporary hardcode, to change defaults on RISC-V
 export CC=%{_bindir}/clang
 export CXX=%{_bindir}/clang++
+%endif
 %endif
 
 %set_build_flags
