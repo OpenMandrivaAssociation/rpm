@@ -1,0 +1,14 @@
+diff -up rpm-4.18.90/CMakeLists.txt.omv~ rpm-4.18.90/CMakeLists.txt
+--- rpm-4.18.90/CMakeLists.txt.omv~	2023-05-04 22:28:18.216811395 +0200
++++ rpm-4.18.90/CMakeLists.txt	2023-05-04 22:28:53.372108512 +0200
+@@ -67,8 +67,8 @@ function(makemacros)
+ 	set(libdir "\${prefix}/=LIB=")
+ 	set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+ 	set(oldincludedir "${CMAKE_INSTALL_FULL_OLDINCLUDEDIR}")
+-	set(infodir "\${datarootdir}/${CMAKE_INSTALL_INFODIR}")
+-	set(mandir "\${datarootdir}/${CMAKE_INSTALL_MANDIR}")
++	set(infodir "\${datarootdir}/info")
++	set(mandir "\${datarootdir}/man")
+ 	set(RUNDIR /run)
+ 
+ 	set(acutils

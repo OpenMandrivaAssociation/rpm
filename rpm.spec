@@ -69,8 +69,8 @@
 %bcond_with check
 # build with plugins?
 %bcond_without plugins
-# build with new db format
-%bcond_with ndb
+%bcond_without audit
+%bcond_without selinux
 
 # Define directory which holds rpm config files, and some binaries actually
 # NOTE: it remains */lib even on lib64 platforms as only one version
@@ -78,26 +78,26 @@
 %define rpmhome /usr/lib/rpm
 
 #global snapver rc1
-%if "%{snapver}" != ""
+%if 0%{?snapver:1}
 %global srcver %{version}%{?snapver:-%{snapver}}
 %define srcdir %{?snapver:testing}%{!?snapver:%{name}-%(echo %{version} |cut -d. -f1-2).x}
 %else
 %global srcver %{version}
-%define srcdir %{name}-%(echo %{version} |cut -d. -f1-2).x
+%define srcdir %(if [ $(echo %{version} |cut -d. -f3) -ge 50 ]; then echo -n testing; else echo -n "rpm-$(echo %{version}|cut -d. -f1-2).x"; fi)
 %endif
-%global libmajor 9
-%global librpmname %mklibname rpm  %{libmajor}
+%global libmajor 10
+%global librpmname %mklibname rpm
 %global librpmnamedevel %mklibname -d rpm
-%global librpmsign %mklibname rpmsign %{libmajor}
-%global librpmbuild %mklibname rpmbuild %{libmajor}
+%global librpmsign %mklibname rpmsign
+%global librpmbuild %mklibname rpmbuild
 
 %global rpmsetup_version 0.4.0
 
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
-Version:	4.18.1
-Release:	%{?snapver:0.%{snapver}.}6
+Version:	4.18.90
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -116,7 +116,8 @@ Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.serv
 Patch906:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.7.1-geode-i686.patch
 # Probably to be upstreamed in slightly different form
 Patch907:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.15.x-ldflags.patch
-Patch908:	https://src.fedoraproject.org/rpms/rpm/raw/rawhide/f/rpm-4.18.x-revert-pandoc-cond.patch
+Patch908:	rpm-4.18.90-c++-not-cxx.patch
+Patch909:	rpm-4.18.90-mandir-infodir.patch
 
 # We disagree...
 #Patch912:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/0001-Revert-Improve-ARM-detection.patch
@@ -193,7 +194,6 @@ Patch3003:	rpm_arm_mips_isa_macros.patch
 #
 # Upstream patches not carried by Fedora or Mageia
 #
-Patch4000:	https://github.com/rpm-software-management/rpm/commit/b960c0b43a080287a7c13533eeb2d9f288db1414.patch
 
 #
 # Patches proposed upstream
@@ -202,7 +202,8 @@ Patch4000:	https://github.com/rpm-software-management/rpm/commit/b960c0b43a08028
 # Add support for %%optional
 # From: https://github.com/rpm-software-management/rpm/pull/417
 Patch5001:	rpm-4.15.x-omv-optional-filelist-tag.patch
-Patch5002:	rpm-4.18.0-rc1-compile.patch
+# Make it compile
+Patch5002:	rpm-4.18.90-compile.patch
 # Add znver1 as an x86_64 superset
 Patch5006:	rpm-4.15.x-omv-znver1-arch.patch
 
@@ -233,14 +234,14 @@ Patch6010:	rpm-4.17.0-usrmerge.patch
 # SourceLicense: (GPLv2+ and LGPLv2+ with exceptions) and BSD
 License:	GPLv2+
 
-BuildRequires:	autoconf
+BuildRequires:	cmake
+BuildRequires:	fakechroot
 BuildRequires:	bison
 BuildRequires:	pkgconf
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(bzip2)
 BuildRequires:	pkgconfig(liblzma) >= 5
 BuildRequires:	pkgconfig(libzstd)
-BuildRequires:	automake
 BuildRequires:	openmp-devel
 BuildRequires:	pkgconfig(libelf)
 BuildRequires:	binutils-devel
@@ -287,9 +288,7 @@ Conflicts:	rpm < 2:4.14.0-0
 
 # Weakly depend on stuff that used to be in main rpm package
 Recommends:	rpm-plugin-syslog
-Recommends:	rpm-plugin-ima
 Recommends:	rpm-plugin-systemd-inhibit
-Obsoletes:	rpm-plugin-audit
 
 %description
 The RPM Package Manager (RPM) is a powerful command line driven
@@ -442,17 +441,6 @@ Conflicts:	rpm < 2:4.14.0-0
 This plugin blocks systemd from entering idle, sleep or shutdown while an rpm
 transaction is running using the systemd-inhibit mechanism.
 
-%package plugin-ima
-Summary:	Rpm plugin for IMA file signatures
-Group:		System/Base
-Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
-# Incompatible with rpm5
-Conflicts:	rpm < 2:4.14.0-0
-
-%description plugin-ima
-This plugin adds support for enforcing and verifying IMA file signatures
-in an rpm.
-
 %package plugin-prioreset
 Summary:	Rpm plugin for resetting scriptlet priorities for SysV init
 Group:		System/Base
@@ -466,14 +454,6 @@ Conflicts:	rpm < 2:4.14.0-0
 Useful on legacy SysV init systems if you run rpm transactions with
 nice/ionice priorities. Should not be used on systemd systems.
 
-%package plugin-fsverity
-Summary:	Rpm plugin for fsverity functionality
-Group:		System/Base
-Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
-
-%description plugin-fsverity
-This plugin provides fsverity functionality to rpm
-
 %package plugin-dbus-announce
 Summary:	Rpm plugin for D-Bus announcements
 Group:		System/Base
@@ -481,6 +461,47 @@ Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description plugin-dbus-announce
 This plugin provides DBus functionality to rpm
+
+%if %{with audit}
+%package plugin-audit
+Summary:	Rpm plugin for auditing
+Group:		System/Base
+Requires:	%{librpmname}%{?_isa} = %{EVRD}
+BuildRequires:	pkgconfig(audit)
+
+%description plugin-audit
+Rpm plugin for auditing
+
+%files plugin-audit
+%{_libdir}/rpm-plugins/audit.so
+%{_mandir}/man8/rpm-plugin-audit.8.zst
+%endif
+
+%if %{with selinux}
+%package plugin-selinux
+Summary:	Rpm plugin for SELinux
+Group:		System/Base
+Requires:	%{librpmname}%{?_isa} = %{EVRD}
+BuildRequires:	pkgconfig(libselinux)
+
+%description plugin-selinux
+Rpm plugin for SELinux
+
+%files plugin-selinux
+%{_libdir}/rpm-plugins/selinux.so
+%endif
+
+%package plugin-fapolicyd
+Summary:	Rpm plugin for working with the application blocker fapolicyd
+Group:		System/Base
+Requires:	%{librpmname}%{?_isa} = %{EVRD}
+
+%description plugin-fapolicyd
+Rpm plugin for working with the application blocker fapolicyd
+
+%files plugin-fapolicyd
+%{_libdir}/rpm-plugins/fapolicyd.so
+%{_mandir}/man8/rpm-plugin-fapolicyd.8.zst
 %endif # with plugins
 
 %prep
@@ -497,36 +518,23 @@ sed -i -e '/^%%_python_bytecompile_extra/d' platform.in
 
 %set_build_flags
 
-autoreconf -i -f
-
-%configure \
-	--sbindir=%{_bindir} \
-	--localstatedir=%{_var} \
-	--sharedstatedir=%{_var}/lib \
-	--with-archive \
-	--with-vendor=%{_real_vendor} \
+# The default "build" is used for other purposes in rpm
+export CMAKE_BUILD_DIR=BUILD
+%cmake \
+	-DRPM_VENDOR=%{_real_vendor} \
+	-DRPM_CONFIGDIR=%{_prefix}/lib/rpm \
 %ifarch %{oldarches}
-	--with-external-db \
-	--enable-bdb-ro \
-%else
-	--disable-bdb-ro \
+	-DENABLE_BDB_RO:BOOL=ON \
 %endif
-	--with-lua \
-	--without-selinux \
-	--with-cap \
-	--with-acl \
-	--without-audit \
-	%{?with_ndb: --with-ndb} \
-	--enable-zstd \
-	--enable-sqlite \
-	--enable-python \
-	--with-crypto=libgcrypt \
-	--enable-openmp
+	-DWITH_INTERNAL_OPENPGP:BOOL=ON \
+	-DWITH_OPENSSL:BOOL=ON \
+	-G "Unix Makefiles"
+
 
 %make_build
 
 %install
-%make_install
+%make_install -C BUILD
 
 # Upstream debugedit is better than rpm's copy
 rm -f %{buildroot}%{_usrlibrpm}/{debugedit,sepdebugcrcfix,find-debuginfo.sh}
@@ -768,7 +776,6 @@ end
 %attr(0755, rpm, rpm) %{rpmhome}/rpmdb_*
 %attr(0644, rpm, rpm) %{rpmhome}/macros
 %rpmhome/macros.d
-%attr(0755, rpm, rpm) %{rpmhome}/mkinstalldirs
 %attr(0755, rpm, rpm) %{rpmhome}/rpm.*
 %attr(0644, rpm, rpm) %{rpmhome}/rpmpopt*
 %attr(0644, rpm, rpm) %{rpmhome}/rpmrc
@@ -792,12 +799,6 @@ end
 %doc %{_mandir}/man8/rpm2archive.8*
 %doc %{_mandir}/man8/rpm-plugins.8*
 %doc %{_mandir}/man1/*.1*
-%lang(fr) %{_mandir}/fr/man[18]/*.[18]*
-%lang(ja) %{_mandir}/ja/man[18]/*.[18]*
-%lang(ko) %{_mandir}/ko/man[18]/*.[18]*
-%lang(pl) %{_mandir}/pl/man[18]/*.[18]*
-%lang(ru) %{_mandir}/ru/man[18]/*.[18]*
-%lang(sk) %{_mandir}/sk/man[18]/*.[18]*
 
 %attr(0755, rpm, rpm) %dir %_localstatedir/lib/rpm
 
@@ -841,16 +842,9 @@ end
 %{_libdir}/rpm-plugins/systemd_inhibit.so
 %doc %{_mandir}/man8/rpm-plugin-systemd-inhibit.8*
 
-%files plugin-ima
-%{_libdir}/rpm-plugins/ima.so
-%doc %{_mandir}/man8/rpm-plugin-ima.8*
-
 %files plugin-prioreset
 %{_libdir}/rpm-plugins/prioreset.so
 %doc %{_mandir}/man8/rpm-plugin-prioreset.8*
-
-%files plugin-fsverity
-%{_libdir}/rpm-plugins/fsverity.so
 
 %files plugin-dbus-announce
 %{_sysconfdir}/dbus-1/system.d/org.rpm.conf
@@ -869,6 +863,7 @@ end
 %files build
 %doc docs/manual
 %{_bindir}/rpmlua
+%{_bindir}/rpmsort
 %{_prefix}/lib/rpm/rpm_macros_provides.sh
 %{_prefix}/lib/rpm/rpmuncompress
 %rpmattr %{_bindir}/rpmbuild
@@ -894,6 +889,7 @@ end
 
 %doc %{_mandir}/man8/rpmbuild.8*
 %doc %{_mandir}/man8/rpmdeps.8*
+%doc %{_mandir}/man8/rpmsort.8*
 %doc %{_mandir}/man8/rpmspec.8*
 %doc %{_mandir}/man8/rpmlua.8*
 
@@ -915,6 +911,7 @@ end
 %files apidocs
 %doc docs/librpm
 %doc COPYING
+%doc %{_docdir}/rpm
 
 %files cron
 %config(noreplace) /etc/cron.daily/rpm

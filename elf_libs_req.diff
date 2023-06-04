@@ -15,14 +15,13 @@ diff -up rpm-4.18.0-alpha2/fileattrs/elflib.attr.9~ rpm-4.18.0-alpha2/fileattrs/
 +%__elflib_requires	%{_rpmconfigdir}/elfdeps --assume-exec --requires %{?__filter_GLIBC_PRIVATE:--filter-private}
 +%__elflib_magic		^(setuid )?(setgid )?(sticky )?ELF (32|64)-bit.*shared object
 +%__elflib_exclude_path	^/usr/lib/debug/
-diff -up rpm-4.18.0-alpha2/fileattrs/Makefile.am.9~ rpm-4.18.0-alpha2/fileattrs/Makefile.am
---- rpm-4.18.0-alpha2/fileattrs/Makefile.am.9~	2022-06-24 16:18:50.949160278 +0200
-+++ rpm-4.18.0-alpha2/fileattrs/Makefile.am	2022-06-24 16:19:51.986357457 +0200
-@@ -8,6 +8,6 @@ fattrsdir = $(rpmconfigdir)/fileattrs
- fattrs_DATA = \
- 	debuginfo.attr desktop.attr elf.attr font.attr metainfo.attr \
- 	perl.attr perllib.attr pkgconfig.attr ocaml.attr \
--	rpm_macro.attr script.attr
-+	rpm_macro.attr script.attr elflib.attr
- 
- EXTRA_DIST = $(fattrs_DATA)
+diff -up rpm-4.18.90/fileattrs/CMakeLists.txt.omv~ rpm-4.18.90/fileattrs/CMakeLists.txt
+--- rpm-4.18.90/fileattrs/CMakeLists.txt.omv~	2023-05-03 16:29:38.643933810 +0200
++++ rpm-4.18.90/fileattrs/CMakeLists.txt	2023-05-03 16:29:49.726051480 +0200
+@@ -2,5 +2,6 @@ install(FILES
+ 	debuginfo.attr desktop.attr elf.attr font.attr metainfo.attr
+ 	perl.attr perllib.attr pkgconfig.attr ocaml.attr
+ 	rpm_macro.attr script.attr sysusers.attr usergroup.attr
++	elflib.attr
+ 	DESTINATION ${RPM_CONFIGDIR}/fileattrs
+ )

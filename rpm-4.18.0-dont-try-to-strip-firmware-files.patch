@@ -1,10 +1,12 @@
-diff -Nurp rpm-4.18.0.orig/scripts/brp-strip rpm-4.18.0/scripts/brp-strip
---- rpm-4.18.0.orig/scripts/brp-strip	2022-04-07 14:13:19.072518377 +0300
-+++ rpm-4.18.0/scripts/brp-strip	2022-11-29 15:01:19.705111799 +0200
-@@ -13,5 +13,5 @@ Darwin*) exit 0 ;;
- esac
+diff -up rpm-4.18.90/scripts/brp-strip.13~ rpm-4.18.90/scripts/brp-strip
+--- rpm-4.18.90/scripts/brp-strip.13~	2023-05-03 16:30:19.104363329 +0200
++++ rpm-4.18.90/scripts/brp-strip	2023-05-03 16:31:46.666189595 +0200
+@@ -33,6 +33,8 @@ strip_elf_binaries()
  
- # Strip ELF binaries
--find "$RPM_BUILD_ROOT" -type f \! -regex "${RPM_BUILD_ROOT}/*usr/lib/debug.*" \! -name "*.go" -print0 | \
-+find "$RPM_BUILD_ROOT" -type f \! -regex "${RPM_BUILD_ROOT}/*usr/lib/debug.*" \! -regex "${RPM_BUILD_ROOT}/lib/firmware.*" \! -name "*.go" -print0 | \
-     xargs -0 -r -P$NCPUS -n32 sh -c "file \"\$@\" | sed -n -e 's/^\(.*\):[ 	]*ELF.*, not stripped.*/\1/p' | grep -v 'no machine' | xargs -I\{\} $STRIP -g \{\}" ARG0
+   find "$RPM_BUILD_ROOT" -type f \
+     ! -regex "${RPM_BUILD_ROOT}/*usr/lib/debug.*" \
++    ! -regex "${RPM_BUILD_ROOT}/lib/firmware.*" \
++    ! -regex "${RPM_BUILD_ROOT}/usr/lib/firmware.*" \
+     ! -name "*.go" -links "${nlinks}" -print0 | \
+     xargs -0 -r -P${nprocs} -n${MAX_ARGS} sh -c "file \"\$@\" | \
+     sed -n -e 's/^\(.*\):[ 	]*ELF.*, not stripped.*/\1/p' | \
