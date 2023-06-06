@@ -106,7 +106,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
 Version:	4.18.1
-Release:	%{?snapver:0.%{snapver}.}3
+Release:	%{?snapver:0.%{snapver}.}4
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -218,7 +218,6 @@ Patch5006:	rpm-4.15.x-omv-znver1-arch.patch
 #
 # OpenMandriva specific patches
 #
-
 # Default to keeping a patch backup file for gendiff
 # and follow file naming conventions
 Patch6004:	rpm-4.15.x-omv-patch-gendiff.patch
@@ -505,14 +504,6 @@ sed -i -e '/^%%_python_bytecompile_extra/d' platform.in
 %build
 %define _disable_ld_no_undefined 1
 
-%if ! %{cross_compiling}
-%ifarch %{riscv}
-# Temporary hardcode, to change defaults on RISC-V
-export CC=%{_bindir}/clang
-export CXX=%{_bindir}/clang++
-%endif
-%endif
-
 %set_build_flags
 
 autoreconf -i -f
@@ -631,7 +622,7 @@ sed -i -e '/^%%_target_platform/i%%_target_cpu		i686' znver1_32-linux/macros
 sed -i -e '/^%%optflags/d' znver1_32-linux/macros
 
 # Let's create some crosscompile targets for MUSL based systems...
-for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 znver1 x32 riscv32 riscv64 ppc64 ppc64le; do
+for arch in aarch64 armv7hl armv7hnl armv8hnl i686 loongarch64 x86_64 znver1 x32 riscv32 riscv64 ppc64 ppc64le; do
 	cp -a $arch-linux $arch-linuxmusl
 	sed -i -e 's,-gnu,-musl,g' $arch-linuxmusl/macros
 	# FIXME this is not very nice... It's a workaround for
@@ -639,7 +630,7 @@ for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 znver1 x32 riscv32 ris
 	sed -i -e 's,%%{_target_os},linux,g' $arch-linuxmusl/macros
 done
 # ... And for uClibc based systems
-for arch in aarch64 armv7hl armv7hnl armv8hnl i686 x86_64 znver1 x32 riscv32 riscv64 ppc64 ppc64le; do
+for arch in aarch64 armv7hl armv7hnl armv8hnl i686 loongarch64 x86_64 znver1 x32 riscv32 riscv64 ppc64 ppc64le; do
 	cp -a $arch-linux $arch-linuxuclibc
 	sed -i -e 's,-gnu,-uclibc,g' $arch-linuxuclibc/macros
 	# FIXME this is not very nice... It's a workaround for
@@ -673,6 +664,9 @@ sed -i -e 's,openmandriva,w64,g' x86_64-mingw32/macros aarch64-mingw32/macros
 # be only about telling the difference between the
 # original mingw32 and its 64-bit capable fork.
 sed -i -e 's,openmandriva,w64,g' i686-mingw32/macros armv7hnl-mingw32/macros
+# Setting _build_* is harmful when crosscompiling, and useless when not
+sed -i -e '/^%%_build_arch/d' */macros
+
 cd -
 
 %find_lang %{name}
