@@ -106,7 +106,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
 Version:	4.18.1
-Release:	%{?snapver:0.%{snapver}.}4
+Release:	%{?snapver:0.%{snapver}.}5
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -667,6 +667,54 @@ sed -i -e 's,openmandriva,w64,g' i686-mingw32/macros armv7hnl-mingw32/macros
 # Setting _build_* is harmful when crosscompiling, and useless when not
 sed -i -e '/^%%_build_arch/d' */macros
 
+# Crosscompiling needs different tools -- the platform files need
+# to know what compiler to use
+for i in *; do
+	[ -e $i/macros ] || continue
+
+	# Skip the native platform and noarch...
+	# As well as a few that aren't quite the "native" platform, but close enough
+	# to not need/want crosscompilers
+	case $i in
+	%{_target_cpu}-%{_target_os})
+		continue
+		;;
+	noarch*)
+		continue
+		;;
+%ifarch %{ix86}
+	athlon-%{_target_os}|geode-%{_target_os}|i.86-%{_target_os}|pentium?-%{_target_os}|znver?_32-%{_target_os})
+		continue
+		;;
+%endif
+%ifarch %{x86_64}
+	amd64-%{_target_os}|ia32e-%{_target_os}|x86_64*-%{_target_os}|znver?-%{_target_os})
+		continue
+		;;
+%endif
+%ifarch %{arm}
+	arm*-%{_target_os})
+		continue
+		;;
+%endif
+%ifarch %{aarch64}
+	aarch64*-%{_target_os})
+		continue
+		;;
+%endif
+	esac
+
+	echo >>$i/macros
+	echo "%%__ar %%{?prefer_gcc:%%{_target_platform}-ar}%%{!?prefer_gcc:llvm-ar}" >>$i/macros
+	echo "%%__cc %%{?prefer_gcc:%%{_target_platform}-gcc}%%{!?prefer_gcc:clang -target %%{_target_platform}} --sysroot %%{_prefix}/%%{_target_platform}" >>$i/macros
+	echo "%%__cxx %%{?prefer_gcc:%%{_target_platform}-g++}%%{!?prefer_gcc:clang++ -target %%{_target_platform}} --sysroot %%{_prefix}/%%{_target_platform}" >>$i/macros
+	echo "%%__cpp %%{?prefer_gcc:%%{_target_platform}-gcc}%%{!?prefer_gcc:clang -target %%{_target_platform}} --sysroot %%{_prefix}/%%{_target_platform} -E" >>$i/macros
+	echo "%%__ld %%{?prefer_gcc:%%{_target_platform}-ld}%%{!?prefer_gcc:ld.lld}" >>$i/macros
+	echo "%%__objcopy %%{?prefer_gcc:%%{_target_platform}-objcopy}%%{!?prefer_gcc:llvm-objcopy}" >>$i/macros
+	echo "%%__objdump %%{?prefer_gcc:%%{_target_platform}-objdump}%%{!?prefer_gcc:llvm-objdump}" >>$i/macros
+	echo "%%__ranlib %%{?prefer_gcc:%%{_target_platform}-ranlib}%%{!?prefer_gcc:llvm-ranlib}" >>$i/macros
+	echo "%%__strip %%{?prefer_gcc:%%{_target_platform}-strip}%%{!?prefer_gcc:llvm-strip}" >>$i/macros
+done
 cd -
 
 %find_lang %{name}
