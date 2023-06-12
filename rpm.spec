@@ -96,7 +96,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
-Version:	4.18.90
+Version:	4.18.91
 Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -117,7 +117,6 @@ Patch906:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.7.1-geode-i6
 # Probably to be upstreamed in slightly different form
 Patch907:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.15.x-ldflags.patch
 Patch908:	rpm-4.18.90-c++-not-cxx.patch
-Patch909:	rpm-4.18.90-mandir-infodir.patch
 
 # We disagree...
 #Patch912:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/0001-Revert-Improve-ARM-detection.patch
@@ -847,7 +846,7 @@ end
 %doc %{_mandir}/man8/rpm-plugin-prioreset.8*
 
 %files plugin-dbus-announce
-%{_sysconfdir}/dbus-1/system.d/org.rpm.conf
+%{_datadir}/dbus-1/system.d/org.rpm.conf
 %{_libdir}/rpm-plugins/dbus_announce.so
 %doc %{_mandir}/man8/rpm-plugin-dbus-announce.8*
 %endif # with plugins
