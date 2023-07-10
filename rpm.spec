@@ -14,6 +14,11 @@
 %define _build_pkgcheck_srpm %{_bindir}/true
 %endif
 
+%if %{cross_compiling}
+# Workaround for libtool being a horrible mess
+%define prefer_gcc 1
+%endif
+
 %define lib64arches %{x86_64} %{aarch64} %{riscv64}
 
 %ifarch %lib64arches
