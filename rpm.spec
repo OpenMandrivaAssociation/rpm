@@ -97,7 +97,7 @@ Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
 Version:	4.18.1
-Release:	%{?snapver:0.%{snapver}.}5
+Release:	%{?snapver:0.%{snapver}.}6
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
