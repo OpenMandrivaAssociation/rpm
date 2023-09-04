@@ -96,7 +96,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
-Version:	4.18.91
+Version:	4.18.99
 Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -114,9 +114,6 @@ Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.serv
 
 # These are not yet upstream
 Patch906:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.7.1-geode-i686.patch
-# Probably to be upstreamed in slightly different form
-Patch907:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.15.x-ldflags.patch
-Patch908:	rpm-4.18.90-c++-not-cxx.patch
 
 # We disagree...
 #Patch912:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/0001-Revert-Improve-ARM-detection.patch
@@ -193,6 +190,7 @@ Patch3003:	rpm_arm_mips_isa_macros.patch
 #
 # Upstream patches not carried by Fedora or Mageia
 #
+Patch5000:	rpm-4.18.99-clang16.patch
 
 #
 # Patches proposed upstream
@@ -885,6 +883,7 @@ end
 %rpmattr %{_prefix}/lib/rpm/pkgconfigdeps.sh
 %rpmattr %{_prefix}/lib/rpm/pythondistdeps.py
 %rpmattr %{_prefix}/lib/rpm/rpmdeps
+%rpmattr %{_prefix}/lib/rpm/sysusers.sh
 
 %doc %{_mandir}/man8/rpmbuild.8*
 %doc %{_mandir}/man8/rpmdeps.8*
@@ -906,6 +905,7 @@ end
 %{_libdir}/librp*[a-z].so
 %{_libdir}/pkgconfig/%{name}.pc
 %{_includedir}/%{name}/
+%{_libdir}/cmake/rpm
 
 %files apidocs
 %doc docs/librpm

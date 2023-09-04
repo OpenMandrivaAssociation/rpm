@@ -1,0 +1,12 @@
+diff -up rpm-4.18.99/plugins/dbus_announce.c.omv~ rpm-4.18.99/plugins/dbus_announce.c
+--- rpm-4.18.99/plugins/dbus_announce.c.omv~	2023-09-04 21:06:10.551283045 +0200
++++ rpm-4.18.99/plugins/dbus_announce.c	2023-09-04 21:08:37.182532492 +0200
+@@ -66,6 +66,8 @@ static rpmRC open_dbus(rpmPlugin plugin,
+     }
+     return RPMRC_OK;
+  err:
++    ; // This is a workaround for what appears to be a clang 16.0.6 bug
++      // ("expected expression") where the "int" is
+     int ignore = dbus_error_has_name(&err, DBUS_ERROR_NO_SERVER) ||
+ 		 dbus_error_has_name(&err, DBUS_ERROR_FILE_NOT_FOUND);
+     rpmlog(ignore ? RPMLOG_DEBUG : RPMLOG_WARNING,
