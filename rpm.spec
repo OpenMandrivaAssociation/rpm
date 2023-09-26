@@ -96,7 +96,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
-Version:	4.18.99
+Version:	4.19.0
 Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
@@ -190,7 +190,6 @@ Patch3003:	rpm_arm_mips_isa_macros.patch
 #
 # Upstream patches not carried by Fedora or Mageia
 #
-Patch5000:	rpm-4.18.99-clang16.patch
 
 #
 # Patches proposed upstream
