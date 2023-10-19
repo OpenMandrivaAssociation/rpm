@@ -253,17 +253,18 @@ BuildRequires:	db-devel >= 18.1
 %endif
 BuildRequires:	pkgconfig(neon)
 BuildRequires:	pkgconfig(popt)
-BuildRequires:	magic-devel
+BuildRequires:	pkgconfig(libmagic)
 BuildRequires:	rpm-%{_real_vendor}-setup-build %{?rpmsetup_version:>= %{rpmsetup_version}}
-BuildRequires:	readline-devel
+BuildRequires:	pkgconfig(readline)
 BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	pkgconfig(libgcrypt)
 BuildRequires:	pkgconfig(lua) >= 5.4
 BuildRequires:	pkgconfig(libcap)
-BuildRequires:	acl-devel
+BuildRequires:	pkgconfig(libacl)
 BuildRequires:	pkgconfig(libarchive) >= 3.4.0
-BuildRequires:	pkgconfig(python3)
+BuildRequires:	pkgconfig(python)
 BuildRequires:	pkgconfig(sqlite3)
+BuildRequires:	pkgconfig(openssl)
 %if %{with check}
 # for testsuite:
 BuildRequires:	eatmydata
