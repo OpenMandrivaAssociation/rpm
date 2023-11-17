@@ -727,15 +727,6 @@ if not pkgs then
     end
 end
 
-%triggerun -- rpm < 1:5.4.15-45
-rm -rf /usr/lib/rpm/*-mandrake-* ||:
-rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
-
-%triggerun -- rpm < 4:4.16.0-0
-if [ -x %{_bindir}/systemctl ]; then
-    systemctl enable rpmdb-rebuild ||:
-fi
-
 %triggerun -p <lua> -- python-%{name} < 4:4.18.1
 path = "%{python_sitearch}/rpm-4.18.0-py3.10.egg-info"
 st = posix.stat(path)
