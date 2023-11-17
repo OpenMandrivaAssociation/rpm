@@ -96,8 +96,8 @@
 Summary:	The RPM package management system
 Name:		rpm
 Epoch:		4
-Version:	4.18.1
-Release:	%{?snapver:0.%{snapver}.}6
+Version:	4.18.2
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -792,14 +792,14 @@ end
 %doc %{_mandir}/man8/rpm2archive.8*
 %doc %{_mandir}/man8/rpm-plugins.8*
 %doc %{_mandir}/man1/*.1*
-%lang(fr) %{_mandir}/fr/man[18]/*.[18]*
-%lang(ja) %{_mandir}/ja/man[18]/*.[18]*
-%lang(ko) %{_mandir}/ko/man[18]/*.[18]*
-%lang(pl) %{_mandir}/pl/man[18]/*.[18]*
-%lang(ru) %{_mandir}/ru/man[18]/*.[18]*
-%lang(sk) %{_mandir}/sk/man[18]/*.[18]*
+%doc %lang(fr) %{_mandir}/fr/man[18]/*.[18]*
+%doc %lang(ja) %{_mandir}/ja/man[18]/*.[18]*
+%doc %lang(ko) %{_mandir}/ko/man[18]/*.[18]*
+%doc %lang(pl) %{_mandir}/pl/man[18]/*.[18]*
+%doc %lang(ru) %{_mandir}/ru/man[18]/*.[18]*
+%doc %lang(sk) %{_mandir}/sk/man[18]/*.[18]*
 
-%attr(0755, rpm, rpm) %dir %_localstatedir/lib/rpm
+%attr(0755, rpm, rpm) %dir %{_localstatedir}/lib/rpm
 
 %define rpmdbattr %attr(0644, rpm, rpm) %verify(not md5 size mtime) %ghost %config(missingok,noreplace)
 
