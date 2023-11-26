@@ -19,7 +19,10 @@
 %define prefer_gcc 1
 %endif
 
-%define lib64arches %{x86_64} %{aarch64} %{riscv64}
+# Listing znver1 here (even though %{x86_64} is supposed to include it)
+# is a bootstrapping help (so building the package on a system without
+# znver1 support will provide a working starting point)
+%define lib64arches %{x86_64} %{aarch64} %{riscv64} znver1
 
 %ifarch %lib64arches
 %define _lib lib64
@@ -705,6 +708,13 @@ for i in *; do
 done
 cd -
 
+# Create the rpm user and group
+mkdir -p %{buildroot}%{_sysusersdir}
+cat >%{buildroot}%{_sysusersdir}/rpm.conf <<EOF
+g rpm 16
+u rpm 16 "RPM Package Manager" %{_localstatedir}/lib/rpm -
+EOF
+
 %find_lang %{name}
 
 %if %{with check}
@@ -715,6 +725,7 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 
 %files -f %{name}.lang
 %doc COPYING
+%{_sysusersdir}/rpm.conf
 %attr(0755, rpm, rpm) %{_bindir}/rpm
 %attr(0755, rpm, rpm) %{_bindir}/rpm2cpio
 %attr(0755, rpm, rpm) %{_bindir}/rpm2archive

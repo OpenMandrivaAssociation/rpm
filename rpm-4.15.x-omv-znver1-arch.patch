@@ -1,7 +1,7 @@
-diff -up rpm-4.18.90/lib/rpmrc.c.16~ rpm-4.18.90/lib/rpmrc.c
---- rpm-4.18.90/lib/rpmrc.c.16~	2023-05-03 17:22:01.778071971 +0200
-+++ rpm-4.18.90/lib/rpmrc.c	2023-05-03 17:27:21.940670977 +0200
-@@ -1015,6 +1015,33 @@ static int is_geode(void)
+diff -up rpm-4.19.0/lib/rpmrc.c.16~ rpm-4.19.0/lib/rpmrc.c
+--- rpm-4.19.0/lib/rpmrc.c.16~	2023-11-26 19:34:41.732242071 +0100
++++ rpm-4.19.0/lib/rpmrc.c	2023-11-26 19:34:41.796242681 +0100
+@@ -1066,6 +1066,33 @@ static int is_geode(void)
  }
  #endif
  
@@ -35,7 +35,7 @@ diff -up rpm-4.18.90/lib/rpmrc.c.16~ rpm-4.18.90/lib/rpmrc.c
  
  #if defined(__linux__)
  /**
-@@ -1345,7 +1372,9 @@ static void defaultMachine(rpmrcCtx ctx,
+@@ -1396,7 +1423,9 @@ static void defaultMachine(rpmrcCtx ctx,
  	{
  	    char mclass = (char) (RPMClass() | '0');
  
@@ -46,7 +46,7 @@ diff -up rpm-4.18.90/lib/rpmrc.c.16~ rpm-4.18.90/lib/rpmrc.c
  	    	strcpy(un.machine, "athlon");
  	    else if (is_pentium4())
  		strcpy(un.machine, "pentium4");
-@@ -1368,6 +1397,11 @@ static void defaultMachine(rpmrcCtx ctx,
+@@ -1419,6 +1448,11 @@ static void defaultMachine(rpmrcCtx ctx,
  	}
  #endif
  
@@ -58,25 +58,26 @@ diff -up rpm-4.18.90/lib/rpmrc.c.16~ rpm-4.18.90/lib/rpmrc.c
  	/* the uname() result goes through the arch_canon table */
  	canon = lookupInCanonTable(un.machine,
  			   ctx->tables[RPM_MACHTABLE_INSTARCH].canons,
-diff -up rpm-4.18.90/macros.in.16~ rpm-4.18.90/macros.in
---- rpm-4.18.90/macros.in.16~	2023-05-03 17:22:01.806072197 +0200
-+++ rpm-4.18.90/macros.in	2023-05-03 17:22:01.848072534 +0200
-@@ -1088,7 +1088,11 @@ Supplements:   (%{name} = %{version}-%{r
+diff -up rpm-4.19.0/macros.in.16~ rpm-4.19.0/macros.in
+--- rpm-4.19.0/macros.in.16~	2023-11-26 19:34:41.767242404 +0100
++++ rpm-4.19.0/macros.in	2023-11-26 19:34:58.305400245 +0100
+@@ -1101,11 +1101,11 @@ Supplements:   (%{name} = %{version}-%{r
  #   rpm can use regular expressions against target platforms in macro
  #   conditionals.
  #
 -%ix86   i386 i486 i586 i686 pentium3 pentium4 athlon geode
 +%ix86   i386 i486 i586 i686 pentium3 pentium4 athlon geode znver1_32
-+
-+#------------------------------------------------------------------------------
-+# arch macro for all supported x86_64 processors
-+%x86_64	x86_64 x86_64_v2 x86_64_v3 x86_64_v4 znver1 amd64 em64t
  
  #------------------------------------------------------------------------------
  # arch macro for all supported x86_64 processors
-diff -up rpm-4.18.90/rpmrc.in.16~ rpm-4.18.90/rpmrc.in
---- rpm-4.18.90/rpmrc.in.16~	2023-05-03 17:22:01.755071786 +0200
-+++ rpm-4.18.90/rpmrc.in	2023-05-03 17:22:01.834072422 +0200
+-%x86_64	x86_64 x86_64_v2 x86_64_v3 x86_64_v4 amd64 em64t
++%x86_64	x86_64 x86_64_v2 x86_64_v3 x86_64_v4 znver1 amd64 em64t
+ 
+ #------------------------------------------------------------------------------
+ # arch macro for all supported 32-bit ARM processors
+diff -up rpm-4.19.0/rpmrc.in.16~ rpm-4.19.0/rpmrc.in
+--- rpm-4.19.0/rpmrc.in.16~	2023-11-26 19:34:41.710241861 +0100
++++ rpm-4.19.0/rpmrc.in	2023-11-26 19:34:41.796242681 +0100
 @@ -20,11 +20,13 @@ optflags: pentium3 -O2 -g -march=pentium
  optflags: pentium4 -O2 -g -march=pentium4
  optflags: athlon -O2 -g -march=athlon
