@@ -95,7 +95,6 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Epoch:		4
 Version:	4.19.0
 Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
@@ -278,7 +277,7 @@ BuildRequires:	clang
 
 Requires:	setup >= 2.9.1
 Requires:	rpm-%{_real_vendor}-setup >= %{rpmsetup_version}
-Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
+Requires:	%{librpmname} = %{EVRD}
 
 # This is a completely different implementation of RPM, replacing rpm5
 Conflicts:	rpm < 2:4.14.0-0
@@ -286,6 +285,9 @@ Conflicts:	rpm < 2:4.14.0-0
 # Weakly depend on stuff that used to be in main rpm package
 Recommends:	rpm-plugin-syslog
 Recommends:	rpm-plugin-systemd-inhibit
+# Last rpm version providing this was 4.18.2; that was
+# released with OMV 5.0 with Epoch: 4
+Obsoletes:	rpm-plugin-ima <= 4:4.18.2-1
 
 %description
 The RPM Package Manager (RPM) is a powerful command line driven
@@ -321,13 +323,13 @@ packages.
 Summary:	Development files for applications which will manipulate RPM packages
 Group:		Development/C
 License:	GPLv2+ and LGPLv2+ with exceptions
-Requires:	rpm = %{epoch}:%{version}-%{release}
+Requires:	rpm = %{EVRD}
 Provides:	librpm-devel = %{version}-%{release}
 Provides:	rpm-devel = %{version}-%{release}
 Requires:	pkgconfig(popt)
-Requires:	%{librpmname} = %{epoch}:%{version}-%{release}
-Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
-Requires:	%{librpmsign} = %{epoch}:%{version}-%{release}
+Requires:	%{librpmname} = %{EVRD}
+Requires:	%{librpmbuild} = %{EVRD}
+Requires:	%{librpmsign} = %{EVRD}
 # We don't provide this anymore...
 Obsoletes:	%{_lib}rpm-static-devel < 2:4.14-0
 
@@ -359,9 +361,9 @@ Provides:	python-rpm-generators = %{version}-%{release}
 Provides:	python3-rpm-generators = %{version}-%{release}
 # (tpg) requires are keep there
 Requires:	basesystem-build
-Requires:	rpm = %{epoch}:%{version}-%{release}
-Requires:	%{librpmbuild} = %{epoch}:%{version}-%{release}
-Conflicts:	rpm-build < %{epoch}:%{version}-%{release}
+Requires:	rpm = %{EVRD}
+Requires:	%{librpmbuild} = %{EVRD}
+Conflicts:	rpm-build < %{EVRD}
 
 %description build
 The rpm-build package contains the scripts and executable programs
@@ -377,10 +379,8 @@ This package contains support for digitally signing RPM packages.
 %package -n python-%{name}
 Summary:	Python 3 bindings for apps which will manipulate RPM packages
 Group:		Development/Python
-Requires:	rpm = %{epoch}:%{version}-%{release}
-Obsoletes:	python-%{name} < %{epoch}:%{version}-%{release}
-# Python 2 subpackage is gone
-Obsoletes:	python2-%{name} < 2:4.15.1-0
+Requires:	rpm = %{EVRD}
+Obsoletes:	python-%{name} < %{EVRD}
 # For the dependency generator to work
 BuildRequires:	python-packaging
 
@@ -407,9 +407,7 @@ Group:		System/Base
 BuildArch:	noarch
 Requires:	crontabs
 Requires:	logrotate
-Requires:	rpm = %{epoch}:%{version}-%{release}
-# Incompatible with rpm5
-Conflicts:	rpm < 2:4.14.0-0
+Requires:	rpm = %{EVRD}
 
 %description cron
 This package contains a cron job which creates daily logs of installed
@@ -419,9 +417,7 @@ packages on a system.
 %package plugin-syslog
 Summary:	Rpm plugin for syslog functionality
 Group:		System/Base
-Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
-# Incompatible with rpm5
-Conflicts:	rpm < 2:4.14.0-0
+Requires:	%{librpmname}%{?_isa} = %{EVRD}
 
 %description plugin-syslog
 This plugin exports RPM actions to the system log.
@@ -430,9 +426,7 @@ This plugin exports RPM actions to the system log.
 Summary:	Rpm plugin for systemd inhibit functionality
 Group:		System/Base
 BuildRequires:	pkgconfig(dbus-1)
-Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
-# Incompatible with rpm5
-Conflicts:	rpm < 2:4.14.0-0
+Requires:	%{librpmname}%{?_isa} = %{EVRD}
 
 %description plugin-systemd-inhibit
 This plugin blocks systemd from entering idle, sleep or shutdown while an rpm
@@ -441,9 +435,7 @@ transaction is running using the systemd-inhibit mechanism.
 %package plugin-prioreset
 Summary:	Rpm plugin for resetting scriptlet priorities for SysV init
 Group:		System/Base
-Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
-# Incompatible with rpm5
-Conflicts:	rpm < 2:4.14.0-0
+Requires:	%{librpmname}%{?_isa} = %{EVRD}
 
 %description plugin-prioreset
 %{summary}.
@@ -454,7 +446,7 @@ nice/ionice priorities. Should not be used on systemd systems.
 %package plugin-dbus-announce
 Summary:	Rpm plugin for D-Bus announcements
 Group:		System/Base
-Requires:	%{librpmname}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	%{librpmname}%{?_isa} = %{EVRD}
 
 %description plugin-dbus-announce
 This plugin provides DBus functionality to rpm
@@ -733,15 +725,6 @@ if not pkgs then
     end
 end
 
-%triggerun -- rpm < 1:5.4.15-45
-rm -rf /usr/lib/rpm/*-mandrake-* ||:
-rm -rf /usr/lib/rpm/*-%{_real_vendor}-* ||:
-
-%triggerun -- rpm < 4:4.16.0-0
-if [ -x %{_bindir}/systemctl ]; then
-    systemctl enable rpmdb-rebuild ||:
-fi
-
 %triggerun -p <lua> -- python-%{name} < 4:4.18.1
 path = "%{python_sitearch}/rpm-4.18.0-py3.10.egg-info"
 st = posix.stat(path)
@@ -797,7 +780,7 @@ end
 %doc %{_mandir}/man8/rpm-plugins.8*
 %doc %{_mandir}/man1/*.1*
 
-%attr(0755, rpm, rpm) %dir %_localstatedir/lib/rpm
+%attr(0755, rpm, rpm) %dir %{_localstatedir}/lib/rpm
 
 %define rpmdbattr %attr(0644, rpm, rpm) %verify(not md5 size mtime) %ghost %config(missingok,noreplace)
 
