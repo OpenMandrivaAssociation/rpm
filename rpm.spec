@@ -75,7 +75,7 @@
 # Define directory which holds rpm config files, and some binaries actually
 # NOTE: it remains */lib even on lib64 platforms as only one version
 #       of rpm is supported anyway, per architecture
-%define rpmhome /usr/lib/rpm
+%define rpmhome %{_prefix}/lib/rpm
 
 #global snapver rc1
 %if 0%{?snapver:1}
@@ -96,7 +96,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	4.19.0
-Release:	%{?snapver:0.%{snapver}.}1
+Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -713,28 +713,9 @@ cd -
 eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %endif
 
-%triggerun -p <lua> -- rpm < 4:4.18.1
-pkgs = posix.stat("/var/lib/rpm/rpmdb.sqlite")
-oldpkgs = posix.stat("/var/lib/rpm/Packages")
-if not pkgs then
-    if oldpkgs then
-	f = io.open("/var/lib/rpm/.rebuilddb", "w")
-	f:close()
-    else
-	os.execute("%{_bindir}/rpm --initdb")
-    end
-end
-
-%triggerun -p <lua> -- python-%{name} < 4:4.18.1
-path = "%{python_sitearch}/rpm-4.18.0-py3.10.egg-info"
-st = posix.stat(path)
-if st and st.type == "directory" then
-    os.execute("rm -rf " .. path)
-end
-
 %files -f %{name}.lang
 %doc COPYING
-%attr(0755,rpm,rpm) %{_bindir}/rpm
+%attr(0755, rpm, rpm) %{_bindir}/rpm
 %attr(0755, rpm, rpm) %{_bindir}/rpm2cpio
 %attr(0755, rpm, rpm) %{_bindir}/rpm2archive
 %attr(0755, rpm, rpm) %{_bindir}/gendiff
@@ -763,6 +744,7 @@ end
 %attr(0755, rpm, rpm) %{rpmhome}/script.req
 
 %rpmattr %{rpmhome}/rpm2cpio.sh
+%rpmattr %{rpmhome}/sysusers.sh
 %rpmattr %{rpmhome}/tgpg
 
 %dir %attr(   -, rpm, rpm) %{rpmhome}/fileattrs
@@ -866,7 +848,6 @@ end
 %rpmattr %{_prefix}/lib/rpm/pkgconfigdeps.sh
 %rpmattr %{_prefix}/lib/rpm/pythondistdeps.py
 %rpmattr %{_prefix}/lib/rpm/rpmdeps
-%rpmattr %{_prefix}/lib/rpm/sysusers.sh
 
 %doc %{_mandir}/man8/rpmbuild.8*
 %doc %{_mandir}/man8/rpmdeps.8*
