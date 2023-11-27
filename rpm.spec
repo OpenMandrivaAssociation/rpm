@@ -99,7 +99,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	4.19.0
-Release:	%{?snapver:0.%{snapver}.}2
+Release:	%{?snapver:0.%{snapver}.}3
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -708,13 +708,6 @@ for i in *; do
 done
 cd -
 
-# Create the rpm user and group
-mkdir -p %{buildroot}%{_sysusersdir}
-cat >%{buildroot}%{_sysusersdir}/rpm.conf <<EOF
-g rpm 16
-u rpm 16 "RPM Package Manager" %{_localstatedir}/lib/rpm -
-EOF
-
 %find_lang %{name}
 
 %if %{with check}
@@ -725,7 +718,6 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 
 %files -f %{name}.lang
 %doc COPYING
-%{_sysusersdir}/rpm.conf
 %attr(0755, rpm, rpm) %{_bindir}/rpm
 %attr(0755, rpm, rpm) %{_bindir}/rpm2cpio
 %attr(0755, rpm, rpm) %{_bindir}/rpm2archive
