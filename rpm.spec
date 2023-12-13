@@ -98,8 +98,8 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Version:	4.19.0
-Release:	%{?snapver:0.%{snapver}.}3
+Version:	4.19.1
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -520,6 +520,7 @@ export CMAKE_BUILD_DIR=BUILD
 %endif
 	-DWITH_INTERNAL_OPENPGP:BOOL=ON \
 	-DWITH_OPENSSL:BOOL=ON \
+	-DMKTREE_BACKEND="rootfs" \
 	-G "Unix Makefiles"
 
 

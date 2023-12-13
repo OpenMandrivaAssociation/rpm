@@ -1,6 +1,6 @@
-diff -up rpm-4.18.0-alpha2/rpmbuild.c.3~ rpm-4.18.0-alpha2/rpmbuild.c
---- rpm-4.18.0-alpha2/rpmbuild.c.3~	2022-05-04 11:59:13.454484278 +0200
-+++ rpm-4.18.0-alpha2/rpmbuild.c	2022-06-24 16:18:06.665014523 +0200
+diff -up rpm-4.18.0-alpha2/tools/rpmbuild.c.3~ rpm-4.18.0-alpha2/tools/rpmbuild.c
+--- rpm-4.18.0-alpha2/tools/rpmbuild.c.3~	2022-05-04 11:59:13.454484278 +0200
++++ rpm-4.18.0-alpha2/tools/rpmbuild.c	2022-06-24 16:18:06.665014523 +0200
 @@ -653,12 +653,12 @@ int main(int argc, char *argv[])
      case 'i':
  	ba->buildAmount |= RPMBUILD_INSTALL;
