@@ -267,6 +267,7 @@ BuildRequires:	pkgconfig(libarchive) >= 3.4.0
 BuildRequires:	pkgconfig(python)
 BuildRequires:	pkgconfig(sqlite3)
 BuildRequires:	pkgconfig(openssl)
+BuildRequires:	bubblewrap
 %if %{with check}
 # for testsuite:
 BuildRequires:	eatmydata
