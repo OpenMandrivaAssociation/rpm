@@ -99,7 +99,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	4.19.1
-Release:	%{?snapver:0.%{snapver}.}1
+Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -180,6 +180,10 @@ Patch182:	systemd-inhibit-requires-logind.patch
 Patch200:	dont-filter-autodeps-from-doc-by-default.patch
 
 Patch201:	rpm-4.18.0-dont-try-to-strip-firmware-files.patch
+# Add the libc suffix to the _host macro. The difference between
+# aarch64-openmandriva-linux, aarch64-openmandriva-linux-musl
+# and aarch64-openmandriva-linux-android matters!
+Patch202:	rpm-4.19.1-add-libc-to-_host.patch
 
 # Various arch enabling:
 Patch3003:	rpm_arm_mips_isa_macros.patch

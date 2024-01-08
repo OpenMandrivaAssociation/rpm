@@ -1,0 +1,12 @@
+diff -up rpm-4.19.1/macros.in.omv~ rpm-4.19.1/macros.in
+--- rpm-4.19.1/macros.in.omv~	2024-01-08 01:18:56.664210626 +0100
++++ rpm-4.19.1/macros.in	2024-01-08 01:19:03.820280703 +0100
+@@ -984,7 +984,7 @@ Supplements:   (%{name} = %{version}-%{r
+ %_build_cpu		%{_host_cpu}
+ %_build_vendor		%{_host_vendor}
+ %_build_os		%{_host_os}
+-%_host			@host@
++%_host			@host@%{_gnu}
+ %_host_alias		@host_alias@%{nil}
+ %_host_cpu		@host_cpu@
+ %_host_vendor		@host_vendor@
