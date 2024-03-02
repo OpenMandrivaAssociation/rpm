@@ -528,6 +528,8 @@ export CMAKE_BUILD_DIR=BUILD
 	-DMKTREE_BACKEND="rootfs" \
 	-G "Unix Makefiles"
 
+# FIXME workaround for something adding -I/usr/include even when crosscompiling
+find . -name flags.make |xargs sed -i -e 's,-I/usr/include ,,'
 
 %make_build
 
