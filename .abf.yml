@@ -1,3 +1,5 @@
 sources:
+  rpm-4.19.90.tar.bz2: 5db7a5ff6ed043ae2c2c3acbb7e64995e96de287
   python-rpm-packaging-main.tar.gz: 6cf5efc27ccda4cf5659f10bc69e17764a8fb924
-  rpm-4.19.1.1.tar.bz2: 5ff9a545a18cd7183854b7ec6de675969fd9b1ec
+  perl-rpm-packaging-20240407.tar.gz: 5e0ce2549d6baebbd567befe4b1d528ffad14de2
+  rpmpgp_legacy-20240407.tar.gz: acb2785c4f3ffde6387bd0d20f27758e4c9cf019

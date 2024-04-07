@@ -1,10 +1,10 @@
-diff -up ./tools/elfdeps.c.0177 ./tools/elfdeps.c
---- ./tools/elfdeps.c.0177	2014-09-17 16:38:52.765369089 +0200
-+++ ./tools/elfdeps.c	2014-09-17 16:59:19.471333627 +0200
-@@ -17,6 +17,7 @@ int soname_only = 0;
- int fake_soname = 1;
+diff -up rpm-4.19.90/tools/elfdeps.c.8~ rpm-4.19.90/tools/elfdeps.c
+--- rpm-4.19.90/tools/elfdeps.c.8~	2024-04-05 14:42:25.000000000 +0200
++++ rpm-4.19.90/tools/elfdeps.c	2024-04-07 13:23:46.695655181 +0200
+@@ -17,6 +17,7 @@ int fake_soname = 1;
  int filter_soname = 1;
  int require_interp = 0;
+ int multifile = 0;
 +int assume_exec = 0;
  
  typedef struct elfInfo_s {
@@ -18,10 +18,10 @@ diff -up ./tools/elfdeps.c.0177 ./tools/elfdeps.c
  
  	processProgHeaders(ei, ehdr);
  	processSections(ei);
-@@ -356,6 +357,7 @@ int main(int argc, char *argv[])
- 	{ "no-fake-soname", 0, POPT_ARG_VAL, &fake_soname, 0, NULL, NULL },
+@@ -369,6 +370,7 @@ int main(int argc, char *argv[])
  	{ "no-filter-soname", 0, POPT_ARG_VAL, &filter_soname, 0, NULL, NULL },
  	{ "require-interp", 0, POPT_ARG_VAL, &require_interp, -1, NULL, NULL },
+ 	{ "multifile", 'm', POPT_ARG_VAL, &multifile, -1, NULL, NULL },
 +	{ "assume-exec", 0, POPT_ARG_VAL, &assume_exec, -1, NULL, NULL },
  	POPT_AUTOHELP 
  	POPT_TABLEEND

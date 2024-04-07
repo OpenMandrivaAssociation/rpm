@@ -98,16 +98,19 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Version:	4.19.1.1
+Version:	4.19.90
 Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
+Source1:	https://github.com/rpm-software-management/rpmpgp_legacy/archive/refs/heads/master.tar.gz#/rpmpgp_legacy-20240407.tar.gz
 # extracted from http://pkgs.fedoraproject.org/cgit/redhat-rpm-config.git/plain/macros:
-Source1:	macros.filter
-Source2:	rpm.rpmlintrc
+Source2:	macros.filter
+Source3:	rpm.rpmlintrc
 # Put python bits back to where they used to be for now
 Source5:	https://github.com/rpm-software-management/python-rpm-packaging/archive/refs/heads/python-rpm-packaging-main.tar.gz
+# Same for perl bits
+Source6:	https://github.com/rpm-software-management/perl-rpm-packaging/archive/refs/heads/master.tar.gz#/perl-rpm-packaging-20240407.tar.gz
 Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.service
 
 #
@@ -159,13 +162,6 @@ Patch145:	rpm-forbid-badly-commented-define-in-spec.patch
 #Patch151: rpm-4.6.0-rc1-protect-against-non-robust-futex.patch
 
 #
-# Merge mageia's perl.prov improvements back into upstream:
-#
-# making sure automatic provides & requires for perl package are using the new
-# macro %%perl_convert_version:
-Patch162:	use_perl_convert_version.diff
-
-#
 # Merge mageia's find-requires.sh improvements back into upstream:
 #
 # (pt) generate ELF provides for libraries, not only for executables
@@ -212,6 +208,7 @@ Patch5006:	rpm-4.15.x-omv-znver1-arch.patch
 #
 # OpenMandriva specific patches
 #
+Patch6000:	rpm-4.19.90-dont-disable-source-fetch.patch
 # Default to keeping a patch backup file for gendiff
 # and follow file naming conventions
 Patch6004:	rpm-4.15.x-omv-patch-gendiff.patch
@@ -459,6 +456,14 @@ Requires:	%{librpmname}%{?_isa} = %{EVRD}
 %description plugin-dbus-announce
 This plugin provides DBus functionality to rpm
 
+%package plugin-unshare
+Summary:	Rpm plugin for unsharing directories
+Group:		System/Base
+Requires:	%{librpmname}%{?_isa} = %{EVRD}
+
+%description plugin-unshare
+This plugin provides directory unsharing functionality to rpm
+
 %if %{with audit}
 %package plugin-audit
 Summary:	Rpm plugin for auditing
@@ -503,6 +508,9 @@ Rpm plugin for working with the application blocker fapolicyd
 
 %prep
 %autosetup -n %{name}-%{srcver} -p1 -a 5
+tar xf %{S:1}
+mv rpmpgp_legacy-master rpmio/rpmpgp_legacy
+tar xf %{S:6}
 
 # Restore python packaging bits
 cat python-rpm-packaging-main/platform.in >>platform.in
@@ -523,7 +531,8 @@ export CMAKE_BUILD_DIR=BUILD
 %ifarch %{oldarches}
 	-DENABLE_BDB_RO:BOOL=ON \
 %endif
-	-DWITH_INTERNAL_OPENPGP:BOOL=ON \
+	-DWITH_SEQUOIA:BOOL=OFF \
+	-DWITH_LEGACY_OPENPGP:BOOL=ON \
 	-DWITH_OPENSSL:BOOL=ON \
 	-DMKTREE_BACKEND="rootfs" \
 	-G "Unix Makefiles"
@@ -574,7 +583,7 @@ done
 mkdir -p $RPM_BUILD_ROOT/var/spool/repackage
 
 mkdir -p %{buildroot}%{rpmhome}/macros.d
-install %{SOURCE1} %{buildroot}%{rpmhome}/macros.d
+install %{S:2} %{buildroot}%{rpmhome}/macros.d
 mkdir -p %{buildroot}%{_sysconfdir}/rpm/macros.d
 cat > %{buildroot}%{_sysconfdir}/rpm/macros <<EOF
 # Put your own system macros here
@@ -716,6 +725,8 @@ for i in *; do
 done
 cd -
 
+install -c -m 755 perl-rpm-packaging-master/scripts/perl.* %{buildroot}%{_prefix}/lib/rpm/
+
 %find_lang %{name}
 
 %if %{with check}
@@ -823,6 +834,10 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %{_datadir}/dbus-1/system.d/org.rpm.conf
 %{_libdir}/rpm-plugins/dbus_announce.so
 %doc %{_mandir}/man8/rpm-plugin-dbus-announce.8*
+
+%files plugin-unshare
+%{_libdir}/rpm-plugins/unshare.so
+%doc %{_mandir}/man8/rpm-plugin-unshare.8.zst
 %endif # with plugins
 
 %files -n %{librpmbuild}
@@ -859,6 +874,7 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %rpmattr %{_prefix}/lib/rpm/pkgconfigdeps.sh
 %rpmattr %{_prefix}/lib/rpm/pythondistdeps.py
 %rpmattr %{_prefix}/lib/rpm/rpmdeps
+%rpmattr %{_prefix}/lib/rpm/rpmdump
 
 %doc %{_mandir}/man8/rpmbuild.8*
 %doc %{_mandir}/man8/rpmdeps.8*
