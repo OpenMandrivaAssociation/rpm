@@ -1,4 +1,7 @@
-# WARNING: This package is synced with Fedora and Mageia
+# Temporary hack to help with getting rid of the old
+# debugpackage generation injection cruft (needed to
+# avoid a dependency on the current version of rpm)
+%define _enable_debug_packages 0
 
 # (ngompa): This is primarily for the znver1 patch, as it's a pain to rediff...
 %global _default_patch_fuzz 2
@@ -99,7 +102,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	4.19.90
-Release:	%{?snapver:0.%{snapver}.}1
+Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -112,6 +115,16 @@ Source5:	https://github.com/rpm-software-management/python-rpm-packaging/archive
 # Same for perl bits
 Source6:	https://github.com/rpm-software-management/perl-rpm-packaging/archive/refs/heads/master.tar.gz#/perl-rpm-packaging-20240407.tar.gz
 Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.service
+
+#
+# Backports from upstream
+#
+# https://github.com/rpm-software-management/rpm/issues/2204
+Patch0:		https://github.com/ffesti/rpm/commit/341ac458c72f36aa07168195cacd4d082e51683f.patch
+# https://github.com/rpm-software-management/rpm/issues/3024
+Patch1:		https://github.com/rpm-software-management/rpm/commit/c97c48225e6e79b3829e77d5179645aed75104a5.patch
+Patch2:		https://github.com/rpm-software-management/rpm/commit/d5c8423da7cc07169364f31716979a200116466a.patch
+Patch3:		https://github.com/rpm-software-management/rpm/commit/bf46dcf3646e1c296c1a5a473aece07cff6682bf.patch
 
 #
 # Fedora patches

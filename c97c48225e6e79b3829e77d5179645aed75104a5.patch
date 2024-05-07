@@ -1,0 +1,111 @@
+From c97c48225e6e79b3829e77d5179645aed75104a5 Mon Sep 17 00:00:00 2001
+From: Panu Matilainen <pmatilai@redhat.com>
+Date: Thu, 18 Apr 2024 11:39:47 +0300
+Subject: [PATCH] Refactor getSection() to more generally useful
+
+Support looking up by name or part number, return a pointer to the
+struct so callers get all the details they need.
+---
+ build/parsePreamble.c     |  6 +++---
+ build/parseSpec.c         | 37 +++++++++++++++----------------------
+ build/rpmbuild_internal.h | 10 +++++++++-
+ 3 files changed, 27 insertions(+), 26 deletions(-)
+
+diff --git a/build/parsePreamble.c b/build/parsePreamble.c
+index 6bdba1feb4..0bbdef2133 100644
+--- a/build/parsePreamble.c
++++ b/build/parsePreamble.c
+@@ -791,9 +791,9 @@ static int addBuildOption(rpmSpec spec, const char *sect, const char *opt)
+     if (*sect == '\0')
+ 	sect = "conf";
+ 
+-    int sn = getSection(sect);
+-    if (sn >= 0) {
+-	argvAdd(&(spec->buildopts[sn]), opt);
++    const struct sectname_s *sc = getSection(sect, 0);
++    if (sc) {
++	argvAdd(&(spec->buildopts[sc->section]), opt);
+ 	rc = RPMRC_OK;
+     }
+     return rc;
+diff --git a/build/parseSpec.c b/build/parseSpec.c
+index cd6a9f45c2..e0e9c92443 100644
+--- a/build/parseSpec.c
++++ b/build/parseSpec.c
+@@ -922,33 +922,26 @@ static int parseEmpty(rpmSpec spec, int prevParsePart)
+     return res;
+ }
+ 
+-struct sectname_s {
+-    const char *name;
+-    int section;
+-    int required;
+-};
+-
+ struct sectname_s sectList[] = {
+-    { "prep", SECT_PREP, 0 },
+-    { "conf", SECT_CONF, 1 },
+-    { "generate_buildrequires", SECT_BUILDREQUIRES, 0 },
+-    { "build", SECT_BUILD, 1 },
+-    { "install", SECT_INSTALL, 1 },
+-    { "check", SECT_CHECK, 0 },
+-    { "clean", SECT_CLEAN, 0 },
+-    { NULL, -1 }
++    { "prep", SECT_PREP, PART_PREP, 0 },
++    { "conf", SECT_CONF, PART_CONF, 1 },
++    { "generate_buildrequires", SECT_BUILDREQUIRES, PART_BUILDREQUIRES, 0 },
++    { "build", SECT_BUILD, PART_BUILD, 1 },
++    { "install", SECT_INSTALL, PART_INSTALL, 1 },
++    { "check", SECT_CHECK, PART_CHECK, 0 },
++    { "clean", SECT_CLEAN, PART_CLEAN, 0 },
++    { NULL, -1, -1, 0 }
+ };
+ 
+-int getSection(const char *name)
++const struct sectname_s *getSection(const char *name, int part)
+ {
+-    int sn = -1;
+-    for (struct sectname_s *sc = sectList; sc->name; sc++) {
+-	if (rstreq(name, sc->name)) {
+-	    sn = sc->section;
+-	    break;
+-	}
++    for (const struct sectname_s *sc = sectList; sc->name; sc++) {
++	if (name && rstreq(name, sc->name))
++	    return sc;
++	if (part && part == sc->part)
++	    return sc;
+     }
+-    return sn;
++    return NULL;
+ }
+ 
+ int checkBuildsystem(rpmSpec spec, const char *name)
+diff --git a/build/rpmbuild_internal.h b/build/rpmbuild_internal.h
+index a6a0d439d5..9e373009c1 100644
+--- a/build/rpmbuild_internal.h
++++ b/build/rpmbuild_internal.h
+@@ -38,6 +38,14 @@ enum sections_e {
+ };
+ #define NR_SECT 7
+ 
++struct sectname_s {
++    const char *name;
++    int section;
++    int part;
++    int required;
++};
++
++
+ struct TriggerFileEntry {
+     int index;
+     char * fileName;
+@@ -654,7 +662,7 @@ void doPatchMacro(rpmMacroBuf mb, rpmMacroEntry me, ARGV_t margs, size_t *parsed
+ 
+ /* Return section number, -1 on error */
+ RPM_GNUC_INTERNAL
+-int getSection(const char *name);
++const struct sectname_s *getSection(const char *name, int part);
+ 
+ #ifdef __cplusplus
+ }

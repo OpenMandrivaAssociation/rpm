@@ -1,0 +1,350 @@
+From bf46dcf3646e1c296c1a5a473aece07cff6682bf Mon Sep 17 00:00:00 2001
+From: Panu Matilainen <pmatilai@redhat.com>
+Date: Thu, 18 Apr 2024 09:11:01 +0300
+Subject: [PATCH] Fix build scriptlet append/prepend interaction with
+ Buildsystem
+
+The append and prepend modes got added before the declarative
+Buildsystem, and did not get thoroughly tested with it. The existing
+%build -a test didn't actually work but automake handling the build
+in %install masked the issue embarrasingly. As the Buildsystem is parsed
+after everything else, there's no way the previous append/prepend
+implementation could work correctly with it.
+
+Do what we should've done from the start: collect any prepend/append
+stuff into separate data structures and apply them after everything
+else has been parsed. This also lifts the artificial sounding
+restriction wrt the corresponding main section:it's really the right
+thing to do, even if it's a bit more code.
+
+Make the tests wrt buildsystem much more thorough to ensure it all
+really works, blush.
+
+Fixes: #3024
+---
+ build/parseSimpleScript.c     | 23 +++++++++--------
+ build/parseSpec.c             | 47 ++++++++++++++++++++++++++++++++---
+ build/rpmbuild_internal.h     | 12 +++++++--
+ build/spec.c                  |  2 ++
+ docs/manual/spec.md           |  7 +++---
+ tests/data/SPECS/amhello.spec | 22 ++++++++++++++++
+ tests/rpmbuild.at             | 16 ++++++++++--
+ 7 files changed, 108 insertions(+), 21 deletions(-)
+
+diff --git a/build/parseSimpleScript.c b/build/parseSimpleScript.c
+index 28ff670cc4..244f8bdb61 100644
+--- a/build/parseSimpleScript.c
++++ b/build/parseSimpleScript.c
+@@ -9,7 +9,8 @@
+ #include "debug.h"
+ 
+ 
+-int parseSimpleScript(rpmSpec spec, const char * name, StringBuf *sbp)
++int parseSimpleScript(rpmSpec spec, const char * name,
++		      StringBuf *sbp, ARGV_t *avp, int *modep)
+ {
+     int res = PART_ERROR;
+     poptContext optCon = NULL;
+@@ -17,10 +18,10 @@ int parseSimpleScript(rpmSpec spec, const char * name, StringBuf *sbp)
+     const char **argv = NULL;
+     StringBuf *target = sbp;
+     StringBuf buf = NULL;
+-    int rc, append = 0, prepend = 0;
++    int rc, mode = PARSE_NONE;
+     struct poptOption optionsTable[] = {
+-	{ NULL, 'a', POPT_ARG_NONE, &append, 'a', NULL, NULL },
+-	{ NULL, 'p', POPT_ARG_NONE, &prepend, 'p', NULL, NULL },
++	{ NULL, 'a', POPT_BIT_SET, &mode, PARSE_APPEND, NULL, NULL },
++	{ NULL, 'p', POPT_BIT_SET, &mode, PARSE_PREPEND, NULL, NULL },
+ 	{ NULL, 0, 0, NULL, 0, NULL, NULL }
+     };
+ 
+@@ -41,20 +42,19 @@ int parseSimpleScript(rpmSpec spec, const char * name, StringBuf *sbp)
+ 	goto exit;
+     }
+ 
+-    if (*sbp != NULL && append == 0 && prepend == 0) {
++    if (*sbp != NULL && mode == PARSE_NONE) {
+ 	rpmlog(RPMLOG_ERR, _("line %d: second %s\n"),
+ 		spec->lineNum, name);
+ 	goto exit;
+     }
+ 
+-    if (append && prepend) {
++    if (mode == (PARSE_APPEND|PARSE_PREPEND)) {
+ 	rpmlog(RPMLOG_ERR, _("line %d: append and prepend specified: %s\n"),
+ 		spec->lineNum, spec->line);
+ 	goto exit;
+     }
+ 
+-    /* Prepend is only special if the section already exists */
+-    if (prepend && *sbp) {
++    if (mode) {
+ 	buf = newStringBuf();
+ 	target = &buf;
+     }
+@@ -62,12 +62,13 @@ int parseSimpleScript(rpmSpec spec, const char * name, StringBuf *sbp)
+     res = parseLines(spec, STRIP_NOTHING, NULL, target);
+ 
+     if (buf) {
+-	appendStringBuf(buf, getStringBuf(*sbp));
+-	freeStringBuf(*sbp);
+-	*sbp = buf;
++	argvAdd(avp, getStringBuf(buf));
++	freeStringBuf(buf);
+     }
+ 
+ exit:
++    if (modep)
++	*modep = mode;
+     free(argv);
+     poptFreeContext(optCon);
+ 
+diff --git a/build/parseSpec.c b/build/parseSpec.c
+index 024fd9a957..8f873f6e10 100644
+--- a/build/parseSpec.c
++++ b/build/parseSpec.c
+@@ -1039,6 +1039,32 @@ static rpmRC parseBuildsystem(rpmSpec spec)
+     return rc;
+ }
+ 
++static rpmRC applyAppendPrepend(rpmSpec spec)
++{
++    for (struct sectname_s *sc = sectList; sc->name; sc++) {
++	ARGV_const_t sp = spec->sectionparts[sc->section];
++	if (sp) {
++	    int nparts = argvCount(sp);
++	    int *modes = argiData(spec->sectionops[sc->section]);
++	    StringBuf *sbp = &spec->sections[sc->section];
++	    if (*sbp == NULL)
++		*sbp = newStringBuf();
++	    for (int i = 0; i < nparts; i++) {
++		if (modes[i] == PARSE_APPEND) {
++		    appendStringBuf(*sbp, sp[i]);
++		} else if (modes[i] == PARSE_PREPEND) {
++		    StringBuf nbuf = newStringBuf();
++		    appendStringBuf(nbuf, sp[i]);
++		    appendStringBuf(nbuf, getStringBuf(*sbp));
++		    freeStringBuf(*sbp);
++		    *sbp = nbuf;
++		}
++	    }
++	}
++    }
++    return RPMRC_OK;
++}
++
+ static rpmSpec parseSpec(const char *specFile, rpmSpecFlags flags,
+ 			 int recursing);
+ 
+@@ -1060,7 +1086,18 @@ static int parseBuildScript(rpmSpec spec, int part)
+     if (sc == NULL) /* can't happen */
+ 	return -1;
+ 
+-    return parseSimpleScript(spec, sc->name, &spec->sections[sc->section]);
++    int mode = 0;
++    int rc = parseSimpleScript(spec, sc->name,
++				&spec->sections[sc->section],
++				&spec->sectionparts[sc->section],
++				&mode);
++
++    if (mode) {
++	int ix = argvCount(spec->sectionparts[sc->section]);
++	argiAdd(&spec->sectionops[sc->section], ix-1, mode);
++    }
++
++    return rc;
+ }
+ 
+ static rpmRC parseSpecSection(rpmSpec *specptr, enum parseStages stage)
+@@ -1213,8 +1250,12 @@ static rpmRC parseSpecSection(rpmSpec *specptr, enum parseStages stage)
+ 	}
+     }
+ 
+-    if (stage == PARSE_SPECFILE && parseBuildsystem(spec))
+-	goto errxit;
++    if (stage == PARSE_SPECFILE) {
++	if (parseBuildsystem(spec))
++	    goto errxit;
++	if (applyAppendPrepend(spec))
++	    goto errxit;
++    }
+ 
+     /* Add arch for each package */
+     addArch(spec);
+diff --git a/build/rpmbuild_internal.h b/build/rpmbuild_internal.h
+index 9e373009c1..b05efd3f0f 100644
+--- a/build/rpmbuild_internal.h
++++ b/build/rpmbuild_internal.h
+@@ -38,6 +38,12 @@ enum sections_e {
+ };
+ #define NR_SECT 7
+ 
++enum parseOps_e {
++    PARSE_NONE		= 0,
++    PARSE_PREPEND	= (1 << 0),
++    PARSE_APPEND	= (1 << 1),
++};
++
+ struct sectname_s {
+     const char *name;
+     int section;
+@@ -45,7 +51,6 @@ struct sectname_s {
+     int required;
+ };
+ 
+-
+ struct TriggerFileEntry {
+     int index;
+     char * fileName;
+@@ -165,6 +170,8 @@ struct rpmSpec_s {
+ 
+     StringBuf sections[NR_SECT]; /*!< spec sections (%prep etc) */
+     ARGV_t buildopts[NR_SECT];	/*!< per-section buildsystem options */
++    ARGV_t sectionparts[NR_SECT];
++    ARGI_t sectionops[NR_SECT];
+ 
+     StringBuf parsed;		/*!< parsed spec contents */
+ 
+@@ -336,7 +343,8 @@ int isPart(const char * line)	;
+  * @return		>= 0 next rpmParseState, < 0 on error
+  */
+ RPM_GNUC_INTERNAL
+-int parseSimpleScript(rpmSpec spec, const char * name, StringBuf *sbp);
++int parseSimpleScript(rpmSpec spec, const char * name,
++		      StringBuf *sbp, ARGV_t *avp, int *modep);
+ 
+ /** \ingroup rpmbuild
+  * Parse %%changelog section of a spec file.
+diff --git a/build/spec.c b/build/spec.c
+index 954b2a9414..e1a17d75a1 100644
+--- a/build/spec.c
++++ b/build/spec.c
+@@ -283,6 +283,8 @@ rpmSpec rpmSpecFree(rpmSpec spec)
+ 
+     for (int i = 0; i < NR_SECT; i++) {
+ 	argvFree(spec->buildopts[i]);
++	argvFree(spec->sectionparts[i]);
++	argiFree(spec->sectionops[i]);
+     }
+ 
+     if (!spec->recursing) {
+diff --git a/docs/manual/spec.md b/docs/manual/spec.md
+index c9200bbd1f..3637007e9e 100644
+--- a/docs/manual/spec.md
++++ b/docs/manual/spec.md
+@@ -496,9 +496,10 @@ omitted.
+ Each section may be present only once, but in rpm >= 4.20 it is
+ possible to augment them by appending or prepending to them using
+ `-a` and `-p` options.
+-If the main section exists, it must come first to avoid ambiguity.
+-Otherwise, append and prepend can be used in any order and multiple
+-times, even if the corresponding main section does not exist.
++Append and prepend can be used multiple times. They are applied relative
++to the corresponding main section, in the order they appear in the spec.
++If the main section does not exist, they are applied relative to the
++first fragment.
+ 
+ During the execution of build scriptlets, (at least) the following
+ rpm-specific environment variables are set:
+diff --git a/tests/data/SPECS/amhello.spec b/tests/data/SPECS/amhello.spec
+index 84aae39bd9..cfa6c8cb41 100644
+--- a/tests/data/SPECS/amhello.spec
++++ b/tests/data/SPECS/amhello.spec
+@@ -21,13 +21,35 @@ Release: 1
+ %description
+ %{summary}
+ 
++%build -p
++touch pre1
++
++%build -p
++touch pre2
++
+ %build -a
++test -f pre1 || exit 1
++test -f pre2 || exit 1
+ cat << EOF > README.distro
+ Add some distro specific notes.
+ EOF
+ 
++%install -p
++mkdir -p ${RPM_BUILD_ROOT}/%{_sysconfdir}/hello.p
++
++%install -a
++test -d ${RPM_BUILD_ROOT}/%{_sysconfdir}/hello.p || exit 1
++mkdir -p ${RPM_BUILD_ROOT}/%{_sysconfdir}/hello.d
++
++%install -a
++test -d ${RPM_BUILD_ROOT}/%{_sysconfdir}/hello.d || exit 1
++mkdir -p ${RPM_BUILD_ROOT}/%{_sysconfdir}/hello.a
++
+ %files
+ %doc README.distro
++%{_sysconfdir}/hello.a/
++%{_sysconfdir}/hello.d/
++%{_sysconfdir}/hello.p/
+ %if %{with alt}
+ /alt/%{_bindir}/alt-hello
+ /alt/%{_docdir}/%{name}
+diff --git a/tests/rpmbuild.at b/tests/rpmbuild.at
+index abcfb96d18..92acc18c7e 100644
+--- a/tests/rpmbuild.at
++++ b/tests/rpmbuild.at
+@@ -53,13 +53,17 @@ cp "${RPMTEST}/data/macros.buildsystem" "${RPMTEST}/${RPM_CONFIGDIR_PATH}/macros
+ RPMTEST_CHECK([
+ runroot rpmbuild -bb \
+ 	--define "_prefix /usr" \
++	--define "_sysconfdir /etc" \
+ 	--define "_docdir_fmt %%{NAME}" \
+ 	--quiet /data/SPECS/amhello.spec
+ 
+ runroot rpm -qpl --noartifact /build/RPMS/*/amhello-1.0-1.*.rpm
+ ],
+ [0],
+-[/usr/bin/hello
++[/etc/hello.a
++/etc/hello.d
++/etc/hello.p
++/usr/bin/hello
+ /usr/share/doc/amhello
+ /usr/share/doc/amhello/README
+ /usr/share/doc/amhello/README.distro
+@@ -73,6 +77,7 @@ mv amhello-1.0 amhello-1.0-prerelease
+ tar czf "${RPMTEST}"/tmp/amhello-pre.tgz amhello-1.0-prerelease/
+ runroot rpmbuild -bb \
+ 	--define "_prefix /usr" \
++	--define "_sysconfdir /etc" \
+ 	--define "_docdir_fmt %%{NAME}" \
+ 	--define "_sourcedir /tmp" \
+ 	--define "srcname amhello-pre.tgz" \
+@@ -81,7 +86,10 @@ runroot rpmbuild -bb \
+ runroot rpm -qpl --noartifact /build/RPMS/*/amhello-1.0-1.*.rpm
+ ],
+ [0],
+-[/usr/bin/hello
++[/etc/hello.a
++/etc/hello.d
++/etc/hello.p
++/usr/bin/hello
+ /usr/share/doc/amhello
+ /usr/share/doc/amhello/README
+ /usr/share/doc/amhello/README.distro
+@@ -91,6 +99,7 @@ runroot rpm -qpl --noartifact /build/RPMS/*/amhello-1.0-1.*.rpm
+ RPMTEST_CHECK([
+ runroot rpmbuild -bb \
+ 	--define "_prefix /usr" \
++	--define "_sysconfdir /etc" \
+ 	--define "_docdir_fmt %%{NAME}" \
+ 	--with alt \
+ 	--quiet /data/SPECS/amhello.spec
+@@ -101,6 +110,9 @@ runroot rpm -qpl --noartifact /build/RPMS/*/amhello-1.0-1alt.*.rpm
+ [/alt/usr/bin/alt-hello
+ /alt/usr/share/doc/amhello
+ /alt/usr/share/doc/amhello/README
++/etc/hello.a
++/etc/hello.d
++/etc/hello.p
+ /usr/share/doc/amhello
+ /usr/share/doc/amhello/README.distro
+ ],
