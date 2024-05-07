@@ -1,8 +1,3 @@
-# Temporary hack to help with getting rid of the old
-# debugpackage generation injection cruft (needed to
-# avoid a dependency on the current version of rpm)
-%define _enable_debug_packages 0
-
 # (ngompa): This is primarily for the znver1 patch, as it's a pain to rediff...
 %global _default_patch_fuzz 2
 
@@ -102,7 +97,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	4.19.90
-Release:	%{?snapver:0.%{snapver}.}2
+Release:	%{?snapver:0.%{snapver}.}3
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
