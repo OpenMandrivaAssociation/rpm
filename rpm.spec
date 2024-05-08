@@ -97,7 +97,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	4.19.90
-Release:	%{?snapver:0.%{snapver}.}3
+Release:	%{?snapver:0.%{snapver}.}4
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -217,6 +217,7 @@ Patch5006:	rpm-4.15.x-omv-znver1-arch.patch
 # OpenMandriva specific patches
 #
 Patch6000:	rpm-4.19.90-dont-disable-source-fetch.patch
+Patch6001:	rpm-4.19.90-noprep-should-also-skip-mkbuilddir.patch
 # Default to keeping a patch backup file for gendiff
 # and follow file naming conventions
 Patch6004:	rpm-4.15.x-omv-patch-gendiff.patch
