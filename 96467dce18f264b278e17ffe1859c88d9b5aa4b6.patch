@@ -1,0 +1,213 @@
+From 96467dce18f264b278e17ffe1859c88d9b5aa4b6 Mon Sep 17 00:00:00 2001
+From: Panu Matilainen <pmatilai@redhat.com>
+Date: Tue, 30 Apr 2024 12:29:23 +0300
+Subject: [PATCH] Automatically reload rpm configuration on mismatching
+ BuildArch
+
+When BuildArch is encountered during spec parse, rpm recurses the
+parse, but this doesn't reset/reload the global configuration and macros
+to match. So eg a "BuildArch: noarch" package gets built with a
+dramatically different macros depending on whether "--target noarch"
+was used or not, whereas people expect it to be the same - after all we
+give zero indication that anything might be wrong when --target wasn't
+specified.
+
+Automatically detect and handle this condition in the rpmbuild tool:
+if the spec parse architecture disagrees with our loaded configuration,
+request a reparse with reloaded configuration for the matching target.
+This ensures 'rpmbuild -bb noarch.spec' and 'rpmbuild -bb --target
+noarch noarch.spec' run with the same exact configuration.
+Doing this also fixes the situation where build-time macro expansion
+of build scriptlets (for template bits and dynamically generated spec
+parts) yields totally different (bogus) than in the initial spec parse.
+This also goes for RPM_ARCH environment and similar.
+
+Avoid --undefine for dependency generation test, it doesn't work.
+--undefine with --target was always broken, now it's just more visible
+since it automatically applies to BuildArch too. Fixing that is a
+separate matter (#3070).
+
+A more sophisticated fix could be having a stack of macro contexts that we
+copy, push and pop as necessary. That ought to solve the undefine too.
+
+Fixes: #3049
+---
+ tests/data/SPECS/templ.spec | 12 +++++++++
+ tests/rpmbuild.at           | 54 ++++++++++++++++++++++++++++++++++++-
+ tools/rpmbuild.c            | 32 +++++++++++++++++-----
+ 3 files changed, 90 insertions(+), 8 deletions(-)
+ create mode 100644 tests/data/SPECS/templ.spec
+
+diff --git a/tests/data/SPECS/templ.spec b/tests/data/SPECS/templ.spec
+new file mode 100644
+index 0000000000..b31929630c
+--- /dev/null
++++ b/tests/data/SPECS/templ.spec
+@@ -0,0 +1,12 @@
++Name: templ
++Version: 1
++Release: 1
++License: Public domain
++Summary: Spec template tests
++BuildArch: noarch
++
++%description
++%{summary}
++
++%build
++echo BUILD ${RPM_ARCH} %{_arch} %{_target_cpu} >> /tmp/build.out
+diff --git a/tests/rpmbuild.at b/tests/rpmbuild.at
+index 482679bbcf..61264f5ac4 100644
+--- a/tests/rpmbuild.at
++++ b/tests/rpmbuild.at
+@@ -1105,7 +1105,7 @@ RPMDB_INIT
+ 
+ runroot rpmbuild -bb --quiet \
+ 		--define '__script_mime text/plain' \
+-		--undefine '__script_magic' \
++		--define '__script_magic %{nil}' \
+ 		/data/SPECS/shebang.spec
+ runroot rpm -qp --requires /build/RPMS/noarch/shebang-0.1-1.noarch.rpm|grep -v ^rpmlib
+ ],
+@@ -3068,3 +3068,55 @@ hello-1.0-install.patch
+ ],
+ [])
+ RPMTEST_CLEANUP
++
++AT_SETUP([rpmbuild target macro sanity])
++AT_KEYWORDS([build])
++RPMDB_INIT
++
++# This is surprisingly tricky - we need to place these macros in a place
++# that is after the platform stuff in macro path so we can't just drop
++# into macros.d, and then we need to take cmake prefix into account,
++# escape \'s and $'s and whatnot. Pff. Would be easier to place to
++# a macro file, but this is so tightly coupled that seems saner to
++# have it all here.
++etcdir=$(runroot rpm --eval "%_sysconfdir")
++mkdir -p ${RPMTEST}/${etcdir}/rpm/
++
++cat << EOF >> ${RPMTEST}/${etcdir}/rpm/macros.template
++%__spec_build_pre\\
++%{___build_pre_env}\\
++echo BUILD_PRE \${RPM_ARCH} %{_arch} %{_target_cpu} >> /tmp/build.out\\
++%{nil}
++
++%__spec_build_post\\
++echo BUILD_POST \${RPM_ARCH} %{_arch} %{_target_cpu} >> /tmp/build.out\\
++%{nil}
++EOF
++
++RPMTEST_CHECK([
++runroot_other rm -f /tmp/build.out
++runroot rpmbuild --quiet \
++	-bc /data/SPECS/templ.spec
++runroot_other cat /tmp/build.out
++],
++[0],
++[BUILD_PRE noarch noarch noarch
++BUILD noarch noarch noarch
++BUILD_POST noarch noarch noarch
++],
++[])
++
++RPMTEST_CHECK([
++runroot_other rm -f /tmp/build.out
++runroot rpmbuild --quiet \
++	--target noarch \
++	-bc /data/SPECS/templ.spec
++runroot_other cat /tmp/build.out
++],
++[0],
++[BUILD_PRE noarch noarch noarch
++BUILD noarch noarch noarch
++BUILD_POST noarch noarch noarch
++],
++[])
++RPMTEST_CLEANUP
+diff --git a/tools/rpmbuild.c b/tools/rpmbuild.c
+index bb47e99613..492b0c290d 100644
+--- a/tools/rpmbuild.c
++++ b/tools/rpmbuild.c
+@@ -422,7 +422,8 @@ static char * getTarSpec(const char *arg)
+     return specFinal;
+ }
+ 
+-static int buildForTarget(rpmts ts, const char * arg, BTA_t ba)
++static int buildForTarget(rpmts ts, const char * arg, BTA_t ba,
++			  ARGV_t *specarch)
+ {
+     int buildAmount = ba->buildAmount;
+     char * buildRootURL = NULL;
+@@ -512,6 +513,21 @@ static int buildForTarget(rpmts ts, const char * arg, BTA_t ba)
+ 	goto exit;
+     }
+ 
++    if (specarch) {
++	Header h = rpmSpecSourceHeader(spec);
++	const char *buildarch = headerGetString(h, RPMTAG_ARCH);
++	const char *arch = NULL;
++
++	rpmGetArchInfo(&arch, NULL);
++
++	/* if spec buildarch differs from current arch, request a reparse */
++	if (strcmp(arch, buildarch)) {
++	    rc = -1;
++	    argvAdd(specarch, buildarch);
++	    goto exit;
++	}
++    }
++
+     /* Create build tree if necessary */
+     if (rpmMkdirs(root, "%{_topdir}:%{_builddir}:%{_rpmdir}:%{_srcrpmdir}"))
+ 	goto exit;
+@@ -520,11 +536,11 @@ static int buildForTarget(rpmts ts, const char * arg, BTA_t ba)
+ 	goto exit;
+     }
+     
+-    if (buildMode == 't')
+-	(void) unlink(specFile);
+     rc = 0;
+ 
+ exit:
++    if (buildMode == 't')
++	(void) unlink(specFile);
+     free(specFile);
+     rpmSpecFree(spec);
+     free(buildRootURL);
+@@ -534,21 +550,23 @@ static int buildForTarget(rpmts ts, const char * arg, BTA_t ba)
+ static int build(rpmts ts, const char * arg, BTA_t ba, const char * rcfile)
+ {
+     int rc = 0;
+-    char * targets = argvJoin(build_targets, ",");
+ #define	buildCleanMask	(RPMBUILD_RMSOURCE|RPMBUILD_RMSPEC)
+     int cleanFlags = ba->buildAmount & buildCleanMask;
+     rpmVSFlags vsflags, ovsflags;
++    char *targets = NULL;
+ 
+     vsflags = rpmExpandNumeric("%{_vsflags_build}");
+     vsflags |= rpmcliVSFlags;
+     ovsflags = rpmtsSetVSFlags(ts, vsflags);
+ 
+     if (build_targets == NULL) {
+-	rc =  buildForTarget(ts, arg, ba);
+-	goto exit;
++	rc = buildForTarget(ts, arg, ba, &build_targets);
++	if (rc >= 0)
++	    goto exit;
+     }
+ 
+     /* parse up the build operators */
++    targets = argvJoin(build_targets, ",");
+     if (!quiet)
+ 	fprintf(stderr, _("Building target platforms: %s\n"), targets);
+ 
+@@ -569,7 +587,7 @@ static int build(rpmts ts, const char * arg, BTA_t ba, const char * rcfile)
+ 	}
+ 	rpmFreeRpmrc();
+ 	(void) rpmReadConfigFiles(rcfile, *target);
+-	rc = buildForTarget(ts, arg, ba);
++	rc = buildForTarget(ts, arg, ba, NULL);
+ 	if (rc)
+ 	    break;
+     }

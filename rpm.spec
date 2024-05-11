@@ -97,7 +97,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	4.19.90
-Release:	%{?snapver:0.%{snapver}.}4
+Release:	%{?snapver:0.%{snapver}.}5
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -114,12 +114,21 @@ Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.serv
 #
 # Backports from upstream
 #
+# Required for the next set of patches to work
+Patch0:		https://github.com/rpm-software-management/rpm/commit/b2058cea1811373e77473bdc89147d8d4a04779c.patch
+Patch1:		https://github.com/rpm-software-management/rpm/commit/dde4fe5cf7d2b543f1fb1f2212679273492ed7e7.patch
+Patch2:		https://github.com/rpm-software-management/rpm/commit/96467dce18f264b278e17ffe1859c88d9b5aa4b6.patch
 # https://github.com/rpm-software-management/rpm/issues/2204
-Patch0:		https://github.com/ffesti/rpm/commit/341ac458c72f36aa07168195cacd4d082e51683f.patch
+# https://github.com/rpm-software-management/rpm/pull/3085
+# Alternative fix:
+# https://github.com/ffesti/rpm/commit/341ac458c72f36aa07168195cacd4d082e51683f
+Patch10:	https://github.com/rpm-software-management/rpm/pull/3085/commits/d96c777ce8f6a8e95fa3d0fd64d1c0e42bf03adb.patch
+Patch11:	https://github.com/rpm-software-management/rpm/pull/3085/commits/90e09aa62c98d1f782343b1cf5cecb890ebe2e0c.patch
+Patch12:	https://github.com/rpm-software-management/rpm/pull/3085/commits/d8ad95f93cfb362390e3f0249d9bcbcad7eb4d5a.patch
 # https://github.com/rpm-software-management/rpm/issues/3024
-Patch1:		https://github.com/rpm-software-management/rpm/commit/c97c48225e6e79b3829e77d5179645aed75104a5.patch
-Patch2:		https://github.com/rpm-software-management/rpm/commit/d5c8423da7cc07169364f31716979a200116466a.patch
-Patch3:		https://github.com/rpm-software-management/rpm/commit/bf46dcf3646e1c296c1a5a473aece07cff6682bf.patch
+Patch50:	https://github.com/rpm-software-management/rpm/commit/c97c48225e6e79b3829e77d5179645aed75104a5.patch
+Patch51:	https://github.com/rpm-software-management/rpm/commit/d5c8423da7cc07169364f31716979a200116466a.patch
+Patch52:	https://github.com/rpm-software-management/rpm/commit/bf46dcf3646e1c296c1a5a473aece07cff6682bf.patch
 
 #
 # Fedora patches
@@ -220,22 +229,14 @@ Patch6000:	rpm-4.19.90-dont-disable-source-fetch.patch
 Patch6001:	rpm-4.19.90-noprep-should-also-skip-mkbuilddir.patch
 # Default to keeping a patch backup file for gendiff
 # and follow file naming conventions
-Patch6004:	rpm-4.15.x-omv-patch-gendiff.patch
+Patch6002:	rpm-4.15.x-omv-patch-gendiff.patch
 # Default to i686 targets on 32bit i686+ machines
-Patch6005:	rpm-4.14-omv-i386-to-i686.patch
+Patch6003:	rpm-4.14-omv-i386-to-i686.patch
 # Add old aarch64 macro (finally added, but renamed to arm64, upstream in 4.16)
-Patch6008:	rpm-4.16.0-omv-aarch64-macro.patch
-# Run the debuginfo generator after, not before, other postprocessing scripts
-# have run.
-# This is important to make sure spec-helper's fix_file_permissions (which
-# makes sure library files are executable) is run before find-debuginfo
-# (which only looks at executable files) decides what files (not) to split.
-# This shrinks OpenJDK by 400 MB -- and certainly can't hurt other packages
-# that install libraries with odd permissions.
-Patch6009:	rpm-4.15.1-omv-macros-run-debuginfo-after-other-scripts.patch
+Patch6004:	rpm-4.16.0-omv-aarch64-macro.patch
 # Make sure /bin/sh is replaced with %{_bindir}/sh during usrmerge
 # transition
-Patch6010:	rpm-4.17.0-usrmerge.patch
+Patch6005:	rpm-4.17.0-usrmerge.patch
 
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD
@@ -558,7 +559,6 @@ find . -name flags.make |xargs sed -i -e 's,-I/usr/include ,,'
 rm -f %{buildroot}%{_usrlibrpm}/{debugedit,sepdebugcrcfix,find-debuginfo.sh}
 ln -s ../../bin/debugedit %{buildroot}%{_usrlibrpm}/
 ln -s ../../bin/sepdebugcrcfix %{buildroot}%{_usrlibrpm}/
-ln -s ../../bin/find-debuginfo.sh %{buildroot}%{_usrlibrpm}/
 
 # We build --without-selinux, so we don't need the
 # man page either
@@ -732,6 +732,8 @@ for i in *; do
 	echo "%%__ranlib %%{?prefer_gcc:%%{_target_platform}-ranlib}%%{!?prefer_gcc:llvm-ranlib}" >>$i/macros
 	echo "%%__strip %%{?prefer_gcc:%%{_target_platform}-strip}%%{!?prefer_gcc:llvm-strip}" >>$i/macros
 done
+sed -i -e '/rpm-debuginfo/d' noarch-*/macros
+sed -i -e '/__debug_package/d' noarch-*/macros
 cd -
 
 install -c -m 755 perl-rpm-packaging-master/scripts/perl.* %{buildroot}%{_prefix}/lib/rpm/
@@ -870,7 +872,6 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %{_prefix}/lib/rpm/debugedit
 %{_prefix}/lib/rpm/sepdebugcrcfix
 %rpmattr %{_prefix}/lib/rpm/*.prov
-%{_prefix}/lib/rpm/find-debuginfo.sh
 %rpmattr %{_prefix}/lib/rpm/find-lang.sh
 %rpmattr %{_prefix}/lib/rpm/find-provides
 %rpmattr %{_prefix}/lib/rpm/find-requires
