@@ -96,8 +96,8 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Version:	4.19.90
-Release:	%{?snapver:0.%{snapver}.}5
+Version:	4.19.91
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -114,25 +114,12 @@ Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.serv
 #
 # Backports from upstream
 #
-# Required for the next set of patches to work
-Patch0:		https://github.com/rpm-software-management/rpm/commit/b2058cea1811373e77473bdc89147d8d4a04779c.patch
-Patch1:		https://github.com/rpm-software-management/rpm/commit/dde4fe5cf7d2b543f1fb1f2212679273492ed7e7.patch
-Patch2:		https://github.com/rpm-software-management/rpm/commit/96467dce18f264b278e17ffe1859c88d9b5aa4b6.patch
-# https://github.com/rpm-software-management/rpm/issues/2204
-# https://github.com/rpm-software-management/rpm/pull/3085
-# Alternative fix:
-# https://github.com/ffesti/rpm/commit/341ac458c72f36aa07168195cacd4d082e51683f
-Patch10:	https://github.com/rpm-software-management/rpm/pull/3085/commits/d96c777ce8f6a8e95fa3d0fd64d1c0e42bf03adb.patch
-Patch11:	https://github.com/rpm-software-management/rpm/pull/3085/commits/90e09aa62c98d1f782343b1cf5cecb890ebe2e0c.patch
-Patch12:	https://github.com/rpm-software-management/rpm/pull/3085/commits/d8ad95f93cfb362390e3f0249d9bcbcad7eb4d5a.patch
-# https://github.com/rpm-software-management/rpm/issues/3024
-Patch50:	https://github.com/rpm-software-management/rpm/commit/c97c48225e6e79b3829e77d5179645aed75104a5.patch
-Patch51:	https://github.com/rpm-software-management/rpm/commit/d5c8423da7cc07169364f31716979a200116466a.patch
-Patch52:	https://github.com/rpm-software-management/rpm/commit/bf46dcf3646e1c296c1a5a473aece07cff6682bf.patch
+# [currently none needed]
 
 #
 # Fedora patches
 #
+# [currently none needed]
 
 # These are not yet upstream
 Patch906:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm-4.7.1-geode-i686.patch
