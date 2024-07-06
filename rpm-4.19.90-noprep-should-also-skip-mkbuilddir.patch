@@ -1,16 +1,16 @@
-diff -up rpm-4.19.90/build/build.c.omv~ rpm-4.19.90/build/build.c
---- rpm-4.19.90/build/build.c.omv~	2024-05-08 18:42:11.829507751 +0200
-+++ rpm-4.19.90/build/build.c	2024-05-08 18:47:51.744982052 +0200
-@@ -407,7 +407,11 @@ static int buildSpec(rpmts ts, BTA_t bui
+diff -up rpm-4.19.92/build/build.c.18~ rpm-4.19.92/build/build.c
+--- rpm-4.19.92/build/build.c.18~	2024-07-06 02:28:48.127453780 +0200
++++ rpm-4.19.92/build/build.c	2024-07-06 02:30:30.732606829 +0200
+@@ -435,7 +435,11 @@ static int buildSpec(rpmts ts, BTA_t bui
  	    (rc = doCheckBuildRequires(ts, spec, test)))
  		goto exit;
  
--	if ((what & RPMBUILD_MKBUILDDIR) && (rc = doBuildDir(spec, test, sbp)))
+-	if ((what & RPMBUILD_MKBUILDDIR) && (rc = doBuildDir(spec, test, inPlace, sbp)))
 +	/* mkbuilddir and prep really should go together -- mock uses
 +	   --noprep to avoid having to uncompress stuff again after it
 +	   has been unpacked for generate_buildrequires, but mkbuilddir
 +	   actually wipes out the previous effort. */
-+	if ((what & RPMBUILD_MKBUILDDIR) && (what & RPMBUILD_PREP) && (rc = doBuildDir(spec, test, sbp)))
++	if ((what & RPMBUILD_MKBUILDDIR) && (what & RPMBUILD_PREP) && (rc = doBuildDir(spec, test, inPlace, sbp)))
  		goto exit;
  
  	if ((what & RPMBUILD_PREP) &&

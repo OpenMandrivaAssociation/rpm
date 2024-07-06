@@ -96,8 +96,8 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Version:	4.19.91
-Release:	%{?snapver:0.%{snapver}.}2
+Version:	4.19.92
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -114,7 +114,7 @@ Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.serv
 #
 # Backports from upstream
 #
-Patch0:		https://github.com/rpm-software-management/rpm/commit/3a14eb950148514c6d196ab3cefa7a37b82bff64.patch
+# [currently none needed]
 
 #
 # Fedora patches
