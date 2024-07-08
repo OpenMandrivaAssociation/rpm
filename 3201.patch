@@ -1,0 +1,36 @@
+From 514feb2b8b436dea8ea7fe1593002f016a8e24fc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@lindev.ch>
+Date: Mon, 8 Jul 2024 20:03:15 +0200
+Subject: [PATCH] Add missing newline in sysusers Requires
+
+Without the newline, a sysusers file like
+
+```
+u saned - "SANE daemon user" /etc/sane.d /bin/false
+m saned cdwriter
+m saned usb
+m saned scanner
+```
+
+Results in "funny" requirements
+```
+group(cdwriter)user(saned)
+group(usb)user(saned)
+```
+---
+ fileattrs/sysusers.attr | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fileattrs/sysusers.attr b/fileattrs/sysusers.attr
+index cb3eadaa55..006702d448 100644
+--- a/fileattrs/sysusers.attr
++++ b/fileattrs/sysusers.attr
+@@ -31,7 +31,7 @@
+             table.insert(fields, w)
+         end
+         if #fields >= 3 and fields[1] == 'm' then
+-	    print(string.format('user(%s)\\ngroup(%s)', fields[2], fields[3]))
++	    print(string.format('user(%s)\\ngroup(%s)\\n', fields[2], fields[3]))
+         end
+         ::continue::
+     end
