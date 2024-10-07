@@ -96,8 +96,8 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Version:	4.19.92
-Release:	%{?snapver:0.%{snapver}.}2
+Version:	4.20.0
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -200,7 +200,7 @@ Patch3003:	rpm_arm_mips_isa_macros.patch
 #
 # Patches proposed upstream
 #
-Patch4000:	https://github.com/rpm-software-management/rpm/pull/3201.patch
+# [currently none]
 
 # Add support for %%optional
 # From: https://github.com/rpm-software-management/rpm/pull/417
