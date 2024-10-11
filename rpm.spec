@@ -97,7 +97,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	4.20.0
-Release:	%{?snapver:0.%{snapver}.}1
+Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -108,7 +108,7 @@ Source3:	rpm.rpmlintrc
 # Put python bits back to where they used to be for now
 Source5:	https://github.com/rpm-software-management/python-rpm-packaging/archive/refs/heads/python-rpm-packaging-main.tar.gz
 # Same for perl bits
-Source6:	https://github.com/rpm-software-management/perl-rpm-packaging/archive/refs/heads/master.tar.gz#/perl-rpm-packaging-20240407.tar.gz
+Source6:	https://github.com/rpm-software-management/perl-rpm-packaging/archive/refs/heads/master.tar.gz#/perl-rpm-packaging-20241011.tar.gz
 Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.service
 
 #
@@ -557,7 +557,7 @@ install -m 644 %{S:10} %{buildroot}%{_unitdir}/
 
 # Restore python packaging bits
 chmod 0755 python-rpm-packaging-main/scripts/*
-mv python-rpm-packaging-main/fileattrs/* %{buildroot}%{_usrlibrpm}/fileattrs
+mv python-rpm-packaging-main/fileattrs/* %{buildroot}%{_usrlibrpm}/fileattrs/
 mv python-rpm-packaging-main/scripts/* %{buildroot}%{_usrlibrpm}/
 
 # Save list of packages through cron
@@ -724,7 +724,8 @@ sed -i -e '/rpm-debuginfo/d' noarch-*/macros
 sed -i -e '/__debug_package/d' noarch-*/macros
 cd -
 
-install -c -m 755 perl-rpm-packaging-master/scripts/perl.* %{buildroot}%{_prefix}/lib/rpm/
+install -c -m 755 perl-rpm-packaging-master/scripts/perl.* %{buildroot}%{_usrlibrpm}/
+install -c -m 644 perl-rpm-packaging-master/fileattrs/*.attr %{buildroot}%{_usrlibrpm}/fileattrs/
 
 %find_lang %{name}
 
@@ -767,9 +768,6 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %rpmattr %{rpmhome}/rpm2cpio.sh
 %rpmattr %{rpmhome}/sysusers.sh
 %rpmattr %{rpmhome}/tgpg
-
-%dir %attr(   -, rpm, rpm) %{rpmhome}/fileattrs
-%attr(0644, rpm, rpm) %{rpmhome}/fileattrs/*.attr
 
 %attr(   -, rpm, rpm) %{rpmhome}/platform/
 
@@ -873,6 +871,8 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %rpmattr %{_prefix}/lib/rpm/pythondistdeps.py
 %rpmattr %{_prefix}/lib/rpm/rpmdeps
 %rpmattr %{_prefix}/lib/rpm/rpmdump
+%dir %attr(-, rpm, rpm) %{rpmhome}/fileattrs
+%attr(0644, rpm, rpm) %{rpmhome}/fileattrs/*.attr
 
 %doc %{_mandir}/man8/rpmbuild.8*
 %doc %{_mandir}/man8/rpmdeps.8*
