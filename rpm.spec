@@ -97,7 +97,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	4.20.0
-Release:	%{?snapver:0.%{snapver}.}2
+Release:	%{?snapver:0.%{snapver}.}3
 Group:		System/Configuration/Packaging
 Url:		http://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -226,6 +226,8 @@ Patch6004:	rpm-4.16.0-omv-aarch64-macro.patch
 # transition
 Patch6005:	rpm-4.17.0-usrmerge.patch
 
+# Patches to perl-rpm-packaging
+Patch10000:	perl-rpm-packaging-perln.patch
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD
 # SourceLicense: (GPLv2+ and LGPLv2+ with exceptions) and BSD
@@ -505,10 +507,14 @@ Rpm plugin for working with the application blocker fapolicyd
 %endif # with plugins
 
 %prep
-%autosetup -n %{name}-%{srcver} -p1 -a 5
+%setup -n %{name}-%{srcver} -a 5
+%autopatch -p1 -M 9999
 tar xf %{S:1}
 mv rpmpgp_legacy-master rpmio/rpmpgp_legacy
 tar xf %{S:6}
+cd perl-rpm-packaging-*
+%autopatch -p1 -m 10000 -M 10100
+cd ..
 
 # Restore python packaging bits
 cat python-rpm-packaging-main/platform.in >>platform.in
