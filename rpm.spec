@@ -99,7 +99,7 @@ Name:		rpm
 Version:	4.20.0
 Release:	%{?snapver:0.%{snapver}.}3
 Group:		System/Configuration/Packaging
-Url:		http://www.rpm.org/
+Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
 Source1:	https://github.com/rpm-software-management/rpmpgp_legacy/archive/refs/heads/master.tar.gz#/rpmpgp_legacy-20240407.tar.gz
 # extracted from http://pkgs.fedoraproject.org/cgit/redhat-rpm-config.git/plain/macros:
