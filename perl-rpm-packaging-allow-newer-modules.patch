@@ -1,0 +1,20 @@
+diff -up perl-rpm-packaging-master/scripts/perl.req.omv~ perl-rpm-packaging-master/scripts/perl.req
+--- perl-rpm-packaging-master/scripts/perl.req.omv~	2024-10-21 21:48:10.981600297 +0200
++++ perl-rpm-packaging-master/scripts/perl.req	2024-10-21 21:48:34.741855391 +0200
+@@ -88,13 +88,13 @@ foreach $module (sort keys %require) {
+     $v =~ s/^v//;
+     if($normalversion)
+     {
+-      print "perl($module) = $normv\n";
++      print "perl($module) >= $normv\n";
+     }
+     else
+     {
+-      print "perl($module) = $require{$module}\n";
++      print "perl($module) >= $require{$module}\n";
+     }
+-    print "perln($module) = $normv\n" if $perln;
++    print "perln($module) >= $normv\n" if $perln;
+   }
+ }
+ 
