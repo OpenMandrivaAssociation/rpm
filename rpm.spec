@@ -97,7 +97,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	4.20.0
-Release:	%{?snapver:0.%{snapver}.}4
+Release:	%{?snapver:0.%{snapver}.}5
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -229,6 +229,7 @@ Patch6005:	rpm-4.17.0-usrmerge.patch
 # Patches to perl-rpm-packaging
 Patch10000:	perl-rpm-packaging-perln.patch
 Patch10001:	perl-rpm-packaging-allow-newer-modules.patch
+Patch10002:	perl-rpm-packaging-default-to-normalversion.patch
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD
 # SourceLicense: (GPLv2+ and LGPLv2+ with exceptions) and BSD
