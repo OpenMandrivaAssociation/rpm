@@ -1,12 +1,21 @@
-diff -up rpm-4.19.90/scripts/brp-strip.11~ rpm-4.19.90/scripts/brp-strip
---- rpm-4.19.90/scripts/brp-strip.11~	2024-04-07 13:24:26.744068425 +0200
-+++ rpm-4.19.90/scripts/brp-strip	2024-04-07 13:26:01.757048782 +0200
-@@ -34,6 +34,8 @@ strip_elf_binaries()
+diff -up rpm-4.20.1/scripts/brp-strip.11~ rpm-4.20.1/scripts/brp-strip
+--- rpm-4.20.1/scripts/brp-strip.11~	2025-02-19 19:20:21.287085823 +0100
++++ rpm-4.20.1/scripts/brp-strip	2025-02-19 19:21:32.793641866 +0100
+@@ -19,7 +19,7 @@ Darwin*) exit 0 ;;
+ esac
  
-   find "$RPM_BUILD_ROOT" -type f \
-     ! -regex "${RPM_BUILD_ROOT}/*usr/lib/debug.*" \
-+    ! -regex "${RPM_BUILD_ROOT}/lib/firmware.*" \
-+    ! -regex "${RPM_BUILD_ROOT}/usr/lib/firmware.*" \
+ # Below is the explanation of commands in the order of their appearance
+-# Ignore /usr/lib/debug entries
++# Ignore /usr/lib/debug and firmware entries
+ # Ignore all ruby, python, and js source files
+ # Ignore all go(guile objects & golang) files
+ # Consider files with only single link
+@@ -35,6 +35,8 @@ strip_elf_binaries()
+   cd "$RPM_BUILD_ROOT" || return 0
+   find . -type f \
+     ! -regex '\./usr/lib/debug.*' \
++    ! -regex "\./lib/firmware.*" \
++    ! -regex "\./usr/lib/firmware.*" \
      ! -name "*.py" ! -name "*.js" ! -name "*.rb" \
      ! -name "*.go" -links "${nlinks}" -print0 | \
      xargs -0 -r -P${nprocs} -n${MAX_ARGS} sh -c "file \"\$@\" | \

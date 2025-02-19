@@ -96,8 +96,8 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Version:	4.20.0
-Release:	%{?snapver:0.%{snapver}.}6
+Version:	4.20.1
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -184,6 +184,7 @@ Patch201:	rpm-4.18.0-dont-try-to-strip-firmware-files.patch
 # aarch64-openmandriva-linux, aarch64-openmandriva-linux-musl
 # and aarch64-openmandriva-linux-android matters!
 Patch202:	rpm-4.19.1-add-libc-to-_host.patch
+Patch203:	rpm-4.20.1-no-gcc-specific-cflags.patch
 
 # Various arch enabling:
 Patch3003:	rpm_arm_mips_isa_macros.patch

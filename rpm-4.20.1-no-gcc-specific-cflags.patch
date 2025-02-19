@@ -1,0 +1,24 @@
+diff -up rpm-4.20.1/CMakeLists.txt.omv~ rpm-4.20.1/CMakeLists.txt
+--- rpm-4.20.1/CMakeLists.txt.omv~	2025-02-19 19:35:25.984741205 +0100
++++ rpm-4.20.1/CMakeLists.txt	2025-02-19 19:36:19.633545333 +0100
+@@ -415,13 +415,13 @@ if (ENABLE_ASAN OR ENABLE_UBSAN)
+ endif()
+ 
+ # try to ensure some compiler sanity and hardening options where supported
+-foreach (flag -fno-strict-overflow -fno-delete-null-pointer-checks -fhardened)
+-	check_c_compiler_flag(${flag} found)
+-	if (found)
+-		add_compile_options(${flag})
+-	endif()
+-	unset(found)
+-endforeach()
++#foreach (flag -fno-strict-overflow -fno-delete-null-pointer-checks -fhardened)
++#	check_c_compiler_flag(${flag} found)
++#	if (found)
++#		add_compile_options(${flag})
++#	endif()
++#	unset(found)
++#endforeach()
+ 
+ # generated sources
+ include_directories(${CMAKE_BINARY_DIR})
