@@ -1,10 +1,10 @@
-diff -up perl-rpm-packaging-master/scripts/perl.req.omv~ perl-rpm-packaging-master/scripts/perl.req
---- perl-rpm-packaging-master/scripts/perl.req.omv~	2024-10-21 21:48:10.981600297 +0200
-+++ perl-rpm-packaging-master/scripts/perl.req	2024-10-21 21:48:34.741855391 +0200
-@@ -88,13 +88,13 @@ foreach $module (sort keys %require) {
-     $v =~ s/^v//;
-     if($normalversion)
-     {
+diff -up perl-rpm-packaging-master/scripts/perl.req.1~ perl-rpm-packaging-master/scripts/perl.req
+--- perl-rpm-packaging-master/scripts/perl.req.1~	2025-02-21 00:35:00.000000000 +0100
++++ perl-rpm-packaging-master/scripts/perl.req	2025-04-10 18:18:05.167301388 +0200
+@@ -86,15 +86,15 @@ foreach $module (sort keys %require) {
+ 
+     if ($normalversion) {
+       my $normv = normalversion($require{$module});
 -      print "perl($module) = $normv\n";
 +      print "perl($module) >= $normv\n";
      }
@@ -13,8 +13,10 @@ diff -up perl-rpm-packaging-master/scripts/perl.req.omv~ perl-rpm-packaging-mast
 -      print "perl($module) = $require{$module}\n";
 +      print "perl($module) >= $require{$module}\n";
      }
--    print "perln($module) = $normv\n" if $perln;
-+    print "perln($module) >= $normv\n" if $perln;
+     if ($perln) {
+       my $normv = normalversion($require{$module});
+-      print "perln($module) = $normv\n";
++      print "perln($module) >= $normv\n";
+     }
    }
  }
- 

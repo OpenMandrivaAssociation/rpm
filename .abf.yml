@@ -1,5 +1,5 @@
 sources:
   python-rpm-packaging-main.tar.gz: 6cf5efc27ccda4cf5659f10bc69e17764a8fb924
-  perl-rpm-packaging-20241011.tar.gz: 7df1cc9778098735108ddcbe2d280bed3ea5b161
-  rpmpgp_legacy-20240407.tar.gz: acb2785c4f3ffde6387bd0d20f27758e4c9cf019
   rpm-4.20.1.tar.bz2: 8438ef4184d2406f0b0b466bed74d4c3f0809e05
+  rpmpgp_legacy-20250203.tar.gz: a051c16a253a1367872e73673fa73eed99588e45
+  perl-rpm-packaging-20250221.tar.gz: 98b3f065ba180ac353e7597dc7293ca3b231c60a

@@ -97,18 +97,18 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	4.20.1
-Release:	%{?snapver:0.%{snapver}.}1
+Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
-Source1:	https://github.com/rpm-software-management/rpmpgp_legacy/archive/refs/heads/master.tar.gz#/rpmpgp_legacy-20240407.tar.gz
+Source1:	https://github.com/rpm-software-management/rpmpgp_legacy/archive/refs/heads/master.tar.gz#/rpmpgp_legacy-20250203.tar.gz
 # extracted from http://pkgs.fedoraproject.org/cgit/redhat-rpm-config.git/plain/macros:
 Source2:	macros.filter
 Source3:	rpm.rpmlintrc
 # Put python bits back to where they used to be for now
 Source5:	https://github.com/rpm-software-management/python-rpm-packaging/archive/refs/heads/python-rpm-packaging-main.tar.gz
 # Same for perl bits
-Source6:	https://github.com/rpm-software-management/perl-rpm-packaging/archive/refs/heads/master.tar.gz#/perl-rpm-packaging-20241011.tar.gz
+Source6:	https://github.com/rpm-software-management/perl-rpm-packaging/archive/refs/heads/master.tar.gz#/perl-rpm-packaging-20250221.tar.gz
 Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.service
 
 #
@@ -228,7 +228,6 @@ Patch6004:	rpm-4.16.0-omv-aarch64-macro.patch
 Patch6005:	rpm-4.17.0-usrmerge.patch
 
 # Patches to perl-rpm-packaging
-Patch10000:	perl-rpm-packaging-perln.patch
 Patch10001:	perl-rpm-packaging-allow-newer-modules.patch
 Patch10002:	perl-rpm-packaging-default-to-normalversion.patch
 
@@ -286,9 +285,6 @@ BuildRequires:	clang
 Requires:	setup >= 2.9.1
 Requires:	rpm-%{_real_vendor}-setup >= %{rpmsetup_version}
 Requires:	%{librpmname} = %{EVRD}
-
-# This is a completely different implementation of RPM, replacing rpm5
-Conflicts:	rpm < 2:4.14.0-0
 
 # Weakly depend on stuff that used to be in main rpm package
 Recommends:	rpm-plugin-syslog
@@ -371,7 +367,6 @@ Provides:	python3-rpm-generators = %{version}-%{release}
 Requires:	basesystem-build
 Requires:	rpm = %{EVRD}
 Requires:	%{librpmbuild} = %{EVRD}
-Conflicts:	rpm-build < %{EVRD}
 
 %description build
 The rpm-build package contains the scripts and executable programs

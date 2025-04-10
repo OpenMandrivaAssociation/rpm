@@ -1,26 +1,25 @@
-diff -up perl-rpm-packaging-master/scripts/perl.prov.omv~ perl-rpm-packaging-master/scripts/perl.prov
---- perl-rpm-packaging-master/scripts/perl.prov.omv~	2024-10-22 14:33:38.837489140 +0200
-+++ perl-rpm-packaging-master/scripts/perl.prov	2024-10-22 14:34:02.727745606 +0200
-@@ -45,13 +45,13 @@
+diff -up perl-rpm-packaging-master/scripts/perl.prov.2~ perl-rpm-packaging-master/scripts/perl.prov
+--- perl-rpm-packaging-master/scripts/perl.prov.2~	2025-02-21 00:35:00.000000000 +0100
++++ perl-rpm-packaging-master/scripts/perl.prov	2025-04-10 18:20:33.416218592 +0200
+@@ -46,13 +46,13 @@ use strict;
  
  # by Ken Estes Mail.com kestes@staff.mail.com
  
 -my $normalversion = 0;
 +my $normalversion = 1;
  my $perln = 0;
+ my %provides;
  
  while ("@ARGV") {
    if ($ARGV[0] =~ /^--/) {
 -    $normalversion = 1 if $ARGV[0] eq "--normalversion"; # use normal form in perl(xxx)
--    $perln = 1 if $ARGV[0] eq "--perln";                 # use perln(xxx) and perl(xxx)
-+    $normalversion = 0 if $ARGV[0] eq "--perlversion"; # old-style versioning in perl(xxx)
-+    $perln = 1 if $ARGV[0] eq "--perln";               # use perln(xxx) and perl(xxx)
++    $normalversion = 0 if $ARGV[0] eq "--perlversion";   # old-style versioning in perl(xxx)
+     $perln = 1 if $ARGV[0] eq "--perln";                 # use perln(xxx) and perl(xxx)
      shift @ARGV;
    } else {
-     last;
-diff -up perl-rpm-packaging-master/scripts/perl.req.omv~ perl-rpm-packaging-master/scripts/perl.req
---- perl-rpm-packaging-master/scripts/perl.req.omv~	2024-10-22 14:33:07.017147570 +0200
-+++ perl-rpm-packaging-master/scripts/perl.req	2024-10-22 14:33:35.587454251 +0200
+diff -up perl-rpm-packaging-master/scripts/perl.req.2~ perl-rpm-packaging-master/scripts/perl.req
+--- perl-rpm-packaging-master/scripts/perl.req.2~	2025-04-10 18:18:38.834208757 +0200
++++ perl-rpm-packaging-master/scripts/perl.req	2025-04-10 18:18:38.839397114 +0200
 @@ -43,13 +43,13 @@ $HAVE_VERSION = 0;
  eval { require version; $HAVE_VERSION = 1; };
  
