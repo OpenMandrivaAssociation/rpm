@@ -97,7 +97,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	4.20.1
-Release:	%{?snapver:0.%{snapver}.}2
+Release:	%{?snapver:0.%{snapver}.}3
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -383,7 +383,6 @@ This package contains support for digitally signing RPM packages.
 Summary:	Python 3 bindings for apps which will manipulate RPM packages
 Group:		Development/Python
 Requires:	rpm = %{EVRD}
-Obsoletes:	python-%{name} < %{EVRD}
 # For the dependency generator to work
 BuildRequires:	python-packaging
 
