@@ -273,6 +273,7 @@ BuildRequires:	pkgconfig(python)
 BuildRequires:	pkgconfig(sqlite3)
 BuildRequires:	pkgconfig(openssl)
 BuildRequires:	bubblewrap
+BuildRequires:	scdoc
 %if %{with check}
 # for testsuite:
 BuildRequires:	eatmydata
