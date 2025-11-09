@@ -96,19 +96,19 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Version:	4.20.1
-Release:	%{?snapver:0.%{snapver}.}3
+Version:	6.0.0
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
-Source1:	https://github.com/rpm-software-management/rpmpgp_legacy/archive/refs/heads/master.tar.gz#/rpmpgp_legacy-20250203.tar.gz
+Source1:	https://github.com/rpm-software-management/rpmpgp_legacy/archive/refs/tags/1.1.tar.gz#/rpmpgp_legacy-1.1.tar.gz
 # extracted from http://pkgs.fedoraproject.org/cgit/redhat-rpm-config.git/plain/macros:
 Source2:	macros.filter
 Source3:	rpm.rpmlintrc
 # Put python bits back to where they used to be for now
 Source5:	https://github.com/rpm-software-management/python-rpm-packaging/archive/refs/heads/python-rpm-packaging-main.tar.gz
 # Same for perl bits
-Source6:	https://github.com/rpm-software-management/perl-rpm-packaging/archive/refs/heads/master.tar.gz#/perl-rpm-packaging-20250221.tar.gz
+Source6:	https://github.com/rpm-software-management/perl-rpm-packaging/archive/refs/tags/v1.2.tar.gz#/perl-rpm-packaging-1.2.tar.gz
 Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.service
 
 #
@@ -184,7 +184,6 @@ Patch201:	rpm-4.18.0-dont-try-to-strip-firmware-files.patch
 # aarch64-openmandriva-linux, aarch64-openmandriva-linux-musl
 # and aarch64-openmandriva-linux-android matters!
 Patch202:	rpm-4.19.1-add-libc-to-_host.patch
-Patch203:	rpm-4.20.1-no-gcc-specific-cflags.patch
 
 # Various arch enabling:
 Patch3003:	rpm_arm_mips_isa_macros.patch
@@ -226,6 +225,9 @@ Patch6004:	rpm-4.16.0-omv-aarch64-macro.patch
 # Make sure /bin/sh is replaced with %{_bindir}/sh during usrmerge
 # transition
 Patch6005:	rpm-4.17.0-usrmerge.patch
+
+# Patches to rpmpgp_legacy
+Patch7000:	rpmpgp_legacy-rpm-6.0.patch
 
 # Patches to perl-rpm-packaging
 Patch10001:	perl-rpm-packaging-allow-newer-modules.patch
@@ -505,9 +507,10 @@ Rpm plugin for working with the application blocker fapolicyd
 
 %prep
 %setup -n %{name}-%{srcver} -a 5
-%autopatch -p1 -M 9999
+%autopatch -p1 -M 6999
 tar xf %{S:1}
-mv rpmpgp_legacy-master rpmio/rpmpgp_legacy
+mv rpmpgp_legacy-1.1 rpmio/rpmpgp_legacy
+%autopatch -p1 -m 7000 -M 9999
 tar xf %{S:6}
 cd perl-rpm-packaging-*
 %autopatch -p1 -m 10000 -M 10100
@@ -727,8 +730,8 @@ sed -i -e '/rpm-debuginfo/d' noarch-*/macros
 sed -i -e '/__debug_package/d' noarch-*/macros
 cd -
 
-install -c -m 755 perl-rpm-packaging-master/scripts/perl.* %{buildroot}%{_usrlibrpm}/
-install -c -m 644 perl-rpm-packaging-master/fileattrs/*.attr %{buildroot}%{_usrlibrpm}/fileattrs/
+install -c -m 755 perl-rpm-packaging-*/scripts/perl.* %{buildroot}%{_usrlibrpm}/
+install -c -m 644 perl-rpm-packaging-*/fileattrs/*.attr %{buildroot}%{_usrlibrpm}/fileattrs/
 
 %find_lang %{name}
 
@@ -776,11 +779,7 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 
 %doc %{_mandir}/man8/rpm.8*
 %doc %{_mandir}/man8/rpmdb.8*
-%doc %{_mandir}/man8/rpmgraph.8*
 %doc %{_mandir}/man8/rpmkeys.8*
-%doc %{_mandir}/man8/rpm2cpio.8*
-%doc %{_mandir}/man8/rpm-misc.8*
-%doc %{_mandir}/man8/rpm2archive.8*
 %doc %{_mandir}/man8/rpm-plugins.8*
 %doc %{_mandir}/man1/*.1*
 
@@ -876,16 +875,21 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %rpmattr %{_prefix}/lib/rpm/rpmdump
 %dir %attr(-, rpm, rpm) %{rpmhome}/fileattrs
 %attr(0644, rpm, rpm) %{rpmhome}/fileattrs/*.attr
-
-%doc %{_mandir}/man8/rpmbuild.8*
-%doc %{_mandir}/man8/rpmdeps.8*
-%doc %{_mandir}/man8/rpmsort.8*
-%doc %{_mandir}/man8/rpmspec.8*
-%doc %{_mandir}/man8/rpmlua.8*
+%doc %{_mandir}/man5/rpm-config.5*
+%doc %{_mandir}/man5/rpm-macrofile.5*
+%doc %{_mandir}/man5/rpm-manifest.5*
+%doc %{_mandir}/man5/rpm-rpmrc.5*
+%doc %{_mandir}/man5/rpmbuild-config.5*
+%doc %{_mandir}/man7/rpm-lua.7*
+%doc %{_mandir}/man7/rpm-macros.7*
+%doc %{_mandir}/man7/rpm-payloadflags.7*
+%doc %{_mandir}/man7/rpm-queryformat.7*
+%doc %{_mandir}/man7/rpm-version.7*
+%doc %{_mandir}/man8/rpm-common.8*
 
 %files sign
 %{_bindir}/rpmsign
-%doc %{_mandir}/man8/rpmsign.8*
+%{_prefix}/lib/rpm/rpm-setup-autosign
 
 %files -n python-%{name}
 %{python3_sitearch}/rpm-*.egg-info

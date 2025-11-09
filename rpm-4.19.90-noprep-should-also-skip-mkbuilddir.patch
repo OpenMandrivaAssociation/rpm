@@ -1,6 +1,6 @@
-diff -up rpm-4.19.92/build/build.c.18~ rpm-4.19.92/build/build.c
---- rpm-4.19.92/build/build.c.18~	2024-07-06 02:28:48.127453780 +0200
-+++ rpm-4.19.92/build/build.c	2024-07-06 02:30:30.732606829 +0200
+diff -up rpm-4.19.92/build/build.cc.18~ rpm-4.19.92/build/build.cc
+--- rpm-4.19.92/build/build.cc.18~	2024-07-06 02:28:48.127453780 +0200
++++ rpm-4.19.92/build/build.cc	2024-07-06 02:30:30.732606829 +0200
 @@ -435,7 +435,11 @@ static int buildSpec(rpmts ts, BTA_t bui
  	    (rc = doCheckBuildRequires(ts, spec, test)))
  		goto exit;

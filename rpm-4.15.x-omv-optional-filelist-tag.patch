@@ -1,7 +1,7 @@
-diff -up rpm-4.18.90/build/files.c.15~ rpm-4.18.90/build/files.c
---- rpm-4.18.90/build/files.c.15~	2023-04-12 10:27:43.000000000 +0200
-+++ rpm-4.18.90/build/files.c	2023-05-03 16:32:45.689939215 +0200
-@@ -875,6 +875,7 @@ static VFA_t const virtualAttrs[] = {
+diff -up rpm-6.0.0/build/files.cc.14~ rpm-6.0.0/build/files.cc
+--- rpm-6.0.0/build/files.cc.14~	2025-09-22 14:09:24.000000000 +0200
++++ rpm-6.0.0/build/files.cc	2025-11-09 16:53:07.592031818 +0100
+@@ -868,6 +868,7 @@ static VFA_t const virtualAttrs[] = {
      { "%pubkey",	RPMFILE_PUBKEY },
      { "%missingok",	RPMFILE_MISSINGOK },
      { "%artifact",	RPMFILE_ARTIFACT },
@@ -9,7 +9,7 @@ diff -up rpm-4.18.90/build/files.c.15~ rpm-4.18.90/build/files.c
      { NULL, 0 }
  };
  
-@@ -1463,7 +1464,7 @@ static rpmRC addFile(FileList fl, const
+@@ -1459,7 +1460,7 @@ static rpmRC addFile(FileList fl, const
  	    int ignore = 0;
  	    const char *msg = fl->cur.isDir ? _("Directory not found: %s\n") :
  					      _("File not found: %s\n");
@@ -18,9 +18,9 @@ diff -up rpm-4.18.90/build/files.c.15~ rpm-4.18.90/build/files.c
  		ignore = 1;
  	    if (fl->cur.attrFlags & RPMFILE_DOC) {
  		int strict_doc =
-diff -up rpm-4.18.90/include/rpm/rpmfiles.h.15~ rpm-4.18.90/include/rpm/rpmfiles.h
---- rpm-4.18.90/include/rpm/rpmfiles.h.15~	2023-04-12 10:27:43.000000000 +0200
-+++ rpm-4.18.90/include/rpm/rpmfiles.h	2023-05-03 16:32:45.689939215 +0200
+diff -up rpm-6.0.0/include/rpm/rpmfiles.h.14~ rpm-6.0.0/include/rpm/rpmfiles.h
+--- rpm-6.0.0/include/rpm/rpmfiles.h.14~	2025-09-22 14:09:24.000000000 +0200
++++ rpm-6.0.0/include/rpm/rpmfiles.h	2025-11-09 16:53:07.592187472 +0100
 @@ -59,6 +59,7 @@ enum rpmfileAttrs_e {
      /* bits 9-10 unused */
      RPMFILE_PUBKEY	= (1 << 11),	/*!< from %%pubkey */
@@ -29,9 +29,9 @@ diff -up rpm-4.18.90/include/rpm/rpmfiles.h.15~ rpm-4.18.90/include/rpm/rpmfiles
  };
  
  typedef rpmFlags rpmfileAttrs;
-diff -up rpm-4.18.90/tests/data/SPECS/optional.spec.15~ rpm-4.18.90/tests/data/SPECS/optional.spec
---- rpm-4.18.90/tests/data/SPECS/optional.spec.15~	2023-05-03 16:32:45.689939215 +0200
-+++ rpm-4.18.90/tests/data/SPECS/optional.spec	2023-05-03 16:32:45.689939215 +0200
+diff -up rpm-6.0.0/tests/data/SPECS/optional.spec.14~ rpm-6.0.0/tests/data/SPECS/optional.spec
+--- rpm-6.0.0/tests/data/SPECS/optional.spec.14~	2025-11-09 16:53:07.592250411 +0100
++++ rpm-6.0.0/tests/data/SPECS/optional.spec	2025-11-09 16:53:07.592250411 +0100
 @@ -0,0 +1,38 @@
 +Summary: optional -- test for the %%optional tag
 +Name: optional
@@ -71,14 +71,13 @@ diff -up rpm-4.18.90/tests/data/SPECS/optional.spec.15~ rpm-4.18.90/tests/data/S
 +%optional /symlink-does-not-exist
 +%optional /symlink-to-dir-exists
 +%optional /symlink-to-dir-does-not-exist
-diff -up rpm-4.18.90/tests/rpmbuild.at.15~ rpm-4.18.90/tests/rpmbuild.at
---- rpm-4.18.90/tests/rpmbuild.at.15~	2023-04-12 10:27:43.000000000 +0200
-+++ rpm-4.18.90/tests/rpmbuild.at	2023-05-03 16:32:45.690939211 +0200
-@@ -1900,7 +1900,33 @@ No hello.debug
- [ignore])
- AT_CLEANUP
+diff -up rpm-6.0.0/tests/rpmbuild.at.14~ rpm-6.0.0/tests/rpmbuild.at
+--- rpm-6.0.0/tests/rpmbuild.at.14~	2025-09-22 14:09:24.000000000 +0200
++++ rpm-6.0.0/tests/rpmbuild.at	2025-11-09 16:59:42.020966894 +0100
+@@ -2863,6 +2863,34 @@ runroot rpmbuild --quiet -bb \
+ RPMTEST_CLEANUP
  
-+# ------------------------------
+ # ------------------------------
 +# Check functionality of %optional tag
 +AT_SETUP([rpmbuild optional tag])
 +AT_KEYWORDS([build] [optional])
@@ -87,7 +86,7 @@ diff -up rpm-4.18.90/tests/rpmbuild.at.15~ rpm-4.18.90/tests/rpmbuild.at
 +
 +runroot rpmbuild \
 +  -bb --quiet /data/SPECS/optional.spec
- 
++
 +runroot rpm -qp --qf \
 +  "\n[%{filemodes:perms} %-8{fileusername} %-8{filegroupname} %{filenames}\n]"\
 +  /build/RPMS/noarch/optional-1.0*.noarch.rpm
@@ -105,6 +104,8 @@ diff -up rpm-4.18.90/tests/rpmbuild.at.15~ rpm-4.18.90/tests/rpmbuild.at
 +],
 +[])
 +AT_CLEANUP
- 
- # ------------------------------
++
++# ------------------------------
  # Check dynamic build requires
+ RPMTEST_SETUP_RW([dynamic build requires rpmbuild -bs])
+ AT_KEYWORDS([build])

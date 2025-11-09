@@ -1,6 +1,6 @@
-diff -up rpm-4.18.90/build/parseSpec.c.omv~ rpm-4.18.90/build/parseSpec.c
---- rpm-4.18.90/build/parseSpec.c.omv~	2023-05-03 17:32:23.569149199 +0200
-+++ rpm-4.18.90/build/parseSpec.c	2023-05-03 17:32:29.834200867 +0200
+diff -up rpm-4.18.90/build/parseSpec.cc.omv~ rpm-4.18.90/build/parseSpec.cc
+--- rpm-4.18.90/build/parseSpec.cc.omv~	2023-05-03 17:32:23.569149199 +0200
++++ rpm-4.18.90/build/parseSpec.cc	2023-05-03 17:32:29.834200867 +0200
 @@ -6,6 +6,7 @@
  #include "system.h"
  

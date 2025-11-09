@@ -1,6 +1,6 @@
-diff -up rpm-4.19.0/lib/rpmrc.c.16~ rpm-4.19.0/lib/rpmrc.c
---- rpm-4.19.0/lib/rpmrc.c.16~	2023-11-26 19:34:41.732242071 +0100
-+++ rpm-4.19.0/lib/rpmrc.c	2023-11-26 19:34:41.796242681 +0100
+diff -up rpm-4.19.0/lib/rpmrc.cc.16~ rpm-4.19.0/lib/rpmrc.cc
+--- rpm-4.19.0/lib/rpmrc.cc.16~	2023-11-26 19:34:41.732242071 +0100
++++ rpm-4.19.0/lib/rpmrc.cc	2023-11-26 19:34:41.796242681 +0100
 @@ -1066,6 +1066,33 @@ static int is_geode(void)
  }
  #endif

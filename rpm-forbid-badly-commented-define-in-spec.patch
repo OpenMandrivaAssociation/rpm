@@ -1,7 +1,7 @@
-diff --git a/build/parseSpec.c b/build/parseSpec.c
+diff --git a/build/parseSpec.cc b/build/parseSpec.cc
 index 01620bd..4233b15 100644
---- a/build/parseSpec.c
-+++ b/build/parseSpec.c
+--- a/build/parseSpec.cc
++++ b/build/parseSpec.cc
 @@ -140,6 +140,24 @@ static OFI_t * popOFI(rpmSpec spec)
      return spec->fileStack;
  }

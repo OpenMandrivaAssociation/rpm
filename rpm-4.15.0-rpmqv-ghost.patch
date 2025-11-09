@@ -7,10 +7,10 @@ Subject: [PATCH 09/36] rpmqv ghost
  lib/poptQV.c |    3 +++
  1 files changed, 3 insertions(+), 0 deletions(-)
 
-diff --git a/lib/poptQV.c b/lib/poptQV.c
+diff --git a/lib/poptQV.cc b/lib/poptQV.cc
 index 548c64a..5cc9d3d 100644
---- a/lib/poptQV.c
-+++ b/lib/poptQV.c
+--- a/lib/poptQV.cc
++++ b/lib/poptQV.cc
 @@ -200,6 +200,9 @@ struct poptOption rpmQVFilePoptTable[] =
   { "artifactfiles", 'A', POPT_BIT_SET,
  	&rpmQVKArgs.qva_incattr, RPMFILE_ARTIFACT,

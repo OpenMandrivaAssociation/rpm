@@ -1,6 +1,6 @@
-diff -u b/lib/transaction.c b/lib/transaction.c
---- b/lib/transaction.c
-+++ b/lib/transaction.c	2012-06-08 16:25:39.367544735 +0000
+diff -u b/lib/transaction.cc b/lib/transaction.cc
+--- b/lib/transaction.cc
++++ b/lib/transaction.cc	2012-06-08 16:25:39.367544735 +0000
 @@ -374,6 +374,21 @@
      return rConflicts;
  }
