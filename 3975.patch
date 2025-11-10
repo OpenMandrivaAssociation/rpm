@@ -1,0 +1,56 @@
+From 2b8f66d53ce3fc220cca37fe7d9ec7133204c5ac Mon Sep 17 00:00:00 2001
+From: Panu Matilainen <pmatilai@redhat.com>
+Date: Wed, 1 Oct 2025 12:45:40 +0300
+Subject: [PATCH 1/2] Fix build regression on WITH_SEQUOIA=OFF
+
+Commit c36c717f41683953b9c23e447a8df0d0ac7c845c neglected to add the
+stub for non-sequoia builds.
+
+Fixes: #3970
+---
+ rpmio/rpmpgp_dummy.cc | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/rpmio/rpmpgp_dummy.cc b/rpmio/rpmpgp_dummy.cc
+index 97babb67a3..dda22ca6d4 100644
+--- a/rpmio/rpmpgp_dummy.cc
++++ b/rpmio/rpmpgp_dummy.cc
+@@ -121,3 +121,8 @@ rpmRC pgpPubkeyMerge(const uint8_t *pkts1, size_t pkts1len, const uint8_t *pkts2
+ {
+     return RPMRC_FAIL;
+ }
++
++int pgpDigParamsSalt(pgpDigParams digp, const uint8_t **datap, size_t *lenp)
++{
++    return -1;
++}
+
+From acf1d7254db1f2c11d23cad527611756d3aabdcd Mon Sep 17 00:00:00 2001
+From: Panu Matilainen <pmatilai@redhat.com>
+Date: Wed, 1 Oct 2025 12:48:10 +0300
+Subject: [PATCH 2/2] Add API docs for pgpDigParamsSalt()
+
+Commit c36c717f41683953b9c23e447a8df0d0ac7c845c also neglected to add
+any docs for this public API function, oops.
+---
+ include/rpm/rpmpgp.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/include/rpm/rpmpgp.h b/include/rpm/rpmpgp.h
+index ee9d8f5a52..3bf4b80b07 100644
+--- a/include/rpm/rpmpgp.h
++++ b/include/rpm/rpmpgp.h
+@@ -489,6 +489,13 @@ int pgpDigParamsVersion(pgpDigParams digp);
+  */
+ uint32_t pgpDigParamsCreationTime(pgpDigParams digp);
+ 
++/** \ingroup rpmpgp
++ * Return salt of a signature (OpenPGP v6 signatures)
++ * @param digp		parameter container
++ * @param[out] datap	salt data
++ * @param[out] lenp	length of the salt
++ * @return		0 on success
++ */
+ int pgpDigParamsSalt(pgpDigParams digp, const uint8_t **datap, size_t *lenp);
+ 
+ /** \ingroup rpmpgp

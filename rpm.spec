@@ -196,6 +196,7 @@ Patch3003:	rpm_arm_mips_isa_macros.patch
 #
 # Upstream patches not carried by Fedora or Mageia
 #
+Patch4000:	https://github.com/rpm-software-management/rpm/pull/3975.patch
 
 #
 # Patches proposed upstream
@@ -228,6 +229,7 @@ Patch6005:	rpm-4.17.0-usrmerge.patch
 
 # Patches to rpmpgp_legacy
 Patch7000:	rpmpgp_legacy-rpm-6.0.patch
+Patch7001:	rpmpgp_legacy-pgpDigParamsSalt.patch
 
 # Patches to perl-rpm-packaging
 Patch10001:	perl-rpm-packaging-allow-newer-modules.patch

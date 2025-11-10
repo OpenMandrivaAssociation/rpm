@@ -1,0 +1,42 @@
+commit d7358065a8ab85391b8fcb37c0a25eccea823f8a
+Author: Bernhard Rosenkränzer <bero@lindev.ch>
+Date:   Mon Nov 10 04:12:29 2025 +0100
+
+    Add a preliminary pgpDigParamsSalt implementation
+
+diff --git rpm-6.0.0/rpmio/rpmpgp_legacy/rpmpgp_internal_api.c rpm-6.0.0/rpmio/rpmpgp_legacy/rpmpgp_internal_api.c
+index 8619915..7fd6cdd 100644
+--- rpm-6.0.0/rpmio/rpmpgp_legacy/rpmpgp_internal_api.c
++++ rpm-6.0.0/rpmio/rpmpgp_legacy/rpmpgp_internal_api.c
+@@ -278,3 +278,31 @@ rpmRC pgpPubkeyMerge(const uint8_t *pkts1, size_t pkts1len, const uint8_t *pkts2
+     return rc == RPMPGP_OK ? RPMRC_OK : RPMRC_FAIL;
+ }
+ 
++int pgpDigParamsSalt(pgpDigParams digp, const uint8_t **datap, size_t *lenp)
++{
++    if(!digp || !datap || !lenp) {
++        fprintf(stderr, "pgpDigParamsSalt: Bad parameters\n");
++        return -1;
++    }
++
++    *datap = NULL;
++    *lenp = 0;
++
++    if(digp->tag != PGPTAG_SIGNATURE) {
++        fprintf(stderr, "pgpDigParamsSalt: not a signature\n");
++        return -1;
++    }
++    if(digp->sigtype != PGPSIGTYPE_BINARY) {
++        fprintf(stderr, "pgpDigParamsSalt: not a binary signature\n");
++        return -1;
++    }
++    if(digp->hash_algo != RPM_HASH_SHA256) {
++        fprintf(stderr, "pgpDigParamsSalt: non-SHA256 signature detected (%u), this may or may not work\n", digp->hash_algo);
++    }
++
++    // digp->hash contains a signature with length digp->hashlen
++    // but as of 6.0.0, there is no indication of it being salted,
++    // so returning an empty salt seems to be the right thing to
++    // do unconditionally
++    return 0;
++}
