@@ -115,6 +115,8 @@ Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.serv
 # Backports from upstream
 #
 # [currently none needed]
+Patch100:	https://github.com/rpm-software-management/rpm/commit/b7e78afe297e0194c22d7901bfcc34b984659165.patch
+Patch101:	https://github.com/rpm-software-management/rpm/commit/dd7f8ff781bc8926d2e1bff8ebed04cec80b0d78.patch
 
 #
 # Fedora patches
@@ -228,8 +230,12 @@ Patch6004:	rpm-4.16.0-omv-aarch64-macro.patch
 Patch6005:	rpm-4.17.0-usrmerge.patch
 
 # Patches to rpmpgp_legacy
-Patch7000:	rpmpgp_legacy-rpm-6.0.patch
-Patch7001:	rpmpgp_legacy-pgpDigParamsSalt.patch
+Patch7000:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/3caaf3a847b92303bf577bd753f5c8dc8bda268d.patch
+Patch7001:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/ab83506f68c57e68745c4e857ae03d9533b49360.patch
+Patch7002:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/e83114ce167bed5cd210e10cbddb49226997e7d4.patch
+Patch7003:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/9a24e90b8d15d10da70b1c98a672a7c3024a840c.patch
+Patch7004:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/09166e6347833866c2160be3b05b00be3f02469e.patch
+Patch7005:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/30699f403450a8f076da450abb8301960d0cb441.patch
 
 # Patches to perl-rpm-packaging
 Patch10001:	perl-rpm-packaging-allow-newer-modules.patch
@@ -513,7 +519,9 @@ Rpm plugin for working with the application blocker fapolicyd
 %autopatch -p1 -M 6999
 tar xf %{S:1}
 mv rpmpgp_legacy-1.1 rpmio/rpmpgp_legacy
+cd rpmio/rpmpgp_legacy
 %autopatch -p1 -m 7000 -M 9999
+cd ../..
 tar xf %{S:6}
 cd perl-rpm-packaging-*
 %autopatch -p1 -m 10000 -M 10100

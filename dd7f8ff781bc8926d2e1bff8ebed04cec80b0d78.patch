@@ -1,0 +1,32 @@
+From dd7f8ff781bc8926d2e1bff8ebed04cec80b0d78 Mon Sep 17 00:00:00 2001
+From: Michal Domonkos <mdomonko@redhat.com>
+Date: Fri, 3 Oct 2025 17:26:01 +0200
+Subject: [PATCH] Fix man page index filtering
+
+Only list man pages in the current directory. This is needed for the
+per-version docs on rpm.org to work properly and should've been part of
+commit 0b30b126393e120999a3bf4bddde4c4153ea1b75.
+
+Note that this issue is currently not visible since we only publish one
+version with the new man page layout (6.0.x), but as soon as we add
+more, duplicate entries would be listed without this filter.
+
+(cherry picked from commit 644829c76e7c9cd55a52beb8eba0f65a95963333)
+---
+ docs/man/index.md | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/docs/man/index.md b/docs/man/index.md
+index 2d5003886c..9faed277e2 100644
+--- a/docs/man/index.md
++++ b/docs/man/index.md
+@@ -3,7 +3,8 @@ layout: default
+ title: rpm.org - RPM Manual Pages
+ ---
+ 
+-{% assign manpages = site.pages | where: 'topic', 'manpage' %}
++{% assign manpages = site.pages | where: 'topic', 'manpage'
++                                | where: 'dir', page.dir %}
+ {% assign tools = manpages      | where: 'type', 'tool' %}
+ {% assign progs = manpages      | where: 'type', 'program' %}
+ {% assign configs = manpages    | where: 'type', 'config' %}

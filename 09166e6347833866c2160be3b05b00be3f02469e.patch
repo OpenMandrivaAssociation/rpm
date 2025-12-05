@@ -1,0 +1,46 @@
+From 09166e6347833866c2160be3b05b00be3f02469e Mon Sep 17 00:00:00 2001
+From: Michael Schroeder <mls@suse.de>
+Date: Tue, 2 Dec 2025 16:43:34 +0100
+Subject: [PATCH] Check digp->version in pgpDigParamsSalt
+
+---
+ rpmpgp_internal_api.c | 24 +++---------------------
+ 1 file changed, 3 insertions(+), 21 deletions(-)
+
+diff --git a/rpmpgp_internal_api.c b/rpmpgp_internal_api.c
+index 7fd6cdd..bbbd664 100644
+--- a/rpmpgp_internal_api.c
++++ b/rpmpgp_internal_api.c
+@@ -280,29 +280,11 @@ rpmRC pgpPubkeyMerge(const uint8_t *pkts1, size_t pkts1len, const uint8_t *pkts2
+ 
+ int pgpDigParamsSalt(pgpDigParams digp, const uint8_t **datap, size_t *lenp)
+ {
+-    if(!digp || !datap || !lenp) {
+-        fprintf(stderr, "pgpDigParamsSalt: Bad parameters\n");
++    if(!digp || !datap || !lenp)
+         return -1;
+-    }
+-
++    if (digp->tag != PGPTAG_SIGNATURE || digp->version >= 6)
++	return -1;	/* unsupported */
+     *datap = NULL;
+     *lenp = 0;
+-
+-    if(digp->tag != PGPTAG_SIGNATURE) {
+-        fprintf(stderr, "pgpDigParamsSalt: not a signature\n");
+-        return -1;
+-    }
+-    if(digp->sigtype != PGPSIGTYPE_BINARY) {
+-        fprintf(stderr, "pgpDigParamsSalt: not a binary signature\n");
+-        return -1;
+-    }
+-    if(digp->hash_algo != RPM_HASH_SHA256) {
+-        fprintf(stderr, "pgpDigParamsSalt: non-SHA256 signature detected (%u), this may or may not work\n", digp->hash_algo);
+-    }
+-
+-    // digp->hash contains a signature with length digp->hashlen
+-    // but as of 6.0.0, there is no indication of it being salted,
+-    // so returning an empty salt seems to be the right thing to
+-    // do unconditionally
+     return 0;
+ }

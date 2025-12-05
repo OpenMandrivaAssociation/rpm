@@ -1,13 +1,16 @@
-commit d7358065a8ab85391b8fcb37c0a25eccea823f8a
-Author: Bernhard Rosenkränzer <bero@lindev.ch>
-Date:   Mon Nov 10 04:12:29 2025 +0100
+From ab83506f68c57e68745c4e857ae03d9533b49360 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@lindev.ch>
+Date: Mon, 10 Nov 2025 04:12:29 +0100
+Subject: [PATCH] Add a preliminary pgpDigParamsSalt implementation
 
-    Add a preliminary pgpDigParamsSalt implementation
+---
+ rpmpgp_internal_api.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git rpm-6.0.0/rpmio/rpmpgp_legacy/rpmpgp_internal_api.c rpm-6.0.0/rpmio/rpmpgp_legacy/rpmpgp_internal_api.c
+diff --git a/rpmpgp_internal_api.c b/rpmpgp_internal_api.c
 index 8619915..7fd6cdd 100644
---- rpm-6.0.0/rpmio/rpmpgp_legacy/rpmpgp_internal_api.c
-+++ rpm-6.0.0/rpmio/rpmpgp_legacy/rpmpgp_internal_api.c
+--- a/rpmpgp_internal_api.c
++++ b/rpmpgp_internal_api.c
 @@ -278,3 +278,31 @@ rpmRC pgpPubkeyMerge(const uint8_t *pkts1, size_t pkts1len, const uint8_t *pkts2
      return rc == RPMPGP_OK ? RPMRC_OK : RPMRC_FAIL;
  }

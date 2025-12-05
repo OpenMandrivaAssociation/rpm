@@ -1,0 +1,32 @@
+From 9a24e90b8d15d10da70b1c98a672a7c3024a840c Mon Sep 17 00:00:00 2001
+From: Michael Schroeder <mls@suse.de>
+Date: Tue, 2 Dec 2025 16:31:03 +0100
+Subject: [PATCH] Also use the fingerprint to get the issuer id
+
+RFC 4880 does not mandate an issuer id subpackage and some implementations
+just add the fingerprint subpackage.
+---
+ rpmpgp_internal.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/rpmpgp_internal.c b/rpmpgp_internal.c
+index 5a8b2a1..c0a1cc6 100644
+--- a/rpmpgp_internal.c
++++ b/rpmpgp_internal.c
+@@ -494,6 +494,16 @@ static rpmpgpRC pgpPrtSubType(const uint8_t *h, size_t hlen, pgpDigParams _digp,
+ 	    }
+ 	    break;
+ 
++	case PGPSUBTYPE_ISSUER_FINGERPRINT:
++	    if (plen - 1 < 17)
++		break;
++	    impl = 1;
++	    if (p[1] == 4 && plen - 1 == 21 && !(_digp->saved & PGPDIG_SAVED_ID)) {
++		memcpy(_digp->signid, p + plen - sizeof(_digp->signid), sizeof(_digp->signid));
++		_digp->saved |= PGPDIG_SAVED_ID;
++	    }
++	    break;
++
+ 	case PGPSUBTYPE_KEY_FLAGS:
+ 	    if (!hashed)
+ 		break;	/* Subpackets in the unhashed section cannot be trusted */

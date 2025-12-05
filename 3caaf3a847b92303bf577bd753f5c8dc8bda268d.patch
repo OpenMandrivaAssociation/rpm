@@ -1,0 +1,36 @@
+From 3caaf3a847b92303bf577bd753f5c8dc8bda268d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@lindev.ch>
+Date: Sun, 9 Nov 2025 17:34:09 +0100
+Subject: [PATCH] Fix build in rpm 6.0+
+
+---
+ rpmpgp_internal.c       | 2 +-
+ rpmpgp_internal_armor.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/rpmpgp_internal.c b/rpmpgp_internal.c
+index 7e8c6ac..24ee4b9 100644
+--- a/rpmpgp_internal.c
++++ b/rpmpgp_internal.c
+@@ -9,7 +9,7 @@
+ #include <rpm/rpmstring.h>
+ #include <rpm/rpmlog.h>
+ 
+-#include "rpmpgpval.h"
++#include "rpmpgpval.hh"
+ #include "rpmpgp_internal.h"
+ 
+ #include "debug.h"
+diff --git a/rpmpgp_internal_armor.c b/rpmpgp_internal_armor.c
+index 505bb5c..030de39 100644
+--- a/rpmpgp_internal_armor.c
++++ b/rpmpgp_internal_armor.c
+@@ -9,7 +9,7 @@
+ #include <rpm/rpmlog.h>
+ #include <rpm/rpmbase64.h>
+ 
+-#include "rpmpgpval.h"
++#include "rpmpgpval.hh"
+ #include "rpmpgp_internal.h"
+ 
+ /** \ingroup rpmpgp

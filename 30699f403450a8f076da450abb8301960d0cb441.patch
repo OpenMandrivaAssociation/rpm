@@ -1,0 +1,24 @@
+From 30699f403450a8f076da450abb8301960d0cb441 Mon Sep 17 00:00:00 2001
+From: Michael Schroeder <mls@suse.de>
+Date: Tue, 2 Dec 2025 16:58:21 +0100
+Subject: [PATCH] Declare the pgpDigParamsSalt function.
+
+---
+ rpmpgp_internal.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/rpmpgp_internal.h b/rpmpgp_internal.h
+index a5ff60c..b0e0e40 100644
+--- a/rpmpgp_internal.h
++++ b/rpmpgp_internal.h
+@@ -163,7 +163,9 @@ rpmpgpRC pgpMergeKeys(const uint8_t *pkts1, size_t pktlen1, const uint8_t *pkts2
+ RPM_GNUC_INTERNAL
+ uint32_t pgpCurrentTime(void);
+ 
+-RPM_GNUC_INTERNAL
+ uint32_t pgpDigParamsModificationTime(pgpDigParams digp);
+ 
++int pgpDigParamsSalt(pgpDigParams digp, const uint8_t **datap, size_t *lenp);
++
++
+ #endif /* _RPMPGP_INTERNAL_H */
