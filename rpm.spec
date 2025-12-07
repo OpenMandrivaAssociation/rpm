@@ -249,6 +249,7 @@ Patch10002:	perl-rpm-packaging-default-to-normalversion.patch
 License:	GPLv2+
 
 BuildRequires:	cmake
+BuildRequires:	make
 BuildRequires:	fakechroot
 BuildRequires:	bison
 BuildRequires:	pkgconf
