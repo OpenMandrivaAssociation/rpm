@@ -97,7 +97,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	6.0.0
-Release:	%{?snapver:0.%{snapver}.}1
+Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -228,6 +228,9 @@ Patch6004:	rpm-4.16.0-omv-aarch64-macro.patch
 # Make sure /bin/sh is replaced with %{_bindir}/sh during usrmerge
 # transition
 Patch6005:	rpm-4.17.0-usrmerge.patch
+# Reduce the _pkgverify_level to digest so locally built packages will
+# install without having to add --nosignature
+Patch6006:	rpm-6.0-default-_pkgverify_level-digest.patch
 
 # Patches to rpmpgp_legacy
 Patch7000:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/3caaf3a847b92303bf577bd753f5c8dc8bda268d.patch
