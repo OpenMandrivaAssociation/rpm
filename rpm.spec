@@ -554,15 +554,15 @@ export CMAKE_BUILD_DIR=BUILD
 	-DWITH_LEGACY_OPENPGP:BOOL=ON \
 	-DWITH_OPENSSL:BOOL=ON \
 	-DMKTREE_BACKEND="rootfs" \
-	-G "Unix Makefiles"
+	-G Ninja
 
 # FIXME workaround for something adding -I/usr/include even when crosscompiling
-find . -name flags.make |xargs sed -i -e 's,-I/usr/include ,,'
+#find . -name flags.make |xargs sed -i -e 's,-I/usr/include ,,'
 
-%make_build
+%ninja_build
 
 %install
-%make_install -C BUILD
+%ninja_install -C BUILD
 
 # Upstream debugedit is better than rpm's copy
 rm -f %{buildroot}%{_usrlibrpm}/{debugedit,sepdebugcrcfix,find-debuginfo.sh}
