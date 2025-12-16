@@ -1,0 +1,12 @@
+diff -up rpm-6.0.1/lib/keystore.hh.omv~ rpm-6.0.1/lib/keystore.hh
+--- rpm-6.0.1/lib/keystore.hh.omv~	2025-12-16 05:55:44.265195519 +0100
++++ rpm-6.0.1/lib/keystore.hh	2025-12-16 05:56:09.485513694 +0100
+@@ -8,6 +8,8 @@
+ 
+ namespace rpm {
+ 
++static rpmRC delete_key_compat(auto keystore, rpmtxn txn, rpmPubkey key, auto skip);
++
+ class keystore {
+ public:
+     virtual rpmRC load_keys(rpmtxn txn, rpmKeyring keyring) = 0;

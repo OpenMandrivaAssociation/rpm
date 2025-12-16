@@ -96,8 +96,8 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Version:	6.0.0
-Release:	%{?snapver:0.%{snapver}.}3
+Version:	6.0.1
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -115,8 +115,6 @@ Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.serv
 # Backports from upstream
 #
 # [currently none needed]
-Patch100:	https://github.com/rpm-software-management/rpm/commit/b7e78afe297e0194c22d7901bfcc34b984659165.patch
-Patch101:	https://github.com/rpm-software-management/rpm/commit/dd7f8ff781bc8926d2e1bff8ebed04cec80b0d78.patch
 
 #
 # Fedora patches
@@ -198,7 +196,6 @@ Patch3003:	rpm_arm_mips_isa_macros.patch
 #
 # Upstream patches not carried by Fedora or Mageia
 #
-Patch4000:	https://github.com/rpm-software-management/rpm/pull/3975.patch
 
 #
 # Patches proposed upstream
@@ -231,6 +228,7 @@ Patch6005:	rpm-4.17.0-usrmerge.patch
 # Reduce the _pkgverify_level to digest so locally built packages will
 # install without having to add --nosignature
 Patch6006:	rpm-6.0-default-_pkgverify_level-digest.patch
+Patch6007:	rpm-6.0.1-clang.patch
 
 # Patches to rpmpgp_legacy
 Patch7000:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/3caaf3a847b92303bf577bd753f5c8dc8bda268d.patch
