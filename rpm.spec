@@ -555,7 +555,7 @@ export CMAKE_BUILD_DIR=BUILD
 	-G Ninja
 
 # FIXME workaround for something adding -I/usr/include even when crosscompiling
-#find . -name flags.make |xargs sed -i -e 's,-I/usr/include ,,'
+sed -i -e 's,-I/usr/include$,,g;s,-I/usr/include\;,,g;s,-I/usr/include ,,g' build.ninja
 
 %ninja_build
 
