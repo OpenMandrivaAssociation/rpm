@@ -97,7 +97,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	6.0.1
-Release:	%{?snapver:0.%{snapver}.}1
+Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -110,6 +110,9 @@ Source5:	https://github.com/rpm-software-management/python-rpm-packaging/archive
 # Same for perl bits
 Source6:	https://github.com/rpm-software-management/perl-rpm-packaging/archive/refs/tags/v1.2.tar.gz#/perl-rpm-packaging-1.2.tar.gz
 Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.service
+
+# Extra functionality
+Patch10:	rpmuncompress-support-for-car-files.patch
 
 #
 # Backports from upstream

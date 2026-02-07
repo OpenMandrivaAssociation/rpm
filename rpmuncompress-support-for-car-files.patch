@@ -1,0 +1,86 @@
+From cc9c1be6771216bb54a7620bfd977dbcdd0b41ce Mon Sep 17 00:00:00 2001
+From: Davide Beatrici <git@davidebeatrici.dev>
+Date: Sat, 7 Feb 2026 04:41:26 +0100
+Subject: [PATCH] rpmuncompress: Add support for CAR files
+
+CAR (Content Addressable Archive) is a format defined by IPFS.
+
+It can be described as the decentralized web counterpart of TAR.
+
+Data integrity and verification is built-in thanks to every block getting its own CID (Content ID).
+
+This has been tested with https://github.com/ipld/go-car.
+---
+ CMakeLists.txt            | 1 +
+ include/rpm/rpmfileutil.h | 3 ++-
+ macros.in                 | 1 +
+ rpmio/rpmfileutil.cc      | 2 ++
+ tools/rpmuncompress.cc    | 1 +
+ 5 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 62686d7d6..466204091 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -115,6 +115,7 @@ function(makemacros)
+ 	findutil(__7ZIP "7za;7z")
+ 	findutil(__BZIP2 bzip2)
+ 	findutil(__CAT cat)
++	findutil(__CAR car)
+ 	findutil(__CHMOD chmod)
+ 	findutil(__CHOWN chown)
+ 	findutil(__CP cp)
+diff --git a/include/rpm/rpmfileutil.h b/include/rpm/rpmfileutil.h
+index dee4f6c7c..e60ac476f 100644
+--- a/include/rpm/rpmfileutil.h
++++ b/include/rpm/rpmfileutil.h
+@@ -28,7 +28,8 @@ typedef enum rpmCompressedMagic_e {
+     COMPRESSED_LRZIP		= 7,	/*!< lrzip can handle */
+     COMPRESSED_7ZIP		= 8,	/*!< 7zip can handle */
+     COMPRESSED_GEM		= 9,	/*!< gem can handle */
+-    COMPRESSED_ZSTD		= 10	/*!< zstd can handle */
++    COMPRESSED_ZSTD		= 10,	/*!< zstd can handle */
++    COMPRESSED_CAR		= 11,   /*!< car can handle */
+ } rpmCompressedMagic;
+ 
+ /** \ingroup rpmfileutil
+diff --git a/macros.in b/macros.in
+index c56e93305..b391c19d9 100644
+--- a/macros.in
++++ b/macros.in
+@@ -22,6 +22,7 @@
+ %__7zip			@__7ZIP@
+ %__awk			@__AWK@
+ %__bzip2		@__BZIP2@
++%__car			@__CAR@
+ %__cat			@__CAT@
+ %__chmod		@__CHMOD@
+ %__chown		@__CHOWN@
+diff --git a/rpmio/rpmfileutil.cc b/rpmio/rpmfileutil.cc
+index 80bc42be2..bd25ce06c 100644
+--- a/rpmio/rpmfileutil.cc
++++ b/rpmio/rpmfileutil.cc
+@@ -216,6 +216,8 @@ int rpmFileIsCompressed(const char * file, rpmCompressedMagic * compressed)
+ 	*compressed = COMPRESSED_LZMA;
+     } else if (rpmFileHasSuffix(file, ".gem")) {
+ 	*compressed = COMPRESSED_GEM;
++    } else if (rpmFileHasSuffix(file, ".car")) {
++	*compressed = COMPRESSED_CAR;
+     }
+ 
+     return rc;
+diff --git a/tools/rpmuncompress.cc b/tools/rpmuncompress.cc
+index 3f6a5c9bc..70022be7b 100644
+--- a/tools/rpmuncompress.cc
++++ b/tools/rpmuncompress.cc
+@@ -60,6 +60,7 @@ struct archiveType_s {
+     { COMPRESSED_7ZIP,	1,	"%{__7zip}",	"x -y",		"-bso0 -bsp0", "-o", 0 },
+     { COMPRESSED_ZSTD,	0,	"%{__zstd}",	"-dc",		"", "", 0 },
+     { COMPRESSED_GEM,	1,	"%{__gem}",	"unpack",	"", "--target=", 0 },
++    { COMPRESSED_CAR,	1,	"%{__car}",	"extract -f",	"", "", 0 },
+     { -1,		0,	NULL,		NULL,		NULL, 0 },
+ };
+ 
+-- 
+2.51.2
+
