@@ -12,11 +12,6 @@
 %define _build_pkgcheck_srpm %{_bindir}/true
 %endif
 
-%if %{cross_compiling}
-# Workaround for libtool being a horrible mess
-%define prefer_gcc 1
-%endif
-
 # Listing znver1 here (even though %{x86_64} is supposed to include it)
 # is a bootstrapping help (so building the package on a system without
 # znver1 support will provide a working starting point)
