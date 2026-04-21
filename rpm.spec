@@ -93,7 +93,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	6.0.1
-Release:	%{?snapver:0.%{snapver}.}3
+Release:	%{?snapver:0.%{snapver}.}4
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -241,6 +241,12 @@ Patch7005:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/30699
 # Patches to perl-rpm-packaging
 Patch10001:	perl-rpm-packaging-allow-newer-modules.patch
 Patch10002:	perl-rpm-packaging-default-to-normalversion.patch
+
+# Patches to python-rpm-packaging
+# These are not yet upstreamed.
+# Fixes for running with python-packaging v26+ based on:
+# https://src.fedoraproject.org/rpms/python-rpm-generators/c/ab5e6f86de9e9e4f45ef803fc06378bf60010384
+Patch12000:	fix-running-pythondistdeps.py-with-packaging-v26.patch
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD
 # SourceLicense: (GPLv2+ and LGPLv2+ with exceptions) and BSD
@@ -527,6 +533,9 @@ cd ../..
 tar xf %{S:6}
 cd perl-rpm-packaging-*
 %autopatch -p1 -m 10000 -M 10100
+cd ..
+cd python-rpm-packaging-*
+%autopatch -p1 -m 12000 -M 12100
 cd ..
 
 # Restore python packaging bits
