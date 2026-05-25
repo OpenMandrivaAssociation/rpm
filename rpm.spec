@@ -573,7 +573,7 @@ export CMAKE_BUILD_DIR=BUILD
 	-G Ninja
 
 # FIXME workaround for something adding -I/usr/include even when crosscompiling
-sed -i -e 's,-I/usr/include$,,g;s,-I/usr/include\;,,g;s,-I/usr/include ,,g' build.ninja
+sed -i -e 's,-I/usr/include$,,g;s,-I/usr/include\;,,g;s,-I/usr/include ,,g;s,-isystem /usr/include$,,;s,-isystem /usr/include\;,,g;s,-isystem /usr/include ,,g' build.ninja
 
 %ninja_build
 
@@ -763,11 +763,6 @@ cd -
 
 install -c -m 755 perl-rpm-packaging-*/scripts/perl.* %{buildroot}%{_usrlibrpm}/
 install -c -m 644 perl-rpm-packaging-*/fileattrs/*.attr %{buildroot}%{_usrlibrpm}/fileattrs/
-
-%if %{cross_compiling}
-# Fix double-sysroot
-mv %{buildroot}%{_prefix}/%{_target_platform}%{_datadir}/dbus-1 %{buildroot}%{_datadir}/
-%endif
 
 %find_lang %{name}
 
