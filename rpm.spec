@@ -92,23 +92,23 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Version:	6.0.1
-Release:	%{?snapver:0.%{snapver}.}5
+Version:	6.0.91
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
-Source1:	https://github.com/rpm-software-management/rpmpgp_legacy/archive/refs/tags/1.1.tar.gz#/rpmpgp_legacy-1.1.tar.gz
+%define pgpr_version 20260318
+Source1:	https://github.com/rpm-software-management/libpgpr/archive/refs/heads/main.tar.gz#/libpgpr-%{pgpr_version}.tar.gz
 # extracted from http://pkgs.fedoraproject.org/cgit/redhat-rpm-config.git/plain/macros:
 Source2:	macros.filter
 Source3:	rpm.rpmlintrc
 # Put python bits back to where they used to be for now
 Source5:	https://github.com/rpm-software-management/python-rpm-packaging/archive/refs/heads/python-rpm-packaging-main.tar.gz
 # Same for perl bits
-Source6:	https://github.com/rpm-software-management/perl-rpm-packaging/archive/refs/tags/v1.2.tar.gz#/perl-rpm-packaging-1.2.tar.gz
+Source6:	https://github.com/rpm-software-management/perl-rpm-packaging/archive/refs/tags/v1.3.tar.gz#/perl-rpm-packaging-1.3.tar.gz
 Source10:	https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpmdb-rebuild.service
 
 # Extra functionality
-Patch10:	rpmuncompress-support-for-car-files.patch
 Patch11:	rpmlua-add-posix.statvfs.patch
 
 #
@@ -230,16 +230,10 @@ Patch6005:	rpm-4.17.0-usrmerge.patch
 Patch6006:	rpm-6.0-default-_pkgverify_level-digest.patch
 Patch6007:	rpm-6.0.1-clang.patch
 
-# Patches to rpmpgp_legacy
-Patch7000:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/3caaf3a847b92303bf577bd753f5c8dc8bda268d.patch
-Patch7001:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/ab83506f68c57e68745c4e857ae03d9533b49360.patch
-Patch7002:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/e83114ce167bed5cd210e10cbddb49226997e7d4.patch
-Patch7003:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/9a24e90b8d15d10da70b1c98a672a7c3024a840c.patch
-Patch7004:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/09166e6347833866c2160be3b05b00be3f02469e.patch
-Patch7005:	https://github.com/rpm-software-management/rpmpgp_legacy/commit/30699f403450a8f076da450abb8301960d0cb441.patch
+# Patches to libpgpr
+# [7000+] -- currently none needed
 
 # Patches to perl-rpm-packaging
-Patch10001:	perl-rpm-packaging-allow-newer-modules.patch
 Patch10002:	perl-rpm-packaging-default-to-normalversion.patch
 
 # Patches to python-rpm-packaging
@@ -526,7 +520,7 @@ Rpm plugin for working with the application blocker fapolicyd
 %setup -n %{name}-%{srcver} -a 5
 %autopatch -p1 -M 6999
 tar xf %{S:1}
-mv rpmpgp_legacy-1.1 rpmio/rpmpgp_legacy
+mv libpgpr-main rpmio/rpmpgp_legacy
 cd rpmio/rpmpgp_legacy
 %autopatch -p1 -m 7000 -M 9999
 cd ../..
@@ -775,7 +769,7 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %files -f %{name}.lang
 %doc COPYING
 %attr(0755, rpm, rpm) %{_bindir}/rpm
-%attr(0755, rpm, rpm) %{_bindir}/rpm2cpio
+%{_bindir}/rpm2cpio
 %attr(0755, rpm, rpm) %{_bindir}/rpm2archive
 %attr(0755, rpm, rpm) %{_bindir}/gendiff
 %attr(0755, rpm, rpm) %{_bindir}/rpmdb
@@ -882,6 +876,8 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %doc docs/manual
 %{_bindir}/rpmlua
 %{_bindir}/rpmsort
+%{_bindir}/rpmuncompress
+%{_bindir}/rpm-setup-autosign
 %{_prefix}/lib/rpm/rpm_macros_provides.sh
 %{_prefix}/lib/rpm/rpmuncompress
 %rpmattr %{_bindir}/rpmbuild
@@ -911,10 +907,14 @@ eatmydata make check || (cat tests/rpmtests.log; exit 0)
 %doc %{_mandir}/man5/rpm-manifest.5*
 %doc %{_mandir}/man5/rpm-rpmrc.5*
 %doc %{_mandir}/man5/rpmbuild-config.5*
+%doc %{_mandir}/man7/rpm-dependency-generators.7*
+%doc %{_mandir}/man7/rpm-design.7*
 %doc %{_mandir}/man7/rpm-lua.7*
 %doc %{_mandir}/man7/rpm-macros.7*
 %doc %{_mandir}/man7/rpm-payloadflags.7*
 %doc %{_mandir}/man7/rpm-queryformat.7*
+%doc %{_mandir}/man7/rpm-scriptlets.7*
+%doc %{_mandir}/man7/rpm-sysusers.7*
 %doc %{_mandir}/man7/rpm-version.7*
 %doc %{_mandir}/man8/rpm-common.8*
 
