@@ -93,7 +93,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	6.0.91
-Release:	%{?snapver:0.%{snapver}.}1
+Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -207,6 +207,8 @@ Patch3003:	rpm_arm_mips_isa_macros.patch
 Patch5001:	rpm-4.15.x-omv-optional-filelist-tag.patch
 # Make it compile
 Patch5002:	rpm-4.18.90-compile.patch
+Patch5003:	rpm-allow-double-percent-sectionname-in-heredocs.patch
+Patch5004:	rpm-filelist-as.patch
 # Add znver1 as an x86_64 superset
 Patch5006:	rpm-4.15.x-omv-znver1-arch.patch
 

@@ -1,0 +1,509 @@
+diff --git a/build/files.cc b/build/files.cc
+index ab5a194..03302a2 100644
+--- a/build/files.cc
++++ b/build/files.cc
+@@ -136,6 +136,7 @@ typedef struct FileEntry_s {
+ 
+     ARGV_t langs;
+     char *caps;
++    char *pkgPath;	/* package path when different from disk (from "as") */
+ 
+     /* these are only ever relevant for current entry */
+     unsigned devtype;
+@@ -220,12 +221,17 @@ static void copyFileEntry(FileEntry src, FileEntry dest)
+     if (src->caps != NULL) {
+ 	dest->caps = xstrdup(src->caps);
+     }
++
++    if (src->pkgPath != NULL) {
++	dest->pkgPath = xstrdup(src->pkgPath);
++    }
+ }
+ 
+ static void FileEntryFree(FileEntry entry)
+ {
+     argvFree(entry->langs);
+     free(entry->caps);
++    free(entry->pkgPath);
+     memset(entry, 0, sizeof(*entry));
+ }
+ 
+@@ -886,6 +892,7 @@ static rpmRC parseForSimple(char * buf, FileEntry cur, ARGV_t * fileNames)
+     int quotes = 0;
+     rpmRC res = RPMRC_OK;
+     int allow_relative = (RPMFILE_PUBKEY|RPMFILE_DOC|RPMFILE_LICENSE);
++    int want_pkgPath = 0;
+ 
+     t = buf;
+     while ((s = strtokWithQuotes(t, delim, &quotes)) != NULL) {
+@@ -905,9 +912,29 @@ static rpmRC parseForSimple(char * buf, FileEntry cur, ARGV_t * fileNames)
+ 	    break;
+ 	}
+ 
+-    	/* Set flags for virtual file attributes */
+-	if (vfaMatch(virtualAttrs, s, &(cur->attrFlags)))
++	/* "SOURCE as DEST" — package under a different name than on disk */
++	if (!quotes && rstreq(s, "as")) {
++	    if (want_pkgPath || cur->pkgPath || argvCount(*fileNames) != 1) {
++		rpmlog(RPMLOG_ERR,
++		       _("\"as\" allows only a single source path\n"));
++		res = RPMRC_FAIL;
++		break;
++	    }
++	    want_pkgPath = 1;
+ 	    continue;
++	}
++
++	/* Attributes must precede paths; DEST after "as" is not an attribute */
++	if (want_pkgPath) {
++	    if (vfaMatch(virtualAttrs, s, &(cur->attrFlags))) {
++		rpmlog(RPMLOG_ERR,
++		       _("Expected package path after \"as\", got: %s\n"), s);
++		res = RPMRC_FAIL;
++		break;
++	    }
++	} else if (vfaMatch(virtualAttrs, s, &(cur->attrFlags))) {
++	    continue;
++	}
+ 
+ 	/* normally paths need to be absolute */
+ 	if (*s != '/') {
+@@ -928,12 +955,32 @@ static rpmRC parseForSimple(char * buf, FileEntry cur, ARGV_t * fileNames)
+ 	    s = rpmEscape(s, "?*[]{}");
+ 	}
+ 
+-	argvAdd(fileNames, s);
++	if (want_pkgPath) {
++	    if (*s != '/') {
++		rpmlog(RPMLOG_ERR,
++		       _("Package path after \"as\" must begin with \"/\": %s\n"),
++		       s);
++		res = RPMRC_FAIL;
++		if (quotes)
++		    free(s);
++		break;
++	    }
++	    /* Match ordinary entries: normalize so dups/compare stay consistent */
++	    cur->pkgPath = xstrdup(rpm::normalize_path(s).c_str());
++	    want_pkgPath = 0;
++	} else {
++	    argvAdd(fileNames, s);
++	}
+ 
+ 	if (quotes)
+ 	    free(s);
+     }
+ 
++    if (res == RPMRC_OK && want_pkgPath) {
++	rpmlog(RPMLOG_ERR, _("Missing package path after \"as\"\n"));
++	res = RPMRC_FAIL;
++    }
++
+     return res;
+ }
+ 
+@@ -1125,9 +1125,8 @@ static void genCpioListAndHeader(FileList fl, rpmSpec spec, Package pkg, int isS
+ 
+     /* Adjust paths if needed */
+     if (!isSrc && pkg->removePostfixes) {
+-	for (auto const & fl : fl->files) {
++	for (auto & fl : fl->files) {
+ 	    char * cpiopath = fl.cpioPath;
+-	    char * cpiopath_orig = xstrdup(cpiopath);
+ 
+ 	    for (ARGV_const_t postfix_p = pkg->removePostfixes; *postfix_p; postfix_p++) {
+ 		int len = strlen(*postfix_p);
+@@ -1139,9 +1138,22 @@ static void genCpioListAndHeader(FileList fl, rpmSpec spec, Package pkg, int isS
+ 		    }
+ 		}
+ 	    }
+-	    if (strcmp(cpiopath_orig, cpiopath))
+-		pkg->fileRenameMap.insert({cpiopath, cpiopath_orig});
+-	    _free(cpiopath_orig);
++	}
++    }
++
++    /*
++     * Map package path -> on-disk path (relative to buildroot) when they
++     * differ: removePostfixes stripping and/or "SOURCE as DEST" renames.
++     * Used so debuginfo can be found under the buildroot name while
++     * packaging under the installed name.
++     */
++    if (!isSrc) {
++	for (auto const & frec : fl->files) {
++	    const char *diskRel = frec.diskPath + fl->buildRootLen;
++	    if (*diskRel == '\0')
++		diskRel = "/";
++	    if (!rstreq(diskRel, frec.cpioPath))
++		pkg->fileRenameMap.insert({frec.cpioPath, diskRel});
+ 	}
+     }
+ 
+@@ -1438,6 +1485,13 @@ static rpmRC addFile(FileList fl, const char * diskPath,
+     if (*cpioPath == '\0')
+ 	cpioPath = "/";
+ 
++    /* "SOURCE as DEST" overrides the package member path */
++    if (fl->cur.pkgPath) {
++	if (!validFilename(fl->cur.pkgPath))
++	    goto exit;
++	cpioPath = fl->cur.pkgPath;
++    }
++
+     /*
+      * Unless recursing, we dont have stat() info at hand. Handle the
+      * various cases, preserving historical behavior wrt %dev():
+@@ -1483,6 +1537,13 @@ static rpmRC addFile(FileList fl, const char * diskPath,
+ 	goto exit;
+     }
+ 
++    /* Renaming only applies to a single entry, not recursive directory walks */
++    if (fl->cur.pkgPath && (fl->cur.isDir != 1) && S_ISDIR(statp->st_mode)) {
++	rpmlog(RPMLOG_ERR,
++	       _("Cannot use \"as\" with recursive directories: %s\n"), diskPath);
++	goto exit;
++    }
++
+     /* Don't recurse into explicit %dir, don't double-recurse from fts */
+     if ((fl->cur.isDir != 1) && (statp == &statbuf) && S_ISDIR(statp->st_mode)) {
+ 	return recurseDir(fl, diskPath);
+@@ -2187,7 +2248,8 @@ static rpmRC processBinaryFile(Package pkg, FileList fl, const char * fileName,
+     if (fl->cur.isDir)
+ 	diskPath += '/';
+ 
+-    if (fl->cur.devtype)
++    /* Renames and %dev() entries are always a single explicit path */
++    if (fl->cur.devtype || fl->cur.pkgPath)
+ 	doGlob = 0;
+ 
+     if (!doGlob) {
+@@ -2497,6 +2559,15 @@ static void addPackageFileList (struct FileList_s *fl, Package pkg,
+ 
+ 	    /* File list does come from the spec, try to detect special
+ 	       files and adjust the actual file names.  */
++	    if (fl->cur.pkgPath &&
++		(fl->cur.attrFlags & (RPMFILE_SPECIALDIR|RPMFILE_DOCDIR|RPMFILE_PUBKEY))) {
++		rpmlog(RPMLOG_ERR,
++		       _("Cannot use \"as\" with special file forms: %s\n"),
++		       *fn);
++		fl->processingFailed = 1;
++		continue;
++	    }
++
+ 	    if (fl->cur.attrFlags & RPMFILE_SPECIALDIR) {
+ 		rpmFlags oattrs = (fl->cur.attrFlags & ~RPMFILE_SPECIALDIR);
+ 		specialDir *sdp = NULL;
+@@ -2946,29 +2958,38 @@ static void filterDebuginfoPackage(rpmSpec spec, Package pkg,
+        and add them to the file list */
+     fi = rpmfiInit(fi, 0);
+     while (rpmfiNext(fi) >= 0) {
+-	const char *name = rpmfiFN(fi);
+-	int namel = strlen(name);
++	/* Package (install) path for the binary — also the path we want
++	 * the .debug member to use so it matches the installed ELF. */
++	const char *pkgname = rpmfiFN(fi);
++	int pkgnamel = strlen(pkgname);
+ 
+ 	/* strip trailing .debug like in find-debuginfo.sh */
+-	if (namel > 6 && !strcmp(name + namel - 6, ".debug"))
+-	    namel -= 6;
++	if (pkgnamel > 6 && !strcmp(pkgname + pkgnamel - 6, ".debug"))
++	    pkgnamel -= 6;
+ 
+-	/* fileRenameMap doesn't necessarily have to be initialized */
++	/* On-disk path under buildroot (may differ with "as" / removePostfixes) */
++	const char *diskname = pkgname;
++	int disknamel = pkgnamel;
++	int renamed = 0;
+ 	if (!pkg->fileRenameMap.empty()) {
+-	    auto range = pkg->fileRenameMap.equal_range(name);
++	    auto range = pkg->fileRenameMap.equal_range(pkgname);
+ 	    if (range.first != range.second) {
+ 		if (std::distance(range.first, range.second) > 1)
+-		    rpmlog(RPMLOG_WARNING, _("%s was mapped to multiple filenames"), name);
+-		auto & it = range.first;
+-		name = it->second.c_str();
+-		namel = it->second.size();
++		    rpmlog(RPMLOG_WARNING,
++			   _("%s was mapped to multiple filenames\n"), pkgname);
++		diskname = range.first->second.c_str();
++		disknamel = range.first->second.size();
++		renamed = 1;
+ 	    }
+ 	}
+-	
+-	/* generate path */
+-	rasprintf(&path, "%s%s%.*s%s.debug", buildroot, DEBUG_LIB_DIR, namel, name, uniquearch);
++
++	/* find-debuginfo lays out .debug files from the on-disk ELF path */
++	rasprintf(&path, "%s%s%.*s%s.debug", buildroot, DEBUG_LIB_DIR,
++		  disknamel, diskname, uniquearch);
+ 
+ 	/* If that file exists we have debug information for it */
+ 	if (access(path, F_OK) == 0) {
++	    char *pkgdbg = NULL;	/* packaged debug path (without buildroot) */
++
+ 	    /* Append the file list preamble */
+ 	    if (!files) {
+ 		char *attr = mkattr();
+@@ -2978,35 +2999,68 @@ static void filterDebuginfoPackage(rpmSpec spec, Package pkg,
+ 		free(attr);
+ 	    }
+ 
+-	    /* Add the files main debug-info file */
+-	    argvAdd(&files, path + buildrootlen);
++	    /* Package under the installed ELF path (DEST) when renamed */
++	    if (renamed) {
++		char *line = NULL;
++		rasprintf(&pkgdbg, "%s%.*s%s.debug", DEBUG_LIB_DIR,
++			  pkgnamel, pkgname, uniquearch);
++		rasprintf(&line, "%s as %s", path + buildrootlen, pkgdbg);
++		argvAdd(&files, line);
++		free(line);
++	    } else {
++		pkgdbg = xstrdup(path + buildrootlen);
++		argvAdd(&files, pkgdbg);
++	    }
+ 
+-	    /* Add the dir(s) */
++	    /* Own dirs for the packaged debug path */
+ 	    dirsadded = 0;
+-	    pmin = path + buildrootlen + strlen(DEBUG_LIB_DIR);
+-	    while ((p = strrchr(path + buildrootlen, '/')) != NULL && p > pmin) {
++	    pmin = pkgdbg + strlen(DEBUG_LIB_DIR);
++	    while ((p = strrchr(pkgdbg, '/')) != NULL && p > pmin) {
+ 		*p = 0;
+-		if (lastdiridx >= 0 && !strcmp(dirs[lastdiridx], path + buildrootlen))
+-		    break;		/* already added this one */
+-		argvAdd(&dirs, path + buildrootlen);
++		if (lastdiridx >= 0 && !strcmp(dirs[lastdiridx], pkgdbg))
++		    break;
++		argvAdd(&dirs, pkgdbg);
+ 		dirsadded++;
+ 	    }
+ 	    if (dirsadded)
+-		lastdiridx = argvCount(dirs) - dirsadded;	/* remember longest dir */
++		lastdiridx = argvCount(dirs) - dirsadded;
++	    free(pkgdbg);
+ 	}
+ 	path = _free(path);
+     }
+     rpmfiFree(fi);
+     /* Exclude debug files for files which were excluded in respective non-debug package */
+     for (ARGV_const_t excl = pkg->fileExcludeList; excl && *excl; excl++) {
+-        const char *name = *excl;
++	const char *pkgname = *excl;
++	const char *diskname = pkgname;
+ 
+-	/* generate path */
+-	rasprintf(&path, "%s%s%s%s.debug", buildroot, DEBUG_LIB_DIR, name, uniquearch);
++	if (!pkg->fileRenameMap.empty()) {
++	    auto range = pkg->fileRenameMap.equal_range(pkgname);
++	    if (range.first != range.second)
++		diskname = range.first->second.c_str();
++	}
++
++	/* On-disk debug path (what find-debuginfo created) */
++	rasprintf(&path, "%s%s%s%s.debug", buildroot, DEBUG_LIB_DIR,
++		  diskname, uniquearch);
+ 	/* Exclude only debuginfo files which actually exist */
+ 	if (access(path, F_OK) == 0) {
+ 	    char *line = NULL;
+-	    rasprintf(&line, "%%exclude %s", path + buildrootlen);
++	    /* Exclude the packaged path (DEST), matching how we add renames */
++	    if (!rstreq(diskname, pkgname)) {
++		char *pkgdbg = NULL;
++		rasprintf(&pkgdbg, "%s%s%s.debug", DEBUG_LIB_DIR, pkgname,
++			  uniquearch);
++		rasprintf(&line, "%%exclude %s", pkgdbg);
++		free(pkgdbg);
++	    } else {
++		rasprintf(&line, "%%exclude %s", path + buildrootlen);
++	    }
+ 	    argvAdd(&files, line);
+ 	    _free(line);
+ 	}
+diff --git a/docs/manual/spec.md b/docs/manual/spec.md
+index fc0acd1..bc325f9 100644
+--- a/docs/manual/spec.md
++++ b/docs/manual/spec.md
+@@ -875,6 +875,55 @@ Example:
+     %caps(cap_net_raw=p) %{_bindir}/foo
+ ```
+ 
++### Renaming packaged paths (`as`)
++
++A file may be packaged under a different path than it has in the build root
++by using the `as` keyword between two absolute paths:
++
++```
++	<source path> as <package path>
++```
++
++Content is read from `<source path>` relative to the build root, but the
++file is recorded and installed as `<package path>`. Both paths must be
++absolute and separated from the keyword by whitespace, so that a directory
++component named `as` is not mistaken for the keyword.
++
++This is useful when different subpackages need to own the same install path
++with different content, for example a text-only and a GUI binary both
++installed as `/usr/bin/abc`:
++
++```
++	%install
++	install -D -m755 abc-text %{buildroot}%{_bindir}/abc-text
++	install -D -m755 abc-gui %{buildroot}%{_bindir}/abc-gui
++
++	%files
++	%{_bindir}/abc-text as %{_bindir}/abc
++
++	%files gui
++	%{_bindir}/abc-gui as %{_bindir}/abc
++```
++
++Attributes such as `%attr`, `%config`, `%ghost` and `%dir` apply as usual
++to the packaged path. Recursive directories cannot be renamed with `as`
++(use an explicit `%dir` only for the directory entry itself). Shell
++globbing is not applied to entries that use `as`. The keyword cannot be
++combined with special `%doc` / `%license` forms, `%docdir` or `%pubkey`.
++Duplicate paths within the *same* package still fail; the feature is
++intended for different packages/subpackages owning the same path.
++
++The package path (`DEST`) is normalized like ordinary file entries
++(redundant `/` and `.` / `..` segments are collapsed). Unpackaged-file
++checks still account for the on-disk source path in the build root, not
++`DEST`, so a leftover file at the destination path can still be reported
++as unpackaged.
++
++When automatic debuginfo generation is enabled, `.debug` files produced
++by `find-debuginfo` from the on-disk `SOURCE` path are packaged under
++the corresponding path for `DEST` (so the debuginfo member matches the
++installed ELF name).
++
+ ### Shell Globbing
+ 
+ The usual rules for shell globbing apply (see `glob(7)`), including brace
+diff --git a/tests/rpmbuild.at b/tests/rpmbuild.at
+index 935b18d..288dfdf 100644
+--- a/tests/rpmbuild.at
++++ b/tests/rpmbuild.at
+@@ -4212,3 +4212,119 @@ runroot rpmbuild -bb --quiet --target x86_64 --with hello32 \
+     /usr/local/bin/hello (ELF 32-bit)
+ ])
+ RPMTEST_CLEANUP
++
++# ------------------------------
++# Package a file under an alternate path with "as"
++RPMTEST_SETUP_RW([rpmbuild file as rename])
++AT_KEYWORDS([build] [files])
++RPMTEST_CHECK([
++runroot rpmbuild -bb --quiet /data/SPECS/fileas.spec
++],
++[0],
++[],
++[])
++
++# Both packages own /usr/bin/abc but with different content/digests
++RPMTEST_CHECK([
++runroot rpm -qp --qf "[%{filenames}\n]" /build/RPMS/noarch/fileas-1.0-1.noarch.rpm
++runroot rpm -qp --qf "[%{filenames}\n]" /build/RPMS/noarch/fileas-gui-1.0-1.noarch.rpm
++],
++[0],
++[/usr/bin/abc
++/usr/share/as/data
++/usr/bin/abc
++],
++[])
++
++RPMTEST_CHECK([
++runroot sh -c 'rpm2cpio /build/RPMS/noarch/fileas-1.0-1.noarch.rpm | cpio -i --to-stdout ./usr/bin/abc'
++echo
++runroot sh -c 'rpm2cpio /build/RPMS/noarch/fileas-gui-1.0-1.noarch.rpm | cpio -i --to-stdout ./usr/bin/abc'
++echo
++],
++[0],
++[text-variant
++gui-variant
++],
++[ignore])
++RPMTEST_CLEANUP
++
++# Negative cases for SOURCE as DEST
++RPMTEST_SETUP_RW([rpmbuild file as rename errors])
++AT_KEYWORDS([build] [files])
++
++# Same-package duplicate DEST fails when terminate_build is set
++RPMTEST_CHECK([
++runroot rpmbuild -bb --quiet \
++  --define '_duplicate_files_terminate_build 1' \
++  --define 'case 1' /data/SPECS/fileas-bad.spec
++],
++[1],
++[],
++[error: File listed twice: /usr/bin/x
++])
++
++# Missing package path after as
++RPMTEST_CHECK([
++runroot rpmbuild -bb --quiet --define 'case 2' /data/SPECS/fileas-bad.spec
++],
++[1],
++[],
++[error: Missing package path after "as"
++])
++
++# Recursive directory without %dir
++RPMTEST_CHECK([
++runroot rpmbuild -bb --quiet --define 'case 3' /data/SPECS/fileas-bad.spec
++],
++[1],
++[],
++[error: Cannot use "as" with recursive directories: /build/BUILD/fileas-bad-1.0-build/BUILDROOT/usr/lib/dirsrc
++])
++
++# Special %doc form cannot use as
++RPMTEST_CHECK([
++runroot rpmbuild -bb --quiet --define 'case 4' /data/SPECS/fileas-bad.spec
++],
++[1],
++[],
++[error: Cannot use "as" with special file forms: readme
++])
++RPMTEST_CLEANUP
++
++# ------------------------------
++# Renamed binaries get debuginfo under the packaged (DEST) path
++RPMTEST_SETUP_RW([rpmbuild file as rename debuginfo])
++AT_KEYWORDS([build] [files] [debuginfo])
++RPMTEST_SKIP_IF([$DEBUGINFO_DISABLED])
++RPMTEST_CHECK([
++export CFLAGS="-g"
++# Subpackages mode rewrites debuginfo from the main package file list,
++# which is where SOURCE as DEST renames are applied.
++rundebug rpmbuild -bb --quiet \
++  --define '_debuginfo_subpackages 1' \
++  /data/SPECS/fileas-debug.spec
++],
++[0],
++[],
++[ignore])
++
++RPMTEST_CHECK([
++runroot rpm -qp --qf "[%{filenames}\n]" /build/RPMS/*/fileasdbg-1.0-1.*.rpm
++],
++[0],
++[/usr/bin/hello-packaged
++],
++[])
++
++# Packaged debug member uses DEST; SOURCE name must not appear as a member path
++RPMTEST_CHECK([
++runroot sh -c 'rpm2cpio /build/RPMS/*/fileasdbg-debuginfo-1.0-1.*.rpm | cpio -t' | \
++  grep -q 'hello-packaged'
++runroot sh -c 'rpm2cpio /build/RPMS/*/fileasdbg-debuginfo-1.0-1.*.rpm | cpio -t' | \
++  grep -q 'hello-on-disk'; test $? -eq 1
++],
++[0],
++[ignore],
++[ignore])
++RPMTEST_CLEANUP
