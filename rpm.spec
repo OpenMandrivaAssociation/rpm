@@ -97,7 +97,7 @@ Release:	%{?snapver:0.%{snapver}.}2
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
-%define pgpr_version 20260318
+%define pgpr_version 20260617
 Source1:	https://github.com/rpm-software-management/libpgpr/archive/refs/heads/main.tar.gz#/libpgpr-%{pgpr_version}.tar.gz
 # extracted from http://pkgs.fedoraproject.org/cgit/redhat-rpm-config.git/plain/macros:
 Source2:	macros.filter
