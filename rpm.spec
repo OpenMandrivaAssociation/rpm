@@ -93,7 +93,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	6.0.91
-Release:	%{?snapver:0.%{snapver}.}2
+Release:	%{?snapver:0.%{snapver}.}3
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -211,6 +211,15 @@ Patch5003:	rpm-allow-double-percent-sectionname-in-heredocs.patch
 Patch5004:	rpm-filelist-as.patch
 # Add znver1 as an x86_64 superset
 Patch5006:	rpm-4.15.x-omv-znver1-arch.patch
+# BuildSystem: soft-accept unknown systems so BuildRequires can pull in
+# the macros package; auto-inject BuildRequires: rpm-build(name); optional
+# %buildsystem_name_buildrequires static BRs; hard-fail incomplete macros
+# at parse and missing macros at build time.
+Patch5007:	rpm-6.0.91-buildsystem-bootstrap-br.patch
+# Auto-Provide rpm-build(name) from macros.* files that define
+# %buildsystem_name_* macros (pairs with Patch5007).
+Patch5008:	rpm-6.0.91-buildsystem-auto-provides.patch
+
 
 #
 # OpenMandriva specific patches

@@ -1,0 +1,195 @@
+--- a/docs/manual/buildsystem.md
++++ b/docs/manual/buildsystem.md
+@@ -24,9 +24,10 @@
+ Declaring a build system automatically adds
+ `BuildRequires: rpm-build(cmake)` so the package that ships the
+ corresponding macros can be installed before the build (mock and similar
+-tools will pull it in on a clean builder). Packages that provide
+-buildsystem macros should therefore also
+-`Provides: rpm-build(<name>)`.
++tools will pull it in on a clean builder). Packages that ship
++`%buildsystem_<name>_*` macros in a `macros.*` file under
++`%{_rpmmacrodir}` automatically get `Provides: rpm-build(<name>)` from
++the `rpm_macro` dependency generator — no manual Provides line is needed.
+ 
+ However it's common to have to manually tweak a thing or two. There are
+ several ways how to accomplish this, what's appropriate depends on the
+@@ -114,11 +115,8 @@
+ %buildsystem_autotools_install() %make_install %*
+ ```
+ 
+-The package shipping these macros should also:
+-
+-```
+-Provides: rpm-build(autotools)
+-```
++Packaging those macros as e.g. `%{_rpmmacrodir}/macros.autotools` is
++enough for the generator to emit `Provides: rpm-build(autotools)`.
+ 
+ ## Global defaults
+ 
+--- a/scripts/rpm_macros_provides.sh
++++ b/scripts/rpm_macros_provides.sh
+@@ -1,12 +1,15 @@
+ #!/bin/bash -e
+ 
+-# Create a provides of the following form:
+-# rpm_macro(foobar)
+-# for each defined macro in a macros.* file in %_rpmmacrodir
+-
+-# We reuse rpm itself for this by just loading just this macro file and then use
+-# the %dump macro to print all defined macros from that file. rpm gives us an
+-# output of the following form:
++# Create provides of the following form from a macros.* file in %_rpmmacrodir:
++#   rpm_macro(foobar)     — for each defined (non-private) macro
++#   rpm-build(name)       — for each buildsystem "name" that has one or more
++#                           %buildsystem_name_<section> macros (see
++#                           docs/manual/buildsystem.md). This matches the
++#                           automatic BuildRequires: rpm-build(name) injected
++#                           by the BuildSystem: tag.
++#
++# We reuse rpm itself by loading just this macro file and using %dump.
++# rpm gives an output of the following form:
+ # ========================
+ # -11: _target    x86_64-linux
+ # -11= _target_cpu        x86_64
+@@ -16,8 +19,8 @@
+ # ===========================
+ #
+ # Everything starting with -11 are macros from rpmrc, those starting with -13
+-# are definitions from macrofiles (i.e. those are that we want), -15 are
+-# defaults and -20 are builtins (see rpmio/rpmmacro.h).
++# are definitions from macrofiles (i.e. those we want), -15 are defaults and
++# -20 are builtins (see rpmio/rpmmacro.h).
+ #
+ # => We grep for all lines starting with -13, as these are the macro defines
+ # from the file in question.
+@@ -26,10 +29,71 @@
+ # optionally removing parameters declared in brackets. Also, we drop any macros
+ # that start with __ as these are considered internal/private and should not be
+ # exposed as a public API.
++#
++# Buildsystem section suffixes (longest first so generate_buildrequires wins
++# over buildrequires over build):
++#   generate_buildrequires, buildrequires, install, build, check, clean,
++#   conf, prep
++
++# Extract the buildsystem name from a macro, or empty if not a section macro.
++buildsystem_name()
++{
++    local macro=$1 name=
++    case $macro in
++    buildsystem_*_generate_buildrequires)
++	name=${macro#buildsystem_}
++	name=${name%_generate_buildrequires}
++	;;
++    buildsystem_*_buildrequires)
++	name=${macro#buildsystem_}
++	name=${name%_buildrequires}
++	;;
++    buildsystem_*_install)
++	name=${macro#buildsystem_}
++	name=${name%_install}
++	;;
++    buildsystem_*_build)
++	name=${macro#buildsystem_}
++	name=${name%_build}
++	;;
++    buildsystem_*_check)
++	name=${macro#buildsystem_}
++	name=${name%_check}
++	;;
++    buildsystem_*_clean)
++	name=${macro#buildsystem_}
++	name=${name%_clean}
++	;;
++    buildsystem_*_conf)
++	name=${macro#buildsystem_}
++	name=${name%_conf}
++	;;
++    buildsystem_*_prep)
++	name=${macro#buildsystem_}
++	name=${name%_prep}
++	;;
++    esac
++    # "default" is the global fallback shipped with rpm, not a real provider
++    if [ -n "$name" ] && [ "$name" != default ]; then
++	printf '%s\n' "$name"
++    fi
++    return 0
++}
+ 
+ while read filename
+ do
++    bsprov=
+     for macro in $(rpm --macros="${filename}" -E "%dump" 2>&1 | grep '^-13:' | awk '{print $2}' | sed -e 's|(.*)||' -e '/^__/d'); do
+-        echo "rpm_macro(${macro})"
++	echo "rpm_macro(${macro})"
++	name=$(buildsystem_name "$macro")
++	if [ -n "$name" ]; then
++	    case " $bsprov " in
++	    *" $name "*) ;;
++	    *) bsprov="${bsprov} ${name}" ;;
++	    esac
++	fi
++    done
++    for name in $bsprov; do
++	echo "rpm-build(${name})"
+     done
+ done
+--- a/tests/rpmbuild.at
++++ b/tests/rpmbuild.at
+@@ -303,6 +303,53 @@
+ [])
+ RPMTEST_CLEANUP
+ 
++# Packages shipping %buildsystem_name_* macros auto-Provide rpm-build(name)
++RPMTEST_SETUP_RW([buildsystem macro auto-provides])
++AT_KEYWORDS([build buildsystem])
++RPMTEST_CHECK([[
++cat << 'EOF' > ${RPMTEST}/tmp/bsmacros.spec
++Name: bsmacros
++Version: 1.0
++Release: 1
++Summary: Buildsystem macro package
++License: GPL
++BuildArch: noarch
++
++%description
++%{summary}
++
++%install
++mkdir -p %{buildroot}%{_rpmmacrodir}
++cat > %{buildroot}%{_rpmmacrodir}/macros.cmake << 'MEOF'
++%buildsystem_cmake_conf() cmake %*
++%buildsystem_cmake_build() cmake --build %*
++%buildsystem_cmake_install() cmake --install %*
++%cmake_common() something
++MEOF
++cat > %{buildroot}%{_rpmmacrodir}/macros.plain << 'MEOF'
++%just_a_macro() echo hi
++MEOF
++
++%files
++%{_rpmmacrodir}/macros.cmake
++%{_rpmmacrodir}/macros.plain
++EOF
++
++runroot rpmbuild -bb --quiet /tmp/bsmacros.spec
++runroot rpm -qp --provides /build/RPMS/noarch/bsmacros-1.0-1.noarch.rpm | grep -E '^(rpm-build|rpm_macro|bsmacros)' | sort
++]],
++[0],
++[bsmacros = 1.0-1
++rpm-build(cmake)
++rpm_macro(buildsystem_cmake_build)
++rpm_macro(buildsystem_cmake_conf)
++rpm_macro(buildsystem_cmake_install)
++rpm_macro(cmake_common)
++rpm_macro(just_a_macro)
++],
++[])
++RPMTEST_CLEANUP
++
+ RPMTEST_SETUP_RW([rpmbuild -b steps])
+ AT_KEYWORDS([build])
+ RPMTEST_CHECK([

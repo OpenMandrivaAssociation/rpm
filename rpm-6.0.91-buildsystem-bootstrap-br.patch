@@ -1,0 +1,380 @@
+--- a/build/build.cc
++++ b/build/build.cc
+@@ -460,6 +460,16 @@
+ 	    (rc = doCheckBuildRequires(ts, spec, test)))
+ 		goto exit;
+ 
++	/* BuildSystem macros may only become available after static BRs
++	 * are installed; if they are still missing when we are about to
++	 * run build sections, fail with a clear message (e.g. --nodeps). */
++	if ((what & (RPMBUILD_PREP|RPMBUILD_CONF|RPMBUILD_BUILD|
++		     RPMBUILD_INSTALL|RPMBUILD_CHECK|RPMBUILD_BUILDREQUIRES)) &&
++	    validateBuildsystem(spec)) {
++	    rc = RPMRC_FAIL;
++	    goto exit;
++	}
++
+ 	if ((what & RPMBUILD_MKBUILDDIR) && (rc = doBuildDir(spec, test, inPlace, sbp)))
+ 		goto exit;
+ 
+--- a/build/parsePreamble.cc
++++ b/build/parsePreamble.cc
+@@ -810,6 +810,49 @@
+     return rc;
+ }
+ 
++/*
++ * Arrange BuildRequires for a BuildSystem:
++ *  - always require rpm-build(name), the virtual provide for the macros
++ *  - if %buildsystem_name_buildrequires is defined, expand and parse it
++ *    as additional static BuildRequires (tools, versioned deps, etc.)
++ */
++static rpmRC addBuildsystemRequires(rpmSpec spec, const char *name)
++{
++    rpmRC rc = RPMRC_FAIL;
++    char *autobr = NULL;
++    char *mn = NULL;
++    char *brs = NULL;
++
++    if (spec->sourcePackage == NULL)
++	goto exit;
++
++    rasprintf(&autobr, "rpm-build(%s)", name);
++    if (parseRCPOT(spec, spec->sourcePackage, autobr, RPMTAG_BUILDREQUIRES,
++		   0, 0, addReqProvPkg, NULL))
++	goto exit;
++
++    mn = rstrscat(NULL, "buildsystem_", name, "_buildrequires", NULL);
++    if (rpmMacroIsParametric(NULL, mn))
++	brs = rpmExpand("%", mn, NULL);
++    else if (rpmMacroIsDefined(NULL, mn))
++	brs = rpmExpand("%{", mn, "}", NULL);
++
++    if (brs) {
++	char *p = brs;
++	SKIPSPACE(p);
++	if (*p && parseRCPOT(spec, spec->sourcePackage, p, RPMTAG_BUILDREQUIRES,
++			     0, 0, addReqProvPkg, NULL))
++	    goto exit;
++    }
++
++    rc = RPMRC_OK;
++exit:
++    free(autobr);
++    free(mn);
++    free(brs);
++    return rc;
++}
++
+ static rpmRC handlePreambleTag(rpmSpec spec, enum parseStages stage,
+ 			       Package pkg, rpmTagVal tag,
+ 			       const char *macro, const char *lang)
+@@ -850,7 +893,15 @@
+     switch (tag) {
+     case RPMTAG_BUILDSYSTEM:
+ 	SINGLE_TOKEN_ONLY;
+-	if (checkBuildsystem(spec, field))
++	/*
++	 * Soft-accept unknown buildsystems so a BuildRequires can pull in
++	 * the package that provides the macros. Always inject
++	 * rpm-build(name) as a static BR for the provider package.
++	 * Hard-fail only on invalid names or partially defined macros.
++	 */
++	if (checkBuildsystem(spec, field) < 0)
++	    goto exit;
++	if (addBuildsystemRequires(spec, field))
+ 	    goto exit;
+ 	break;
+     case RPMTAG_BUILDOPTION:
+--- a/build/parseSpec.cc
++++ b/build/parseSpec.cc
+@@ -991,14 +991,21 @@
+     return NULL;
+ }
+ 
++/*
++ * Check whether buildsystem macros are available.
++ * Returns:
++ *   0  macros OK (required parametric macros present)
++ *   1  missing entirely (bootstrap case — soft at parse time)
++ *  -1  error (invalid name, or partially defined / incomplete)
++ */
+ int checkBuildsystem(rpmSpec spec, const char *name)
+ {
+     if (rpmCharCheck(spec, name,
+ 			ALLOWED_CHARS_NAME, ALLOWED_FIRSTCHARS_NAME))
+ 	return -1;
+ 
+-    int rc = 0;
+     int found = 0;
++    int missing_required = 0;
+     char * mmn = NULL;
+     for (struct sectname_s *sc = sectList; sc->name; sc++) {
+ 	char *mn = rstrscat(NULL, "buildsystem_", name, "_", sc->name, NULL);
+@@ -1006,7 +1013,7 @@
+ 	    if (sc->required) {
+ 		if (!mmn)
+ 		    mmn = xstrdup(mn);
+-		rc = -1;
++		missing_required = 1;
+ 	    }
+ 	} else {
+ 	    found = 1;
+@@ -1014,18 +1021,66 @@
+ 	free(mn);
+     }
+ 
++    int rc = 0;
+     if (!found) {
+-	rpmlog(RPMLOG_ERR, _("line %d: Unknown buildsystem: %s\n"),
+-	       spec->lineNum, name);
+-    } else if (mmn) {
++	/* No macros at all — defer hard failure so BuildRequires can
++	 * pull in the package providing them (see addBuildsystemRequires). */
++	rc = 1;
++    } else if (missing_required) {
+ 	rpmlog(RPMLOG_ERR,
+ 	       _("line %d: Required parametric macro %%%s not defined for buildsystem %s\n"),
+ 		spec->lineNum, mmn, name);
++	rc = -1;
+     }
+     free(mmn);
+     return rc;
+ }
+ 
++/*
++ * Ensure BuildSystem macros are usable for a real build. Soft-missing at
++ * parse time is fine (bootstrap via rpm-build(name) BR); once we are about
++ * to run build sections, missing macros with unfilled required sections
++ * is a hard error. Call after static BR check so the BR message wins when
++ * the provider package is simply not installed yet.
++ */
++int validateBuildsystem(rpmSpec spec)
++{
++    char *buildsystem = rpmExpand("%{?buildsystem}", NULL);
++    int rc = 0;
++    int st = 0;
++    int need = 0;
++
++    if (*buildsystem == '\0')
++	goto exit;
++
++    st = checkBuildsystem(spec, buildsystem);
++    if (st == 0)
++	goto exit;
++
++    /* Manual overrides of required sections make the macros optional */
++    for (struct sectname_s *sc = sectList; sc->name; sc++) {
++	if (sc->required && spec->sections[sc->section] == NULL) {
++	    need = 1;
++	    break;
++	}
++    }
++    if (!need)
++	goto exit;
++
++    if (st > 0) {
++	rpmlog(RPMLOG_ERR,
++	       _("BuildSystem macros for '%s' are not available "
++		 "(BuildRequires: rpm-build(%s)?)\n"),
++	       buildsystem, buildsystem);
++    }
++    /* st < 0 already reported by checkBuildsystem */
++    rc = -1;
++
++exit:
++    free(buildsystem);
++    return rc;
++}
++
+ static rpmRC parseBuildsysSect(rpmSpec spec, const char *prefix,
+ 				struct sectname_s *sc, FD_t fd, int *foundp)
+ {
+--- a/build/rpmbuild_internal.hh
++++ b/build/rpmbuild_internal.hh
+@@ -654,6 +654,9 @@
+ int checkBuildsystem(rpmSpec spec, const char *buildsys);
+ 
+ RPM_GNUC_INTERNAL
++int validateBuildsystem(rpmSpec spec);
++
++RPM_GNUC_INTERNAL
+ void fillOutMainPackage(Header h);
+ 
+ RPM_GNUC_INTERNAL
+--- a/docs/manual/buildsystem.md
++++ b/docs/manual/buildsystem.md
+@@ -21,6 +21,13 @@
+ 
+ In the most simple case, a spec will have an buildsystem declaration such
+ as `BuildSystem: cmake` and no manually specified build scripts at all.
++Declaring a build system automatically adds
++`BuildRequires: rpm-build(cmake)` so the package that ships the
++corresponding macros can be installed before the build (mock and similar
++tools will pull it in on a clean builder). Packages that provide
++buildsystem macros should therefore also
++`Provides: rpm-build(<name>)`.
++
+ However it's common to have to manually tweak a thing or two. There are
+ several ways how to accomplish this, what's appropriate depends on the
+ case.
+@@ -76,6 +83,29 @@
+ spec section, unless the spec manually overrides it. All buildsystem
+ macros are required to be parametric to have enforceable semantics.
+ 
++In addition, an optional static dependency macro may be defined:
++
++```
++%buildsystem_name_buildrequires
++```
++
++or the parametric form `%buildsystem_name_buildrequires()`. When present
++it is expanded at parse time and treated as extra `BuildRequires:`
++(on top of the automatic `rpm-build(name)`). Use this for tools the
++buildsystem always needs, for example:
++
++```
++%buildsystem_cmake_buildrequires cmake >= 3.20 ninja-build
++```
++
++If the buildsystem macros are not installed yet when the spec is first
++parsed, rpm still accepts `BuildSystem:` and records the automatic
++`rpm-build(name)` dependency so the macros package can be installed;
++section expansion and any `%buildsystem_name_buildrequires` injection
++happen on the subsequent parse once the macros are available. Dynamic
++dependencies continue to use `%generate_buildrequires` /
++`%buildsystem_name_generate_buildrequires` as before.
++
+ For example, supporting the classic autotools case could be built on top
+ of existing helper macros:
+ ```
+@@ -84,6 +114,12 @@
+ %buildsystem_autotools_install() %make_install %*
+ ```
+ 
++The package shipping these macros should also:
++
++```
++Provides: rpm-build(autotools)
++```
++
+ ## Global defaults
+ 
+ While the actual steps to build and install obviously differ greatly among
+--- a/tests/rpmbuild.at
++++ b/tests/rpmbuild.at
+@@ -143,8 +143,10 @@
+ 
+ cp "${RPMTEST}/data/macros.buildsystem" "${RPMTEST}/${RPM_CONFIGDIR_PATH}/macros.d/"
+ 
++# BuildSystem always injects BuildRequires: rpm-build(name); macros here are
++# provided via macros.d rather than a package, so use --nodeps for builds.
+ RPMTEST_CHECK([
+-runroot rpmbuild -bb \
++runroot rpmbuild -bb --nodeps \
+ 	--define "_prefix /usr" \
+ 	--define "_sysconfdir /etc" \
+ 	--define "_docdir_fmt %%{NAME}" \
+@@ -179,7 +181,7 @@
+ tar xf /data/SOURCES/amhello-1.0.tar.gz
+ mv amhello-1.0 amhello-1.0-prerelease
+ tar czf "${RPMTEST}"/tmp/amhello-pre.tgz amhello-1.0-prerelease/
+-runroot rpmbuild -bb \
++runroot rpmbuild -bb --nodeps \
+ 	--define "_prefix /usr" \
+ 	--define "_sysconfdir /etc" \
+ 	--define "_docdir_fmt %%{NAME}" \
+@@ -201,7 +203,7 @@
+ [ignore])
+ 
+ RPMTEST_CHECK([
+-runroot rpmbuild -bb \
++runroot rpmbuild -bb --nodeps \
+ 	--define "_prefix /usr" \
+ 	--define "_sysconfdir /etc" \
+ 	--define "_docdir_fmt %%{NAME}" \
+@@ -222,16 +224,28 @@
+ ],
+ [ignore])
+ 
++# Unknown buildsystem: soft at parse, auto BR rpm-build(name), fail on deps
+ RPMTEST_CHECK([
+ runroot rpmbuild -bb \
+ 	--define "buildsys bogons" \
+ 	--quiet /data/SPECS/amhello.spec
+ ],
++[11],
++[],
++[ignore])
++
++# Same with --nodeps: hard error when macros still unavailable for build
++RPMTEST_CHECK([
++runroot rpmbuild -bb --nodeps \
++	--define "buildsys bogons" \
++	--quiet /data/SPECS/amhello.spec
++],
+ [1],
+ [],
+-[error: line 11: Unknown buildsystem: bogons
++[error: BuildSystem macros for 'bogons' are not available (BuildRequires: rpm-build(bogons)?)
+ ])
+ 
++# Non-parametric overrides wipe the buildsystem → treated as missing (auto BR)
+ RPMTEST_CHECK([
+ runroot rpmbuild -bb \
+ 	--define 'buildsystem_autotools_conf %nil' \
+@@ -240,11 +254,11 @@
+ 	--define 'buildsystem_autotools_check %nil' \
+ 	--quiet /data/SPECS/amhello.spec
+ ],
+-[1],
++[11],
+ [],
+-[error: line 11: Unknown buildsystem: autotools
+-])
++[ignore])
+ 
++# Partially defined buildsystem still hard-fails at parse
+ RPMTEST_CHECK([
+ runroot rpmbuild -bb \
+ 	--define 'buildsystem_autotools_build %nil' \
+@@ -263,6 +277,30 @@
+ [amhello-1.0-1
+ ],
+ [])
++
++# Auto BR is visible even when macros are not installed (bootstrap)
++RPMTEST_CHECK([
++runroot rpmspec -q --buildrequires \
++	--define "buildsys bogons" \
++	/data/SPECS/amhello.spec
++],
++[0],
++[rpm-build(bogons)
++],
++[])
++
++# Optional %buildsystem_name_buildrequires expands into static BRs
++RPMTEST_CHECK([
++runroot rpmspec -q --buildrequires \
++	--define "buildsystem_autotools_buildrequires cmake >= 3.20 ninja-build" \
++	/data/SPECS/amhello.spec | sort
++],
++[0],
++[cmake >= 3.20
++ninja-build
++rpm-build(autotools)
++],
++[])
+ RPMTEST_CLEANUP
+ 
+ RPMTEST_SETUP_RW([rpmbuild -b steps])
+@@ -530,7 +568,7 @@
+ cp "${RPMTEST}/data/macros.buildsystem" "${RPMTEST}/${RPM_CONFIGDIR_PATH}/macros.d/"
+ 
+ RPMTEST_CHECK([
+-runroot rpmbuild -bi /data/SPECS/reproducer-buildsubdir.spec 2>&1| grep "^+ echo"
++runroot rpmbuild -bi --nodeps /data/SPECS/reproducer-buildsubdir.spec 2>&1| grep "^+ echo"
+ ],
+ [0],
+ [+ echo CONF: reproducer-buildsubdir-0
