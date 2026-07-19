@@ -93,7 +93,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	6.0.91
-Release:	%{?snapver:0.%{snapver}.}3
+Release:	%{?snapver:0.%{snapver}.}4
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -219,6 +219,7 @@ Patch5007:	rpm-6.0.91-buildsystem-bootstrap-br.patch
 # Auto-Provide rpm-build(name) from macros.* files that define
 # %buildsystem_name_* macros (pairs with Patch5007).
 Patch5008:	rpm-6.0.91-buildsystem-auto-provides.patch
+Patch5009:	rpm-6.0.91-pgo.patch
 
 
 #
