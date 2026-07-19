@@ -92,8 +92,8 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Version:	6.0.91
-Release:	%{?snapver:0.%{snapver}.}4
+Version:	6.0.92
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
