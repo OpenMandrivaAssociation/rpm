@@ -228,7 +228,7 @@ index 0000000..6c10ed6
 +
 +| Aspect | GCC | Clang |
 +|--------|-----|-------|
-+| Instrument flag | `-fprofile-generate=%{_pgo_profile_dir}` | `-fprofile-generate=%{_pgo_profile_dir}` |
++| Instrument flag | `-fprofile-generate=%{_pgo_profile_dir} -fprofile-update=atomic` | `-fprofile-generate=%{_pgo_profile_dir} -fprofile-update=atomic` |
 +| Link flag (instrument) | `-fprofile-generate` | `-fprofile-generate` |
 +| Merge tool | `gcov-tool merge` | `llvm-profdata merge` |
 +| Profile file | `*.gcda` (per-object) | `default_*.profraw` → merged `.profdata` |
@@ -369,7 +369,7 @@ diff --git a/build/build.cc b/build/build.cc
 index 6bd40c3..2dec8f4 100644
 --- a/build/build.cc
 +++ b/build/build.cc
-@@ -365,6 +365,215 @@ static rpmRC doBuildDir(rpmSpec spec, int test, int inPlace, StringBuf *sbp)
+@@ -365,6 +365,208 @@ static rpmRC doBuildDir(rpmSpec spec, int test, int inPlace, StringBuf *sbp)
      return rc;
  }
  
@@ -415,18 +415,13 @@ index 6bd40c3..2dec8f4 100644
 +static void pgoPushGenerateEnv(rpmSpec spec)
 +{
 +    char *profdir = rpmExpand("%{_pgo_profile_dir}", NULL);
-+    char *cc = rpmExpand("%{__cc}", NULL);
-+    int is_clang = (strstr(cc, "clang") != NULL);
 +
 +    char *gen_cflags = NULL;
 +    char *gen_ldflags = NULL;
-+    if (is_clang) {
-+	rasprintf(&gen_cflags, "-fprofile-generate=%s", profdir);
-+	rasprintf(&gen_ldflags, "-fprofile-generate=%s", profdir);
-+    } else {
-+	rasprintf(&gen_cflags, "-fprofile-generate=%s -fprofile-update=atomic", profdir);
-+	rasprintf(&gen_ldflags, "-fprofile-generate=%s", profdir);
-+    }
++    /* -fprofile-update=atomic: safe counters when the training workload is
++     * multi-threaded (OpenMP, etc.). Both GCC and Clang accept it. */
++    rasprintf(&gen_cflags, "-fprofile-generate=%s -fprofile-update=atomic", profdir);
++    rasprintf(&gen_ldflags, "-fprofile-generate=%s", profdir);
 +
 +    char *orig_optflags = rpmExpand("%{optflags}", NULL);
 +    char *orig_ldflags = rpmExpand("%{?build_ldflags}", NULL);
@@ -450,7 +445,6 @@ index 6bd40c3..2dec8f4 100644
 +    rpmlog(RPMLOG_NOTICE, _("PGO: LDFLAGS=%s\n"), new_ldflags);
 +
 +    free(profdir);
-+    free(cc);
 +    free(gen_cflags);
 +    free(gen_ldflags);
 +    free(orig_optflags);
@@ -539,12 +533,11 @@ index 6bd40c3..2dec8f4 100644
 +    rpmRC rc = RPMRC_OK;
 +
 +    if (is_clang) {
-+	/* Merge all .profraw files into merged.profdata */
++	/* Merge all .profraw files into merged.profdata (PATH llvm-profdata) */
 +	char *merge_script = NULL;
 +	rasprintf(&merge_script,
-+	    "llvm-profdata merge --failure-mode=warn -o '%s/merged.profdata' $(find '%s' -name '*.profraw' -type f) || "
-+	    "llvm-profdata-18 merge --failure-mode=warn -o '%s/merged.profdata' $(find '%s' -name '*.profraw' -type f)",
-+	    profdir, profdir, profdir, profdir);
++	    "llvm-profdata merge --failure-mode=warn -o '%s/merged.profdata' $(find '%s' -name '*.profraw' -type f)",
++	    profdir, profdir);
 +	rc = doScript(spec, RPMBUILD_STRINGBUF, "%pgo-merge",
 +		      merge_script, test, sbp);
 +	free(merge_script);
@@ -585,7 +578,7 @@ index 6bd40c3..2dec8f4 100644
  static int buildSpec(rpmts ts, BTA_t buildArgs, rpmSpec spec, int what)
  {
      int rc = RPMRC_OK;
-@@ -498,18 +707,95 @@ static int buildSpec(rpmts ts, BTA_t buildArgs, rpmSpec spec, int what)
+@@ -498,18 +700,95 @@ static int buildSpec(rpmts ts, BTA_t buildArgs, rpmSpec spec, int what)
  	    goto exit;
  	}
  
