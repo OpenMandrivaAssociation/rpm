@@ -355,7 +355,7 @@ index 0000000..6c10ed6
 +|------|-----------|
 +| Profile data from pass 1 deleted during wipe | Store in `%{_builddir}/.pgo-profiles/`, not in build subdirectory |
 +| Compiler flag injection breaks custom specs | Only modify standard macros; specs that hardcode CFLAGS work as before |
-+| Cross-compilation false positive | Compare `%{_build_cpu}` with `%{_target_cpu}` |
++| Cross-compilation false positive | Use `rpmMachineScore(INSTARCH/INSTOS, …)` so subarches like znver1 are not treated as cross |
 +| BuildSystem specs not supported | PGO runs at build execution time, after all parsing/generation is done |
 +| Thread-safety of profile counters | Use `-fprofile-update=atomic` |
 +
@@ -369,7 +369,7 @@ diff --git a/build/build.cc b/build/build.cc
 index 6bd40c3..2dec8f4 100644
 --- a/build/build.cc
 +++ b/build/build.cc
-@@ -365,6 +365,211 @@ static rpmRC doBuildDir(rpmSpec spec, int test, int inPlace, StringBuf *sbp)
+@@ -365,6 +365,215 @@ static rpmRC doBuildDir(rpmSpec spec, int test, int inPlace, StringBuf *sbp)
      return rc;
  }
  
@@ -388,13 +388,17 @@ index 6bd40c3..2dec8f4 100644
 +    if (arch && rstreq(arch, "noarch"))
 +	return 0;
 +
-+    /* Don't PGO when cross-compiling — can't run the binaries */
-+    char *build_cpu = rpmExpand("%{_build_cpu}", NULL);
-+    char *target_cpu = rpmExpand("%{_target_cpu}", NULL);
-+    int cross = !rstreq(build_cpu, target_cpu);
-+    free(build_cpu);
-+    free(target_cpu);
-+    if (cross)
++    /* Don't PGO when we can't run the binaries (true cross-compile).
++     * Use rpmMachineScore on the package arch rather than comparing
++     * %{_build_cpu} with %{_target_cpu}: subarchitectures like znver1
++     * set the package/_target arch to "znver1" while _build_cpu stays at
++     * the generic "x86_64" from config.guess, which is not a real
++     * cross-compile. Score 0 means this host cannot run that arch.
++     * Likewise for a foreign OS (e.g. mingw32 on Linux). */
++    if (arch && rpmMachineScore(RPM_MACHTABLE_INSTARCH, arch) == 0)
++	return 0;
++    const char *os = headerGetString(spec->packages->header, RPMTAG_OS);
++    if (os && rpmMachineScore(RPM_MACHTABLE_INSTOS, os) == 0)
 +	return 0;
 +
 +    return 1;
@@ -581,7 +585,7 @@ index 6bd40c3..2dec8f4 100644
  static int buildSpec(rpmts ts, BTA_t buildArgs, rpmSpec spec, int what)
  {
      int rc = RPMRC_OK;
-@@ -498,18 +703,95 @@ static int buildSpec(rpmts ts, BTA_t buildArgs, rpmSpec spec, int what)
+@@ -498,18 +707,95 @@ static int buildSpec(rpmts ts, BTA_t buildArgs, rpmSpec spec, int what)
  	    goto exit;
  	}
  
