@@ -305,12 +305,13 @@ index 0000000..6c10ed6
 +    // === Merge profiles ===
 +    run profile merge script
 +
-+    // === Wipe build tree ===
-+    rm -rf buildsubdir
++    // === Wipe build artifacts (not sources when out-of-tree) ===
++    // Prefer rm -rf buildsubdir/_OMV_rpm_build{,32}; keep extracted sources.
++    // Fall back to rm -rf buildsubdir + re-prep only for in-tree layouts.
 +
 +    // === PASS 2: Optimized build ===
 +    push PGO-use macros (optflags += -fprofile-use=...)
-+    run %prep
++    // re-prep only if full source wipe stamp is set
 +    run %conf
 +    run %build
 +    pop PGO-use macros
@@ -550,20 +551,49 @@ index 6bd40c3..2dec8f4 100644
 +}
 +
 +/**
-+ * Wipe the build subdirectory in preparation for the second (optimized) pass.
++ * Wipe out-of-tree build dirs only (not the extracted sources) for pass 2.
++ *
++ * OMV BuildSystem cmake/meson/autotools put objects under
++ * _OMV_rpm_build{,32}/. Removing those is enough for a clean reconfigure;
++ * deleting the whole buildsubdir would force a re-prep and risks touching
++ * anything a package put under the source tree. Profile data lives in
++ * %{_pgo_profile_dir} (sibling of buildsubdir) and is never removed here.
++ *
++ * If no OMV out-of-tree build dir exists (in-tree packages), fall back to
++ * wiping the full buildsubdir — caller must re-prep in that case. We write
++ * a stamp file so pass 2 knows whether to re-run %%prep.
 + */
 +static rpmRC pgoWipeBuildDir(rpmSpec spec, int test, StringBuf *sbp)
 +{
 +    char *buildSubdir = rpmGetPath("%{?buildsubdir}", NULL);
 +    char *buildDir = rpmGenPath(spec->rootDir, "%{builddir}", "");
++    char *profdir = rpmExpand("%{_pgo_profile_dir}", NULL);
 +    rpmRC rc = RPMRC_OK;
 +
 +    if (buildSubdir[0] != '\0') {
 +	char *subpath = NULL;
-+	rasprintf(&subpath, "%s/%s", buildDir, buildSubdir);
 +	char *wipe_script = NULL;
-+	rasprintf(&wipe_script, "rm -rf '%s'\n", subpath);
-+	rpmlog(RPMLOG_NOTICE, _("PGO: wiping build directory %s for optimized rebuild\n"), subpath);
++	rasprintf(&subpath, "%s/%s", buildDir, buildSubdir);
++	/* Stamp under profdir (survives any source wipe). */
++	rasprintf(&wipe_script,
++	    "mkdir -p '%s'\n"
++	    "rm -f '%s/.pgo-need-reprep'\n"
++	    "if [ -d '%s/_OMV_rpm_build' ] || [ -d '%s/_OMV_rpm_build32' ]; then\n"
++	    "  echo \"PGO: wiping out-of-tree build dirs under %s (keeping sources)\"\n"
++	    "  rm -rf '%s/_OMV_rpm_build' '%s/_OMV_rpm_build32'\n"
++	    "else\n"
++	    "  echo \"PGO: no _OMV_rpm_build; wiping full source tree %s (in-tree layout)\"\n"
++	    "  rm -rf '%s'\n"
++	    "  touch '%s/.pgo-need-reprep'\n"
++	    "fi\n",
++	    profdir, profdir,
++	    subpath, subpath,
++	    subpath,
++	    subpath, subpath,
++	    subpath,
++	    subpath,
++	    profdir);
++	rpmlog(RPMLOG_NOTICE, _("PGO: wiping build artifacts under %s for optimized rebuild\n"), subpath);
 +	rc = doScript(spec, RPMBUILD_STRINGBUF, "%pgo-wipe",
 +		      wipe_script, test, sbp);
 +	free(subpath);
@@ -572,6 +602,7 @@ index 6bd40c3..2dec8f4 100644
 +
 +    free(buildSubdir);
 +    free(buildDir);
++    free(profdir);
 +    return rc;
 +}
 +
@@ -640,18 +671,31 @@ index 6bd40c3..2dec8f4 100644
 +	    if ((rc = pgoWipeBuildDir(spec, test, sbp)))
 +		goto exit;
 +
-+	    /* === PASS 2: Re-prep and optimized build === */
++	    /* === PASS 2: Optimized build (sources kept when out-of-tree) === */
 +	    rpmlog(RPMLOG_NOTICE, _("PGO: pass 2 - rebuilding with profile data\n"));
 +
-+	    /* Always re-run %%prep after wipe. Do not gate on RPMBUILD_PREP:
-+	     * mock/rpmbuild often invoke conf/build in a separate buildSpec()
-+	     * call where PREP is not set, so gating skips re-extract and
-+	     * %%conf fails with "cd: …: No such file or directory". */
-+	    rpmlog(RPMLOG_NOTICE, _("PGO: re-running %%prep for optimized pass\n"));
-+	    if ((rc = doScript(spec, RPMBUILD_PREP, "%prep",
-+			       rpmSpecGetSection(spec, RPMBUILD_PREP),
-+			       test, sbp)))
-+		goto exit;
++	    /* Re-prep only if wipe fell back to removing the full source tree
++	     * (in-tree packages without _OMV_rpm_build). Out-of-tree BuildSystem
++	     * packages only lost the build dir; sources stay and re-prep is
++	     * unnecessary (and PREP is often not set in the conf/build pass). */
++	    {
++		char *profdir = rpmExpand("%{_pgo_profile_dir}", NULL);
++		char *stamp = NULL;
++		rasprintf(&stamp, "%s/.pgo-need-reprep", profdir);
++		if (!access(stamp, F_OK)) {
++		    rpmlog(RPMLOG_NOTICE, _("PGO: re-running %%prep after full source wipe\n"));
++		    unlink(stamp);
++		    if ((rc = doScript(spec, RPMBUILD_PREP, "%prep",
++				       rpmSpecGetSection(spec, RPMBUILD_PREP),
++				       test, sbp))) {
++			free(stamp);
++			free(profdir);
++			goto exit;
++		    }
++		}
++		free(stamp);
++		free(profdir);
++	    }
 +
 +	    pgoPushUseEnv(spec);
 +
