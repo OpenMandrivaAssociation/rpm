@@ -643,8 +643,12 @@ index 6bd40c3..2dec8f4 100644
 +	    /* === PASS 2: Re-prep and optimized build === */
 +	    rpmlog(RPMLOG_NOTICE, _("PGO: pass 2 - rebuilding with profile data\n"));
 +
-+	    if ((what & RPMBUILD_PREP) &&
-+		(rc = doScript(spec, RPMBUILD_PREP, "%prep",
++	    /* Always re-run %%prep after wipe. Do not gate on RPMBUILD_PREP:
++	     * mock/rpmbuild often invoke conf/build in a separate buildSpec()
++	     * call where PREP is not set, so gating skips re-extract and
++	     * %%conf fails with "cd: …: No such file or directory". */
++	    rpmlog(RPMLOG_NOTICE, _("PGO: re-running %%prep for optimized pass\n"));
++	    if ((rc = doScript(spec, RPMBUILD_PREP, "%prep",
 +			       rpmSpecGetSection(spec, RPMBUILD_PREP),
 +			       test, sbp)))
 +		goto exit;
