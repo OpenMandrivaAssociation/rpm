@@ -1,14 +1,6 @@
-commit d661889aee646c9a5fc3ff9c7f0f75819796df58
-Author: Bernhard Rosenkränzer <bero@lindev.ch>
-Date:   Sun Jul 12 19:54:27 2026 +0200
-
-    PGO support
-
-diff --git a/PGO_COMPARISON.md b/PGO_COMPARISON.md
-new file mode 100644
-index 0000000..9667daf
---- /dev/null
-+++ b/PGO_COMPARISON.md
+diff -Naur a/PGO_COMPARISON.md b/PGO_COMPARISON.md
+--- a/PGO_COMPARISON.md	1970-01-01 01:00:00.000000000 +0100
++++ b/PGO_COMPARISON.md	2026-08-06 15:34:28.505256818 +0200
 @@ -0,0 +1,167 @@
 +# PGO Build Comparison: zlib-ng 2.3.1
 +
@@ -177,12 +169,10 @@ index 0000000..9667daf
 +For packages with more complex C/C++ code paths (e.g., databases, language
 +runtimes, web servers), significantly larger performance improvements would be
 +expected.
-diff --git a/PGO_DESIGN.md b/PGO_DESIGN.md
-new file mode 100644
-index 0000000..6c10ed6
---- /dev/null
-+++ b/PGO_DESIGN.md
-@@ -0,0 +1,182 @@
+diff -Naur a/PGO_DESIGN.md b/PGO_DESIGN.md
+--- a/PGO_DESIGN.md	1970-01-01 01:00:00.000000000 +0100
++++ b/PGO_DESIGN.md	2026-08-06 15:35:25.835426835 +0200
+@@ -0,0 +1,184 @@
 +# PGO (Profile-Guided Optimization) Support for RPM: Design Document
 +
 +## 1. Overview
@@ -305,9 +295,10 @@ index 0000000..6c10ed6
 +    // === Merge profiles ===
 +    run profile merge script
 +
-+    // === Wipe build artifacts (not sources when out-of-tree) ===
-+    // Prefer rm -rf buildsubdir/_OMV_rpm_build{,32}; keep extracted sources.
-+    // Fall back to rm -rf buildsubdir + re-prep only for in-tree layouts.
++    // === Wipe build artifacts (prefer out-of-tree only) ===
++    // Prefer: rm -rf buildsubdir/_OMV_rpm_build{,32}  (keep sources)
++    // Fallback (in-tree): rm -rf buildsubdir + stamp for re-prep
++    // Profiles stay in %{_pgo_profile_dir}
 +
 +    // === PASS 2: Optimized build ===
 +    push PGO-use macros (optflags += -fprofile-use=...)
@@ -366,11 +357,10 @@ index 0000000..6c10ed6
 +   on noarch, skip on cross-compile, and both gcc/clang paths.
 +2. **Integration test with zlib-ng**: Build with and without PGO using both
 +   gcc and clang, compare binary sizes and performance.
-diff --git a/build/build.cc b/build/build.cc
-index 6bd40c3..2dec8f4 100644
---- a/build/build.cc
-+++ b/build/build.cc
-@@ -365,6 +365,208 @@ static rpmRC doBuildDir(rpmSpec spec, int test, int inPlace, StringBuf *sbp)
+diff -Naur a/build/build.cc b/build/build.cc
+--- a/build/build.cc	2026-07-16 15:34:18.000000000 +0200
++++ b/build/build.cc	2026-08-06 15:35:13.493008580 +0200
+@@ -365,6 +365,234 @@
      return rc;
  }
  
@@ -551,17 +541,15 @@ index 6bd40c3..2dec8f4 100644
 +}
 +
 +/**
-+ * Wipe out-of-tree build dirs only (not the extracted sources) for pass 2.
++ * Wipe out-of-tree build dirs only (not extracted sources) for pass 2.
 + *
 + * OMV BuildSystem cmake/meson/autotools put objects under
-+ * _OMV_rpm_build{,32}/. Removing those is enough for a clean reconfigure;
-+ * deleting the whole buildsubdir would force a re-prep and risks touching
-+ * anything a package put under the source tree. Profile data lives in
-+ * %{_pgo_profile_dir} (sibling of buildsubdir) and is never removed here.
++ * _OMV_rpm_build{,32}/. Removing those is enough for a clean reconfigure.
++ * Profile data lives in %{_pgo_profile_dir} (sibling of buildsubdir) and
++ * is never removed here.
 + *
 + * If no OMV out-of-tree build dir exists (in-tree packages), fall back to
-+ * wiping the full buildsubdir — caller must re-prep in that case. We write
-+ * a stamp file so pass 2 knows whether to re-run %%prep.
++ * wiping the full buildsubdir and stamp .pgo-need-reprep so pass 2 re-preps.
 + */
 +static rpmRC pgoWipeBuildDir(rpmSpec spec, int test, StringBuf *sbp)
 +{
@@ -574,26 +562,24 @@ index 6bd40c3..2dec8f4 100644
 +	char *subpath = NULL;
 +	char *wipe_script = NULL;
 +	rasprintf(&subpath, "%s/%s", buildDir, buildSubdir);
-+	/* Stamp under profdir (survives any source wipe). */
++	/* Stamp under profdir survives any source wipe. */
 +	rasprintf(&wipe_script,
 +	    "mkdir -p '%s'\n"
 +	    "rm -f '%s/.pgo-need-reprep'\n"
 +	    "if [ -d '%s/_OMV_rpm_build' ] || [ -d '%s/_OMV_rpm_build32' ]; then\n"
-+	    "  echo \"PGO: wiping out-of-tree build dirs under %s (keeping sources)\"\n"
 +	    "  rm -rf '%s/_OMV_rpm_build' '%s/_OMV_rpm_build32'\n"
 +	    "else\n"
-+	    "  echo \"PGO: no _OMV_rpm_build; wiping full source tree %s (in-tree layout)\"\n"
 +	    "  rm -rf '%s'\n"
 +	    "  touch '%s/.pgo-need-reprep'\n"
 +	    "fi\n",
 +	    profdir, profdir,
 +	    subpath, subpath,
-+	    subpath,
 +	    subpath, subpath,
 +	    subpath,
-+	    subpath,
 +	    profdir);
-+	rpmlog(RPMLOG_NOTICE, _("PGO: wiping build artifacts under %s for optimized rebuild\n"), subpath);
++	rpmlog(RPMLOG_NOTICE,
++	    _("PGO: wiping build artifacts under %s for optimized rebuild\n"),
++	    subpath);
 +	rc = doScript(spec, RPMBUILD_STRINGBUF, "%pgo-wipe",
 +		      wipe_script, test, sbp);
 +	free(subpath);
@@ -609,7 +595,7 @@ index 6bd40c3..2dec8f4 100644
  static int buildSpec(rpmts ts, BTA_t buildArgs, rpmSpec spec, int what)
  {
      int rc = RPMRC_OK;
-@@ -498,18 +700,95 @@ static int buildSpec(rpmts ts, BTA_t buildArgs, rpmSpec spec, int what)
+@@ -494,18 +722,112 @@
  	    goto exit;
  	}
  
@@ -665,25 +651,25 @@ index 6bd40c3..2dec8f4 100644
 +	    /* === Merge profile data === */
 +	    rpmlog(RPMLOG_NOTICE, _("PGO: merging profile data\n"));
 +	    if ((rc = pgoMergeProfiles(spec, test, sbp)))
- 		goto exit;
- 
-+	    /* === Wipe build tree === */
-+	    if ((rc = pgoWipeBuildDir(spec, test, sbp)))
 +		goto exit;
 +
++	    /* === Wipe build tree === */
++	    if ((rc = pgoWipeBuildDir(spec, test, sbp)))
+ 		goto exit;
+ 
 +	    /* === PASS 2: Optimized build (sources kept when out-of-tree) === */
 +	    rpmlog(RPMLOG_NOTICE, _("PGO: pass 2 - rebuilding with profile data\n"));
 +
-+	    /* Re-prep only if wipe fell back to removing the full source tree
-+	     * (in-tree packages without _OMV_rpm_build). Out-of-tree BuildSystem
-+	     * packages only lost the build dir; sources stay and re-prep is
-+	     * unnecessary (and PREP is often not set in the conf/build pass). */
++	    /* Re-prep only if wipe removed the full source tree (in-tree
++	     * packages without _OMV_rpm_build). Out-of-tree BuildSystem
++	     * packages only lost the build dir; sources stay. */
 +	    {
 +		char *profdir = rpmExpand("%{_pgo_profile_dir}", NULL);
 +		char *stamp = NULL;
 +		rasprintf(&stamp, "%s/.pgo-need-reprep", profdir);
 +		if (!access(stamp, F_OK)) {
-+		    rpmlog(RPMLOG_NOTICE, _("PGO: re-running %%prep after full source wipe\n"));
++		    rpmlog(RPMLOG_NOTICE,
++			_("PGO: re-running %%prep after full source wipe\n"));
 +		    unlink(stamp);
 +		    if ((rc = doScript(spec, RPMBUILD_PREP, "%prep",
 +				       rpmSpecGetSection(spec, RPMBUILD_PREP),
@@ -730,11 +716,10 @@ index 6bd40c3..2dec8f4 100644
  	if ((what & RPMBUILD_INSTALL) &&
  	    (rc = doScript(spec, RPMBUILD_INSTALL, "%install",
  			   rpmSpecGetSection(spec, RPMBUILD_INSTALL),
-diff --git a/build/parseSpec.cc b/build/parseSpec.cc
-index d3ea101..cbf2a95 100644
---- a/build/parseSpec.cc
-+++ b/build/parseSpec.cc
-@@ -54,6 +54,7 @@ static const struct PartRec {
+diff -Naur a/build/parseSpec.cc b/build/parseSpec.cc
+--- a/build/parseSpec.cc	2026-07-16 15:34:18.000000000 +0200
++++ b/build/parseSpec.cc	2026-08-06 15:34:28.505529062 +0200
+@@ -53,6 +53,7 @@
      { PART_INSTALL,       1, LEN_AND_STR("%install")},
      { PART_CHECK,         1, LEN_AND_STR("%check")},
      { PART_CLEAN,         1, LEN_AND_STR("%clean")},
@@ -742,7 +727,7 @@ index d3ea101..cbf2a95 100644
      { PART_PREUN,         0, LEN_AND_STR("%preun")},
      { PART_POSTUN,        0, LEN_AND_STR("%postun")},
      { PART_PRETRANS,      0, LEN_AND_STR("%pretrans")},
-@@ -962,6 +963,7 @@ struct sectname_s sectList[] = {
+@@ -938,6 +939,7 @@
      { "install", SECT_INSTALL, PART_INSTALL, 1 },
      { "check", SECT_CHECK, PART_CHECK, 0 },
      { "clean", SECT_CLEAN, PART_CLEAN, 0 },
@@ -750,7 +735,7 @@ index d3ea101..cbf2a95 100644
      { NULL, -1, -1, 0 }
  };
  
-@@ -1190,6 +1192,7 @@ static rpmRC parseSpecSection(rpmSpec *specptr, enum parseStages stage)
+@@ -1166,6 +1168,7 @@
  	case PART_INSTALL:
  	case PART_CHECK:
  	case PART_CLEAN:
@@ -758,11 +743,10 @@ index d3ea101..cbf2a95 100644
  	    parsePart = parseBuildScript(spec, parsePart);
  	    break;
  	case PART_CHANGELOG:
-diff --git a/build/rpmbuild_internal.hh b/build/rpmbuild_internal.hh
-index 9101f55..5311ea6 100644
---- a/build/rpmbuild_internal.hh
-+++ b/build/rpmbuild_internal.hh
-@@ -33,8 +33,9 @@ enum sections_e {
+diff -Naur a/build/rpmbuild_internal.hh b/build/rpmbuild_internal.hh
+--- a/build/rpmbuild_internal.hh	2026-07-16 15:34:18.000000000 +0200
++++ b/build/rpmbuild_internal.hh	2026-08-06 15:34:28.505599463 +0200
+@@ -33,8 +33,9 @@
      SECT_INSTALL	= 4,
      SECT_CHECK		= 5,
      SECT_CLEAN		= 6,
@@ -773,7 +757,7 @@ index 9101f55..5311ea6 100644
  
  enum parseOps_e {
      PARSE_NONE		= 0,
-@@ -270,7 +271,8 @@ typedef enum rpmParseState_e {
+@@ -270,7 +271,8 @@
      PART_CONF			= 43+PART_BASE, /*!< */
      PART_PREUNTRANS		= 44+PART_BASE, /*!< */
      PART_POSTUNTRANS		= 45+PART_BASE, /*!< */
@@ -783,11 +767,10 @@ index 9101f55..5311ea6 100644
  } rpmParseState; 
  
  
-diff --git a/build/spec.cc b/build/spec.cc
-index b173e4c..9cf4a32 100644
---- a/build/spec.cc
-+++ b/build/spec.cc
-@@ -438,6 +438,8 @@ const char * rpmSpecGetSection(rpmSpec spec, int section)
+diff -Naur a/build/spec.cc b/build/spec.cc
+--- a/build/spec.cc	2026-07-16 15:34:18.000000000 +0200
++++ b/build/spec.cc	2026-08-06 15:34:28.505640293 +0200
+@@ -438,6 +438,8 @@
  	    return getStringBuf(spec->sections[SECT_CHECK]);
  	case RPMBUILD_CLEAN:
  	    return getStringBuf(spec->sections[SECT_CLEAN]);
@@ -796,11 +779,10 @@ index b173e4c..9cf4a32 100644
  	}
      }
      return NULL;
-diff --git a/include/rpm/rpmbuild.h b/include/rpm/rpmbuild.h
-index 23f037d..0ead7d1 100644
---- a/include/rpm/rpmbuild.h
-+++ b/include/rpm/rpmbuild.h
-@@ -39,6 +39,7 @@ enum rpmBuildFlags_e {
+diff -Naur a/include/rpm/rpmbuild.h b/include/rpm/rpmbuild.h
+--- a/include/rpm/rpmbuild.h	2026-07-16 15:34:18.000000000 +0200
++++ b/include/rpm/rpmbuild.h	2026-08-06 15:34:28.505674524 +0200
+@@ -39,6 +39,7 @@
      RPMBUILD_DUMPBUILDREQUIRES	= (1 <<  21), /*!< Write buildrequires.nosrc.rpm. */
      RPMBUILD_CONF	= (1 << 22),	/*!< Execute %%conf. */
      RPMBUILD_MKBUILDDIR	= (1 << 23),	/*!< Internal use only */
@@ -808,29 +790,27 @@ index 23f037d..0ead7d1 100644
  
      RPMBUILD_NOBUILD	= (1 << 31)	/*!< Don't execute or package. */
  };
-diff --git a/macros.in b/macros.in
-index 16fe411..9e2770a 100644
---- a/macros.in
-+++ b/macros.in
-@@ -1045,6 +1045,13 @@ Supplements:   (%{name} = %{version}-%{release} and langpacks-%{1})\
-   FCFLAGS="${FCFLAGS:-%{?build_fflags}}" ; export FCFLAGS ; \
+diff -Naur a/macros.in b/macros.in
+--- a/macros.in	2026-07-16 15:34:18.000000000 +0200
++++ b/macros.in	2026-08-06 15:34:28.505731644 +0200
+@@ -1044,6 +1044,13 @@
    LDFLAGS="${LDFLAGS:-%{?build_ldflags}}" ; export LDFLAGS
  
-+#==============================================================================
+ #==============================================================================
 +# ---- PGO (Profile-Guided Optimization) macros.
 +
 +# Directory where PGO profile data is stored (outside the build subdirectory
 +# so it survives the build tree wipe between PGO passes).
 +%_pgo_profile_dir	%{_builddir}/.pgo-profiles/%{NAME}-%{VERSION}
 +
- #==============================================================================
++#==============================================================================
  # ---- specfile macros.
  #	Macro(s) here can be used reliably for reproducible builds.
-diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index 769e1e1..91f2845 100644
---- a/tests/CMakeLists.txt
-+++ b/tests/CMakeLists.txt
-@@ -54,6 +54,7 @@ set(TESTSUITE_AT
+ #	(Note: Above is the goal, below are the macros under development)
+diff -Naur a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+--- a/tests/CMakeLists.txt	2026-07-16 15:34:18.000000000 +0200
++++ b/tests/CMakeLists.txt	2026-08-06 15:34:28.505785945 +0200
+@@ -54,6 +54,7 @@
  	rpmconfig2.at
  	rpmconfig3.at
  	rpmbrp.at
@@ -838,11 +818,9 @@ index 769e1e1..91f2845 100644
  )
  
  FILE(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/rpmtests.at)
-diff --git a/tests/rpmpgo.at b/tests/rpmpgo.at
-new file mode 100644
-index 0000000..f87c376
---- /dev/null
-+++ b/tests/rpmpgo.at
+diff -Naur a/tests/rpmpgo.at b/tests/rpmpgo.at
+--- a/tests/rpmpgo.at	1970-01-01 01:00:00.000000000 +0100
++++ b/tests/rpmpgo.at	2026-08-06 15:34:28.505834696 +0200
 @@ -0,0 +1,272 @@
 +#    rpmpgo.at: test %pgo (Profile-Guided Optimization) support
 +#
