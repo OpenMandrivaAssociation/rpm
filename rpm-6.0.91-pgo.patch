@@ -1,6 +1,6 @@
 diff -Naur a/PGO_COMPARISON.md b/PGO_COMPARISON.md
 --- a/PGO_COMPARISON.md	1970-01-01 01:00:00.000000000 +0100
-+++ b/PGO_COMPARISON.md	2026-08-06 15:34:28.505256818 +0200
++++ b/PGO_COMPARISON.md	2026-08-07 21:40:42.970556511 +0200
 @@ -0,0 +1,167 @@
 +# PGO Build Comparison: zlib-ng 2.3.1
 +
@@ -171,8 +171,8 @@ diff -Naur a/PGO_COMPARISON.md b/PGO_COMPARISON.md
 +expected.
 diff -Naur a/PGO_DESIGN.md b/PGO_DESIGN.md
 --- a/PGO_DESIGN.md	1970-01-01 01:00:00.000000000 +0100
-+++ b/PGO_DESIGN.md	2026-08-06 15:35:25.835426835 +0200
-@@ -0,0 +1,184 @@
++++ b/PGO_DESIGN.md	2026-08-07 21:41:28.280060892 +0200
+@@ -0,0 +1,189 @@
 +# PGO (Profile-Guided Optimization) Support for RPM: Design Document
 +
 +## 1. Overview
@@ -212,9 +212,13 @@ diff -Naur a/PGO_DESIGN.md b/PGO_DESIGN.md
 +#### 2.2.1 Compiler Detection (GCC vs Clang vs Others)
 +
 +The proposal mentions using the right merge tool per compiler. The implementation
-+needs a concrete mechanism to detect the compiler. We detect this by inspecting
-+`%{__cc}` — if it contains `clang`, we use Clang PGO flags; otherwise we default
-+to GCC-style flags. This covers the vast majority of real-world cases.
++needs a concrete mechanism to detect the compiler. Matching the `%{__cc}`
++filename for `clang` is not enough: distributions often ship `/usr/bin/cc` and
++`/usr/bin/c++` as symlinks (or wrappers) to the default compiler, so the
++command name may be just `cc` even when that is Clang. We therefore invoke
++`%{__cc} -dM -E -x c /dev/null` and look for `__clang__`. That is correct for
++explicit `clang`/`gcc` names, `cc` → clang or `cc` → gcc symlinks, and
++compiler wrappers such as ccache.
 +
 +| Aspect | GCC | Clang |
 +|--------|-----|-------|
@@ -350,6 +354,7 @@ diff -Naur a/PGO_DESIGN.md b/PGO_DESIGN.md
 +| Cross-compilation false positive | Use `rpmMachineScore(INSTARCH/INSTOS, …)` so subarches like znver1 are not treated as cross |
 +| BuildSystem specs not supported | PGO runs at build execution time, after all parsing/generation is done |
 +| Thread-safety of profile counters | Use `-fprofile-update=atomic` |
++| `cc`/`c++` symlink to clang treated as GCC | Probe `%{__cc}` for `__clang__`; do not match the filename |
 +
 +## 5. Testing Strategy
 +
@@ -359,8 +364,8 @@ diff -Naur a/PGO_DESIGN.md b/PGO_DESIGN.md
 +   gcc and clang, compare binary sizes and performance.
 diff -Naur a/build/build.cc b/build/build.cc
 --- a/build/build.cc	2026-07-16 15:34:18.000000000 +0200
-+++ b/build/build.cc	2026-08-06 15:35:13.493008580 +0200
-@@ -365,6 +365,234 @@
++++ b/build/build.cc	2026-08-07 21:42:07.316577130 +0200
+@@ -365,6 +365,268 @@
      return rc;
  }
  
@@ -393,6 +398,44 @@ diff -Naur a/build/build.cc b/build/build.cc
 +	return 0;
 +
 +    return 1;
++}
++
++/**
++ * Detect whether %{__cc} is Clang.
++ *
++ * %{__cc} is typically /usr/bin/cc (or /usr/bin/c++), which may be a
++ * symlink or wrapper whose name does not contain "clang". Matching the
++ * command string for "clang" therefore treats Clang as GCC and injects
++ * GCC-only flags such as -fprofile-correction. Ask the compiler for
++ * predefined macros instead; __clang__ is authoritative and works for
++ * cc -> clang, ccache wrappers, and explicit "clang"/"gcc" names.
++ */
++static int pgoIsClang(void)
++{
++    static int cached = -1;
++    char *cmd;
++    FILE *fp;
++    char buf[512];
++    int is_clang = 0;
++
++    if (cached >= 0)
++	return cached;
++
++    cmd = rpmExpand("%{__cc} -dM -E -x c /dev/null 2>/dev/null", NULL);
++    fp = popen(cmd, "r");
++    if (fp != NULL) {
++	while (fgets(buf, sizeof(buf), fp) != NULL) {
++	    if (strstr(buf, "#define __clang__") != NULL) {
++		is_clang = 1;
++		break;
++	    }
++	}
++	(void) pclose(fp);
++    }
++    free(cmd);
++
++    cached = is_clang;
++    return is_clang;
 +}
 +
 +/**
@@ -450,8 +493,7 @@ diff -Naur a/build/build.cc b/build/build.cc
 +static void pgoPushUseEnv(rpmSpec spec)
 +{
 +    char *profdir = rpmExpand("%{_pgo_profile_dir}", NULL);
-+    char *cc = rpmExpand("%{__cc}", NULL);
-+    int is_clang = (strstr(cc, "clang") != NULL);
++    int is_clang = pgoIsClang();
 +
 +    char *use_cflags = NULL;
 +    char *use_ldflags = NULL;
@@ -488,7 +530,6 @@ diff -Naur a/build/build.cc b/build/build.cc
 +    rpmlog(RPMLOG_NOTICE, _("PGO: LDFLAGS=%s\n"), new_ldflags);
 +
 +    free(profdir);
-+    free(cc);
 +    free(use_cflags);
 +    free(use_ldflags);
 +    free(orig_optflags);
@@ -519,8 +560,7 @@ diff -Naur a/build/build.cc b/build/build.cc
 +static rpmRC pgoMergeProfiles(rpmSpec spec, int test, StringBuf *sbp)
 +{
 +    char *profdir = rpmExpand("%{_pgo_profile_dir}", NULL);
-+    char *cc = rpmExpand("%{__cc}", NULL);
-+    int is_clang = (strstr(cc, "clang") != NULL);
++    int is_clang = pgoIsClang();
 +    rpmRC rc = RPMRC_OK;
 +
 +    if (is_clang) {
@@ -536,7 +576,6 @@ diff -Naur a/build/build.cc b/build/build.cc
 +    /* For GCC, .gcda files are written directly to profdir, no merge needed */
 +
 +    free(profdir);
-+    free(cc);
 +    return rc;
 +}
 +
@@ -595,7 +634,7 @@ diff -Naur a/build/build.cc b/build/build.cc
  static int buildSpec(rpmts ts, BTA_t buildArgs, rpmSpec spec, int what)
  {
      int rc = RPMRC_OK;
-@@ -494,18 +722,112 @@
+@@ -494,18 +756,114 @@
  	    goto exit;
  	}
  
@@ -606,6 +645,8 @@ diff -Naur a/build/build.cc b/build/build.cc
 +	/* PGO (Profile-Guided Optimization) two-pass build */
 +	if ((what & (RPMBUILD_CONF|RPMBUILD_BUILD)) && pgoBuildEnabled(spec)) {
 +	    rpmlog(RPMLOG_NOTICE, _("PGO: profile-guided optimization enabled\n"));
++	    rpmlog(RPMLOG_NOTICE, _("PGO: using %s PGO flags\n"),
++		   pgoIsClang() ? "Clang" : "GCC");
 +
 +	    /* Create the profile directory */
 +	    {
@@ -651,12 +692,12 @@ diff -Naur a/build/build.cc b/build/build.cc
 +	    /* === Merge profile data === */
 +	    rpmlog(RPMLOG_NOTICE, _("PGO: merging profile data\n"));
 +	    if ((rc = pgoMergeProfiles(spec, test, sbp)))
-+		goto exit;
-+
-+	    /* === Wipe build tree === */
-+	    if ((rc = pgoWipeBuildDir(spec, test, sbp)))
  		goto exit;
  
++	    /* === Wipe build tree === */
++	    if ((rc = pgoWipeBuildDir(spec, test, sbp)))
++		goto exit;
++
 +	    /* === PASS 2: Optimized build (sources kept when out-of-tree) === */
 +	    rpmlog(RPMLOG_NOTICE, _("PGO: pass 2 - rebuilding with profile data\n"));
 +
@@ -718,7 +759,7 @@ diff -Naur a/build/build.cc b/build/build.cc
  			   rpmSpecGetSection(spec, RPMBUILD_INSTALL),
 diff -Naur a/build/parseSpec.cc b/build/parseSpec.cc
 --- a/build/parseSpec.cc	2026-07-16 15:34:18.000000000 +0200
-+++ b/build/parseSpec.cc	2026-08-06 15:34:28.505529062 +0200
++++ b/build/parseSpec.cc	2026-08-07 21:40:42.971054618 +0200
 @@ -53,6 +53,7 @@
      { PART_INSTALL,       1, LEN_AND_STR("%install")},
      { PART_CHECK,         1, LEN_AND_STR("%check")},
@@ -745,7 +786,7 @@ diff -Naur a/build/parseSpec.cc b/build/parseSpec.cc
  	case PART_CHANGELOG:
 diff -Naur a/build/rpmbuild_internal.hh b/build/rpmbuild_internal.hh
 --- a/build/rpmbuild_internal.hh	2026-07-16 15:34:18.000000000 +0200
-+++ b/build/rpmbuild_internal.hh	2026-08-06 15:34:28.505599463 +0200
++++ b/build/rpmbuild_internal.hh	2026-08-07 21:40:42.971200570 +0200
 @@ -33,8 +33,9 @@
      SECT_INSTALL	= 4,
      SECT_CHECK		= 5,
@@ -769,7 +810,7 @@ diff -Naur a/build/rpmbuild_internal.hh b/build/rpmbuild_internal.hh
  
 diff -Naur a/build/spec.cc b/build/spec.cc
 --- a/build/spec.cc	2026-07-16 15:34:18.000000000 +0200
-+++ b/build/spec.cc	2026-08-06 15:34:28.505640293 +0200
++++ b/build/spec.cc	2026-08-07 21:40:42.971298631 +0200
 @@ -438,6 +438,8 @@
  	    return getStringBuf(spec->sections[SECT_CHECK]);
  	case RPMBUILD_CLEAN:
@@ -781,7 +822,7 @@ diff -Naur a/build/spec.cc b/build/spec.cc
      return NULL;
 diff -Naur a/include/rpm/rpmbuild.h b/include/rpm/rpmbuild.h
 --- a/include/rpm/rpmbuild.h	2026-07-16 15:34:18.000000000 +0200
-+++ b/include/rpm/rpmbuild.h	2026-08-06 15:34:28.505674524 +0200
++++ b/include/rpm/rpmbuild.h	2026-08-07 21:40:42.971386243 +0200
 @@ -39,6 +39,7 @@
      RPMBUILD_DUMPBUILDREQUIRES	= (1 <<  21), /*!< Write buildrequires.nosrc.rpm. */
      RPMBUILD_CONF	= (1 << 22),	/*!< Execute %%conf. */
@@ -792,7 +833,7 @@ diff -Naur a/include/rpm/rpmbuild.h b/include/rpm/rpmbuild.h
  };
 diff -Naur a/macros.in b/macros.in
 --- a/macros.in	2026-07-16 15:34:18.000000000 +0200
-+++ b/macros.in	2026-08-06 15:34:28.505731644 +0200
++++ b/macros.in	2026-08-07 21:40:42.971499894 +0200
 @@ -1044,6 +1044,13 @@
    LDFLAGS="${LDFLAGS:-%{?build_ldflags}}" ; export LDFLAGS
  
@@ -809,7 +850,7 @@ diff -Naur a/macros.in b/macros.in
  #	(Note: Above is the goal, below are the macros under development)
 diff -Naur a/tests/CMakeLists.txt b/tests/CMakeLists.txt
 --- a/tests/CMakeLists.txt	2026-07-16 15:34:18.000000000 +0200
-+++ b/tests/CMakeLists.txt	2026-08-06 15:34:28.505785945 +0200
++++ b/tests/CMakeLists.txt	2026-08-07 21:40:42.971630886 +0200
 @@ -54,6 +54,7 @@
  	rpmconfig2.at
  	rpmconfig3.at
@@ -820,8 +861,8 @@ diff -Naur a/tests/CMakeLists.txt b/tests/CMakeLists.txt
  FILE(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/rpmtests.at)
 diff -Naur a/tests/rpmpgo.at b/tests/rpmpgo.at
 --- a/tests/rpmpgo.at	1970-01-01 01:00:00.000000000 +0100
-+++ b/tests/rpmpgo.at	2026-08-06 15:34:28.505834696 +0200
-@@ -0,0 +1,272 @@
++++ b/tests/rpmpgo.at	2026-08-07 21:41:42.080243561 +0200
+@@ -0,0 +1,282 @@
 +#    rpmpgo.at: test %pgo (Profile-Guided Optimization) support
 +#
 +#    This program is free software; you can redistribute it and/or modify
@@ -937,27 +978,20 @@ diff -Naur a/tests/rpmpgo.at b/tests/rpmpgo.at
 +AT_KEYWORDS([build pgo])
 +RPMTEST_CHECK([
 +
-+rpmbuild \
++out=$(rpmbuild \
 +  --define "debug_package %{nil}" \
 +  --define "__cc gcc" \
-+  -bb ${RPMDATA}/SPECS/pgohello.spec 2>&1 | \
-+  grep -oF -- "-fprofile-generate" | head -1
++  -bb ${RPMDATA}/SPECS/pgohello.spec 2>&1)
++echo "$out" | grep -oF -- "-fprofile-generate" | head -1
++echo "$out" | grep -oF -- "-fprofile-use" | head -1
++echo "$out" | grep -oF -- "-fprofile-correction" | head -1
++echo "$out" | grep -F "PGO: using GCC PGO flags"
 +],
 +[0],
 +[-fprofile-generate
-+],
-+[])
-+
-+RPMTEST_CHECK([
-+
-+rpmbuild \
-+  --define "debug_package %{nil}" \
-+  --define "__cc gcc" \
-+  -bb ${RPMDATA}/SPECS/pgohello.spec 2>&1 | \
-+  grep -oF -- "-fprofile-use" | head -1
-+],
-+[0],
-+[-fprofile-use
++-fprofile-use
++-fprofile-correction
++PGO: using GCC PGO flags
 +],
 +[])
 +
@@ -970,27 +1004,44 @@ diff -Naur a/tests/rpmpgo.at b/tests/rpmpgo.at
 +RPMTEST_SKIP_IF([! which clang >/dev/null 2>&1])
 +RPMTEST_CHECK([
 +
-+rpmbuild \
++out=$(rpmbuild \
 +  --define "debug_package %{nil}" \
 +  --define "__cc clang" \
-+  -bb ${RPMDATA}/SPECS/pgohello.spec 2>&1 | \
-+  grep -oF -- "-fprofile-generate" | head -1
++  -bb ${RPMDATA}/SPECS/pgohello.spec 2>&1)
++echo "$out" | grep -oF -- "-fprofile-generate" | head -1
++echo "$out" | grep -oF -- "-fprofile-use" | head -1
++echo "$out" | grep -cF -- "-fprofile-correction" || true
++echo "$out" | grep -F "PGO: using Clang PGO flags"
 +],
 +[0],
 +[-fprofile-generate
++-fprofile-use
++0
++PGO: using Clang PGO flags
 +],
 +[])
 +
++RPMTEST_CLEANUP
++
++# ------------------------------
++# %{__cc} is often /usr/bin/cc, a symlink whose name does not contain "clang"
++RPMTEST_SETUP_RW([rpmbuild PGO detects clang via cc symlink])
++AT_KEYWORDS([build pgo])
++RPMTEST_SKIP_IF([! which clang >/dev/null 2>&1])
 +RPMTEST_CHECK([
 +
-+rpmbuild \
++ccdir=$(mktemp -d)
++ln -s "$(which clang)" "$ccdir/cc"
++out=$(rpmbuild \
 +  --define "debug_package %{nil}" \
-+  --define "__cc clang" \
-+  -bb ${RPMDATA}/SPECS/pgohello.spec 2>&1 | \
-+  grep -oF -- "-fprofile-use" | head -1
++  --define "__cc $ccdir/cc" \
++  -bb ${RPMDATA}/SPECS/pgohello.spec 2>&1)
++echo "$out" | grep -F "PGO: using Clang PGO flags"
++echo "$out" | grep -cF -- "-fprofile-correction" || true
 +],
 +[0],
-+[-fprofile-use
++[PGO: using Clang PGO flags
++0
 +],
 +[])
 +
