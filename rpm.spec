@@ -93,7 +93,7 @@
 Summary:	The RPM package management system
 Name:		rpm
 Version:	6.0.92
-Release:	%{?snapver:0.%{snapver}.}5
+Release:	%{?snapver:0.%{snapver}.}6
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
@@ -585,6 +585,15 @@ sed -i -e 's,-I/usr/include$,,g;s,-I/usr/include\;,,g;s,-I/usr/include ,,g;s,-is
 
 %install
 %ninja_install -C BUILD
+%if %{cross_compiling}
+# meson + PKG_CONFIG_SYSROOT_DIR installs dbus policy under the sysroot prefix
+if [ -f %{buildroot}/usr/%{_target_platform}/usr/share/dbus-1/system.d/org.rpm.conf ]; then
+	mkdir -p %{buildroot}%{_datadir}/dbus-1/system.d
+	mv %{buildroot}/usr/%{_target_platform}/usr/share/dbus-1/system.d/org.rpm.conf \
+		%{buildroot}%{_datadir}/dbus-1/system.d/
+	rmdir -p %{buildroot}/usr/%{_target_platform}/usr/share/dbus-1/system.d 2>/dev/null || :
+fi
+%endif
 
 # Upstream debugedit is better than rpm's copy
 rm -f %{buildroot}%{_usrlibrpm}/{debugedit,sepdebugcrcfix,find-debuginfo.sh}
