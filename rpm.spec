@@ -92,13 +92,13 @@
 
 Summary:	The RPM package management system
 Name:		rpm
-Version:	6.0.92
-Release:	%{?snapver:0.%{snapver}.}6
+Version:	6.1.0
+Release:	%{?snapver:0.%{snapver}.}1
 Group:		System/Configuration/Packaging
 Url:		https://www.rpm.org/
 Source0:	http://ftp.rpm.org/releases/%{srcdir}/%{name}-%{srcver}.tar.bz2
-%define pgpr_version 20260617
-Source1:	https://github.com/rpm-software-management/libpgpr/archive/refs/heads/main.tar.gz#/libpgpr-%{pgpr_version}.tar.gz
+%define pgpr_version 1.3
+Source1:	https://github.com/rpm-software-management/libpgpr/archive/refs/tags/%{pgpr_version}.tar.gz#/libpgpr-%{pgpr_version}.tar.gz
 # extracted from http://pkgs.fedoraproject.org/cgit/redhat-rpm-config.git/plain/macros:
 Source2:	macros.filter
 Source3:	rpm.rpmlintrc
@@ -532,7 +532,7 @@ Rpm plugin for working with the application blocker fapolicyd
 %setup -n %{name}-%{srcver} -a 5
 %autopatch -p1 -M 6999
 tar xf %{S:1}
-mv libpgpr-main rpmio/rpmpgp_legacy
+mv libpgpr-%{pgpr_version} rpmio/rpmpgp_legacy
 cd rpmio/rpmpgp_legacy
 %autopatch -p1 -m 7000 -M 9999
 cd ../..
