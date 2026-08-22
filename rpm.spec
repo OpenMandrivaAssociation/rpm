@@ -16,7 +16,7 @@
 # Listing znver1 here (even though %{x86_64} is supposed to include it)
 # is a bootstrapping help (so building the package on a system without
 # znver1 support will provide a working starting point)
-%define lib64arches %{x86_64} %{aarch64} %{riscv64} znver1
+%define lib64arches %{x86_64} %{aarch64} %{riscv64} %{loongarch64} znver1
 
 %ifarch %lib64arches
 %define _lib lib64
