@@ -1,6 +1,6 @@
 diff -Naur a/PGO_COMPARISON.md b/PGO_COMPARISON.md
 --- a/PGO_COMPARISON.md	1970-01-01 01:00:00.000000000 +0100
-+++ b/PGO_COMPARISON.md	2026-08-07 21:40:42.970556511 +0200
++++ b/PGO_COMPARISON.md	2026-08-24 21:47:34.123227114 +0200
 @@ -0,0 +1,167 @@
 +# PGO Build Comparison: zlib-ng 2.3.1
 +
@@ -171,8 +171,8 @@ diff -Naur a/PGO_COMPARISON.md b/PGO_COMPARISON.md
 +expected.
 diff -Naur a/PGO_DESIGN.md b/PGO_DESIGN.md
 --- a/PGO_DESIGN.md	1970-01-01 01:00:00.000000000 +0100
-+++ b/PGO_DESIGN.md	2026-08-07 21:41:28.280060892 +0200
-@@ -0,0 +1,189 @@
++++ b/PGO_DESIGN.md	2026-08-24 21:48:26.332875666 +0200
+@@ -0,0 +1,194 @@
 +# PGO (Profile-Guided Optimization) Support for RPM: Design Document
 +
 +## 1. Overview
@@ -202,6 +202,8 @@ diff -Naur a/PGO_DESIGN.md b/PGO_DESIGN.md
 +- **Skip on cross-compile**: Instrumented binaries can't run on the build host
 +  if they target a different architecture. Correct to skip.
 +- **Skip on `noarch`**: No compiled binaries means no profiles. Correct.
++- **Skip on `--nopgo`**: Same as noarch/cross-compile; one-pass build for
++  quick test builds without hours of PGO.
 +- **Full prep→conf→build→pgo→wipe→prep→conf→build→install flow**: This is the
 +  standard PGO workflow and is correct.
 +- **Profile data outside the build directory**: Essential since the build tree
@@ -279,15 +281,17 @@ diff -Naur a/PGO_DESIGN.md b/PGO_DESIGN.md
 +3. Add `%pgo` to `partList[]` (prebuildonly, like `%check`).
 +4. Add `%pgo` to `sectList[]` (not required).
 +5. Parse `%pgo` like other simple script sections.
-+6. Add `RPMBUILD_PGO` flag to `rpmBuildFlags_e`.
++6. Add `RPMBUILD_PGO` and `RPMBUILD_NOPGO` flags to `rpmBuildFlags_e`.
++   `rpmbuild --nopgo` sets `RPMBUILD_NOPGO` (like `--nobuild` sets
++   `RPMBUILD_NOBUILD`).
 +
 +### 3.2 Build Logic Changes (build.cc)
 +
 +The core change is in `buildSpec()`. When a `%pgo` section is present, the arch
-+is not `noarch`, and we're not cross-compiling:
++is not `noarch`, we're not cross-compiling, and `--nopgo` was not given:
 +
 +```
-+if (pgo_section_present && !noarch && !cross_compiling) {
++if (pgo_section_present && !noarch && !cross_compiling && !nopgo) {
 +    // === PASS 1: Instrumented build ===
 +    push PGO-instrument macros (optflags += -fprofile-generate=...)
 +    run %prep
@@ -335,7 +339,7 @@ diff -Naur a/PGO_DESIGN.md b/PGO_DESIGN.md
 +The implementation:
 +
 +1. **Detects PGO eligibility** by checking for the `%pgo` section, the arch,
-+   and cross-compilation status.
++   cross-compilation status, and the `--nopgo` / `RPMBUILD_NOPGO` flag.
 +2. **Pushes modified macros** that add PGO instrumentation flags to the compiler
 +   flag macros.
 +3. **Runs the first pass** (%prep, %conf, %build) with instrumentation.
@@ -359,13 +363,14 @@ diff -Naur a/PGO_DESIGN.md b/PGO_DESIGN.md
 +## 5. Testing Strategy
 +
 +1. **Unit tests in rpm test suite**: Verify %pgo parsing, flag injection, skip
-+   on noarch, skip on cross-compile, and both gcc/clang paths.
++   on noarch, skip on cross-compile, skip on `--nopgo`, and both gcc/clang
++   paths.
 +2. **Integration test with zlib-ng**: Build with and without PGO using both
 +   gcc and clang, compare binary sizes and performance.
 diff -Naur a/build/build.cc b/build/build.cc
---- a/build/build.cc	2026-07-16 15:34:18.000000000 +0200
-+++ b/build/build.cc	2026-08-07 21:42:07.316577130 +0200
-@@ -365,6 +365,268 @@
+--- a/build/build.cc	2026-08-20 10:38:01.000000000 +0200
++++ b/build/build.cc	2026-08-24 21:48:26.309994875 +0200
+@@ -365,6 +365,272 @@
      return rc;
  }
  
@@ -373,10 +378,14 @@ diff -Naur a/build/build.cc b/build/build.cc
 + * Determine if PGO (Profile-Guided Optimization) should be used.
 + * Returns 1 if PGO is applicable, 0 otherwise.
 + */
-+static int pgoBuildEnabled(rpmSpec spec)
++static int pgoBuildEnabled(rpmSpec spec, int what)
 +{
 +    /* Must have a %pgo section */
 +    if (!rpmSpecGetSection(spec, RPMBUILD_PGO))
++	return 0;
++
++    /* --nopgo: skip the two-pass flow (same as noarch / cross-compile) */
++    if (what & RPMBUILD_NOPGO)
 +	return 0;
 +
 +    /* Don't PGO noarch packages — no compiled binaries */
@@ -634,7 +643,7 @@ diff -Naur a/build/build.cc b/build/build.cc
  static int buildSpec(rpmts ts, BTA_t buildArgs, rpmSpec spec, int what)
  {
      int rc = RPMRC_OK;
-@@ -494,18 +756,114 @@
+@@ -494,18 +760,114 @@
  	    goto exit;
  	}
  
@@ -643,7 +652,7 @@ diff -Naur a/build/build.cc b/build/build.cc
 -			   rpmSpecGetSection(spec, RPMBUILD_CONF),
 -			   test, sbp)))
 +	/* PGO (Profile-Guided Optimization) two-pass build */
-+	if ((what & (RPMBUILD_CONF|RPMBUILD_BUILD)) && pgoBuildEnabled(spec)) {
++	if ((what & (RPMBUILD_CONF|RPMBUILD_BUILD)) && pgoBuildEnabled(spec, what)) {
 +	    rpmlog(RPMLOG_NOTICE, _("PGO: profile-guided optimization enabled\n"));
 +	    rpmlog(RPMLOG_NOTICE, _("PGO: using %s PGO flags\n"),
 +		   pgoIsClang() ? "Clang" : "GCC");
@@ -758,8 +767,8 @@ diff -Naur a/build/build.cc b/build/build.cc
  	    (rc = doScript(spec, RPMBUILD_INSTALL, "%install",
  			   rpmSpecGetSection(spec, RPMBUILD_INSTALL),
 diff -Naur a/build/parseSpec.cc b/build/parseSpec.cc
---- a/build/parseSpec.cc	2026-07-16 15:34:18.000000000 +0200
-+++ b/build/parseSpec.cc	2026-08-07 21:40:42.971054618 +0200
+--- a/build/parseSpec.cc	2026-08-20 10:38:01.000000000 +0200
++++ b/build/parseSpec.cc	2026-08-24 21:47:34.123545808 +0200
 @@ -53,6 +53,7 @@
      { PART_INSTALL,       1, LEN_AND_STR("%install")},
      { PART_CHECK,         1, LEN_AND_STR("%check")},
@@ -785,8 +794,8 @@ diff -Naur a/build/parseSpec.cc b/build/parseSpec.cc
  	    break;
  	case PART_CHANGELOG:
 diff -Naur a/build/rpmbuild_internal.hh b/build/rpmbuild_internal.hh
---- a/build/rpmbuild_internal.hh	2026-07-16 15:34:18.000000000 +0200
-+++ b/build/rpmbuild_internal.hh	2026-08-07 21:40:42.971200570 +0200
+--- a/build/rpmbuild_internal.hh	2026-08-20 10:38:01.000000000 +0200
++++ b/build/rpmbuild_internal.hh	2026-08-24 21:47:34.123628379 +0200
 @@ -33,8 +33,9 @@
      SECT_INSTALL	= 4,
      SECT_CHECK		= 5,
@@ -809,8 +818,8 @@ diff -Naur a/build/rpmbuild_internal.hh b/build/rpmbuild_internal.hh
  
  
 diff -Naur a/build/spec.cc b/build/spec.cc
---- a/build/spec.cc	2026-07-16 15:34:18.000000000 +0200
-+++ b/build/spec.cc	2026-08-07 21:40:42.971298631 +0200
+--- a/build/spec.cc	2026-08-20 10:38:01.000000000 +0200
++++ b/build/spec.cc	2026-08-24 21:47:34.123680660 +0200
 @@ -438,6 +438,8 @@
  	    return getStringBuf(spec->sections[SECT_CHECK]);
  	case RPMBUILD_CLEAN:
@@ -820,20 +829,36 @@ diff -Naur a/build/spec.cc b/build/spec.cc
  	}
      }
      return NULL;
+diff -Naur a/docs/man/rpmbuild.1.scd b/docs/man/rpmbuild.1.scd
+--- a/docs/man/rpmbuild.1.scd	2026-08-20 10:38:01.000000000 +0200
++++ b/docs/man/rpmbuild.1.scd	2026-08-24 21:48:26.298058094 +0200
+@@ -147,6 +147,11 @@
+ *--nodeps*
+ 	Do not verify build dependencies.
+ 
++*--nopgo*
++	Do not execute the two-pass *%pgo* build even if a *%pgo* section
++	is present in spec. The package is built once, without profile
++	instrumentation. Useful for quick test builds.
++
+ *--noprep*
+ 	Do not execute *%prep* build stage even if present in spec.
+ 	This assumes there has been another *rpmbuild* run in which
 diff -Naur a/include/rpm/rpmbuild.h b/include/rpm/rpmbuild.h
---- a/include/rpm/rpmbuild.h	2026-07-16 15:34:18.000000000 +0200
-+++ b/include/rpm/rpmbuild.h	2026-08-07 21:40:42.971386243 +0200
-@@ -39,6 +39,7 @@
+--- a/include/rpm/rpmbuild.h	2026-08-20 10:38:01.000000000 +0200
++++ b/include/rpm/rpmbuild.h	2026-08-24 21:48:26.291328509 +0200
+@@ -39,6 +39,8 @@
      RPMBUILD_DUMPBUILDREQUIRES	= (1 <<  21), /*!< Write buildrequires.nosrc.rpm. */
      RPMBUILD_CONF	= (1 << 22),	/*!< Execute %%conf. */
      RPMBUILD_MKBUILDDIR	= (1 << 23),	/*!< Internal use only */
 +    RPMBUILD_PGO	= (1 << 24),	/*!< Execute %%pgo. */
++    RPMBUILD_NOPGO	= (1 << 25),	/*!< Don't execute %%pgo. */
  
      RPMBUILD_NOBUILD	= (1 << 31)	/*!< Don't execute or package. */
  };
 diff -Naur a/macros.in b/macros.in
---- a/macros.in	2026-07-16 15:34:18.000000000 +0200
-+++ b/macros.in	2026-08-07 21:40:42.971499894 +0200
+--- a/macros.in	2026-08-20 10:38:01.000000000 +0200
++++ b/macros.in	2026-08-24 21:47:34.123797522 +0200
 @@ -1044,6 +1044,13 @@
    LDFLAGS="${LDFLAGS:-%{?build_ldflags}}" ; export LDFLAGS
  
@@ -849,8 +874,8 @@ diff -Naur a/macros.in b/macros.in
  #	Macro(s) here can be used reliably for reproducible builds.
  #	(Note: Above is the goal, below are the macros under development)
 diff -Naur a/tests/CMakeLists.txt b/tests/CMakeLists.txt
---- a/tests/CMakeLists.txt	2026-07-16 15:34:18.000000000 +0200
-+++ b/tests/CMakeLists.txt	2026-08-07 21:40:42.971630886 +0200
+--- a/tests/CMakeLists.txt	2026-08-20 10:38:01.000000000 +0200
++++ b/tests/CMakeLists.txt	2026-08-24 21:47:34.123855792 +0200
 @@ -54,6 +54,7 @@
  	rpmconfig2.at
  	rpmconfig3.at
@@ -861,8 +886,8 @@ diff -Naur a/tests/CMakeLists.txt b/tests/CMakeLists.txt
  FILE(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/rpmtests.at)
 diff -Naur a/tests/rpmpgo.at b/tests/rpmpgo.at
 --- a/tests/rpmpgo.at	1970-01-01 01:00:00.000000000 +0100
-+++ b/tests/rpmpgo.at	2026-08-07 21:41:42.080243561 +0200
-@@ -0,0 +1,282 @@
++++ b/tests/rpmpgo.at	2026-08-24 21:48:26.295393340 +0200
+@@ -0,0 +1,310 @@
 +#    rpmpgo.at: test %pgo (Profile-Guided Optimization) support
 +#
 +#    This program is free software; you can redistribute it and/or modify
@@ -1075,6 +1100,34 @@ diff -Naur a/tests/rpmpgo.at b/tests/rpmpgo.at
 +RPMTEST_CLEANUP
 +
 +# ------------------------------
++# Verify --nopgo skips %pgo even when present
++RPMTEST_SETUP_RW([rpmbuild --nopgo skips %pgo])
++AT_KEYWORDS([build pgo])
++RPMTEST_CHECK([
++
++rpmbuild \
++  --nopgo \
++  --define "debug_package %{nil}" \
++  -bb ${RPMDATA}/SPECS/pgohello.spec 2>&1 | \
++  grep -cF "PGO: profile-guided optimization enabled" || true
++],
++[0],
++[0
++],
++[])
++
++# Package should still be built successfully without the two-pass PGO flow
++RPMTEST_CHECK([
++runroot rpm -qp --qf "%{name}-%{version}\n" /build/RPMS/*/pgohello-1.0-1.*.rpm
++],
++[0],
++[pgohello-1.0
++],
++[])
++
++RPMTEST_CLEANUP
++
++# ------------------------------
 +# Verify PGO runs the training workload
 +RPMTEST_SETUP_RW([rpmbuild PGO training workload runs])
 +AT_KEYWORDS([build pgo])
@@ -1145,3 +1198,15 @@ diff -Naur a/tests/rpmpgo.at b/tests/rpmpgo.at
 +[])
 +
 +RPMTEST_CLEANUP
+diff -Naur a/tools/rpmbuild.cc b/tools/rpmbuild.cc
+--- a/tools/rpmbuild.cc	2026-08-20 10:38:01.000000000 +0200
++++ b/tools/rpmbuild.cc	2026-08-24 21:48:26.291328509 +0200
+@@ -278,6 +278,8 @@
+ 	N_("do not execute %prep stage of the build"), NULL },
+  { "nocheck", '\0', POPT_BIT_SET, &nobuildAmount, RPMBUILD_CHECK,
+ 	N_("do not execute %check stage of the build"), NULL },
++ { "nopgo", '\0', POPT_BIT_SET, &rpmBTArgs.buildAmount, RPMBUILD_NOPGO,
++	N_("do not execute %pgo stage of the build"), NULL },
+ 
+  { "nolang", '\0', POPT_ARGFLAG_DOC_HIDDEN, 0, POPT_NOLANG,
+ 	N_("do not accept i18N msgstr's from specfile"), NULL},
